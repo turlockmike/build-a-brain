@@ -1,0 +1,14 @@
+{
+  "name": "Build a Brain — Neural Networks from Scratch",
+  "short_name": "Build a Brain",
+  "description": "A step-by-step course teaching everything you need to build a neural network from scratch — starting with the math.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f6fb",
+  "theme_color": "#4f46e5",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
