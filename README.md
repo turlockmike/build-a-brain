@@ -23,8 +23,9 @@ no network afterward (same pattern as the sibling flashcard apps below).
 
 ## Status
 
-**Phase 1 (Math Foundations I) is fully written — 20/20 lessons.**
-Phases 2-14 are visible in the roadmap as titles only ("coming soon") so the
+**Phases 1-2 are fully written** — Phase 1 (Math Foundations I, 20/20 lessons)
+and Phase 2 (Programming Foundations I — Python, 17/17 lessons).
+Phases 3-14 are visible in the roadmap as titles only ("coming soon") so the
 whole path is motivating to see, but have no lesson content yet. See
 `STATUS.md` for the exact cutoff and what's next.
 
@@ -38,7 +39,7 @@ project." Each future session should pick up one phase at a time.
 index.html          — shell: header, roadmap view, lesson view (all CSS inline)
 app.js               — all app logic: routing (#/ and #/lesson/<id>), rendering,
                         localStorage progress, quiz grading
-data/curriculum.js   — ROADMAP (all 14 phase titles) + LESSONS (full Phase 1 content)
+data/curriculum.js   — ROADMAP (all 14 phase titles) + LESSONS (full Phase 1-2 content)
 sw.js                — service worker, cache-first app shell for offline use
 manifest.json        — PWA manifest (installable, "Add to Home Screen")
 icon.svg             — app icon
@@ -82,27 +83,27 @@ const LESSONS = [
 ];
 ```
 
-`app.js` renders phase 1 straight out of `LESSONS` and treats any `ROADMAP`
-entry with `number !== 1` as a locked "coming soon" card — it never assumes a
-fixed list length, so adding lessons to `LESSONS` for a new phase is enough to
-unlock that phase's lesson list automatically (see below).
+`app.js`'s `renderRoadmap()` renders any `ROADMAP` entry that has matching
+lessons in `LESSONS` (generalized 2026-08-25, no longer a `p.number === 1`
+special case) — it never assumes a fixed list length, so appending lessons to
+`LESSONS` for a new phase is enough to unlock that phase's lesson list
+automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 2:
-   "Programming Foundations I — Python: variables, loops, if/else, functions").
+1. Pick the next phase from `ROADMAP` (currently phase 3:
+   "How Brains Work — neurons, signals, synapses as connection strength").
 2. Write that phase's lesson list (title-only breakdown first, then full content
-   per lesson using the exact schema above — same content bar as Phase 1: a real
-   300-500 word explanation with analogies, a worked example, 3-5 practice
-   problems with solutions, a 5-question quiz).
+   per lesson using the exact schema above — same content bar as Phase 1-2: a
+   real 300-500 word explanation with analogies, a worked example, 3-5
+   practice problems with solutions, a 5-question quiz). Each lesson may
+   assume only earlier-phase content plus earlier lessons in the same phase —
+   never anything from a later phase or later lesson.
 3. Append those lesson objects to `LESSONS` in `data/curriculum.js`, ids
-   `"2.1"`, `"2.2"`, ... (id format is always `"<phase>.<lesson>"`).
-4. **`app.js` currently only renders `LESSONS` for phase 1 specifically** —
-   generalizing `renderRoadmap()` to render *any* phase whose lessons exist
-   (rather than hardcoding `p.number === 1`) is the one code change needed;
-   everything else (routing, quiz engine, progress tracking, offline caching)
-   is already phase-agnostic and needs no changes.
-5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v1` → `bab-v2`) so
+   `"3.1"`, `"3.2"`, ... (id format is always `"<phase>.<lesson>"`).
+4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
+   any phase with matching `LESSONS` entries automatically.
+5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v2` → `bab-v3`) so
    returning users actually pick up the new content instead of a stale cache.
 6. Commit, push to `main` — GitHub Pages serves straight from `main` / `/root`,
    no separate deploy step required.

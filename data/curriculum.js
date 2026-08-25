@@ -2132,5 +2132,1820 @@ const LESSONS = [
         "explanation": "The four locks solve to x = 2, x = 3, x = 5, and x = 8 in order, forming the code 2358."
       }
     ]
+  },
+  {
+    "id": "2.1",
+    "number": 1,
+    "title": "What is a program? — instructions, Python, print(), and comments",
+    "objectives": [
+      "Explain what a computer program is as a precise, ordered list of instructions",
+      "Describe what Python is and how a Python program runs, one line at a time",
+      "Use print() to display text on the screen",
+      "Write comments with # to leave notes that Python ignores"
+    ],
+    "explanation": [
+      "A computer program is nothing more than a list of exact instructions, carried out one at a time, in the exact order they're written. Think of a recipe: \"crack two eggs into a bowl, whisk for 30 seconds, add a cup of flour.\" A recipe only works if every step is precise and unambiguous — a computer is even less forgiving than a home cook. It has zero common sense and makes zero guesses about what you \"probably meant.\" If an instruction is missing, out of order, or the tiniest bit unclear, the computer either does the wrong thing or refuses to run at all. Learning to program is really learning to think in precise, ordered steps — a skill that turns out to be useful far beyond computers.",
+      "Python is one particular language for writing those instructions. There are many programming languages, but Python is a great place to start because it's designed to read almost like plain English, without a lot of extra symbols cluttering up the page. A Python program is just a plain text file full of instructions, called statements, and when you run it, the computer reads and carries out those statements from top to bottom, one line after another — the exact same way you'd read a page of a book, left to right, top to bottom, never skipping ahead or jumping backward unless a later lesson explicitly tells it to.",
+      "The very first tool you'll use constantly is print(). It's a built-in command Python already understands — you don't have to build it yourself — and its job is simple: display whatever you put inside its parentheses on the screen. print('Hello, world!') shows the text Hello, world! Notice the text sits inside quotation marks; that tells Python \"this is literal text, show it exactly as written,\" not an instruction to carry out. A program can contain many print() statements, and they run in order just like every other line — the first print() in the file shows its message first, the second shows its message second, and so on.",
+      "One last essential tool: comments. Any line that starts with a # symbol is a comment, and Python skips over it completely — it produces no output and has zero effect on what the program does. Comments exist purely for humans: to leave yourself (or anyone else reading the code later) a plain-English note about what a tricky bit of code is doing or why. # this line prints a greeting is a comment; Python's eyes glide right past it as if it weren't there. Getting into the habit of writing a short comment to explain your reasoning — the same habit that makes a worked math solution easy to follow — will make your programs far easier to read, debug, and come back to later."
+    ],
+    "example": {
+      "problem": "Predict exactly what this program prints, line by line:\nprint('Starting program')\n# this line is a comment, Python skips it\nprint('All done')",
+      "steps": [
+        "Line 1 is a print() statement, so Python runs it immediately: it displays Starting program on the screen.",
+        "Line 2 begins with #, so it's a comment — Python skips it entirely and produces no output for it.",
+        "Line 3 is another print() statement, so Python runs it: it displays All done on the screen.",
+        "The program has no more lines, so it stops."
+      ],
+      "answer": "The program prints two lines total: Starting program, then All done. The comment produces no output at all."
+    },
+    "practice": [
+      {
+        "problem": "What does print('Hi there!') display on the screen?",
+        "solution": "It displays exactly the text inside the quotes, with the quotes themselves not shown: Hi there!"
+      },
+      {
+        "problem": "How many lines of output does this program produce?\n# print the total\nprint('Total: 10')\n# end of program",
+        "solution": "One line of output. Both lines starting with # are comments and are skipped; only the single print() statement produces output: Total: 10."
+      },
+      {
+        "problem": "Predict the output, in order:\nprint('One')\nprint('Two')\nprint('Three')",
+        "solution": "Python runs statements top to bottom, so it prints, in order: One, then Two, then Three — each on its own line."
+      },
+      {
+        "problem": "Why can't a computer just \"figure out\" a vague or missing instruction the way a person might?",
+        "solution": "A computer has no common sense or judgment of its own — it can only carry out exactly what it's told, in exactly the order it's told. If an instruction is missing or unclear, it does the wrong thing or fails, rather than guessing what a person probably meant."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a computer program?",
+        "choices": [
+          "A precise, ordered list of instructions the computer carries out one at a time",
+          "A random collection of ideas the computer interprets however it likes",
+          "A single instruction that runs forever",
+          "A picture of what an app should look like"
+        ],
+        "answerIndex": 0,
+        "explanation": "A program is an exact, ordered sequence of instructions — the computer follows each one precisely, in order, with no guessing."
+      },
+      {
+        "type": "mc",
+        "question": "What does print('Score: 5') do?",
+        "choices": [
+          "Displays the text Score: 5 on the screen",
+          "Adds 5 to a variable called Score",
+          "Deletes the text Score: 5",
+          "Does nothing, since it starts with a lowercase letter"
+        ],
+        "answerIndex": 0,
+        "explanation": "print() displays whatever text is inside its parentheses exactly as written."
+      },
+      {
+        "type": "short",
+        "question": "What symbol starts a comment line in Python?",
+        "answer": "#",
+        "acceptable": [
+          "#",
+          "hashtag",
+          "pound sign"
+        ],
+        "explanation": "A line starting with # is a comment, and Python ignores it completely — it produces no output."
+      },
+      {
+        "type": "short",
+        "question": "How many lines does this program print?\nprint('A')\n# print('B')\nprint('C')",
+        "answer": "2",
+        "acceptable": [
+          "2",
+          "two"
+        ],
+        "explanation": "The middle line starts with #, so it's a comment and is skipped — even though it looks like a print() statement, Python never runs it. Only lines 1 and 3 actually print, giving 2 lines of output: A and C."
+      },
+      {
+        "type": "mc",
+        "question": "In what order does Python run the statements in a program?",
+        "choices": [
+          "Top to bottom, one at a time, in the order they're written",
+          "Bottom to top",
+          "In a random order each time",
+          "All at the exact same instant"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python reads and executes a program from top to bottom, one statement after another, unless a later lesson's tool (like a loop) changes that flow."
+      }
+    ]
+  },
+  {
+    "id": "2.2",
+    "number": 2,
+    "title": "Variables — storing values with a name",
+    "objectives": [
+      "Explain what a variable is and how assignment (=) stores a value in one",
+      "Distinguish Python's = (assignment) from the math meaning of =",
+      "Apply Python's variable naming rules",
+      "Trace how a variable's value changes after reassignment"
+    ],
+    "explanation": [
+      "Back in Phase 1, you met the idea of a variable as a box that holds a number you don't know yet — an unknown you solve for. Python variables borrow that same \"box\" picture, but with a twist: instead of solving for what's already inside, you get to choose what goes in, and you can even swap it out for something else later. A Python variable is a named storage spot that holds a value — a number, a piece of text, anything — so you can refer back to it by name instead of retyping the value every time.",
+      "You create a variable with an assignment statement: age = 12. Read this from right to left in your head: \"take the value 12, and store it in a box named age.\" This is the single most important thing to get right early on, because Python's = does NOT mean the same thing as the = you've used since Phase 1. In math, x + 3 = 7 is a statement claiming two things are equal, and your job is to figure out what makes that true. In Python, = is not a claim at all — it's a command: \"compute whatever's on the right, then store that value into the name on the left.\" There's no equation to solve and nothing being claimed as equal; it's purely an instruction to save a value under a name.",
+      "Variable names follow a few firm rules: they can use letters, digits, and underscores, but can't start with a digit (age2 is fine, 2age is not), and they're case-sensitive, meaning Age and age are treated as two completely different variables. Spaces aren't allowed inside a name either — use an underscore instead, like total_score. Beyond the rules, good practice matters too: a name like x tells a reader nothing, while score or total_score describes what the value actually represents — exactly like choosing a clear label instead of a mystery box.",
+      "A variable can be reassigned — given a brand-new value that replaces the old one, with the old value simply gone, unrecoverable unless you saved it somewhere else first. Picture a whiteboard instead of a diary: writing a new number on the whiteboard erases whatever was there before, while a diary keeps every past entry. age = 12 followed later by age = 13 leaves age holding only 13; there's no built-in memory of the earlier 12. You can even use a variable's own current value to compute its new one, like score = score + 3, which is read the same instructive way: \"take the current value of score, add 3 to it, and store that new result back into score\" — not an equation claiming score equals score plus 3 (which would be impossible), but a two-step instruction: compute, then store."
+    ],
+    "example": {
+      "problem": "Predict what this program prints:\nname = 'Maya'\nscore = 87\nscore = score + 3\nprint(score)",
+      "steps": [
+        "Line 1 stores the text 'Maya' into a variable named name. It's never used again in this program, but that's allowed.",
+        "Line 2 stores the number 87 into a variable named score.",
+        "Line 3 is a reassignment: Python first computes the right side using score's CURRENT value (87 + 3 = 90), then stores that new result, 90, into score, overwriting the old value of 87.",
+        "Line 4 prints score's current value, which is now 90."
+      ],
+      "answer": "90 — the earlier value of 87 is completely overwritten by the reassignment."
+    },
+    "practice": [
+      {
+        "problem": "After running x = 5 followed by x = x + 10, what value does x hold?",
+        "solution": "Python computes the right side using x's current value first: 5 + 10 = 15. That result, 15, is then stored into x, overwriting the 5. x now holds 15."
+      },
+      {
+        "problem": "Which of these is a valid Python variable name: 2total, total_2, or total 2?",
+        "solution": "total_2 is valid. 2total is invalid because it starts with a digit. total 2 is invalid because it contains a space (an underscore would be needed instead)."
+      },
+      {
+        "problem": "Predict the final value of coins after this program runs:\ncoins = 10\ncoins = 25\ncoins = coins + 5\nprint(coins)",
+        "solution": "coins is set to 10, then immediately overwritten to 25 (the 10 is gone). Then coins = coins + 5 uses the current value, 25, giving 25 + 5 = 30, which is stored back into coins. Final value: 30."
+      },
+      {
+        "problem": "Explain in your own words why age = age + 1 is not a math equation, even though it uses the = symbol.",
+        "solution": "In Python, = is an instruction to store a value, not a claim that two things are equal. age = age + 1 tells Python to take age's current value, add 1 to it, and store that new result back into age — it's a two-step command (compute, then store), not an equation being solved. As a math equation, age = age + 1 would have no solution, since no number equals itself plus 1."
+      },
+      {
+        "problem": "Are Score and score the same variable in Python? Why or why not?",
+        "solution": "No. Python variable names are case-sensitive, so Score and score are two completely separate variables, even though they look almost identical to a human reader."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the statement total = 20 do in Python?",
+        "choices": [
+          "Stores the value 20 in a variable named total",
+          "Checks whether total already equals 20",
+          "Solves for the unknown value of total",
+          "Prints the number 20 to the screen"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python's = is an assignment instruction: it stores the value on the right into the variable named on the left. It doesn't check or solve anything."
+      },
+      {
+        "type": "mc",
+        "question": "Which variable name is INVALID in Python?",
+        "choices": [
+          "3rd_place",
+          "third_place",
+          "thirdPlace",
+          "_third"
+        ],
+        "answerIndex": 0,
+        "explanation": "Variable names can't start with a digit, so 3rd_place is invalid. The others are all legal Python names."
+      },
+      {
+        "type": "short",
+        "question": "After x = 4 then x = x * 2, what value does x hold?",
+        "answer": "8",
+        "acceptable": [
+          "8"
+        ],
+        "explanation": "Python computes the right side with x's current value first: 4 * 2 = 8. That result is stored back into x."
+      },
+      {
+        "type": "short",
+        "question": "In one short sentence, how is Python's = different from the = used in a math equation?",
+        "answer": "Python's = stores a value into a variable (an instruction), while math's = states that two things are equal.",
+        "acceptable": [
+          "assignment not equality",
+          "it stores a value instead of stating equality",
+          "it's a command to store, not a claim of equality"
+        ],
+        "explanation": "Math's = makes a claim that both sides are equal and asks you to solve for an unknown. Python's = is a command: compute the right side, then store that result into the variable named on the left."
+      },
+      {
+        "type": "mc",
+        "question": "After running coins = 5 then coins = 12, what does print(coins) show?",
+        "choices": [
+          "12",
+          "5",
+          "17",
+          "coins"
+        ],
+        "answerIndex": 0,
+        "explanation": "The second assignment overwrites the first — the earlier value of 5 is gone, and coins now holds only 12."
+      }
+    ]
+  },
+  {
+    "id": "2.3",
+    "number": 3,
+    "title": "Data types — int, float, str, bool, and type()",
+    "objectives": [
+      "Identify the four basic Python data types: int, float, str, bool",
+      "Explain how quotes make a value a str, even if it looks like a number",
+      "Use type() to check what type a value is",
+      "Explain why data types matter for how Python treats a value"
+    ],
+    "explanation": [
+      "Every value in Python belongs to a type — a category that describes what kind of value it is and what you're allowed to do with it. You'll start with four basic types. int (short for \"integer\") is a whole number, positive or negative, exactly the whole and negative numbers from Phase 1 — 7, 0, and -42 are all ints. float is a number with a decimal point, matching the decimals from Phase 1 — 3.14 and -0.5 are floats. Even a number like 4.0, which looks like a whole number, is a float in Python simply because it's written with a decimal point.",
+      "str (short for \"string,\" as in a string of characters) is text — any sequence of characters wrapped in quotes, either single quotes or double quotes; Python treats 'hello' and \"hello\" as exactly the same, as long as the quote marks on each end match. This means a number can secretly be text: '5' (in quotes) is a str, not an int, even though it looks like a number to your eye. Python doesn't peek inside the quotes and guess — anything in quotes is text, full stop, and you can't directly do math with it the way you can with a real int or float (a later lesson will show how to convert between them on purpose).",
+      "bool (short for \"Boolean,\" named after the mathematician George Boole) has only two possible values: True and False, always capitalized exactly like that and never in quotes. A bool represents a yes/no, on/off, true/false state, and you'll meet it constantly starting in the next few lessons, once you start asking Python questions like \"is this number bigger than that one?\"",
+      "To check what type a value actually is, Python gives you a built-in tool called type(). type(5) reports int, type(5.0) reports float, type('5') reports str, and type(True) reports bool. Types matter because the exact same operator can behave completely differently depending on the types involved — adding two ints gives you a bigger int, but (as you'll see in an upcoming lesson) \"adding\" two strings glues them together as text instead of computing a sum. Knowing a value's type tells you exactly what kind of behavior to expect from it."
+    ],
+    "example": {
+      "problem": "What does type() report for each of these: 12, 12.5, '12', True?",
+      "steps": [
+        "12 has no decimal point and isn't in quotes, so it's a whole number: type(12) is int.",
+        "12.5 has a decimal point, so it's a decimal number: type(12.5) is float.",
+        "'12' is wrapped in quotes, so no matter what characters are inside, Python treats it as text: type('12') is str.",
+        "True is one of the two special capitalized values with no quotes: type(True) is bool."
+      ],
+      "answer": "12 is int, 12.5 is float, '12' is str, and True is bool."
+    },
+    "practice": [
+      {
+        "problem": "What type is the value -8?",
+        "solution": "It's a whole number with no decimal point, so it's an int (Python ints can be negative, matching the negative numbers from Phase 1)."
+      },
+      {
+        "problem": "What type is the value 0.0?",
+        "solution": "It has a decimal point, so it's a float — even though it looks like it could be a whole number, the decimal point makes it a float in Python."
+      },
+      {
+        "problem": "What type is the value \"9\" (in quotes)?",
+        "solution": "It's wrapped in quotes, so Python treats it purely as text — it's a str, not an int, even though every character inside looks like a digit."
+      },
+      {
+        "problem": "What does type(False) report?",
+        "solution": "bool — False (along with True) is one of the two possible values of the bool type."
+      },
+      {
+        "problem": "Why can't you directly add the values 5 and '5' together as numbers in Python?",
+        "solution": "5 is an int, but '5' is a str (text) because it's in quotes. Even though they look similar, they're different types, and Python won't automatically treat text as a number for math — you'd need to deliberately convert '5' into an int first."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Which value is a float?",
+        "choices": [
+          "7.0",
+          "7",
+          "'7'",
+          "True"
+        ],
+        "answerIndex": 0,
+        "explanation": "7.0 has a decimal point, which makes it a float in Python, even though it represents a whole-number amount."
+      },
+      {
+        "type": "mc",
+        "question": "What are the only two possible values of a bool?",
+        "choices": [
+          "True and False",
+          "1 and 0 only, never words",
+          "'True' and 'False' in quotes",
+          "Yes and No"
+        ],
+        "answerIndex": 0,
+        "explanation": "A bool can only ever be True or False, written exactly that way — capitalized, and never in quotes."
+      },
+      {
+        "type": "short",
+        "question": "What type is the value 3.14?",
+        "answer": "float",
+        "acceptable": [
+          "float"
+        ],
+        "explanation": "3.14 has a decimal point, so it's a float."
+      },
+      {
+        "type": "short",
+        "question": "What built-in tool would you use to check what type a value is?",
+        "answer": "type()",
+        "acceptable": [
+          "type()",
+          "type"
+        ],
+        "explanation": "type() is Python's built-in tool for reporting a value's type, e.g. type(5) reports int."
+      },
+      {
+        "type": "mc",
+        "question": "Why is '42' (in quotes) a str instead of an int, even though it looks like a number?",
+        "choices": [
+          "Anything inside quotes is treated as text, no matter what characters it contains",
+          "42 is too big to be an int",
+          "Python randomly decides the type each time",
+          "Quotes always mean the value is a float"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python doesn't examine what's inside quotes to decide the type — quotes always mean \"this is text,\" so '42' is a str regardless of what it looks like."
+      }
+    ]
+  },
+  {
+    "id": "2.4",
+    "number": 4,
+    "title": "Arithmetic operators — +, -, *, /, //, %, ** and order of operations",
+    "objectives": [
+      "Use Python's arithmetic operators, including // (floor division) and % (modulo)",
+      "Apply PEMDAS order of operations rules inside Python expressions",
+      "Explain the difference between Python's ** and the ^ symbol used in math notation",
+      "Predict whether / gives an int or float result"
+    ],
+    "explanation": [
+      "Python supports the same basic arithmetic you already know from Phase 1: + for addition, - for subtraction, * for multiplication, and / for division. And the same PEMDAS order of operations rules from Phase 1's very first lessons apply exactly the same way inside a line of Python code: parentheses first, then exponents, then multiplication and division (left to right), then addition and subtraction (left to right). Python didn't invent a new order of operations — it uses the exact same one you already know.",
+      "There's one important notation trap to watch for. In math class, you might write an exponent with a caret, like 4^2. In Python, the ^ symbol means something else entirely (a rarely-used operation on the binary representation of numbers, well outside this course), so using it for \"to the power of\" gives a wrong and confusing result. Python's actual exponent operator is two asterisks together: **. So \"4 squared\" is written 4 ** 2 in code, which evaluates to 16. This mix-up — typing ^ out of math-class habit — is one of the single most common early Python mistakes, so it's worth building the correct habit now: always use ** for exponents in code.",
+      "Python also gives you two operators with no direct equivalent from Phase 1, both built from ordinary division-with-a-remainder. Imagine splitting 17 candies evenly among 5 friends: each friend gets 3 whole candies, with 2 candies left over that can't be split evenly. Floor division, written //, gives you just that whole-number part: 17 // 5 is 3. Modulo, written %, gives you just the leftover remainder: 17 % 5 is 2. These come up constantly in real programs — for example, a number is even exactly when dividing it by 2 leaves nothing left over, so number % 2 == 0 is a common way to test for that (you'll meet == properly in a later lesson).",
+      "One more detail worth knowing up front: regular division, /, always produces a float result in Python, even when the division comes out perfectly even. 10 / 2 gives 5.0, not the int 5 — the decimal point is always there for regular division. Floor division, //, is different: it always chops off any leftover and gives you just the whole-number part (for positive numbers, this is the same as the // 5 = 3 candy-splitting example above). Keeping / (always gives a float, keeps any decimal) and // (always gives the truncated whole-number part) straight in your head will save you from a lot of confusing bugs later on."
+    ],
+    "example": {
+      "problem": "Evaluate these two Python expressions: 3 + 4 * 2 ** 2, and 17 // 5, and 17 % 5",
+      "steps": [
+        "For 3 + 4 * 2 ** 2, apply PEMDAS: exponent first, 2 ** 2 = 4.",
+        "The expression is now 3 + 4 * 4. Multiplication next: 4 * 4 = 16.",
+        "The expression is now 3 + 16. Addition last: 3 + 16 = 19.",
+        "For 17 // 5, this is floor division: how many whole times does 5 fit into 17? 5 fits 3 whole times (3 * 5 = 15), so 17 // 5 = 3.",
+        "For 17 % 5, this is the remainder left over: 17 − 15 = 2, so 17 % 5 = 2."
+      ],
+      "answer": "3 + 4 * 2 ** 2 is 19. 17 // 5 is 3. 17 % 5 is 2."
+    },
+    "practice": [
+      {
+        "problem": "Evaluate 2 + 3 * 4 ** 2 in Python.",
+        "solution": "Exponent first: 4 ** 2 = 16. Multiplication next: 3 * 16 = 48. Addition last: 2 + 48 = 50."
+      },
+      {
+        "problem": "Evaluate 20 // 6 and 20 % 6.",
+        "solution": "6 fits into 20 a total of 3 whole times (3 * 6 = 18), so 20 // 6 = 3. The leftover is 20 − 18 = 2, so 20 % 6 = 2."
+      },
+      {
+        "problem": "What does 9 / 3 evaluate to in Python, and what type is the result?",
+        "solution": "9 / 3 evaluates to 3.0, and its type is float — regular division (/) always gives a float result in Python, even when the division is exact."
+      },
+      {
+        "problem": "A student writes 5^2 in their Python code expecting to get 25. What actually goes wrong, and how should they fix it?",
+        "solution": "In Python, ^ is not the exponent operator (it means something unrelated). To compute 5 squared, they need to use two asterisks instead: 5 ** 2, which correctly evaluates to 25."
+      },
+      {
+        "problem": "Use % to determine whether 14 is even (leaves no remainder when divided by 2).",
+        "solution": "14 % 2 gives the remainder when 14 is divided by 2. Since 14 divides evenly by 2 (2 * 7 = 14), the remainder is 0, so 14 % 2 = 0, confirming 14 is even."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How do you write \"6 to the power of 2\" in Python code?",
+        "choices": [
+          "6 ** 2",
+          "6 ^ 2",
+          "6 * 2",
+          "6 // 2"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python's exponent operator is **, not ^ (which means something else entirely). 6 ** 2 evaluates to 36."
+      },
+      {
+        "type": "mc",
+        "question": "What does 13 // 4 evaluate to?",
+        "choices": [
+          "3",
+          "3.25",
+          "1",
+          "4"
+        ],
+        "answerIndex": 0,
+        "explanation": "4 fits into 13 a total of 3 whole times (3 * 4 = 12), with 1 left over, so floor division gives just the whole part: 13 // 4 = 3."
+      },
+      {
+        "type": "short",
+        "question": "What does 13 % 4 evaluate to?",
+        "answer": "1",
+        "acceptable": [
+          "1"
+        ],
+        "explanation": "4 fits into 13 three whole times (3 * 4 = 12), leaving a remainder of 13 − 12 = 1, so 13 % 4 = 1."
+      },
+      {
+        "type": "short",
+        "question": "Evaluate (2 + 3) ** 2 in Python.",
+        "answer": "25",
+        "acceptable": [
+          "25"
+        ],
+        "explanation": "Parentheses first: 2 + 3 = 5. Then the exponent: 5 ** 2 = 25."
+      },
+      {
+        "type": "mc",
+        "question": "What type does 8 / 4 evaluate to in Python, even though the division comes out perfectly even?",
+        "choices": [
+          "float (2.0)",
+          "int (2)",
+          "str",
+          "bool"
+        ],
+        "answerIndex": 0,
+        "explanation": "Regular division with / always produces a float result in Python, so 8 / 4 gives 2.0, not the int 2."
+      }
+    ]
+  },
+  {
+    "id": "2.5",
+    "number": 5,
+    "title": "Strings — concatenation, repetition, len(), and f-strings",
+    "objectives": [
+      "Combine strings with + (concatenation) and repeat them with *",
+      "Explain why mixing str and int directly with + causes an error",
+      "Use f-strings to insert variable values into text",
+      "Use len() to find how many characters are in a string"
+    ],
+    "explanation": [
+      "You already know from the last lesson that a str is text in quotes, and that operators can behave differently depending on type. + between two strings doesn't add anything numerically — it glues them together end to end, a process called concatenation. 'Hello' + 'World' produces 'HelloWorld' — notice there's no space between them, because + only joins exactly what's there; if you want a space, you have to include one yourself, like 'Hello' + ' ' + 'World', which gives 'Hello World'.",
+      "* between a string and an int repeats the string that many times, joined back to back. This connects directly to an idea from Phase 1's very first lessons: multiplication as repeated addition. String repetition is quite literally repeated concatenation — 'ab' * 3 is exactly the same as writing 'ab' + 'ab' + 'ab', giving 'ababab'. It's the same multiplication idea, just applied to text instead of numbers.",
+      "Mixing a str and an int directly with + causes an error, because Python refuses to guess whether you mean \"add them as numbers\" or \"glue them as text.\" 'Score: ' + 87 fails outright — you can't concatenate a str with an int. To fix it, you have to explicitly convert the number to text first using str(): 'Score: ' + str(87) correctly produces 'Score: 87'. That works, but there's a much more convenient tool built for exactly this: f-strings. Put the letter f immediately before the opening quote, and anything inside curly braces {} gets automatically evaluated and converted to text and inserted right there. f'Score: {score}' does the same job as the str() version above, but more directly and readably, and it works for any variable, not just numbers — you'll use f-strings constantly from here on.",
+      "One more useful built-in tool for strings: len(), which reports how many characters are in a string, counting every letter, space, and punctuation mark. len('hello') is 5. len('Hi there!') is 9 — 2 letters, a space, 5 letters, and the exclamation mark, all counted. len() will come back in a later lesson doing a very similar job for a different kind of value, so it's worth remembering what question it always answers: \"how many things are in this?\""
+    ],
+    "example": {
+      "problem": "Predict the output of this program:\nname = 'Alex'\nscore = 92\nprint('Name: ' + name)\nprint(f'{name} scored {score} points')\nprint('-' * 10)",
+      "steps": [
+        "Line 3 concatenates the str 'Name: ' with the str stored in name ('Alex'), giving 'Name: Alex', which is printed.",
+        "Line 4 is an f-string: {name} is replaced with Alex and {score} is replaced with 92 (converted to text automatically), giving 'Alex scored 92 points', which is printed.",
+        "Line 5 repeats the string '-' ten times, giving '----------', which is printed."
+      ],
+      "answer": "The program prints three lines: Name: Alex, then Alex scored 92 points, then ----------"
+    },
+    "practice": [
+      {
+        "problem": "What does 'Cat' + 'fish' evaluate to?",
+        "solution": "Concatenation glues the two strings directly together with nothing in between: 'Catfish'."
+      },
+      {
+        "problem": "What does 'ha' * 4 evaluate to?",
+        "solution": "The string 'ha' is repeated 4 times back to back, exactly like 'ha' + 'ha' + 'ha' + 'ha': 'hahahaha'."
+      },
+      {
+        "problem": "A student writes 'Total: ' + 25 and gets an error. Explain what went wrong and how to fix it.",
+        "solution": "'Total: ' is a str and 25 is an int — Python won't concatenate a str with an int directly, since it can't tell whether you mean addition or text-joining. Fixing it requires converting the number to text first: 'Total: ' + str(25), or more simply, an f-string: f'Total: {25}'."
+      },
+      {
+        "problem": "Given age = 12, what does f'I am {age} years old' evaluate to?",
+        "solution": "The f-string inserts age's current value, 12, in place of {age}: 'I am 12 years old'."
+      },
+      {
+        "problem": "What does len('Python') evaluate to?",
+        "solution": "len() counts every character in the string. 'Python' has 6 letters, so len('Python') is 6."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does 'Sun' + 'flower' evaluate to?",
+        "choices": [
+          "'Sunflower'",
+          "'Sun flower'",
+          "'flowerSun'",
+          "An error"
+        ],
+        "answerIndex": 0,
+        "explanation": "+ between two strings concatenates them exactly as written, with no space added automatically: 'Sunflower'."
+      },
+      {
+        "type": "mc",
+        "question": "Why does 'Points: ' + 10 cause an error in Python?",
+        "choices": [
+          "You can't directly concatenate a str and an int with + — Python won't guess which one you mean",
+          "The colon inside the string is not allowed",
+          "10 is too large a number for +",
+          "Python doesn't support the + operator at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "+ between a str and an int is not allowed directly, since Python refuses to guess whether you want numeric addition or text-joining. The int must be converted to a str first, e.g. with str(10), or an f-string can be used instead."
+      },
+      {
+        "type": "short",
+        "question": "Given score = 88, what does f'Score: {score}' evaluate to (as a string)?",
+        "answer": "Score: 88",
+        "acceptable": [
+          "Score: 88",
+          "'Score: 88'"
+        ],
+        "explanation": "The f-string automatically converts score's current value, 88, to text and inserts it in place of {score}."
+      },
+      {
+        "type": "short",
+        "question": "What does len('coding') evaluate to?",
+        "answer": "6",
+        "acceptable": [
+          "6"
+        ],
+        "explanation": "len() counts every character in the string. 'coding' has 6 letters, so the result is 6."
+      },
+      {
+        "type": "mc",
+        "question": "What does '='  * 5 evaluate to?",
+        "choices": [
+          "'====='",
+          "'5555='",
+          "25",
+          "An error"
+        ],
+        "answerIndex": 0,
+        "explanation": "* between a string and an int repeats the string that many times back to back: '=' repeated 5 times is '====='."
+      }
+    ]
+  },
+  {
+    "id": "2.6",
+    "number": 6,
+    "title": "input() and converting types with int() and float()",
+    "objectives": [
+      "Use input() to read text typed by the user",
+      "Explain why input() always returns a str, even when digits are typed",
+      "Convert user input to int or float using int() and float()",
+      "Combine input(), conversion, variables, and f-strings in a small interactive program"
+    ],
+    "explanation": [
+      "So far, every value in your programs has been fixed right there in the code. input() lets a program pause, wait for a person to type something and press enter, and then hands back whatever they typed. name = input('What is your name? ') displays the message 'What is your name? ', waits for the user to type a response, and stores whatever they typed into the variable name.",
+      "Here's the detail that trips people up: input() ALWAYS returns a str, no matter what the user types — even if they type digits like 12, the value stored is the str '12', not the int 12. This matters because, as you saw two lessons ago, you can't do math directly with a str. If a program asks for someone's age and then tries to do age + 1 without converting first, it will fail, because age is holding the str '12', not a usable number.",
+      "The fix is to convert deliberately, using the same idea from the strings lesson but in reverse: int() converts a str made of digits into an int, and float() converts a str into a float. age = int(input('How old are you? ')) does both steps in a single line — it reads the typed text, then immediately hands the whole result to int(), converting it before storing the final int value into age. From that point on, age behaves like any other int: you can add to it, compare it, and so on.",
+      "One thing worth knowing, without needing to worry about it deeply yet: if the text typed isn't actually a valid number — like someone typing 'banana' when int() expects digits — the conversion will fail. For now, just build the habit of converting input() any time you plan to do math with it, and leaving it as plain str whenever you just want to work with it as text (like someone's name). Combining input(), conversion, and the f-strings from the last lesson lets you write small, genuinely interactive programs — the kind that respond differently depending on what a real person types in."
+    ],
+    "example": {
+      "problem": "A program runs this code, and the user types 15 when asked their age:\nage = int(input('How old are you? '))\nnext_year = age + 1\nprint(f'Next year you will be {next_year}')\nWhat does it print?",
+      "steps": [
+        "input('How old are you? ') displays the prompt and waits; the user types 15, so input() returns the str '15'.",
+        "int('15') converts that str into the int 15, which is stored into age.",
+        "next_year = age + 1 computes 15 + 1 = 16 (this works because age is now a real int, not a str) and stores 16 into next_year.",
+        "The f-string inserts next_year's value, 16, into the message."
+      ],
+      "answer": "The program prints: Next year you will be 16"
+    },
+    "practice": [
+      {
+        "problem": "Why does this code fail if age was created with age = input('Age? ') (without int())?\nnext_age = age + 1",
+        "solution": "input() always returns a str, so age holds the str version of whatever was typed, like '12', not the int 12. You can't add an int (1) directly to a str with +, so age + 1 fails. Wrapping the input() call in int() would fix it: age = int(input('Age? '))."
+      },
+      {
+        "problem": "A program reads a price with price = float(input('Price? ')) and the user types 4.5. What value and type does price hold?",
+        "solution": "input() returns the str '4.5', and float() converts it into the float 4.5. price holds the float 4.5."
+      },
+      {
+        "problem": "Write the single line of code that reads a whole number of tickets from the user (prompt: 'How many tickets? ') and stores it as an int in a variable called tickets.",
+        "solution": "tickets = int(input('How many tickets? '))"
+      },
+      {
+        "problem": "If a program only ever needs someone's name as text and never does math with it, does it need int() or float() around the input() call?",
+        "solution": "No — since input() already returns a str, and a name is meant to stay as text, no conversion is needed at all: name = input('Name? ') is enough."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What type of value does input() always return, no matter what the user types?",
+        "choices": [
+          "str",
+          "int",
+          "float",
+          "bool"
+        ],
+        "answerIndex": 0,
+        "explanation": "input() always returns a str, even if the user types only digits — converting it to a number requires int() or float() explicitly."
+      },
+      {
+        "type": "mc",
+        "question": "What does int(input('Score? ')) do, if the user types 90?",
+        "choices": [
+          "Reads '90' as text, then converts it to the int 90",
+          "Reads it directly as the int 90 with no conversion needed",
+          "Always fails because input() can't be combined with int()",
+          "Converts it into a float, 90.0"
+        ],
+        "answerIndex": 0,
+        "explanation": "input() first returns the str '90', and wrapping it in int() converts that str into the int 90 in the same line."
+      },
+      {
+        "type": "short",
+        "question": "If a program does x = input('Number? ') and the user types 7, what is the type of x?",
+        "answer": "str",
+        "acceptable": [
+          "str",
+          "string"
+        ],
+        "explanation": "Without wrapping in int() or float(), input() always returns a str, so x holds the str '7', not the int 7."
+      },
+      {
+        "type": "short",
+        "question": "Which built-in tool converts a str like '3.5' into a usable decimal number?",
+        "answer": "float()",
+        "acceptable": [
+          "float()",
+          "float"
+        ],
+        "explanation": "float() converts a str representing a decimal number into an actual float value that can be used in math."
+      },
+      {
+        "type": "mc",
+        "question": "Why can't you directly do math with the result of input() without converting it first?",
+        "choices": [
+          "input() always returns a str, and you can't do math directly with a str",
+          "input() only works with negative numbers",
+          "input() automatically deletes the value after use",
+          "You actually can, no conversion is ever needed"
+        ],
+        "answerIndex": 0,
+        "explanation": "input() always hands back a str, and (as covered in the strings lesson) a str can't be used directly in math the way an int or float can — it must be converted with int() or float() first."
+      }
+    ]
+  },
+  {
+    "id": "2.7",
+    "number": 7,
+    "title": "Comparison operators — ==, !=, <, >, <=, >=",
+    "objectives": [
+      "Use Python's six comparison operators to compare values",
+      "Explain the difference between = (assignment) and == (equality comparison)",
+      "State that every comparison evaluates to a bool, True or False",
+      "Apply comparisons to numbers, including negatives"
+    ],
+    "explanation": [
+      "Two lessons back you learned that = stores a value into a variable — it's a command, not a question. To actually ask Python \"are these two things equal?\" you need a different, two-character operator: ==. age == 12 changes nothing at all; it simply evaluates to one of the two bool values from the data types lesson, True or False, answering the question \"is age currently equal to 12?\" A helpful habit going forward: read = as \"gets set to,\" and read == as \"is equal to?\" — keeping that mental split will prevent one of the most common bugs beginners run into.",
+      "Python has six comparison operators in total, and each one, when evaluated, produces exactly one bool. == means \"equal to,\" and its opposite, != , means \"not equal to.\" < means \"less than,\" > means \"greater than,\" <= means \"less than or equal to,\" and >= means \"greater than or equal to.\" 5 == 5 evaluates to True. 5 == 6 evaluates to False. 7 != 3 evaluates to True, because 7 really isn't equal to 3.",
+      "These comparisons work exactly the way you'd expect from the number line you built in Phase 1's negative numbers lessons — numbers further to the right are always greater. -5 < 2 evaluates to True, because -5 sits to the left of 2 on the number line, and \"left\" always means smaller. -5 > -10 also evaluates to True, since -5 sits to the right of -10 (less negative means bigger, exactly the reasoning you already practiced back then).",
+      "Comparisons aren't limited to numbers either — Python can compare strings too, most commonly with == and != to check whether two pieces of text are identical, character for character (including matching capitalization: 'Cat' == 'cat' evaluates to False, since capital C and lowercase c are different characters). For now, the comparisons you'll use constantly are the numeric ones, and you'll put them to real use starting in the very next lesson, where a program's bool answer to a comparison decides which block of code actually runs."
+    ],
+    "example": {
+      "problem": "Given x = 8, evaluate each of these: x == 8, x != 8, x < 10, x >= 9",
+      "steps": [
+        "x == 8 asks \"is x equal to 8?\" Since x currently holds 8, this evaluates to True.",
+        "x != 8 asks \"is x NOT equal to 8?\" Since x does equal 8, this evaluates to False.",
+        "x < 10 asks \"is x less than 10?\" Since 8 is less than 10, this evaluates to True.",
+        "x >= 9 asks \"is x greater than or equal to 9?\" Since 8 is neither greater than nor equal to 9, this evaluates to False."
+      ],
+      "answer": "x == 8 is True, x != 8 is False, x < 10 is True, x >= 9 is False."
+    },
+    "practice": [
+      {
+        "problem": "Given temp = -4, evaluate temp < 0.",
+        "solution": "-4 sits to the left of 0 on the number line, so -4 is less than 0: temp < 0 evaluates to True."
+      },
+      {
+        "problem": "Given score = 75, evaluate score >= 80.",
+        "solution": "75 is not greater than or equal to 80, so score >= 80 evaluates to False."
+      },
+      {
+        "problem": "Given a = -3 and b = -7, evaluate a > b.",
+        "solution": "On the number line, -3 sits to the right of -7 (it's less negative), so -3 is greater than -7: a > b evaluates to True."
+      },
+      {
+        "problem": "What's the difference between what x = 5 does and what x == 5 does?",
+        "solution": "x = 5 is an assignment: it stores the value 5 into the variable x, overwriting whatever was there before. x == 5 is a comparison: it doesn't change x at all, it just asks \"does x currently equal 5?\" and evaluates to True or False."
+      },
+      {
+        "problem": "Given name = 'Sam', evaluate name == 'sam'.",
+        "solution": "String comparisons with == check every character exactly, including capitalization. 'Sam' and 'sam' differ in the first letter's capitalization, so they are not equal: name == 'sam' evaluates to False."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the expression 6 == 6 evaluate to?",
+        "choices": [
+          "True",
+          "False",
+          "6",
+          "It stores 6 into a variable"
+        ],
+        "answerIndex": 0,
+        "explanation": "== checks equality without changing anything, and 6 does equal 6, so the expression evaluates to the bool True."
+      },
+      {
+        "type": "mc",
+        "question": "What is the key difference between = and == in Python?",
+        "choices": [
+          "= stores a value into a variable; == asks whether two values are equal",
+          "They mean exactly the same thing",
+          "= is for text and == is for numbers",
+          "== stores a value; = only compares"
+        ],
+        "answerIndex": 0,
+        "explanation": "= is an assignment command that stores a value. == is a comparison that evaluates to True or False without changing anything."
+      },
+      {
+        "type": "short",
+        "question": "Given n = -2, what does n <= -2 evaluate to?",
+        "answer": "True",
+        "acceptable": [
+          "True",
+          "true"
+        ],
+        "explanation": "<= means \"less than or equal to.\" Since n is exactly -2, it is equal to -2, so n <= -2 evaluates to True."
+      },
+      {
+        "type": "short",
+        "question": "What type of value does every comparison (like <, ==, or >=) evaluate to?",
+        "answer": "bool",
+        "acceptable": [
+          "bool",
+          "boolean",
+          "True or False"
+        ],
+        "explanation": "Every comparison evaluates to exactly one of the two bool values, True or False."
+      },
+      {
+        "type": "mc",
+        "question": "Given price = 12, which expression evaluates to True?",
+        "choices": [
+          "price != 15",
+          "price == 15",
+          "price < 12",
+          "price > 12"
+        ],
+        "answerIndex": 0,
+        "explanation": "price holds 12, which is indeed not equal to 15, so price != 15 evaluates to True. The other three are all False."
+      }
+    ]
+  },
+  {
+    "id": "2.8",
+    "number": 8,
+    "title": "Boolean operators — and, or, not",
+    "objectives": [
+      "Combine comparisons using and, or, and not",
+      "State the truth rule for each: and, or, not",
+      "Predict the result of a compound boolean expression",
+      "Use parentheses to group boolean expressions clearly"
+    ],
+    "explanation": [
+      "A single comparison like age >= 13 asks one yes/no question. Often, though, a real decision depends on more than one condition at once — \"is this person a teenager?\" really means \"is their age 13 or more, AND is it also 19 or less?\" Python's boolean operators — and, or, not — let you combine bools (from comparisons, or from anywhere else) into a single, more complex True-or-False answer.",
+      "and evaluates to True only when BOTH sides are True — if either side is False, the whole thing is False. age >= 13 and age <= 19 is True only for someone whose age satisfies both conditions at once; a 10-year-old fails the first condition, and a 25-year-old fails the second, so both would make the whole and expression False.",
+      "or evaluates to True when AT LEAST ONE side is True — it only comes out False when both sides are False. day == 'Saturday' or day == 'Sunday' is True whenever day is either one (it doesn't need to be both, which wouldn't even be possible for a single value), and False only when day is neither.",
+      "not flips a bool to its opposite — True becomes False, and False becomes True. This should feel familiar: it's the same \"undo the opposite\" idea from Phase 1's negative numbers lesson, where subtracting a negative flipped back to a positive, like a double negative canceling out. not (age >= 18) is True exactly when age >= 18 is False, i.e. when someone is under 18. Just like PEMDAS gives arithmetic operators a fixed priority order, Python evaluates not before and, and and before or, when there are no parentheses — but exactly like in math, you can always add parentheses to make the grouping explicit and unmistakable, which is usually the clearer choice anyway."
+    ],
+    "example": {
+      "problem": "Given age = 15 and has_ticket = True, evaluate: age >= 13 and age <= 19, and evaluate: has_ticket or age >= 18",
+      "steps": [
+        "First, evaluate the two comparisons inside the and expression: age >= 13 is True (15 is at least 13), and age <= 19 is True (15 is at most 19).",
+        "and requires both sides True to be True: True and True evaluates to True.",
+        "Next, evaluate the or expression: has_ticket is already True (it doesn't need to be computed further), and age >= 18 is False (15 is not at least 18).",
+        "or needs only one side True: True or False evaluates to True."
+      ],
+      "answer": "Both expressions evaluate to True."
+    },
+    "practice": [
+      {
+        "problem": "Given x = 4, evaluate x > 0 and x < 10.",
+        "solution": "x > 0 is True (4 is greater than 0), and x < 10 is True (4 is less than 10). Since and needs both sides True: True and True evaluates to True."
+      },
+      {
+        "problem": "Given x = 4, evaluate x < 0 or x > 100.",
+        "solution": "x < 0 is False, and x > 100 is False. Since or needs at least one side True and neither is: False or False evaluates to False."
+      },
+      {
+        "problem": "Given is_raining = False, evaluate not is_raining.",
+        "solution": "not flips the bool to its opposite. is_raining is False, so not is_raining evaluates to True."
+      },
+      {
+        "problem": "Given score = 55, evaluate score >= 60 and score < 70.",
+        "solution": "score >= 60 is False (55 is not at least 60). Since one side of and is already False, the whole expression is False regardless of the other side — no need to even check it. Result: False."
+      },
+      {
+        "problem": "Given age = 20, evaluate not (age < 18).",
+        "solution": "First evaluate the inside: age < 18 is False (20 is not less than 18). Then not flips it: not False evaluates to True."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "When does an and expression evaluate to True?",
+        "choices": [
+          "Only when both sides are True",
+          "When at least one side is True",
+          "Always, no matter what",
+          "Only when both sides are False"
+        ],
+        "answerIndex": 0,
+        "explanation": "and requires both sides to be True; if either side is False, the whole expression is False."
+      },
+      {
+        "type": "mc",
+        "question": "Given p = True and q = False, what does p or q evaluate to?",
+        "choices": [
+          "True",
+          "False",
+          "p",
+          "It cannot be determined"
+        ],
+        "answerIndex": 0,
+        "explanation": "or only needs one side to be True. p is True, so p or q evaluates to True regardless of q."
+      },
+      {
+        "type": "short",
+        "question": "Given x = 5, what does not (x == 5) evaluate to?",
+        "answer": "False",
+        "acceptable": [
+          "False",
+          "false"
+        ],
+        "explanation": "x == 5 is True (x really does equal 5), and not flips True to False."
+      },
+      {
+        "type": "short",
+        "question": "Given n = 8, what does n > 0 and n < 5 evaluate to?",
+        "answer": "False",
+        "acceptable": [
+          "False",
+          "false"
+        ],
+        "explanation": "n > 0 is True, but n < 5 is False (8 is not less than 5). Since and requires both sides True, the result is False."
+      },
+      {
+        "type": "mc",
+        "question": "Which boolean operator flips True to False and False to True?",
+        "choices": [
+          "not",
+          "and",
+          "or",
+          "=="
+        ],
+        "answerIndex": 0,
+        "explanation": "not reverses a bool to its opposite value — the same \"undo\" idea as a double negative flipping back to positive."
+      }
+    ]
+  },
+  {
+    "id": "2.9",
+    "number": 9,
+    "title": "if / else — making decisions and Python's indentation rule",
+    "objectives": [
+      "Write an if statement that runs code only when a condition is True",
+      "Add an else block that runs when the condition is False",
+      "Explain how Python uses indentation to group lines into a block",
+      "Trace which block of an if/else actually runs, given a variable's value"
+    ],
+    "explanation": [
+      "Every program you've written so far runs every single line, every single time, top to bottom, no exceptions. Real programs usually need to behave differently depending on the situation — show a \"you win\" message only if the score is high enough, or a different one otherwise. That's exactly what an if statement does: it runs a block of code only when a given condition (a bool, from the last two lessons) evaluates to True, and skips that block entirely when the condition is False.",
+      "The syntax looks like this:\nif age >= 13:\n    print('Welcome, teen!')\nThe line starts with if, followed by a condition, followed by a colon (:). The line right after it, print('Welcome, teen!'), is indented — pushed in with extra spaces at the start of the line. That indentation is not just for looks: in Python, it's the actual rule that decides which lines belong \"inside\" the if. Unlike math, where grouping is shown with parentheses (from Phase 1's PEMDAS lesson), Python groups blocks of code purely by how far each line is indented. Every line indented directly under the if is part of what runs only when the condition is True; the moment a line goes back to the same indentation as the if itself, it's outside the block again, and runs regardless of the condition.",
+      "else gives you the other branch: an optional partner block that runs exactly when the if's condition was False. \nif age >= 13:\n    print('Welcome, teen!')\nelse:\n    print('Welcome, kid!')\nHere, exactly one of the two print() lines runs each time the program executes — never both, never neither. If age is 15, the condition is True, so only the first message prints and the else block is skipped entirely; if age is 9, the condition is False, so only the second message prints.",
+      "It helps to think of if/else the same way you think of the two branches of a fork in a path — you take exactly one of them, based on the True-or-False answer to a single question. As your programs grow, an entire block's worth of behavior can hinge on that one question, which is why getting the condition right (using the comparison and boolean operators from the last two lessons) and the indentation right (so Python knows exactly which lines belong to which branch) both matter enormously."
+    ],
+    "example": {
+      "problem": "Predict what this program prints, given score = 42:\nif score >= 50:\n    print('You passed!')\nelse:\n    print('Keep practicing.')\nprint('Program finished.')",
+      "steps": [
+        "First, evaluate the condition: score >= 50. Since score is 42, this is False.",
+        "Because the condition is False, the indented block right under if is skipped entirely — nothing from it runs.",
+        "Because the condition was False, the indented block under else DOES run: print('Keep practicing.') executes.",
+        "print('Program finished.') is not indented under either branch, so it always runs regardless of the condition, right after the if/else finishes."
+      ],
+      "answer": "The program prints two lines: Keep practicing. then Program finished."
+    },
+    "practice": [
+      {
+        "problem": "Given temp = 85, predict the output:\nif temp > 90:\n    print('Very hot')\nelse:\n    print('Not too bad')",
+        "solution": "temp > 90 is False (85 is not greater than 90), so the else block runs instead: Not too bad."
+      },
+      {
+        "problem": "Given x = 7, predict the output:\nif x % 2 == 0:\n    print('even')\nelse:\n    print('odd')",
+        "solution": "x % 2 computes the remainder when 7 is divided by 2, which is 1, so x % 2 == 0 evaluates to False. The else block runs: odd."
+      },
+      {
+        "problem": "What determines which lines are considered \"inside\" an if block in Python?",
+        "solution": "Indentation. Every line indented directly under the if line (by the same consistent amount) is part of that block; a line that returns to the same indentation level as the if itself is no longer part of the block, no matter what it does."
+      },
+      {
+        "problem": "Given has_key = True, predict the output:\nif has_key:\n    print('Door unlocked')\nelse:\n    print('Door stays locked')",
+        "solution": "has_key is already a bool (True), so it can be used directly as the condition with no comparison needed — it evaluates to True, so the if block runs: Door unlocked."
+      },
+      {
+        "problem": "In an if/else, is it possible for both blocks to run in the same pass through the code? Why or why not?",
+        "solution": "No. The condition evaluates to exactly one of True or False, and exactly one branch corresponds to each outcome — so exactly one of the two blocks runs, never both and never neither."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What decides which lines belong inside an if block in Python?",
+        "choices": [
+          "Indentation — how far the lines are pushed in from the left",
+          "Parentheses around the lines",
+          "The color of the text",
+          "The order the lines were typed in"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python uses indentation, not parentheses or any other symbol, to group lines into a block that belongs to an if (or any other structure with a colon)."
+      },
+      {
+        "type": "mc",
+        "question": "Given n = 3, what does this print?\nif n > 5:\n    print('big')\nelse:\n    print('small')",
+        "choices": [
+          "small",
+          "big",
+          "Both small and big",
+          "Nothing"
+        ],
+        "answerIndex": 0,
+        "explanation": "n > 5 is False (3 is not greater than 5), so the else block runs, printing small."
+      },
+      {
+        "type": "short",
+        "question": "In an if/else statement, how many of the two blocks run during a single pass through the code?",
+        "answer": "1",
+        "acceptable": [
+          "1",
+          "one",
+          "exactly one"
+        ],
+        "explanation": "Exactly one block runs — the if block when the condition is True, or the else block when it's False — never both, never neither."
+      },
+      {
+        "type": "short",
+        "question": "Given passed = True, what does this print?\nif passed:\n    print('Pass')\nelse:\n    print('Fail')",
+        "answer": "Pass",
+        "acceptable": [
+          "Pass",
+          "'Pass'"
+        ],
+        "explanation": "passed is already a bool with value True, so the if condition is True and its block runs, printing Pass."
+      },
+      {
+        "type": "mc",
+        "question": "What symbol must end the line that starts an if statement?",
+        "choices": [
+          "A colon (:)",
+          "A semicolon (;)",
+          "A period (.)",
+          "An equals sign (=)"
+        ],
+        "answerIndex": 0,
+        "explanation": "An if line always ends with a colon, which signals that an indented block follows."
+      }
+    ]
+  },
+  {
+    "id": "2.10",
+    "number": 10,
+    "title": "if / elif / else — handling more than two outcomes",
+    "objectives": [
+      "Write an if/elif/else chain to handle three or more possible outcomes",
+      "Explain that Python runs only the first True branch and skips the rest",
+      "Order conditions correctly when ranges could overlap",
+      "Trace which branch of a chain runs for a given value"
+    ],
+    "explanation": [
+      "if/else only ever covers two outcomes — but plenty of real decisions have more than two. What if a program needs to sort a score into an A, B, C, or F range? Python's answer is elif, short for \"else if,\" which lets you check additional conditions in sequence, all part of the same chain: if / elif / elif / ... / else.",
+      "if score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelif score >= 70:\n    print('C')\nelse:\n    print('F')\nPython checks the conditions from top to bottom, in order, and runs the block belonging to the FIRST one that evaluates to True — then it skips every remaining condition in the chain entirely, even if a later one would also have been True. This is the single most important rule to understand about elif chains, and it's exactly why the order of the conditions matters so much.",
+      "Picture score = 95. The first condition, score >= 90, is True, so Python runs print('A') and then jumps straight past every remaining elif and the else, without even checking them. Now picture the conditions written in the wrong order: if score >= 70: ... elif score >= 90: ... — a 95 would get caught by score >= 70 (which is also True for 95) before ever reaching the score >= 90 check, incorrectly reporting a C instead of an A. Whenever ranges could overlap like this, the most restrictive or highest condition needs to come first in the chain, exactly so the right one gets caught before a looser one steals it.",
+      "This top-to-bottom, first-match-wins behavior connects directly to how you evaluated expressions in Phase 1 by plugging a specific value in for x and working through the result — here, you're similarly \"plugging in\" the variable's current value against each condition in order, until you find the first one that comes out True. The else at the end is optional but a common safety net, catching any value that didn't match any of the conditions above it — for the grade example, anything below 70."
+    ],
+    "example": {
+      "problem": "Given score = 82, trace this chain and predict what prints:\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelif score >= 70:\n    print('C')\nelse:\n    print('F')",
+      "steps": [
+        "Check the first condition: score >= 90. Is 82 >= 90? No, this is False. Skip this block and move to the next condition.",
+        "Check the next condition: score >= 80. Is 82 >= 80? Yes, this is True.",
+        "Run the block belonging to this condition: print('B').",
+        "Because a True condition was already found and its block ran, Python skips every remaining elif and the else entirely, without checking them."
+      ],
+      "answer": "The program prints: B"
+    },
+    "practice": [
+      {
+        "problem": "Given temp = 45, trace this chain:\nif temp >= 80:\n    print('hot')\nelif temp >= 50:\n    print('mild')\nelse:\n    print('cold')",
+        "solution": "temp >= 80 is False (45 is not >= 80). temp >= 50 is also False (45 is not >= 50). Since neither condition was True, the else block runs: cold."
+      },
+      {
+        "problem": "A student writes a grade chain but puts the conditions in this order: if score >= 70: ... elif score >= 90: .... For score = 95, what prints, and why is this a bug?",
+        "solution": "score >= 70 is checked first and is True for 95, so its block runs and everything after (including the score >= 90 check) is skipped — a 95 incorrectly gets the score >= 70 result instead of the intended score >= 90 result. The conditions need to be reordered from highest to lowest so the more restrictive, higher check happens first."
+      },
+      {
+        "problem": "Given n = 0, trace this chain:\nif n > 0:\n    print('positive')\nelif n < 0:\n    print('negative')\nelse:\n    print('zero')",
+        "solution": "n > 0 is False (0 is not greater than 0). n < 0 is also False (0 is not less than 0). Neither condition matched, so the else block runs: zero."
+      },
+      {
+        "problem": "In an if/elif/else chain, if the very first condition is True, does Python still check the remaining elif conditions?",
+        "solution": "No. As soon as Python finds the first True condition, it runs that block and then skips every remaining elif and the else entirely — it never checks them, even if one of them would also have been True."
+      },
+      {
+        "problem": "Given age = 17, trace this chain:\nif age >= 18:\n    print('adult')\nelif age >= 13:\n    print('teen')\nelse:\n    print('child')",
+        "solution": "age >= 18 is False (17 is not >= 18). age >= 13 is True (17 is >= 13). This block runs: teen. The else is skipped since a True branch was already found."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In an if/elif/else chain, how many blocks run during a single pass through the code?",
+        "choices": [
+          "At most one — the first one whose condition is True",
+          "Every block whose condition is True",
+          "Always all of them",
+          "Always exactly the last elif"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python checks conditions top to bottom and runs only the block for the first True one, then skips the rest of the chain entirely."
+      },
+      {
+        "type": "mc",
+        "question": "Why must the highest/most restrictive condition come first when ranges could overlap?",
+        "choices": [
+          "Because Python stops checking after the first True condition, so a looser earlier condition could wrongly catch a value meant for a later, stricter one",
+          "Because Python always checks conditions from bottom to top",
+          "It doesn't matter what order the conditions are in",
+          "Because elif requires conditions to be in alphabetical order"
+        ],
+        "answerIndex": 0,
+        "explanation": "Since only the first True condition's block runs, a looser condition placed earlier would catch values that were meant to be caught by a stricter, later condition."
+      },
+      {
+        "type": "short",
+        "question": "Given score = 65, what prints? if score >= 90: print('A') / elif score >= 70: print('C') / else: print('F')",
+        "answer": "F",
+        "acceptable": [
+          "F",
+          "'F'"
+        ],
+        "explanation": "score >= 90 is False and score >= 70 is also False (65 is not >= 70), so neither elif matches and the else block runs, printing F."
+      },
+      {
+        "type": "short",
+        "question": "What keyword lets you check an additional condition after an if, as part of the same chain?",
+        "answer": "elif",
+        "acceptable": [
+          "elif"
+        ],
+        "explanation": "elif (short for \"else if\") lets you add another condition to the same if/else chain."
+      },
+      {
+        "type": "mc",
+        "question": "Given x = 10, what prints? if x > 20: print('big') / elif x > 5: print('medium') / elif x > 0: print('small') / else: print('zero or negative')",
+        "choices": [
+          "medium",
+          "big",
+          "small",
+          "zero or negative"
+        ],
+        "answerIndex": 0,
+        "explanation": "x > 20 is False. x > 5 is True (10 is greater than 5), so this block runs, printing medium — the remaining elif and else are skipped even though x > 0 would also have been True."
+      }
+    ]
+  },
+  {
+    "id": "2.11",
+    "number": 11,
+    "title": "for loops and range()",
+    "objectives": [
+      "Explain what a for loop does and why it avoids repeating code by hand",
+      "Use range() to generate a sequence of numbers for a loop to run over",
+      "Explain range()'s zero-start, exclusive-end behavior",
+      "Use the loop variable inside a for loop's block"
+    ],
+    "explanation": [
+      "Suppose you wanted to print 'Hello!' five times. You could write print('Hello!') five separate times, but that gets unwieldy fast — imagine needing it 500 times, or a number that isn't even known until the program runs. A for loop solves this: it repeats an indented block of code (using the same indentation rule from the if/else lesson) a set number of times, without you having to write that block out more than once. This is the same repeated-action idea behind multiplication as repeated addition, from all the way back in Phase 1's very first lessons — a loop is just \"do this thing over and over\" made explicit and controllable.",
+      "The most common way to control how many times a for loop runs is with range(). range(5) produces the sequence of whole numbers 0, 1, 2, 3, 4 — five numbers in total. Two details are easy to trip over here, so it's worth stating them plainly: range() always starts counting at 0, not 1, and it stops just BEFORE the number you give it, never including it. range(5) gives you five numbers, but the last one is 4, not 5. \nfor i in range(5):\n    print(i)\nprints five lines: 0, 1, 2, 3, then 4 — one line per pass through the loop, with the loop variable i taking on each value in the sequence, in order.",
+      "range() also accepts two or three arguments for more control. range(start, stop) counts from start up to (but not including) stop: range(2, 6) gives 2, 3, 4, 5. range(start, stop, step) additionally lets you control the size of each jump: range(0, 10, 2) counts by twos, giving 0, 2, 4, 6, 8. In every case, the ending number you give range() is never actually included in the sequence — the loop always stops one step short of it.",
+      "The loop variable (i in the examples above — though it can be named anything, like count or n) is just a regular variable, created fresh and updated automatically by the loop itself on every pass. You can use it inside the block for anything you need — printing it, doing math with it, or simply ignoring it entirely if all you need is to repeat something a fixed number of times without caring which repeat you're currently on."
+    ],
+    "example": {
+      "problem": "Predict the exact output of this program:\nfor i in range(3):\n    print(f'Lap {i}')\nprint('Done!')",
+      "steps": [
+        "range(3) produces the sequence 0, 1, 2 — three numbers, starting at 0, stopping just before 3.",
+        "The loop runs its indented block once per value in that sequence. First pass: i is 0, so print(f'Lap {i}') prints Lap 0.",
+        "Second pass: i is 1, printing Lap 1.",
+        "Third pass: i is 2, printing Lap 2. The sequence is now exhausted, so the loop ends.",
+        "print('Done!') is not indented under the for loop, so it runs once, after the loop finishes."
+      ],
+      "answer": "The program prints four lines: Lap 0, Lap 1, Lap 2, then Done!"
+    },
+    "practice": [
+      {
+        "problem": "How many times does the block inside for i in range(7): run, and what is the very last value i takes on?",
+        "solution": "range(7) produces 7 numbers: 0, 1, 2, 3, 4, 5, 6. The block runs 7 times, and the last value i takes on is 6 (not 7, since range() always stops just before its argument)."
+      },
+      {
+        "problem": "Predict the output:\nfor n in range(1, 4):\n    print(n)",
+        "solution": "range(1, 4) counts from 1 up to (but not including) 4, giving 1, 2, 3. The loop prints three lines: 1, then 2, then 3."
+      },
+      {
+        "problem": "Predict the output:\nfor n in range(0, 10, 5):\n    print(n)",
+        "solution": "range(0, 10, 5) starts at 0, stops before 10, and jumps by 5 each time: 0, 5. (10 itself is not included, since the stop value is always excluded.) The loop prints two lines: 0, then 5."
+      },
+      {
+        "problem": "Write a for loop that prints the word 'Go!' exactly four times.",
+        "solution": "for i in range(4):\n    print('Go!')\nThis repeats the block 4 times (i takes values 0, 1, 2, 3), and the loop variable i doesn't need to be used inside the block at all, since only the repeat count matters here."
+      },
+      {
+        "problem": "Predict the total number of lines printed:\nfor i in range(2, 8, 2):\n    print(i)",
+        "solution": "range(2, 8, 2) starts at 2, stops before 8, jumping by 2: 2, 4, 6. That's 3 values, so 3 lines are printed: 2, 4, then 6."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What sequence of numbers does range(4) produce?",
+        "choices": [
+          "0, 1, 2, 3",
+          "1, 2, 3, 4",
+          "0, 1, 2, 3, 4",
+          "4, 3, 2, 1"
+        ],
+        "answerIndex": 0,
+        "explanation": "range() always starts at 0 and stops just before its argument, so range(4) gives four numbers: 0, 1, 2, 3."
+      },
+      {
+        "type": "mc",
+        "question": "How many times does the block inside for x in range(6): run?",
+        "choices": [
+          "6",
+          "5",
+          "7",
+          "0"
+        ],
+        "answerIndex": 0,
+        "explanation": "range(6) produces exactly 6 numbers (0 through 5), so the loop body runs 6 times."
+      },
+      {
+        "type": "short",
+        "question": "What is the last value the loop variable takes on in for i in range(5):?",
+        "answer": "4",
+        "acceptable": [
+          "4"
+        ],
+        "explanation": "range(5) produces 0, 1, 2, 3, 4 — the last value is 4, since range() always stops just before the number given, so 5 itself is never included."
+      },
+      {
+        "type": "short",
+        "question": "What does range(3, 6) produce, as a sequence of numbers?",
+        "answer": "3, 4, 5",
+        "acceptable": [
+          "3,4,5",
+          "3 4 5"
+        ],
+        "explanation": "range(start, stop) counts from start up to (but not including) stop, so range(3, 6) gives 3, 4, 5."
+      },
+      {
+        "type": "mc",
+        "question": "What does range(0, 12, 4) produce?",
+        "choices": [
+          "0, 4, 8",
+          "0, 4, 8, 12",
+          "4, 8, 12",
+          "0, 3, 6, 9"
+        ],
+        "answerIndex": 0,
+        "explanation": "range(start, stop, step) starts at 0, jumps by 4 each time, and always stops before reaching 12 (never including it): 0, 4, 8."
+      }
+    ]
+  },
+  {
+    "id": "2.12",
+    "number": 12,
+    "title": "while loops",
+    "objectives": [
+      "Explain how a while loop repeats based on a condition rather than a fixed count",
+      "Compare when to use a for loop versus a while loop",
+      "Explain why something inside a while loop must eventually make its condition False",
+      "Trace a while loop's execution step by step"
+    ],
+    "explanation": [
+      "A for loop with range() is perfect when you know exactly how many times you want to repeat something in advance. But plenty of real situations don't work that way — you might want to \"keep asking the user for a password until they get it right\" or \"keep doubling a number until it passes 1000,\" where the number of repeats isn't fixed ahead of time; it depends on what happens as the program runs. That's exactly what a while loop is for: it repeats its indented block for as long as a given condition (a bool, just like an if's condition) stays True, rechecking that condition fresh before every single pass through the block.",
+      "count = 0\nwhile count < 3:\n    print(count)\n    count = count + 1\nHere, Python checks count < 3 before every pass. First pass: count is 0, 0 < 3 is True, so the block runs — it prints 0, then updates count to 1. Second pass: count is 1, 1 < 3 is still True, so it prints 1 and updates count to 2. Third pass: count is 2, 2 < 3 is still True, so it prints 2 and updates count to 3. Fourth check: count is now 3, and 3 < 3 is False, so the loop stops without running the block again.",
+      "That count = count + 1 line inside the block is doing essential work, and it's worth naming explicitly why: something inside a while loop's block MUST eventually make its condition become False, or the loop will repeat forever — an infinite loop that never lets the rest of the program run. If that update line were accidentally left out, count would stay at 0 forever, count < 3 would stay True forever, and the loop would never stop. This is the single biggest gotcha with while loops, and it's exactly the kind of bug worth double-checking for by name every time you write one: \"what, inside this loop, is guaranteed to eventually make the condition False?\"",
+      "As a rule of thumb: reach for a for loop when you know the number of repeats in advance (or can express it as a range of numbers), and reach for a while loop when you're repeating until some condition changes and you can't say in advance exactly how many passes that will take."
+    ],
+    "example": {
+      "problem": "Trace this program and predict its output:\ntotal = 0\nwhile total < 10:\n    total = total + 4\n    print(total)",
+      "steps": [
+        "Check the condition before the first pass: total is 0, and 0 < 10 is True, so the block runs. total becomes 0 + 4 = 4, and print(total) shows 4.",
+        "Check the condition again: total is 4, and 4 < 10 is True, so the block runs again. total becomes 4 + 4 = 8, and print(total) shows 8.",
+        "Check the condition again: total is 8, and 8 < 10 is True, so the block runs again. total becomes 8 + 4 = 12, and print(total) shows 12.",
+        "Check the condition again: total is 12, and 12 < 10 is False, so the loop stops without running the block again."
+      ],
+      "answer": "The program prints three lines: 4, 8, then 12."
+    },
+    "practice": [
+      {
+        "problem": "Trace this program:\nn = 5\nwhile n > 0:\n    print(n)\n    n = n - 1",
+        "solution": "n starts at 5. Each pass prints n's current value, then subtracts 1. Passes print, in order: 5, 4, 3, 2, 1. After the pass where n becomes 0, the condition n > 0 is False, so the loop stops. Output: 5, 4, 3, 2, 1."
+      },
+      {
+        "problem": "What is wrong with this loop, and what will happen if it runs?\ncount = 0\nwhile count < 5:\n    print('hello')",
+        "solution": "The block never changes count, so count stays 0 forever, and count < 5 stays True forever — this is an infinite loop that will keep printing 'hello' without ever stopping. It needs a line like count = count + 1 inside the block to eventually make the condition False."
+      },
+      {
+        "problem": "Would you use a for loop or a while loop to print the numbers 1 through 20? Why?",
+        "solution": "A for loop, because the exact number of repeats (20) is known in advance — for i in range(1, 21): print(i) is a natural fit. A while loop would work too but is a less natural choice when the repeat count is already known."
+      },
+      {
+        "problem": "Would you use a for loop or a while loop to keep asking a user to type 'yes' until they actually do? Why?",
+        "solution": "A while loop, because you don't know in advance how many times the user will need to be asked — the loop needs to keep going based on a changing condition (whether they've typed 'yes' yet), not a fixed count."
+      },
+      {
+        "problem": "Trace this program:\nx = 1\nwhile x < 20:\n    x = x * 2\nprint(x)",
+        "solution": "x starts at 1. Pass 1: 1 < 20 is True, x becomes 1 * 2 = 2. Pass 2: 2 < 20 is True, x becomes 2 * 2 = 4. Pass 3: 4 < 20 is True, x becomes 4 * 2 = 8. Pass 4: 8 < 20 is True, x becomes 8 * 2 = 16. Pass 5: 16 < 20 is True, x becomes 16 * 2 = 32. Pass 6: 32 < 20 is False, loop stops. print(x) shows 32."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What determines how many times a while loop's block runs?",
+        "choices": [
+          "Whether its condition is still True, rechecked before every pass",
+          "A fixed count set by range()",
+          "The number of variables in the program",
+          "It always runs exactly once"
+        ],
+        "answerIndex": 0,
+        "explanation": "A while loop keeps running its block as long as its condition evaluates to True, checking fresh before every single pass."
+      },
+      {
+        "type": "mc",
+        "question": "Why must something inside a while loop's block eventually make the condition False?",
+        "choices": [
+          "Otherwise the loop runs forever (an infinite loop)",
+          "Otherwise Python refuses to start the loop at all",
+          "It's just a style preference, not a requirement",
+          "Because while loops are only allowed to run once"
+        ],
+        "answerIndex": 0,
+        "explanation": "If nothing inside the loop ever changes the condition to False, the loop keeps repeating forever, since the condition is rechecked and stays True every time."
+      },
+      {
+        "type": "short",
+        "question": "Given n = 2, how many times does this loop's block run? while n < 20: n = n * 2",
+        "answer": "4",
+        "acceptable": [
+          "4"
+        ],
+        "explanation": "n goes 2 -> 4 (pass 1, since 2 < 20) -> 8 (pass 2, since 4 < 20) -> 16 (pass 3, since 8 < 20) -> 32 (pass 4, since 16 < 20). After pass 4, n is 32, and 32 < 20 is False, so it stops. The block ran 4 times."
+      },
+      {
+        "type": "short",
+        "question": "When you know exactly how many times you want to repeat something in advance, which loop is usually the more natural choice: for or while?",
+        "answer": "for",
+        "acceptable": [
+          "for",
+          "for loop"
+        ],
+        "explanation": "A for loop (often with range()) is the natural choice when the number of repeats is known ahead of time; a while loop is better suited to repeating until a condition changes, when the count isn't known in advance."
+      },
+      {
+        "type": "mc",
+        "question": "What will this loop do?\nx = 5\nwhile x > 0:\n    print(x)",
+        "choices": [
+          "Run forever, since x is never changed and x > 0 stays True",
+          "Print 5 once and stop",
+          "Print 5, 4, 3, 2, 1 and stop",
+          "Cause an immediate error"
+        ],
+        "answerIndex": 0,
+        "explanation": "The block never updates x, so x stays 5 forever, and x > 0 never becomes False — this is an infinite loop."
+      }
+    ]
+  },
+  {
+    "id": "2.13",
+    "number": 13,
+    "title": "Lists — creating, indexing, len(), and append()",
+    "objectives": [
+      "Create a list and explain how it differs from a single-value variable",
+      "Access list items using zero-based indexing",
+      "Use len() to find how many items are in a list",
+      "Add items with append() and change an item by index"
+    ],
+    "explanation": [
+      "Every variable you've used so far has held exactly one value at a time. A list changes that: it's a single variable that holds an ORDERED collection of multiple values together, all under one name. You create one with square brackets, separating the items with commas: scores = [85, 92, 78]. Now scores isn't one number — it's a whole ordered group of three numbers, stored under a single variable name, and you can grow it, shrink it, or change individual items inside it as your program runs.",
+      "Each item in a list sits at a position called an index, and here's the detail that trips almost everyone up at first: Python starts counting positions from 0, not 1. This is the exact same zero-start pattern you just saw with range() in an earlier lesson — it's not a coincidence, it's how Python counts positions in general. So for scores = [85, 92, 78], scores[0] is the FIRST item, 85; scores[1] is the second item, 92; and scores[2] is the third and last item, 78. Trying to access scores[3] would cause an error, since there is no fourth item — the last valid index is always one less than the number of items in the list.",
+      "len(), the exact same tool from the strings lesson, works on lists too — there, it counted characters in a string; here, it counts items in a list. len(scores) is 3. This is a nice pattern worth noticing: len() always answers the same question, \"how many things are in this?\", no matter what kind of collection you hand it.",
+      "Two more essential list tools: append(value) adds a new item onto the very end of the list, growing it by one — scores.append(90) turns [85, 92, 78] into [85, 92, 78, 90]. And you can change an existing item in place by assigning to its index, reusing the same assignment idea from the variables lesson but applied to just one slot of the list: scores[1] = 95 overwrites only the second item, turning [85, 92, 78] into [85, 95, 78] — the other two items are untouched."
+    ],
+    "example": {
+      "problem": "Given scores = [70, 82, 91], trace this program and predict its final output:\nscores.append(88)\nscores[0] = 75\nprint(scores)\nprint(len(scores))\nprint(scores[2])",
+      "steps": [
+        "scores starts as [70, 82, 91].",
+        "scores.append(88) adds 88 onto the end: scores becomes [70, 82, 91, 88].",
+        "scores[0] = 75 overwrites the item at index 0 (the first item, currently 70) with 75: scores becomes [75, 82, 91, 88].",
+        "print(scores) shows the whole list: [75, 82, 91, 88].",
+        "print(len(scores)) shows how many items are in the list, which is 4.",
+        "print(scores[2]) shows the item at index 2 — counting from 0, that's the third item, 91."
+      ],
+      "answer": "The program prints: [75, 82, 91, 88], then 4, then 91."
+    },
+    "practice": [
+      {
+        "problem": "Given colors = ['red', 'blue', 'green'], what is colors[1]?",
+        "solution": "Indexing starts at 0, so colors[0] is 'red' (first item) and colors[1] is 'blue' (second item)."
+      },
+      {
+        "problem": "Given nums = [4, 8, 15], what is len(nums), and what is the largest valid index you can use?",
+        "solution": "len(nums) is 3, since there are 3 items. The largest valid index is always one less than the length, so the largest valid index here is 2 (nums[2] is the last item, 15)."
+      },
+      {
+        "problem": "Given items = [1, 2, 3], predict the list after items.append(4) runs.",
+        "solution": "append() adds the new value onto the end: items becomes [1, 2, 3, 4]."
+      },
+      {
+        "problem": "Given nums = [10, 20, 30], predict the list after nums[1] = 99 runs.",
+        "solution": "nums[1] refers to the item at index 1, the second item (currently 20). Assigning to it overwrites just that one slot: nums becomes [10, 99, 30]."
+      },
+      {
+        "problem": "Given fruits = ['apple', 'pear'], explain why fruits[2] would cause an error.",
+        "solution": "fruits has only 2 items, at valid indexes 0 ('apple') and 1 ('pear'). Index 2 would be a nonexistent third item, so trying to access fruits[2] causes an error — the largest valid index is always length minus one, which here is 1."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In Python, what index does the FIRST item of a list have?",
+        "choices": [
+          "0",
+          "1",
+          "-1",
+          "It depends on the list"
+        ],
+        "answerIndex": 0,
+        "explanation": "Python lists are zero-indexed — the first item is always at index 0, the second at index 1, and so on."
+      },
+      {
+        "type": "mc",
+        "question": "Given nums = [3, 6, 9, 12], what does nums[2] evaluate to?",
+        "choices": [
+          "9",
+          "3",
+          "6",
+          "12"
+        ],
+        "answerIndex": 0,
+        "explanation": "Counting from index 0: nums[0] is 3, nums[1] is 6, nums[2] is 9 — the third item."
+      },
+      {
+        "type": "short",
+        "question": "Given letters = ['a', 'b', 'c'], what does len(letters) evaluate to?",
+        "answer": "3",
+        "acceptable": [
+          "3"
+        ],
+        "explanation": "len() reports the number of items in the list, and there are 3: 'a', 'b', and 'c'."
+      },
+      {
+        "type": "short",
+        "question": "Which list method adds a new item onto the end of a list?",
+        "answer": "append()",
+        "acceptable": [
+          "append()",
+          "append",
+          ".append()"
+        ],
+        "explanation": "append(value) adds value onto the end of the list, growing it by one item."
+      },
+      {
+        "type": "mc",
+        "question": "Given nums = [5, 10, 15], what does nums become after nums[0] = 1 runs?",
+        "choices": [
+          "[1, 10, 15]",
+          "[5, 10, 15, 1]",
+          "[1, 5, 10, 15]",
+          "[15, 10, 5]"
+        ],
+        "answerIndex": 0,
+        "explanation": "nums[0] refers to the first item (5), and assigning to it overwrites just that one slot with 1, leaving the rest unchanged: [1, 10, 15]."
+      }
+    ]
+  },
+  {
+    "id": "2.14",
+    "number": 14,
+    "title": "Looping over lists — combining for loops and lists",
+    "objectives": [
+      "Loop over every item in a list with for item in list",
+      "Use for i in range(len(list)) when the index itself is also needed",
+      "Apply the accumulator pattern to total up values in a list",
+      "Choose between the two looping styles for a given task"
+    ],
+    "explanation": [
+      "Two of the most useful tools you now have — for loops and lists — combine into one of the most common patterns in all of programming: visiting every item in a list, one at a time, automatically. for item in my_list: lets you do exactly that, without managing index numbers by hand at all. \nfor score in scores:\n    print(score)\nHere, score takes on each value in the scores list in order, one per pass, exactly the same way the loop variable in a range()-based for loop took on each number in the sequence — just now it's taking on each list item instead of each number.",
+      "Sometimes you need the position (the index) as well as the value — maybe to also change an item while looping, or to print which position a value came from. For that, combine range() with len() (both from earlier lessons) like this: for i in range(len(scores)): lets i take on every valid index of scores, 0 up to (but not including) len(scores), and you can then use scores[i] inside the block to get the actual value at that position, or assign to scores[i] to change it. Use plain for item in list when you only need the values themselves; use for i in range(len(list)) when you also need to know (or change) the position.",
+      "One extremely common thing to do while looping over a list is add up its values — this is called the accumulator pattern, and you've already used half of it: the reassignment idea (score = score + 3) from the variables lesson. Start a total variable at 0 BEFORE the loop begins, then, inside the loop's block, add each item to it: \ntotal = 0\nfor score in scores:\n    total = total + score\nAfter the loop finishes, total holds the sum of every item that was in the list. This exact pattern — start at a starting value before the loop, update it on every pass inside the loop — comes up constantly in real programs, and you'll rely on it again in this phase's final project.",
+      "It's worth noticing why the total = 0 line has to come before the loop, not inside it: if it were inside the loop's block, it would reset total back to 0 on every single pass, wiping out everything added so far, and the loop would never actually accumulate anything."
+    ],
+    "example": {
+      "problem": "Given scores = [70, 85, 90], trace this program and predict its output:\ntotal = 0\nfor score in scores:\n    total = total + score\nprint(total)",
+      "steps": [
+        "Before the loop starts, total is set to 0.",
+        "First pass: score is 70 (the first item in scores). total = total + score computes 0 + 70 = 70, storing 70 into total.",
+        "Second pass: score is 85. total = total + score computes 70 + 85 = 155, storing 155 into total.",
+        "Third pass: score is 90. total = total + score computes 155 + 90 = 245, storing 245 into total.",
+        "The list is exhausted, so the loop ends. print(total) shows the final accumulated value."
+      ],
+      "answer": "The program prints: 245"
+    },
+    "practice": [
+      {
+        "problem": "Given names = ['Ana', 'Ben', 'Cy'], predict the output:\nfor name in names:\n    print(f'Hi, {name}!')",
+        "solution": "The loop visits each item in order, printing an f-string for each: Hi, Ana!, then Hi, Ben!, then Hi, Cy!"
+      },
+      {
+        "problem": "Given nums = [2, 4, 6, 8], trace and predict the final value of total:\ntotal = 0\nfor n in nums:\n    total = total + n",
+        "solution": "total starts at 0, then accumulates: 0+2=2, 2+4=6, 6+6=12, 12+8=20. Final value of total: 20."
+      },
+      {
+        "problem": "Given nums = [10, 20, 30], predict the output:\nfor i in range(len(nums)):\n    print(f'Index {i}: {nums[i]}')",
+        "solution": "range(len(nums)) is range(3), giving indexes 0, 1, 2. The loop prints: Index 0: 10, then Index 1: 20, then Index 2: 30."
+      },
+      {
+        "problem": "Why would total = 0 placed INSIDE the loop's block (instead of before it) break the accumulator pattern?",
+        "solution": "If total = 0 were inside the loop, it would reset total back to 0 at the start of every single pass, erasing whatever had already been added — the loop would never actually build up a running sum, and total would just end up holding the value of the last item added to 0."
+      },
+      {
+        "problem": "Given prices = [3, 7, 2], would you use for price in prices or for i in range(len(prices)) to simply print each price, with no need for the index? Why?",
+        "solution": "for price in prices, since only the values are needed, not their positions — this style is simpler and more direct whenever the index itself isn't required."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does for item in my_list: let you do?",
+        "choices": [
+          "Visit every item in the list, one at a time, in order, without managing index numbers by hand",
+          "Only visit the first item in the list",
+          "Delete every item in the list",
+          "Sort the list automatically"
+        ],
+        "answerIndex": 0,
+        "explanation": "This loop style takes on each value in the list in turn, letting you process every item without writing separate code for each index."
+      },
+      {
+        "type": "mc",
+        "question": "When should you use for i in range(len(my_list)) instead of for item in my_list?",
+        "choices": [
+          "When you also need the index (position), not just the value",
+          "It's never useful, always prefer for item in my_list",
+          "Only when the list is empty",
+          "Only for lists of strings"
+        ],
+        "answerIndex": 0,
+        "explanation": "for i in range(len(my_list)) gives you the index itself, which you can then use to look up or change my_list[i] — useful whenever the position matters, not just the value."
+      },
+      {
+        "type": "short",
+        "question": "Given nums = [1, 2, 3, 4], what is the final value of total after this runs? total = 0 / for n in nums: total = total + n",
+        "answer": "10",
+        "acceptable": [
+          "10"
+        ],
+        "explanation": "Accumulating: 0+1=1, 1+2=3, 3+3=6, 6+4=10. Final total: 10."
+      },
+      {
+        "type": "short",
+        "question": "In the accumulator pattern, where must the starting total = 0 line be placed relative to the loop?",
+        "answer": "before the loop",
+        "acceptable": [
+          "before",
+          "before the loop starts",
+          "outside and before the loop"
+        ],
+        "explanation": "total = 0 must run once, before the loop begins — if it were inside the loop's block, it would reset the total on every pass instead of accumulating."
+      },
+      {
+        "type": "mc",
+        "question": "Given nums = [5, 15, 25], what does for i in range(len(nums)): print(nums[i]) print?",
+        "choices": [
+          "5, then 15, then 25",
+          "0, then 1, then 2",
+          "Only 25",
+          "An error, since len(nums) can't be used in range()"
+        ],
+        "answerIndex": 0,
+        "explanation": "len(nums) is 3, so range(len(nums)) gives indexes 0, 1, 2. nums[i] for each of those indexes gives 5, 15, then 25 — the actual values, printed in order."
+      }
+    ]
+  },
+  {
+    "id": "2.15",
+    "number": 15,
+    "title": "Functions — def, parameters, and return",
+    "objectives": [
+      "Define a function with def, a parameter, and a return statement",
+      "Explain how a parameter works like the x in an algebraic expression",
+      "Distinguish return (hands back a usable value) from print (only displays)",
+      "Call a function and use its returned value"
+    ],
+    "explanation": [
+      "You've actually been using functions this entire phase without calling them that by name: print(), input(), len(), type(), int(), float(), str(), and range() are all functions Python already provides, ready-made — you just call them by name with parentheses. Now it's time to write your own. A function is a reusable, named block of instructions that you can run whenever you want, as many times as you want, by calling its name.",
+      "This connects directly back to Phase 1's expressions lessons: you learned to evaluate an expression like 2x + 3 by \"plugging in\" a specific value for x — plug in x = 5 and you get 13; plug in x = 10 and you get 23. A Python function works the same way, but can do much more than a single formula — its body can contain multiple steps, and (from the last several lessons) if/elif/else, loops, and lists, all packaged under one reusable name. def double(x):\n    return x * 2\nHere, def starts a function definition, double is the name you're giving it, and x — inside the parentheses — is a parameter: a placeholder variable name, exactly like the x in an algebra expression, that receives whatever value gets passed in when the function is actually called.",
+      "The indented body follows the same indentation rule from the if/else lesson — everything indented under the def line belongs to the function. return is the keyword that sends a value back out of the function to wherever it was called from, and it also immediately ends the function's execution at that point (any lines after a return inside the same function never run). This is an important and easy-to-blur distinction: print() only displays something on the screen — it doesn't hand anything back that the rest of the program can use. return actually hands a value back, so it can be stored in a variable, used in more math, or passed straight into another function. A function with print() inside it shows something; a function with return inside it gives something back you can actually use.",
+      "Writing def double(x): return x * 2 only defines the function — it doesn't run it yet, the same way writing down a recipe doesn't cook the meal. To actually run it, you call it by name with a value in the parentheses: double(5) runs the function with x set to 5, and evaluates to 10 (because of the return), which you can then store: result = double(5) stores 10 into result, or print it directly: print(double(5))."
+    ],
+    "example": {
+      "problem": "Given this function definition:\ndef square(x):\n    return x * x\nwhat does result = square(6) followed by print(result) do?",
+      "steps": [
+        "The def line defines the function square, which takes one parameter, x. Defining it doesn't run anything yet.",
+        "square(6) calls the function, matching the parameter x to the value 6.",
+        "Inside the function, return x * x computes 6 * 6 = 36 and hands that value back out to wherever the function was called.",
+        "result = square(6) stores that returned value, 36, into result.",
+        "print(result) displays result's current value."
+      ],
+      "answer": "The program prints: 36"
+    },
+    "practice": [
+      {
+        "problem": "Given def triple(n): return n * 3, what does triple(5) evaluate to?",
+        "solution": "The parameter n is matched to 5, so return n * 3 computes 5 * 3 = 15. triple(5) evaluates to 15."
+      },
+      {
+        "problem": "What is the key difference between a function that uses print(x) inside it and one that uses return x inside it?",
+        "solution": "print(x) only displays x's value on the screen — it doesn't give the rest of the program anything usable back. return x actually hands x's value back out of the function to wherever it was called, so it can be stored in a variable or used in further calculations."
+      },
+      {
+        "problem": "Write a function called add_five that takes one parameter, n, and returns n plus 5.",
+        "solution": "def add_five(n):\n    return n + 5"
+      },
+      {
+        "problem": "Does writing def add_five(n): return n + 5 by itself cause anything to print or calculate immediately? Why or why not?",
+        "solution": "No — defining a function only creates it, it doesn't run it. The function's code only actually executes when the function is called later, like add_five(3)."
+      },
+      {
+        "problem": "Given def is_even(n): return n % 2 == 0, what does is_even(8) evaluate to, and what type is the result?",
+        "solution": "Inside the function, n is 8, so n % 2 computes the remainder of 8 divided by 2, which is 0. 0 == 0 evaluates to True. The result is the bool True."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What keyword do you use to start defining a function?",
+        "choices": [
+          "def",
+          "func",
+          "return",
+          "define"
+        ],
+        "answerIndex": 0,
+        "explanation": "def starts a function definition, followed by the function's name, parentheses (with any parameters), and a colon."
+      },
+      {
+        "type": "mc",
+        "question": "What is the main difference between print(x) and return x inside a function?",
+        "choices": [
+          "print only displays a value on screen; return hands the value back so the rest of the program can use it",
+          "They do exactly the same thing",
+          "return only works inside loops",
+          "print can only be used with numbers"
+        ],
+        "answerIndex": 0,
+        "explanation": "print() displays a value but gives nothing back to the calling code. return actually hands a usable value back out of the function."
+      },
+      {
+        "type": "short",
+        "question": "Given def cube(x): return x * x * x, what does cube(3) evaluate to?",
+        "answer": "27",
+        "acceptable": [
+          "27"
+        ],
+        "explanation": "The parameter x is matched to 3, and x * x * x computes 3 * 3 * 3 = 27, which is returned."
+      },
+      {
+        "type": "short",
+        "question": "In a function definition, what is the name for a placeholder variable (like x) that receives a value when the function is called?",
+        "answer": "parameter",
+        "acceptable": [
+          "parameter",
+          "a parameter"
+        ],
+        "explanation": "A parameter is a placeholder name inside a function's parentheses that gets matched to an actual value whenever the function is called."
+      },
+      {
+        "type": "mc",
+        "question": "What happens if you write a function definition but never call it anywhere in the program?",
+        "choices": [
+          "Nothing runs — the function's code only executes when it's actually called",
+          "It runs automatically once, right after being defined",
+          "Python causes an error immediately",
+          "It runs once for every other function in the program"
+        ],
+        "answerIndex": 0,
+        "explanation": "Defining a function only creates it, the same way writing a recipe doesn't cook the meal — its code only runs when the function is actually called by name."
+      }
+    ]
+  },
+  {
+    "id": "2.16",
+    "number": 16,
+    "title": "Functions with multiple parameters, and combining functions with loops and if",
+    "objectives": [
+      "Define and call a function with more than one parameter",
+      "Write a function whose body contains a loop and/or an if/elif/else",
+      "Use a default parameter value",
+      "Explain why functions help organize and reuse code"
+    ],
+    "explanation": [
+      "A function can take more than one parameter, separated by commas in the def line, and each one gets matched, in order, to the values supplied when the function is called. def add(a, b):\n    return a + b\nCalling add(3, 5) matches a to 3 and b to 5 (in that order), computing and returning 3 + 5 = 8. The order matters — add(3, 5) and add(5, 3) happen to give the same result here since addition doesn't care about order, but for an operation like subtraction, subtract(a, b) returning a - b, the order absolutely would change the answer.",
+      "A function's body isn't limited to a single line — it can contain anything you've learned so far: if/elif/else, for and while loops, lists, the accumulator pattern, all of it, wrapped up under one reusable name. Here's a function that counts how many items in a list are even, combining a for loop, an if, %  from the arithmetic lesson, and an accumulator: \ndef count_evens(nums):\n    count = 0\n    for n in nums:\n        if n % 2 == 0:\n            count = count + 1\n    return count\nNotice the nesting: the if is indented under the for loop, and the for loop's whole block is indented under the function — each level of indentation shows which structure a line belongs to, layered just like a math expression's parentheses can be layered inside other parentheses.",
+      "One more small but handy feature: default parameter values. def greet(name, greeting='Hello'):\n    return f'{greeting}, {name}!'\nlets you call greet('Maya') and it automatically fills in 'Hello' for greeting since you didn't supply one, giving 'Hello, Maya!' — or you can override the default by supplying your own second value: greet('Maya', 'Hi') gives 'Hi, Maya!' instead.",
+      "The whole point of functions is reuse and organization: writing the logic once inside a well-named function, then calling it as many times as needed with different values, instead of copy-pasting the same block of code over and over. A large program is, in the end, really just a collection of smaller, well-named functions calling each other — exactly the approach you'll use in this phase's final project."
+    ],
+    "example": {
+      "problem": "Given this function:\ndef count_evens(nums):\n    count = 0\n    for n in nums:\n        if n % 2 == 0:\n            count = count + 1\n    return count\nWhat does count_evens([3, 4, 7, 8, 10]) evaluate to?",
+      "steps": [
+        "count starts at 0.",
+        "First item, 3: 3 % 2 is 1, so 3 % 2 == 0 is False — the if block doesn't run, count stays 0.",
+        "Second item, 4: 4 % 2 is 0, so the if block runs — count becomes 0 + 1 = 1.",
+        "Third item, 7: 7 % 2 is 1, False — count stays 1.",
+        "Fourth item, 8: 8 % 2 is 0, True — count becomes 1 + 1 = 2.",
+        "Fifth item, 10: 10 % 2 is 0, True — count becomes 2 + 1 = 3.",
+        "The loop ends, and return count hands back count's final value."
+      ],
+      "answer": "count_evens([3, 4, 7, 8, 10]) evaluates to 3."
+    },
+    "practice": [
+      {
+        "problem": "Given def multiply(a, b): return a * b, what does multiply(4, 7) evaluate to?",
+        "solution": "a is matched to 4 and b is matched to 7, so a * b computes 4 * 7 = 28."
+      },
+      {
+        "problem": "Write a function called is_in_range that takes three parameters, n, low, and high, and returns True if n is between low and high (inclusive), False otherwise.",
+        "solution": "def is_in_range(n, low, high):\n    return n >= low and n <= high\nThis reuses the comparison and boolean operators from earlier lessons: the function returns the bool result of the and expression directly."
+      },
+      {
+        "problem": "Given def greet(name, greeting='Hi'): return f'{greeting}, {name}!', what does greet('Sam') evaluate to?",
+        "solution": "Since no second value was supplied, greeting uses its default value, 'Hi'. The result is 'Hi, Sam!'."
+      },
+      {
+        "problem": "Trace what sum_positive([2, -3, 5, -1, 4]) returns, given:\ndef sum_positive(nums):\n    total = 0\n    for n in nums:\n        if n > 0:\n            total = total + n\n    return total",
+        "solution": "total starts at 0. 2 is positive, total becomes 2. -3 is not positive, skipped. 5 is positive, total becomes 2+5=7. -1 is not positive, skipped. 4 is positive, total becomes 7+4=11. The function returns 11."
+      },
+      {
+        "problem": "Why is it useful to wrap the count_evens logic in a function instead of writing the loop out fresh every time you need it?",
+        "solution": "Wrapping it in a function lets you write the loop-and-if logic exactly once, then reuse it by calling count_evens(some_list) on as many different lists as needed, instead of copy-pasting the same block of code every time it's needed — the function name also makes the code's intent clear at a glance."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Given def subtract(a, b): return a - b, what does subtract(10, 4) evaluate to?",
+        "choices": [
+          "6",
+          "-6",
+          "14",
+          "40"
+        ],
+        "answerIndex": 0,
+        "explanation": "a is matched to 10 and b to 4, in that order, so a - b computes 10 - 4 = 6."
+      },
+      {
+        "type": "mc",
+        "question": "What is a default parameter value used for?",
+        "choices": [
+          "It's automatically used for a parameter when the caller doesn't supply a value for it",
+          "It forces every call to supply that value",
+          "It deletes the parameter",
+          "It only works with the return keyword"
+        ],
+        "answerIndex": 0,
+        "explanation": "A default value is filled in automatically whenever a call doesn't supply a value for that parameter — the caller can still override it by supplying their own value instead."
+      },
+      {
+        "type": "short",
+        "question": "Given def add(a, b): return a + b, what does add(6, 9) evaluate to?",
+        "answer": "15",
+        "acceptable": [
+          "15"
+        ],
+        "explanation": "a is matched to 6 and b to 9, so a + b computes 6 + 9 = 15."
+      },
+      {
+        "type": "short",
+        "question": "Can a function's body contain a for loop and an if statement together? (yes/no)",
+        "answer": "yes",
+        "acceptable": [
+          "yes",
+          "Yes"
+        ],
+        "explanation": "Yes — a function's body can contain anything covered so far, including loops, if/elif/else, and lists, all nested together using indentation."
+      },
+      {
+        "type": "mc",
+        "question": "In def add(a, b): return a + b, what does the ORDER of a and b in the call add(2, 9) determine?",
+        "choices": [
+          "Which value gets matched to a and which gets matched to b",
+          "Nothing, order never matters in Python",
+          "Whether the function returns or prints",
+          "The function's name"
+        ],
+        "answerIndex": 0,
+        "explanation": "Parameters are matched to the values in a call in order — the first value given matches the first parameter, and so on. Here, a gets 2 and b gets 9."
+      }
+    ]
+  },
+  {
+    "id": "2.17",
+    "number": 17,
+    "title": "Mini-project — a quiz-grader program that combines it all",
+    "objectives": [
+      "Combine variables, lists, loops, if/elif/else, and functions into one working program",
+      "Trace a multi-part program's execution from start to finish",
+      "Write and modify small pieces of a larger program correctly",
+      "Verify a program's output by checking it against each part of the logic"
+    ],
+    "explanation": [
+      "Ms. Alvarez teaches math down the hall, and she just asked for your help: she has a whole class of quiz scores to grade, and typing out feedback for each student by hand is taking forever. She wants a small Python program that takes a list of scores, prints personalized feedback for every student, and also reports the class average — exactly the kind of task you now have every tool for.",
+      "The plan combines everything from this phase. A list (from two lessons ago) holds all the scores together: scores = [95, 68, 82, 55, 74]. A function (from the last two lessons) computes the average, using the accumulator pattern from the lists-and-loops lesson: add up every score with a for loop, then divide the total by len(scores) — the same len() that's been counting characters and list items this whole phase. A for loop visits each score in order, and for each one, an if/elif/else chain (checking the score against grade boundaries, highest first, exactly like the grading example two lessons back) decides which feedback message applies, printed with an f-string.",
+      "def average(nums):\n    total = 0\n    for n in nums:\n        total = total + n\n    return total / len(nums)\n\nscores = [95, 68, 82, 55, 74]\nfor score in scores:\n    if score >= 90:\n        print(f'{score}: Excellent work!')\n    elif score >= 70:\n        print(f'{score}: Good job.')\n    elif score >= 60:\n        print(f'{score}: Needs review.')\n    else:\n        print(f'{score}: Please see me for extra help.')\n\nclass_average = average(scores)\nprint(f'Class average: {class_average}')",
+      "Notice how each piece is something you've already fully mastered on its own — a function definition, an accumulator loop inside it, a separate for loop over the same list, an if/elif/else chain nested inside that loop, and f-strings tying the output together — and the whole program is really just those familiar pieces, called in the right order, working together. That's the real shape of programming: not new tricks appearing out of nowhere, but familiar, individually simple tools combined to do something bigger than any one of them could alone."
+    ],
+    "example": {
+      "problem": "Using the program above, trace exactly what prints for scores = [95, 68, 82, 55, 74].",
+      "steps": [
+        "First, def average(nums): ... defines the function, but doesn't run it yet.",
+        "scores is set to [95, 68, 82, 55, 74].",
+        "The for loop begins. score = 95: 95 >= 90 is True, so it prints '95: Excellent work!' and skips the rest of that chain.",
+        "score = 68: 68 >= 90 is False, 68 >= 70 is False, 68 >= 60 is True, so it prints '68: Needs review.'",
+        "score = 82: 82 >= 90 is False, 82 >= 70 is True, so it prints '82: Good job.'",
+        "score = 55: all three comparisons are False, so the else runs: it prints '55: Please see me for extra help.'",
+        "score = 74: 74 >= 90 is False, 74 >= 70 is True, so it prints '74: Good job.'",
+        "The loop ends. class_average = average(scores) calls the function: total accumulates 95+68+82+55+74 = 374, and total / len(nums) computes 374 / 5 = 74.8, which is returned and stored.",
+        "The final print shows the f-string with class_average's value."
+      ],
+      "answer": "The program prints, in order: 95: Excellent work!, 68: Needs review., 82: Good job., 55: Please see me for extra help., 74: Good job., then Class average: 74.8"
+    },
+    "practice": [
+      {
+        "problem": "Using the average() function from the lesson, what does average([80, 90, 100]) evaluate to?",
+        "solution": "total accumulates 0+80=80, 80+90=170, 170+100=270. len([80, 90, 100]) is 3. The function returns 270 / 3 = 90.0 (a float, since / always gives a float)."
+      },
+      {
+        "problem": "A new student's score, 61, is added to the class: scores = [95, 68, 82, 55, 74, 61]. Which feedback message does 61 get, using the if/elif/else chain from the lesson?",
+        "solution": "61 >= 90 is False. 61 >= 70 is False. 61 >= 60 is True, so this branch runs (and the else is skipped): '61: Needs review.'"
+      },
+      {
+        "problem": "Ms. Alvarez wants a new top tier: any score of 98 or above should print 'Outstanding!' instead of 'Excellent work!'. Where in the if/elif/else chain does this new condition need to go, and why?",
+        "solution": "It needs to go FIRST, before the score >= 90 check, as a new condition: if score >= 98: print(f'{score}: Outstanding!') — because Python runs only the first True condition in the chain, so a score of 98 would otherwise get caught by score >= 90 first (since 98 is also >= 90) and never reach a check placed after it."
+      },
+      {
+        "problem": "Write a function called count_passing that takes a list of scores and returns how many of them are 60 or above, using a for loop, an if, and an accumulator.",
+        "solution": "def count_passing(nums):\n    count = 0\n    for n in nums:\n        if n >= 60:\n            count = count + 1\n    return count\nThis reuses the same accumulator pattern as average() and count_evens(), just with a different condition inside the if."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In the quiz-grader program, what does the average() function use to add up all the scores before dividing?",
+        "choices": [
+          "The accumulator pattern: a total variable starting at 0, updated inside a for loop",
+          "The len() function alone, with no loop",
+          "An if/elif/else chain",
+          "A while loop that never stops"
+        ],
+        "answerIndex": 0,
+        "explanation": "average() uses the accumulator pattern from the lists-and-loops lesson: total starts at 0 before the loop, and each score is added to it inside the loop, before dividing by len(nums)."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the if/elif/else chain in the quiz-grader program check score >= 90 before score >= 70?",
+        "choices": [
+          "Because Python runs only the first True condition in a chain, so the higher, more restrictive condition must come first to avoid being caught by a looser one",
+          "The order doesn't matter at all",
+          "Because 90 is an even number",
+          "Because elif chains always have to count downward"
+        ],
+        "answerIndex": 0,
+        "explanation": "As covered in the if/elif/else lesson, only the first True condition's block runs — so checking the higher threshold (90) first ensures a high score isn't wrongly caught by a lower threshold's condition instead."
+      },
+      {
+        "type": "short",
+        "question": "Using average([70, 90]), what value is returned?",
+        "answer": "80.0",
+        "acceptable": [
+          "80.0",
+          "80"
+        ],
+        "explanation": "total accumulates 0+70=70, 70+90=160. len([70, 90]) is 2. 160 / 2 = 80.0 (a float, since regular division always gives a float)."
+      },
+      {
+        "type": "short",
+        "question": "In the quiz-grader program, what tool converts each score and feedback message into a single printable string?",
+        "answer": "f-string",
+        "acceptable": [
+          "f-strings",
+          "f-string",
+          "an f-string"
+        ],
+        "explanation": "Each print() call uses an f-string, like f'{score}: Good job.', to insert the score's value directly into the message text."
+      },
+      {
+        "type": "mc",
+        "question": "What does the for loop in the quiz-grader program iterate over?",
+        "choices": [
+          "Every score in the scores list, one at a time, in order",
+          "Every letter grade from A to F",
+          "Only the first and last scores",
+          "The result of the average() function"
+        ],
+        "answerIndex": 0,
+        "explanation": "for score in scores: visits every item in the scores list, one per pass, exactly like the looping-over-lists lesson covered."
+      }
+    ]
   }
 ];
