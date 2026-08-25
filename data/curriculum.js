@@ -1,7 +1,8 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 2-14 — content not written yet).
- * LESSONS: full lesson content for Phase 1 (20 lessons). Phases 2-14 will each get
- * their own LESSONS entries in a future session — see README.md "Adding a new phase".
+ * ROADMAP: all 14 phases (title only for phases 4-14 — content not written yet).
+ * LESSONS: full lesson content for Phase 1 (20 lessons), Phase 2 (17 lessons), and
+ * Phase 3 (15 lessons). Phases 4-14 will each get their own LESSONS entries in a
+ * future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -3947,5 +3948,1590 @@ const LESSONS = [
         "explanation": "for score in scores: visits every item in the scores list, one per pass, exactly like the looping-over-lists lesson covered."
       }
     ]
-  }
+  },
+  {
+    "id": "3.1",
+    "number": 1,
+    "title": "What Is a Neuron? The Brain's Building Block",
+    "objectives": [
+      "Explain what a neuron is and what job it does",
+      "Estimate the scale of the brain's neuron count using rounding skills",
+      "Connect the idea of \"many small identical parts working together\" to how the brain is built",
+      "Preview what the rest of this phase will cover"
+    ],
+    "explanation": [
+      "Think about a huge LEGO castle. Up close, it isn't one solid piece — it's built from millions of small, mostly identical bricks, each one simple on its own, snapped together in patterns that create something way more complex than any single brick could ever be. Your brain works the same way. It's built from roughly 86 billion tiny cells called neurons, and every thought you've ever had, every memory, every decision to raise your hand in class, came from neurons working together — not from one giant master brain-cell doing it all alone.",
+      "A neuron is a specialized cell whose entire job is handling information: receiving signals from other neurons, deciding what to do with them, and passing a signal along to still more neurons. Picture an old-fashioned telephone switchboard operator, the kind you've maybe seen in an old movie — wires come in from all over, the operator decides which calls get connected to which lines, and a new signal goes back out. A neuron is a microscopic version of that: incoming signals arrive, the neuron processes them, and (sometimes) an outgoing signal leaves to keep the message moving.",
+      "86 billion is such a big number it's worth pausing on, the same way Phase 1 had you round and estimate big numbers to get a feel for their size. Picture a small town of about 20,000 people. To match the number of neurons in one human brain, you'd need over 4 million towns that size — more people than have ever lived on Earth, all packed into the space between your ears. And each of those 86 billion neurons doesn't work alone either: a single neuron can connect to thousands of others, which is part of why the brain can do so much with cells that are, individually, pretty simple.",
+      "This phase is going to zoom in on that one building block — the neuron — and build up from there. You'll learn the parts of a single neuron, how it sends an electrical signal, how it hands that signal off to the next neuron across a tiny gap called a synapse, and how connections between neurons can get stronger or weaker over time. By the end, you'll understand exactly why computer scientists looked at real neurons and thought, \"could we build a simplified version of this inside a computer?\" — the idea that eventually leads to artificial intelligence, which this course will build from scratch in a later phase."
+    ],
+    "example": {
+      "problem": "The human brain has about 86 billion neurons. A large stadium holds about 70,000 people. Rounding to the nearest ten thousand, roughly how many stadiums full of people would it take to match the number of neurons in one brain?",
+      "steps": [
+        "Write the neuron count in full: 86 billion = 86,000,000,000.",
+        "Write the stadium size: 70,000 people.",
+        "Divide to find how many stadiums are needed: 86,000,000,000 ÷ 70,000.",
+        "Simplify by canceling zeros: 86,000,000,000 ÷ 70,000 = 86,000,000 ÷ 70 = 1,228,571.4...",
+        "Round to the nearest ten thousand, since the problem asks for a rough estimate: about 1,230,000 stadiums."
+      ],
+      "answer": "It would take roughly 1,230,000 stadiums full of people to match the number of neurons in a single human brain — a reminder of just how large 86 billion really is."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, what is the main job of a neuron?",
+        "solution": "A neuron's main job is handling information: it receives signals (usually from other neurons), processes them, and can pass a signal along to more neurons — similar to a switchboard operator connecting and relaying calls."
+      },
+      {
+        "problem": "Why is the LEGO castle a useful analogy for how the brain is built?",
+        "solution": "Like a castle built from many small, mostly identical bricks that individually can't do much, the brain is built from billions of small, individually simple neurons — the complexity comes from how many there are and how they're connected, not from any single super-powerful cell."
+      },
+      {
+        "problem": "A city has about 500,000 people. Roughly how many cities that size would it take to match 86 billion neurons? (Round your final answer to the nearest ten thousand.)",
+        "solution": "86,000,000,000 ÷ 500,000 = 172,000. So it would take about 172,000 cities that size — already rounded to the nearest ten thousand."
+      },
+      {
+        "problem": "True or false: a single neuron typically works alone, with little connection to other neurons. Explain your answer.",
+        "solution": "False. A single neuron can connect to thousands of other neurons, and the brain's abilities come from huge networks of connected neurons working together, not from neurons acting in isolation."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a neuron?",
+        "choices": [
+          "A specialized cell whose job is receiving, processing, and passing along signals",
+          "A type of bone found only in the skull",
+          "A chemical the body uses to digest food",
+          "A muscle that controls blinking"
+        ],
+        "answerIndex": 0,
+        "explanation": "A neuron is a specialized cell that handles information — receiving signals, processing them, and often passing a signal on to other neurons."
+      },
+      {
+        "type": "mc",
+        "question": "Roughly how many neurons does the human brain have?",
+        "choices": [
+          "86 thousand",
+          "86 million",
+          "86 billion",
+          "86 trillion"
+        ],
+        "answerIndex": 2,
+        "explanation": "The human brain has roughly 86 billion neurons — a number so large that Phase 1's rounding and estimating skills help make sense of its scale."
+      },
+      {
+        "type": "short",
+        "question": "What everyday object was used in the lesson to describe how a huge number of simple parts can combine into something complex?",
+        "answer": "a LEGO castle",
+        "acceptable": [
+          "LEGO castle",
+          "a lego castle",
+          "lego",
+          "legos",
+          "LEGO bricks"
+        ],
+        "explanation": "The lesson compared the brain to a LEGO castle: individually simple bricks (neurons) combine, through their connections, into something far more complex than any single piece."
+      },
+      {
+        "type": "short",
+        "question": "What is the name of the old-fashioned job used in the lesson to describe how a neuron connects incoming and outgoing signals?",
+        "answer": "switchboard operator",
+        "acceptable": [
+          "switchboard operator",
+          "telephone operator",
+          "operator"
+        ],
+        "explanation": "The lesson compared a neuron to a switchboard operator: signals come in, the neuron processes them, and a signal may go back out to keep the message moving."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the lesson say complexity in the brain doesn't come from any single \"master\" cell?",
+        "choices": [
+          "Because each individual neuron is fairly simple, and the brain's abilities come from huge numbers of neurons connected together",
+          "Because neurons are actually not cells at all",
+          "Because the brain has no neurons, only chemicals",
+          "Because only one neuron in the whole brain does any real work"
+        ],
+        "answerIndex": 0,
+        "explanation": "No single neuron is a miniature brain by itself. Complexity comes from billions of individually simple neurons connected into networks — the same way a LEGO castle's complexity comes from how many bricks are combined, not from one special brick."
+      }
+    ]
+  },
+  {
+    "id": "3.2",
+    "number": 2,
+    "title": "Anatomy of a Neuron — Dendrites, Cell Body, Axon",
+    "objectives": [
+      "Name the three main parts of a neuron and describe each part's job",
+      "Trace the path a signal takes through a single neuron, in order",
+      "Explain why dendrites branch out while an axon is typically a single long fiber",
+      "Use an everyday analogy to remember each part's function"
+    ],
+    "explanation": [
+      "Lesson 3.1 introduced the neuron as a tiny information-handling cell, like a switchboard operator. Now it's time to open that cell up and look at its three main parts, because each part does a genuinely different job in moving a signal along. The three parts, in the order a signal travels through them, are: dendrites, the cell body (also called the soma), and the axon.",
+      "Dendrites are branching, tree-root-like structures that stick out from the cell body and are built to receive incoming signals from other neurons. A single neuron can have thousands of dendrite branches, each one able to pick up a signal from a different neighboring neuron — think of dendrites as a building's mail room, with hundreds of separate mail slots, each one able to receive a letter from a different sender at the same time. The more dendrite branches a neuron has, the more incoming \"mail\" it can gather before deciding what to do next.",
+      "All of that incoming information flows into the cell body, the neuron's main hub. This is where the neuron combines everything it just received and, as later lessons in this phase will explain, decides whether the combined signal is strong enough to pass along. Sticking with the mail room analogy, the cell body is like the office manager who reads through everything that arrived in the mail room and decides whether it adds up to something worth acting on.",
+      "If the cell body decides to act, the signal travels down the axon — a long, cable-like fiber that carries the outgoing signal away from the cell body, sometimes a very long distance. In an adult human, some axons (like the ones running from your spinal cord down to your toes) stretch up to a meter, even though the cell body they start from is microscopic. At its far end, the axon branches out into axon terminals, tiny tips that pass the signal on to the dendrites of the next neurons in line — like an outgoing delivery truck (the axon) dropping packages off at multiple addresses (the axon terminals) after leaving the office. The next two lessons dig into exactly how that signal travels down the axon, and exactly how it crosses the gap to the next neuron's dendrites."
+    ],
+    "example": {
+      "problem": "A signal enters a neuron through one of its input branches, gets combined and evaluated at the neuron's main hub, and then — if strong enough — travels out along the neuron's long output cable to reach the next neuron. Name the three parts involved, in the order the signal visits them.",
+      "steps": [
+        "The signal first arrives at an input branch that receives signals from other neurons — this is a dendrite.",
+        "It then travels to the neuron's main hub, where incoming signals are combined and a decision is made — this is the cell body (soma).",
+        "If the combined signal is strong enough, it travels out along the long output cable — this is the axon, ending at the axon terminals, which pass it to the next neuron's dendrites."
+      ],
+      "answer": "In order: dendrite (receives) → cell body / soma (combines and decides) → axon and axon terminals (carries the outgoing signal to the next neuron)."
+    },
+    "practice": [
+      {
+        "problem": "Which part of a neuron is responsible for receiving signals from other neurons, and why does it make sense that this part is heavily branched?",
+        "solution": "The dendrites receive incoming signals. It makes sense that they're heavily branched because a neuron often needs to receive input from thousands of other neurons at once, and more branches means more separate connection points for gathering that input, just like a mail room with many mail slots."
+      },
+      {
+        "problem": "What job does the cell body (soma) do, using the mail-room analogy from the lesson?",
+        "solution": "The cell body is like the office manager who reads everything that arrived in the mail room (the combined incoming signals from all the dendrites) and decides whether it adds up to something worth acting on — that is, whether to send a signal onward."
+      },
+      {
+        "problem": "Why might some axons in the human body be about a meter long, even though the cell body they come from is microscopic?",
+        "solution": "The axon is the neuron's outgoing cable, and its length depends on how far the signal needs to travel — for example, from the spinal cord down to the toes — not on the size of the cell body it starts from. A long axon is just a long single fiber extending out from a tiny starting point."
+      },
+      {
+        "problem": "What are axon terminals, and what do they connect to?",
+        "solution": "Axon terminals are the branching tips at the far end of an axon. They pass the outgoing signal on to the dendrites of the next neuron (or neurons) in line, similar to a delivery truck dropping off packages at multiple addresses."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Which part of a neuron receives incoming signals from other neurons?",
+        "choices": [
+          "The axon",
+          "The dendrites",
+          "The axon terminals",
+          "The synapse"
+        ],
+        "answerIndex": 1,
+        "explanation": "Dendrites are the branching structures that receive incoming signals from other neurons, like a mail room with many slots for incoming letters."
+      },
+      {
+        "type": "mc",
+        "question": "What is the correct order a signal travels through a single neuron?",
+        "choices": [
+          "Axon → cell body → dendrites",
+          "Cell body → axon → dendrites",
+          "Dendrites → cell body → axon",
+          "Axon terminals → dendrites → axon"
+        ],
+        "answerIndex": 2,
+        "explanation": "A signal is received by the dendrites, combined and evaluated at the cell body, and then — if strong enough — sent out along the axon."
+      },
+      {
+        "type": "short",
+        "question": "What is another name for the cell body of a neuron?",
+        "answer": "soma",
+        "acceptable": [
+          "soma",
+          "the soma"
+        ],
+        "explanation": "The cell body is also called the soma — the neuron's main hub, where incoming signals are combined."
+      },
+      {
+        "type": "short",
+        "question": "What structure carries the outgoing signal away from the cell body, sometimes over long distances?",
+        "answer": "axon",
+        "acceptable": [
+          "axon",
+          "the axon"
+        ],
+        "explanation": "The axon is the long, cable-like fiber that carries the outgoing signal away from the cell body, ending in axon terminals."
+      },
+      {
+        "type": "mc",
+        "question": "Why does it make sense for a neuron to have many branching dendrites but usually just one long axon?",
+        "choices": [
+          "Dendrites gather input from many sources at once, while the axon carries one outgoing signal to its destination(s), so branching helps gathering but isn't needed for sending",
+          "Dendrites and axons do the exact same job, so the branching is random",
+          "Because axons are actually shorter than dendrites in every neuron",
+          "Because dendrites carry the outgoing signal and axons receive input"
+        ],
+        "answerIndex": 0,
+        "explanation": "Dendrites need to gather signals from many other neurons, so branching helps collect more input. The axon's job is to carry one outgoing signal (which does branch at its very end, at the axon terminals, to reach multiple next neurons)."
+      }
+    ]
+  },
+  {
+    "id": "3.3",
+    "number": 3,
+    "title": "How Neurons \"Fire\" — Electrical Signals and the All-or-Nothing Rule",
+    "objectives": [
+      "Describe, in plain terms, how a neuron sends a signal down its axon",
+      "Explain the all-or-nothing rule and why it means a neuron either fires fully or not at all",
+      "Explain what a threshold is, using a non-technical analogy",
+      "Connect the idea of a threshold to everyday examples of build-up-then-release"
+    ],
+    "explanation": [
+      "Lesson 3.2 explained that when the cell body decides a signal is strong enough, it sends that signal shooting down the axon. What does \"sending a signal\" actually mean, physically? Inside and around every neuron are charged particles, and a neuron at rest keeps a small electrical difference between its inside and outside — think of it like a phone battery sitting at a steady charge, not doing anything yet, but ready to be used. When a neuron's dendrites and cell body gather enough incoming signal, that steady balance gets disturbed, and a fast electrical pulse — called an action potential, or more informally, the neuron \"firing\" — shoots down the axon from one end to the other.",
+      "Here's the part that makes this predictable rather than mushy: a neuron firing follows what's called the all-or-nothing rule. Either the incoming signal crosses a certain tipping point, called the threshold, and the neuron fires a full, complete pulse — or it doesn't cross the threshold, and nothing happens at all. There's no such thing as a neuron firing \"a little bit\" or \"halfway.\" A useful analogy is a toilet tank: you can push the handle down gently and nothing happens, push it a bit harder and still nothing happens, but the instant you push past a certain point, the whole flush happens, fully, every time — never a half-flush. A neuron's firing works the same way: below threshold, silence; at or above threshold, one full, identical pulse.",
+      "Another way to picture it is a cup being filled with water, drop by drop, from many small streams (the incoming signals arriving through the dendrites). The cup doesn't overflow after the first drop, or the tenth — it takes filling all the way to the rim. But the instant the water crosses the rim, it spills over completely; the size of that overflow doesn't depend on whether the cup was filled by one strong stream or many small ones combined. That's exactly how a neuron works: it doesn't matter whether the threshold gets crossed by one very strong incoming signal or by many small ones adding up together — once threshold is crossed, the result is the same full-strength firing.",
+      "This threshold idea is going to come back twice more in this course: later in this very phase, when you learn how a neuron combines many different incoming signals (some stronger, some weaker) before deciding whether they add up to enough; and again in Phase 4, on logic and computing, where \"threshold decisions\" show up as a core idea in how simple computer circuits make decisions. For now, the key takeaway is just this: neurons don't do partial signals — they either cross the line and fire, fully, or they stay quiet."
+    ],
+    "example": {
+      "problem": "A neuron's threshold requires its combined incoming signal to reach a strength of 10 units before it fires. On three separate occasions, its dendrites gather a combined signal of 6 units, then 10 units, then 14 units. What happens on each occasion, and how strong is the resulting pulse each time it does fire?",
+      "steps": [
+        "Occasion 1: combined signal is 6 units, which is below the threshold of 10, so the neuron does not fire at all.",
+        "Occasion 2: combined signal is 10 units, which meets the threshold exactly, so the neuron fires a full, complete pulse.",
+        "Occasion 3: combined signal is 14 units, which is above the threshold of 10, so the neuron fires — but by the all-or-nothing rule, the pulse is still just one full, complete pulse, not a bigger or stronger one.",
+        "Comparing occasions 2 and 3: even though 14 is bigger than 10, both firings produce the exact same full-strength pulse, because there's no such thing as a \"stronger than full\" firing."
+      ],
+      "answer": "The neuron stays silent at 6 units, and fires a full, identical pulse at both 10 and 14 units — crossing the threshold by a little or a lot always produces the same all-or-nothing result."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, what is the all-or-nothing rule?",
+        "solution": "A neuron either fires a full, complete pulse (if the incoming signal reaches or crosses its threshold) or doesn't fire at all (if it doesn't reach the threshold) — there is no partial or half-strength firing."
+      },
+      {
+        "problem": "Why is the toilet-flush analogy a good way to picture threshold and all-or-nothing firing?",
+        "solution": "Pushing the handle gently does nothing, and pushing it slightly harder still does nothing — but the instant enough pressure is applied to cross the tipping point, the entire flush happens fully, every time. That mirrors how a neuron does nothing below threshold and fires one full, identical pulse the instant threshold is crossed."
+      },
+      {
+        "problem": "A neuron's threshold is 8 units. Its dendrites gather a combined signal of 8 units on Monday and a combined signal of 20 units on Tuesday. Does the Tuesday pulse come out stronger than the Monday pulse? Explain.",
+        "solution": "No. Because of the all-or-nothing rule, both signals cross the threshold, so both produce the exact same full-strength pulse. Going further above threshold doesn't create a bigger pulse — it's either a full pulse or nothing."
+      },
+      {
+        "problem": "Explain, using the cup-of-water analogy, why it doesn't matter whether a neuron's threshold gets crossed by one strong incoming signal or many small ones added together.",
+        "solution": "A cup fills to the rim whether it's filled by one fast stream or several small drips — what matters is the total amount of water, not how it arrived. Similarly, a neuron's threshold responds to the total combined incoming signal, regardless of whether that total came from one strong dendrite input or many smaller ones adding up together."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the informal name for the fast electrical pulse a neuron sends down its axon?",
+        "choices": [
+          "Firing (an action potential)",
+          "Digesting",
+          "Synapsing",
+          "Rounding"
+        ],
+        "answerIndex": 0,
+        "explanation": "The fast electrical pulse sent down the axon is called firing, or more formally an action potential."
+      },
+      {
+        "type": "mc",
+        "question": "What does the all-or-nothing rule mean?",
+        "choices": [
+          "A neuron fires a full, complete pulse or doesn't fire at all — never a partial pulse",
+          "A neuron always fires, no matter how weak the incoming signal is",
+          "A neuron fires more strongly the more incoming signal it receives",
+          "A neuron can only fire once in its entire lifetime"
+        ],
+        "answerIndex": 0,
+        "explanation": "The all-or-nothing rule means there's no in-between: below threshold, the neuron stays silent; at or above threshold, it fires one full, identical pulse."
+      },
+      {
+        "type": "short",
+        "question": "What word describes the tipping point that an incoming signal must reach or cross for a neuron to fire?",
+        "answer": "threshold",
+        "acceptable": [
+          "threshold",
+          "the threshold"
+        ],
+        "explanation": "The threshold is the tipping point — reach or cross it, and the neuron fires a full pulse; stay below it, and nothing happens."
+      },
+      {
+        "type": "short",
+        "question": "In the lesson's cup-of-water analogy, what does the water spilling over the rim represent?",
+        "answer": "the neuron firing",
+        "acceptable": [
+          "the neuron firing",
+          "firing",
+          "an action potential",
+          "the neuron crossing threshold and firing"
+        ],
+        "explanation": "The cup overflowing once water crosses the rim represents the neuron firing once its combined incoming signal crosses the threshold."
+      },
+      {
+        "type": "mc",
+        "question": "A neuron's threshold is 12 units. It receives a combined signal of 30 units. What happens?",
+        "choices": [
+          "It fires a pulse two and a half times stronger than normal",
+          "It fires the same full-strength pulse it would fire at exactly 12 units",
+          "It doesn't fire, because 30 is too far above the threshold",
+          "It fires twice in a row"
+        ],
+        "answerIndex": 1,
+        "explanation": "By the all-or-nothing rule, any signal at or above the threshold produces the same full-strength pulse — going further above threshold doesn't make the pulse bigger."
+      }
+    ]
+  },
+  {
+    "id": "3.4",
+    "number": 4,
+    "title": "The Synapse — Crossing the Gap Between Neurons",
+    "objectives": [
+      "Explain what a synapse is and why neurons don't actually touch",
+      "Describe how a signal converts from electrical to chemical and back again to cross a synapse",
+      "Use the terms presynaptic and postsynaptic correctly",
+      "Explain why this crossing step matters for how neurons pass messages along"
+    ],
+    "explanation": [
+      "Lesson 3.3 left off with a neuron's axon carrying a full electrical pulse all the way to its axon terminals. Here's a detail that surprises a lot of people the first time they hear it: when that pulse reaches the end of the axon, it doesn't just jump straight into the next neuron's dendrite, because the two neurons aren't actually touching. There's a tiny gap between them — so small it can only be seen with a powerful microscope — and that gap, along with the machinery on both sides of it, is called a synapse.",
+      "So how does a signal get across a gap if it can't just keep traveling as electricity? At the synapse, the signal switches forms. When the electrical pulse reaches the axon terminal, it triggers the release of tiny chemical messengers called neurotransmitters, which drift across the gap and lock onto special receiving spots on the next neuron's dendrite. Those neurotransmitters then trigger a new electrical signal inside the receiving neuron. It's a bit like two relay racers who can't quite touch hands to pass the baton directly — instead, the first racer tosses the baton across a short gap, and the second racer catches it and keeps running. The \"baton\" here is the neurotransmitter, tossed as a chemical message and caught to restart the electrical signal on the other side.",
+      "This handoff involves two neurons with specific roles, and it's worth knowing their names because they'll come up again later in this phase. The neuron sending the signal — the one whose axon terminal releases the neurotransmitter — is called the presynaptic neuron (\"pre\" meaning before the synapse, from the sender's side). The neuron receiving the signal — the one whose dendrite catches the neurotransmitter — is called the postsynaptic neuron (\"post\" meaning after the synapse, from the receiver's side). A single neuron is very often postsynaptic to thousands of other neurons at once (receiving from many senders) while also being presynaptic to many others (sending to many receivers) — the same neuron plays both roles, just with different partners at different connections.",
+      "Why does this electrical-to-chemical-to-electrical handoff matter, instead of neurons just touching directly? It turns out this gap is exactly where the next big idea in this phase comes from. Because the synapse is a physical structure — with a specific number of receiving spots, a specific amount of neurotransmitter released, and so on — it can change over time: it can get more efficient at passing a signal along, or less efficient. That changeability is what the next lesson calls synaptic strength, and it's one of the most important ideas in this entire phase."
+    ],
+    "example": {
+      "problem": "Neuron A's axon terminal releases neurotransmitters that cross a gap and are picked up by a dendrite belonging to Neuron B. Identify which neuron is presynaptic, which is postsynaptic, and describe the three steps the signal takes to get from A to B.",
+      "steps": [
+        "Neuron A is the one releasing the neurotransmitter from its axon terminal — the sender — so Neuron A is the presynaptic neuron.",
+        "Neuron B is the one whose dendrite receives the neurotransmitter — the receiver — so Neuron B is the postsynaptic neuron.",
+        "Step 1: an electrical pulse travels down Neuron A's axon and reaches its axon terminal.",
+        "Step 2: the axon terminal releases neurotransmitters (the chemical messengers), which drift across the synaptic gap.",
+        "Step 3: the neurotransmitters lock onto receiving spots on Neuron B's dendrite, triggering a new electrical signal inside Neuron B."
+      ],
+      "answer": "Neuron A is presynaptic and Neuron B is postsynaptic. The signal crosses the gap by converting from electrical (in A's axon) to chemical (the neurotransmitter crossing the synapse) and back to electrical (in B's dendrite)."
+    },
+    "practice": [
+      {
+        "problem": "What is a synapse?",
+        "solution": "A synapse is the tiny gap between two neurons (plus the machinery on both sides of it) where a signal is passed from one neuron to the next using chemical messengers, since the neurons don't actually touch."
+      },
+      {
+        "problem": "Why can't the electrical pulse just keep traveling directly from one neuron's axon into the next neuron's dendrite?",
+        "solution": "Because the two neurons don't actually touch — there's a small physical gap between them. The electrical pulse can't jump across that gap directly, so it triggers the release of chemical neurotransmitters instead, which cross the gap and restart an electrical signal on the other side."
+      },
+      {
+        "problem": "In the relay-race analogy, what does the neurotransmitter represent, and why is the analogy a good fit?",
+        "solution": "The neurotransmitter represents the baton. Just as a relay racer tosses the baton across a short gap for the next racer to catch (rather than the two racers touching hands), a neuron releases a neurotransmitter across the synaptic gap for the next neuron to \"catch\" and continue the signal."
+      },
+      {
+        "problem": "A single neuron receives signals from 500 other neurons and sends signals to 300 different neurons. Is this neuron postsynaptic, presynaptic, or both? Explain.",
+        "solution": "Both — just at different connections. The neuron is postsynaptic at the 500 connections where it's receiving signals, and presynaptic at the 300 connections where it's sending signals. The same neuron can play both roles, depending on which connection you're looking at."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the small gap between two neurons, where a signal is handed off, called?",
+        "choices": [
+          "A dendrite",
+          "A synapse",
+          "A threshold",
+          "An axon terminal"
+        ],
+        "answerIndex": 1,
+        "explanation": "The gap between two neurons, along with the machinery for passing a signal across it, is called a synapse."
+      },
+      {
+        "type": "mc",
+        "question": "What does a neuron's axon terminal release to send a signal across the synapse?",
+        "choices": [
+          "Electricity, which jumps the gap directly",
+          "Neurotransmitters, chemical messengers that cross the gap",
+          "Water",
+          "Another axon"
+        ],
+        "answerIndex": 1,
+        "explanation": "The axon terminal releases neurotransmitters — chemical messengers — which drift across the synaptic gap and trigger a new electrical signal in the next neuron."
+      },
+      {
+        "type": "short",
+        "question": "What term describes the neuron that sends a signal across a synapse (the one releasing the neurotransmitter)?",
+        "answer": "presynaptic",
+        "acceptable": [
+          "presynaptic",
+          "presynaptic neuron",
+          "the presynaptic neuron"
+        ],
+        "explanation": "The sending neuron — the one releasing neurotransmitter from its axon terminal — is called the presynaptic neuron."
+      },
+      {
+        "type": "short",
+        "question": "What term describes the neuron that receives a signal across a synapse (the one whose dendrite catches the neurotransmitter)?",
+        "answer": "postsynaptic",
+        "acceptable": [
+          "postsynaptic",
+          "postsynaptic neuron",
+          "the postsynaptic neuron"
+        ],
+        "explanation": "The receiving neuron — the one whose dendrite catches the neurotransmitter — is called the postsynaptic neuron."
+      },
+      {
+        "type": "mc",
+        "question": "Why does it matter that the synapse is a physical structure (a gap plus release/receiving machinery) rather than a direct touch between neurons?",
+        "choices": [
+          "Because a physical structure can change over time — becoming more or less efficient — which is the basis for connections getting stronger or weaker",
+          "It doesn't matter at all; it's just a random extra step with no purpose",
+          "Because physical structures can't carry any kind of signal",
+          "Because it means neurons never actually communicate with each other"
+        ],
+        "answerIndex": 0,
+        "explanation": "Because the synapse is a real physical structure, it can change over time — becoming more or less efficient at passing a signal along. That changeability is exactly what the next lesson calls synaptic strength."
+      }
+    ]
+  },
+  {
+    "id": "3.5",
+    "number": 5,
+    "title": "Not All Connections Are Equal — Synaptic Strength",
+    "objectives": [
+      "Explain what synaptic strength means",
+      "Describe how a stronger synapse has more influence on whether the next neuron fires",
+      "Compare a strong synapse and a weak synapse using a real-world analogy",
+      "Explain why synaptic strength being changeable matters for the rest of this phase"
+    ],
+    "explanation": [
+      "Lesson 3.4 showed how a signal crosses a synapse from a presynaptic neuron to a postsynaptic neuron. Here's a detail that makes the whole system far more interesting than a simple on/off relay: not every synapse has the same amount of influence. Some synapses are strong — they release more neurotransmitter, or have more receiving spots ready to catch it, and so they give the next neuron a bigger nudge toward firing. Other synapses are weak — they give a much smaller nudge for the exact same kind of signal.",
+      "A good way to picture this is thinking about how much different people's opinions matter to you when you're deciding whether to watch a new movie. If five random strangers on the street recommend it, that might barely register. But if your five closest friends — the ones whose taste you trust — all say it's great, that carries a lot more weight, even though it's still \"five recommendations\" in both cases. Synaptic strength works the same way: a strong synapse's \"vote\" toward making the next neuron fire counts for a lot, while a weak synapse's \"vote\" barely moves the needle, even if both synapses are technically active at the same moment.",
+      "This matters because a single neuron, as later lessons in this phase will cover, usually receives input from many other neurons at once through many different synapses — and it doesn't treat all of that input equally. A neuron connected to you through ten weak synapses might need all ten firing together to reach its threshold, while a neuron connected through just two very strong synapses might reach threshold from those two alone. The strength of each individual connection changes how much it contributes to that final decision.",
+      "Here's the idea that makes synaptic strength so important for how brains learn, which the next lesson explores in full: synaptic strength isn't fixed forever. It can increase or decrease over time, based on experience. A synapse that gets used often, in the right pattern, tends to grow stronger — meaning that connection becomes more influential going forward. A synapse that rarely gets used tends to stay weak, or even weaken further. This single fact — that connections aren't all equal, and that their strength can change — turns out to be the biological basis for learning and memory, and it's also the exact detail that computer scientists borrowed when they invented artificial neural networks, a connection this phase builds toward across its remaining lessons."
+    ],
+    "example": {
+      "problem": "Neuron X has two synapses feeding into it: one from Neuron A, which is a very strong synapse, and one from Neuron B, which is a very weak synapse. Both A and B fire at the same time. Which synapse contributes more toward pushing Neuron X's combined signal up toward its threshold, and why?",
+      "steps": [
+        "Both A and B fire, so both synapses become active and both release neurotransmitter toward Neuron X.",
+        "But synaptic strength is not about whether a synapse is active — it's about how much influence that synapse has when it is active.",
+        "The synapse from A is strong, meaning it gives Neuron X a bigger nudge toward its threshold for the same kind of firing event.",
+        "The synapse from B is weak, meaning it gives Neuron X only a small nudge for the same kind of firing event.",
+        "So even though both A and B fired, A's strong synapse contributes more toward pushing Neuron X's combined signal up."
+      ],
+      "answer": "The synapse from Neuron A contributes more, because it's a strong synapse — strong synapses give a bigger nudge toward the next neuron's threshold than weak synapses do, even when both are equally active."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, what does it mean for a synapse to be \"strong\" versus \"weak\"?",
+        "solution": "A strong synapse gives the next neuron a bigger nudge toward firing when it's active (for example, by releasing more neurotransmitter or having more receiving spots), while a weak synapse gives a much smaller nudge for the same kind of activity."
+      },
+      {
+        "problem": "Use the \"five friends vs. five strangers\" analogy to explain why synaptic strength matters even when the same number of synapses are active.",
+        "solution": "Five strangers' movie recommendations and five close friends' recommendations are both \"five opinions,\" but the friends' opinions carry far more weight because you trust them more. Similarly, whether five synapses are strong or weak changes how much combined influence they have on the next neuron, even though the count (five) is the same in both cases."
+      },
+      {
+        "problem": "Neuron Y needs a combined signal of 20 units to reach threshold. It has one synapse that contributes 18 units when active, and five other synapses that each contribute only 1 unit when active. Which synapse alone is closer to being able to push Neuron Y over threshold by itself?",
+        "solution": "The single synapse contributing 18 units is much closer to threshold (20) on its own than any of the five weak synapses contributing 1 unit each. This shows how one strong synapse can matter more than several weak ones."
+      },
+      {
+        "problem": "Why is it significant that synaptic strength can change over time, rather than staying fixed forever?",
+        "solution": "If synaptic strength never changed, connections between neurons could never become more or less influential based on experience — which means learning and memory, which depend on connections getting stronger or weaker, wouldn't be possible. Changeable synaptic strength is the basis for how brains adapt and learn."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does it mean for a synapse to be \"strong\"?",
+        "choices": [
+          "It gives the next neuron a bigger nudge toward firing when it's active",
+          "It is physically larger in size than any other body part",
+          "It always causes the next neuron to fire immediately, no matter what",
+          "It only exists in the axon, never near dendrites"
+        ],
+        "answerIndex": 0,
+        "explanation": "A strong synapse has more influence — it gives the next neuron a bigger nudge toward reaching its threshold — compared to a weak synapse, which gives only a small nudge."
+      },
+      {
+        "type": "mc",
+        "question": "In the movie-recommendation analogy, what do the five close friends represent?",
+        "choices": [
+          "Weak synapses, because friends' opinions don't matter much",
+          "Strong synapses, because their input carries more weight even though the count is the same as with strangers",
+          "The postsynaptic neuron",
+          "The threshold itself"
+        ],
+        "answerIndex": 1,
+        "explanation": "The close friends' opinions carry more weight than strangers' opinions, even with the same number of recommendations — just like a strong synapse carries more influence than a weak one, even when the same number of synapses are active."
+      },
+      {
+        "type": "short",
+        "question": "What term describes how much influence a given synapse has on whether the next neuron fires?",
+        "answer": "synaptic strength",
+        "acceptable": [
+          "synaptic strength",
+          "strength",
+          "connection strength"
+        ],
+        "explanation": "Synaptic strength (also called connection strength) describes how much nudge a given synapse contributes toward the next neuron's threshold."
+      },
+      {
+        "type": "short",
+        "question": "Is synaptic strength fixed forever, or can it change over time based on experience?",
+        "answer": "it can change over time",
+        "acceptable": [
+          "it can change",
+          "changeable",
+          "it changes over time",
+          "yes it can change",
+          "it can increase or decrease"
+        ],
+        "explanation": "Synaptic strength can increase or decrease over time based on experience — a fact that turns out to be the biological basis for learning and memory, covered in the next lesson."
+      },
+      {
+        "type": "mc",
+        "question": "Why does synaptic strength matter for how a neuron reaches its threshold?",
+        "choices": [
+          "Because a neuron combines input from many synapses, and stronger synapses contribute more to that combined total than weaker ones do",
+          "Because only the number of active synapses matters, never their strength",
+          "Because synaptic strength has no effect on whether a neuron fires",
+          "Because a weak synapse always cancels out a strong one"
+        ],
+        "answerIndex": 0,
+        "explanation": "A neuron typically combines input from many synapses at once. Because stronger synapses contribute a bigger nudge than weaker ones, the mix of strong and weak connections — not just how many are active — determines whether the combined signal reaches threshold."
+      }
+    ]
+  },
+  {
+    "id": "3.6",
+    "number": 6,
+    "title": "Neurons That Fire Together Wire Together — How Practice Builds Connections",
+    "objectives": [
+      "State the \"fire together, wire together\" idea in plain language",
+      "Explain why repeated, simultaneous activity between two neurons tends to strengthen the synapse between them",
+      "Connect this idea to why practicing a skill makes it easier over time",
+      "Distinguish a connection that gets used often from one that rarely gets used"
+    ],
+    "explanation": [
+      "Lesson 3.5 established that synapses can be strong or weak, and that their strength can change. This lesson answers the natural next question: what actually makes a synapse get stronger in the first place? The short version, often summed up in a famous phrase, is: neurons that fire together, wire together. When a presynaptic neuron and a postsynaptic neuron are frequently active at around the same time — the presynaptic one firing right around when the postsynaptic one also fires — the synapse connecting them tends to get physically strengthened, meaning it becomes more efficient at nudging the postsynaptic neuron toward firing the next time.",
+      "Think about a brand-new hiking trail through tall grass. The very first time someone walks it, the path is barely visible — just some bent grass. But every time someone walks that same route again, the ground gets a little more packed down, the grass gets a little more flattened, and the path becomes a little clearer and easier to follow. After enough repeated use, it turns into a well-worn trail that's obviously the easiest way through. A rarely-used side path, by contrast, stays overgrown and hard to find. A synapse works the same way: repeated, coordinated firing between two neurons packs down a clearer \"trail\" between them (a stronger synapse), while a connection that's rarely used stays faint.",
+      "This is exactly what's happening, biologically, when you get better at something through practice. Think back to Phase 1, where estimating and rounding felt effortful the first few times you tried it, but got noticeably faster and more automatic the more problems you worked through. That improvement wasn't magic or just \"getting used to it\" in some vague sense — it reflects real synapses, in the neural circuits responsible for that skill, getting physically strengthened each time you fired through that same pattern of neurons again. The same is true for a piano piece that starts out requiring intense concentration and eventually can be played almost without thinking: the relevant connections have been walked so many times they've become a well-worn trail.",
+      "It's worth being precise about the timing detail buried in the phrase \"fire together\": it's not enough for two neurons to fire at completely unrelated, random times — the strengthening effect depends on them firing in a coordinated way, generally close together in time, so that the presynaptic neuron's firing appears to be contributing to the postsynaptic neuron's firing. This timing-based strengthening is one of the most important discoveries in how brains learn, and the next few lessons build directly on it — first to explain how networks of many strengthened connections let a brain recognize patterns, and later to explain what happens to a connection that's rarely used at all."
+    ],
+    "example": {
+      "problem": "Neuron A and Neuron B are connected by a synapse. On Monday, A and B happen to fire together (around the same time) many times during the day. On Tuesday, they fire together many more times. Based on \"fire together, wire together,\" what would you expect to be true about the synapse between A and B by Wednesday, compared to before Monday?",
+      "steps": [
+        "The rule states that when two connected neurons repeatedly fire together (in a coordinated, close-in-time way), the synapse between them tends to strengthen.",
+        "A and B fired together many times on both Monday and Tuesday — that's repeated, coordinated firing.",
+        "By Wednesday, this repeated coordinated firing should have made the synapse between A and B stronger than it was before Monday.",
+        "A stronger synapse means B will now get a bigger nudge toward firing whenever A fires, compared to how things were before this repeated firing happened."
+      ],
+      "answer": "By Wednesday, the synapse between A and B should be stronger than it was before Monday — repeated, coordinated firing packs down a clearer \"trail\" between them, just like a hiking path that gets more worn in with every use."
+    },
+    "practice": [
+      {
+        "problem": "State the \"fire together, wire together\" idea in your own words.",
+        "solution": "When two connected neurons are frequently active at around the same time, the synapse between them tends to get stronger — making that connection more effective at influencing the second neuron to fire the next time."
+      },
+      {
+        "problem": "Use the hiking-trail analogy to explain why a rarely-used connection between two neurons stays weak.",
+        "solution": "Just like a rarely-walked side path stays overgrown and hard to follow because it never gets packed down, a synapse that's rarely used doesn't get the repeated activity needed to strengthen it, so it stays weak (or faint), like an overgrown trail."
+      },
+      {
+        "problem": "Why does getting faster at a practiced skill (like solving arithmetic problems, or playing a piece of music) reflect a real physical change in the brain, rather than just \"getting used to it\"?",
+        "solution": "Practicing a skill means repeatedly firing the same circuit of neurons in the same coordinated pattern. By the \"fire together, wire together\" rule, that repetition physically strengthens the synapses along that circuit, making the same pattern easier and faster to activate the next time — a real, physical change, not just a vague feeling of familiarity."
+      },
+      {
+        "problem": "Two neurons, C and D, fire at completely random, unrelated times all week — never close together. According to the timing detail in this lesson, would you expect the synapse between C and D to strengthen? Why or why not?",
+        "solution": "No, probably not — the strengthening effect depends on the two neurons firing together in a coordinated way, close together in time, not just both firing at some point during the week. If their firing is unrelated and random, there's no consistent pattern for the synapse to reinforce."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does \"neurons that fire together wire together\" mean?",
+        "choices": [
+          "Neurons that are frequently active at the same time tend to develop a stronger synapse between them",
+          "Any two neurons in the brain are automatically connected to each other",
+          "Neurons that fire together always immediately stop working",
+          "Only neurons in the same exact location can ever connect"
+        ],
+        "answerIndex": 0,
+        "explanation": "When two connected neurons repeatedly fire together in a coordinated way, the synapse between them tends to strengthen, making that connection more influential going forward."
+      },
+      {
+        "type": "mc",
+        "question": "In the hiking-trail analogy, what does a well-worn, easy-to-follow trail represent?",
+        "choices": [
+          "A weak synapse that's rarely used",
+          "A strong synapse that's been reinforced by repeated, coordinated firing",
+          "A neuron's axon",
+          "A neuron that never fires"
+        ],
+        "answerIndex": 1,
+        "explanation": "Just as repeated walking packs down and clarifies a trail, repeated coordinated firing strengthens a synapse — the well-worn trail represents a strong, reinforced connection."
+      },
+      {
+        "type": "short",
+        "question": "What happens to a synapse's strength when two connected neurons repeatedly fire together, close together in time?",
+        "answer": "it strengthens",
+        "acceptable": [
+          "it gets stronger",
+          "strengthens",
+          "increases",
+          "it strengthens"
+        ],
+        "explanation": "Repeated, coordinated firing between two connected neurons tends to strengthen the synapse between them."
+      },
+      {
+        "type": "short",
+        "question": "According to this lesson, does getting better at a practiced skill (like a piano piece) involve real physical changes in the brain, or is it purely a mental illusion?",
+        "answer": "real physical changes",
+        "acceptable": [
+          "real physical change",
+          "real physical changes",
+          "yes, real changes",
+          "physical change"
+        ],
+        "explanation": "Repeated practice means repeatedly firing the same circuit of neurons together, which physically strengthens the synapses along that circuit — a real, measurable physical change, not just a feeling."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the timing of firing matter for the \"fire together, wire together\" rule?",
+        "choices": [
+          "The strengthening effect depends on the two neurons firing in a coordinated way, close together in time — not just both firing at unrelated random moments",
+          "Timing has no effect at all on synaptic strength",
+          "Only neurons that fire at exactly midnight can strengthen their connection",
+          "Two neurons must never fire at the same time for the synapse to strengthen"
+        ],
+        "answerIndex": 0,
+        "explanation": "The strengthening effect specifically depends on coordinated, close-in-time firing between the two connected neurons — random, unrelated firing doesn't produce the same reinforcement."
+      }
+    ]
+  },
+  {
+    "id": "3.7",
+    "number": 7,
+    "title": "From One Neuron to a Network — Why Numbers Matter",
+    "objectives": [
+      "Explain why a single neuron, by itself, can only do a limited amount",
+      "Describe how neurons connect in a many-to-many pattern to form a network",
+      "Use an analogy to explain how simple individual parts combine into complex group behavior",
+      "Preview how networks of neurons let a brain do things no single neuron could do alone"
+    ],
+    "explanation": [
+      "So far, this phase has zoomed in on a single neuron — its parts (Lesson 3.2), how it fires (3.3), how it hands a signal to one other neuron across a synapse (3.4), and how that one connection can be strong or weak and can change with practice (3.5, 3.6). It's time to zoom back out, because a single neuron, on its own, is actually quite limited. All it can really do is combine whatever input reaches it and either fire or not fire, based on its threshold. That's it. One neuron can't recognize your grandmother's face, remember your phone number, or decide what to say next — those abilities only show up once huge numbers of neurons are wired together into a network.",
+      "Think about a single ant. An individual ant can do a handful of simple things: follow a scent trail, pick up a small object, react to another ant bumping into it. Nothing about a single ant explains how ant colonies build elaborate underground tunnel systems with separate chambers for food storage, waste, and raising young. That complex behavior only emerges once thousands of ants, each doing their own simple thing, interact with each other in huge numbers. A neural network works the same way: no single neuron is smart, but wire enough simple neurons together and genuinely intelligent behavior can emerge from the network as a whole.",
+      "The key structural fact that makes this possible is that connections in the brain aren't one-to-one — they're many-to-many. Recall from Lesson 3.1 that a single neuron can connect to thousands of others. That means a neuron's output (down its axon, across its axon terminals) doesn't go to just one other neuron — it branches out to many. And that same neuron's dendrites are, at the same time, receiving input from many other neurons upstream. So a single neuron sits inside a web: many neurons feeding into it, and it feeding into many neurons in turn. Multiply that pattern across 86 billion neurons, and you get a staggeringly interconnected network — recall from Lesson 3.1 that the connection count (not just the neuron count) is what makes the brain so powerful.",
+      "This many-to-many wiring is exactly what makes networks capable of things individual neurons can't do — and the next lesson picks this up directly, explaining how networks of neurons, wired this way, let a brain recognize patterns like faces, letters, and songs. From here through the end of this phase, almost everything builds on this one shift in perspective: stop thinking about what one neuron can do, and start thinking about what a connected group of them can do together."
+    ],
+    "example": {
+      "problem": "Neuron P sends its output to 4 different neurons (Q, R, S, T). Each of those 4 neurons also receives input from several other neurons besides P, and each of them sends output to several more neurons beyond that. Explain why this branching, many-to-many pattern is more powerful than if each neuron only ever connected to exactly one other neuron in a simple chain.",
+      "steps": [
+        "In a simple one-to-one chain, a signal from P could only ever influence a single path: P → one neuron → one neuron → and so on, with no combining of different sources.",
+        "In the many-to-many pattern described, P's firing can influence Q, R, S, and T all at once, and each of those neurons combines P's input with input from several other sources too.",
+        "This means the effect of P firing can ripple outward into many different combinations, mixing with many other signals, rather than traveling down one single, isolated path.",
+        "That mixing and branching is exactly what lets huge numbers of individually simple neurons produce complex, varied outcomes — the same way many ants interacting produces complex colony behavior that no single ant chain could produce alone."
+      ],
+      "answer": "The many-to-many pattern lets one neuron's signal combine with many other signals across many different downstream neurons, producing far richer, more complex outcomes than a simple one-to-one chain ever could — this branching and combining is the real source of a network's power."
+    },
+    "practice": [
+      {
+        "problem": "Why can't a single neuron, by itself, do something like recognize a face?",
+        "solution": "A single neuron can only combine its incoming input and either fire or not fire based on its threshold — a very limited kind of action. Recognizing something as complex as a face requires huge numbers of neurons, each doing their own simple combining-and-firing, working together as a network."
+      },
+      {
+        "problem": "How does the ant colony analogy help explain how complex brain function can arise from simple neurons?",
+        "solution": "A single ant can only do simple things (follow a scent, react to a bump), yet thousands of ants interacting together build elaborate tunnel systems no single ant could plan or build alone. Similarly, no single neuron is \"smart,\" but huge numbers of simple neurons, interacting through their connections, can produce genuinely intelligent behavior as a network."
+      },
+      {
+        "problem": "What does it mean to say neuron connections are \"many-to-many\" rather than \"one-to-one\"?",
+        "solution": "It means a single neuron typically sends its output to many other neurons at once (through branching axon terminals), while also receiving input from many other neurons at once (through its many dendrites) — rather than each neuron connecting to just one other neuron in a simple chain."
+      },
+      {
+        "problem": "Why does the many-to-many wiring pattern matter more for the brain's power than the raw count of 86 billion neurons alone?",
+        "solution": "The raw neuron count matters, but it's the huge number of connections between those neurons — each one able to combine and pass along many different signals — that lets the network as a whole produce complex behavior. A network of 86 billion neurons with almost no connections between them would be far less capable than one with the brain's actual dense web of connections."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Why is a single neuron, on its own, quite limited?",
+        "choices": [
+          "It can only combine incoming input and fire or not fire based on its threshold — complex abilities require many neurons working together",
+          "It can recognize faces and remember phone numbers all by itself",
+          "It has no dendrites or axon of its own",
+          "It can only exist for one second before disappearing"
+        ],
+        "answerIndex": 0,
+        "explanation": "A single neuron can only combine input and fire or not fire. Complex abilities like recognizing a face require large networks of neurons working together, not any single neuron acting alone."
+      },
+      {
+        "type": "mc",
+        "question": "In the ant colony analogy, what does the elaborate tunnel system represent?",
+        "choices": [
+          "A single neuron's threshold",
+          "Complex behavior that emerges from many simple units (ants, or neurons) interacting together",
+          "A synapse",
+          "An action potential"
+        ],
+        "answerIndex": 1,
+        "explanation": "No single ant could plan or build the tunnel system alone — it emerges from thousands of simple ants interacting, just as complex brain function emerges from huge numbers of simple neurons interacting through their connections."
+      },
+      {
+        "type": "short",
+        "question": "What term describes a connection pattern where each neuron sends output to many other neurons while also receiving input from many other neurons?",
+        "answer": "many-to-many",
+        "acceptable": [
+          "many-to-many",
+          "many to many"
+        ],
+        "explanation": "This many-to-many wiring pattern — many inputs feeding a neuron, and that neuron feeding many outputs — is what lets networks of neurons combine signals in complex ways."
+      },
+      {
+        "type": "short",
+        "question": "What word describes a large group of interconnected neurons working together (as opposed to a single isolated neuron)?",
+        "answer": "network",
+        "acceptable": [
+          "network",
+          "a network",
+          "neural network"
+        ],
+        "explanation": "A network is a group of interconnected neurons, and it's the network as a whole — not any single neuron — that produces complex brain function."
+      },
+      {
+        "type": "mc",
+        "question": "Which best summarizes the main idea of this lesson?",
+        "choices": [
+          "Individual neurons are limited, but wiring huge numbers of them together in a many-to-many network lets complex abilities emerge that no single neuron could produce alone",
+          "The brain would work just as well with only one neuron",
+          "Neurons never connect to more than one other neuron at a time",
+          "Complex brain abilities come from a single, unusually powerful \"master neuron\""
+        ],
+        "answerIndex": 0,
+        "explanation": "The lesson's central point is that complexity comes from the network — many individually simple neurons, connected in a many-to-many pattern — not from any single powerful neuron."
+      }
+    ]
+  },
+  {
+    "id": "3.8",
+    "number": 8,
+    "title": "How Networks Recognize Patterns",
+    "objectives": [
+      "Explain, at a conceptual level, how groups of neurons can recognize patterns like faces or letters",
+      "Describe the idea of building up from simple features to more complex recognition",
+      "Use an analogy to explain how combining simple detectors can identify something complex",
+      "Explain why this idea doesn't require any single neuron to \"understand\" the whole pattern"
+    ],
+    "explanation": [
+      "Lesson 3.7 ended with a promise: networks of neurons can do things no single neuron could do alone, like recognizing a face. This lesson explains, in plain terms, how that's possible — without any single neuron needing to somehow \"understand\" what a face is.",
+      "Here's the key idea: rather than one neuron recognizing an entire complex pattern all at once, many neurons each specialize in noticing something much simpler, and then other neurons combine those simple detections into something more complex. Imagine trying to identify a friend in a crowded photo. You don't process the whole photo in one instant — your brain (through its network of neurons) first picks up on small, simple features: edges, curves, colors, the rough shape of eyes or a nose. Other neurons, further along in the network, take those simple detected features as their own input and combine them into slightly more complex shapes — an eye shape here, a mouth curve there. Still further along, another layer of neurons combines those medium-complexity shapes into recognizing a whole face, and eventually into recognizing that it's specifically your friend's face.",
+      "A good analogy is a jigsaw puzzle. No single puzzle piece shows you the whole picture — one piece might just be a patch of blue sky, another a corner of a rooftop. But when enough pieces (simple, small pieces of information) are combined in the right arrangement, the full picture emerges, even though no individual piece \"knew\" what the whole picture was. That's exactly the relationship between a simple feature-detecting neuron and the full pattern the network eventually recognizes: no single neuron holds the whole picture, but the combination, layer by layer, builds it up.",
+      "This layered, build-up-from-simple-parts idea is one of the most important discoveries about how real brains process patterns — sound, sight, and more all seem to work this way, with early neurons picking up simple raw features and later neurons combining those into increasingly complex recognitions. It's also, as you'll see in Lesson 3.14, one of the very first ideas that computer scientists borrowed directly when designing artificial neural networks: layers of simple artificial neurons, each combining the outputs of the layer before it, eventually recognizing complex patterns like handwritten digits or spoken words — a connection this course will build, from scratch, much later on."
+    ],
+    "example": {
+      "problem": "A network needs to recognize the printed letter \"A\". Using the layered, build-up-from-simple-features idea from this lesson, describe roughly what an early layer of neurons might detect, versus what a later layer might detect.",
+      "steps": [
+        "An early layer of neurons, sitting closest to the raw visual information, would likely detect very simple features: short straight line segments at different angles (for example, two slanted lines and one horizontal line, since that's what makes up an \"A\").",
+        "A middle layer of neurons would take those simple line-segment detections as its input and combine them into slightly more complex shapes — for instance, detecting that two slanted lines meet at a point at the top, forming a peak, and that a horizontal line crosses between them.",
+        "A later layer would take those medium-complexity shape detections and combine them into recognizing the full letter: a peaked shape with a crossbar matches the pattern for the letter \"A\", distinguishing it from other letters.",
+        "At no point did any single neuron need to \"know\" what a letter A is — each layer just combined the simpler detections from the layer before it."
+      ],
+      "answer": "An early layer would detect simple raw features like line segments and angles; a later layer would combine those into the recognition of the full letter \"A\" — with no single neuron ever needing to understand the whole letter by itself."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, explain the main idea behind how networks of neurons recognize complex patterns.",
+        "solution": "Instead of one neuron recognizing an entire complex pattern at once, many neurons each detect something simple, and other neurons combine those simple detections into increasingly complex recognitions, layer by layer, until the full pattern is recognized."
+      },
+      {
+        "problem": "How does the jigsaw puzzle analogy explain why no single neuron needs to \"understand\" a whole face?",
+        "solution": "No single puzzle piece shows the whole picture — each piece is just a small patch of information. But combining many pieces in the right arrangement produces the full picture. Similarly, no single neuron needs to recognize a whole face; combining many simple detections from many neurons produces the full recognition."
+      },
+      {
+        "problem": "Why does it make sense for early neurons in a network to detect very simple features (like edges or line segments) rather than complex ones?",
+        "solution": "Simple features like edges and line segments are the basic building blocks that make up more complex shapes. Detecting these simple pieces first gives later neurons the raw material they need to combine into progressively more complex, and eventually whole, patterns — building complexity up in stages rather than all at once."
+      },
+      {
+        "problem": "A network recognizes spoken words. Based on this lesson's ideas, would you expect the very first neurons in that network to detect whole words directly, or something simpler first? Explain.",
+        "solution": "Something simpler first. Following the layered build-up idea, the earliest neurons would likely detect very simple raw sound features (like specific pitches or short sound fragments), with later layers combining those into recognizing syllables, and still later layers combining syllables into recognizing whole words."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How do networks of neurons recognize complex patterns like faces, according to this lesson?",
+        "choices": [
+          "One single, extremely powerful neuron instantly recognizes the whole pattern",
+          "Many neurons detect simple features, and other neurons combine those simple detections, layer by layer, into recognizing the full complex pattern",
+          "Patterns are recognized purely by random chance",
+          "Only the axon can recognize patterns, never the dendrites"
+        ],
+        "answerIndex": 1,
+        "explanation": "Recognition builds up from simple features detected by early neurons to increasingly complex combinations detected by later neurons — no single neuron recognizes the whole pattern alone."
+      },
+      {
+        "type": "mc",
+        "question": "In the jigsaw puzzle analogy, what does a single puzzle piece represent?",
+        "choices": [
+          "The full recognized pattern (like a whole face)",
+          "A simple, small piece of information detected by an early neuron",
+          "A neuron's threshold",
+          "The synapse"
+        ],
+        "answerIndex": 1,
+        "explanation": "A single puzzle piece, like a single early neuron's detection, only holds a small piece of information — the full picture only emerges once many pieces are combined."
+      },
+      {
+        "type": "short",
+        "question": "What word describes the idea that early neurons detect simple features while later neurons combine those into more complex recognitions?",
+        "answer": "layered",
+        "acceptable": [
+          "layered",
+          "layers",
+          "layering",
+          "build-up",
+          "layered build-up"
+        ],
+        "explanation": "This layered idea — simple features first, more complex combinations later — is how networks recognize complex patterns without any single neuron understanding the whole thing."
+      },
+      {
+        "type": "short",
+        "question": "Does any single neuron need to fully \"understand\" an entire complex pattern (like a whole face) for the network to recognize it?",
+        "answer": "no",
+        "acceptable": [
+          "no",
+          "no single neuron",
+          "no it doesn't"
+        ],
+        "explanation": "No single neuron needs to understand the whole pattern — the recognition emerges from combining many simple detections across the network, layer by layer."
+      },
+      {
+        "type": "mc",
+        "question": "Why is this lesson's layered idea mentioned as a preview of artificial neural networks, covered much later in this course?",
+        "choices": [
+          "Because artificial neural networks are also organized in layers of simple units that each combine outputs from the previous layer to recognize increasingly complex patterns, directly inspired by this idea",
+          "Because artificial neural networks have nothing to do with real neurons at all",
+          "Because computers cannot recognize patterns of any kind",
+          "Because this idea only applies to jigsaw puzzles, not to computers"
+        ],
+        "answerIndex": 0,
+        "explanation": "Computer scientists directly borrowed this layered, build-up-from-simple-features idea when designing artificial neural networks — a connection this course will explore hands-on in a later phase."
+      }
+    ]
+  },
+  {
+    "id": "3.9",
+    "number": 9,
+    "title": "Learning and Memory as Changing Connections",
+    "objectives": [
+      "Explain how learning can be described as a physical change in synaptic connections",
+      "Distinguish a short-term, weakly-formed connection from a long-term, well-reinforced one",
+      "Explain what a memory is, in terms of neuron connections",
+      "Connect this idea back to \"fire together, wire together\" from Lesson 3.6"
+    ],
+    "explanation": [
+      "Lesson 3.6 explained that repeated, coordinated firing between two neurons strengthens the synapse between them — the well-worn hiking trail. This lesson takes that idea and states it as plainly as possible: learning something new is, physically, the process of forming and strengthening new patterns of neuron connections, and a memory is a pattern of connections that has been strengthened enough to be reliably reactivated later.",
+      "Picture the very first time you tried to remember a new friend's phone number. Right after hearing it, you can probably repeat it back immediately — but if a stranger interrupts with a totally different question, that number might slip away completely a few minutes later. That's a short-term memory: a pattern of neuron activity that formed but never got reinforced enough to become a stable, strong connection. Now compare that to your own home phone number or address, something you've heard and used hundreds or thousands of times. You don't have to \"try\" to remember it — it comes back instantly and reliably. That's a long-term memory: the relevant synapses have been fired together so many times, so consistently, that the connection has become strong and stable, much like the well-worn hiking trail from Lesson 3.6 versus a path only walked once.",
+      "This is why the exact same information can feel completely different depending on how many times you've encountered it. The first time you see a new vocabulary word, its meaning barely sticks — the neurons involved fired together only once, so the synapse barely strengthened at all. But after seeing that word, and consciously connecting it to its meaning, five or ten separate times, the connection has been reinforced enough that recalling it starts to feel automatic. This is also, not coincidentally, why re-reading something once is a much weaker way to learn it than actively practicing it multiple times: passive re-reading doesn't create nearly as much of the kind of repeated, coordinated neuron firing that actually strengthens a connection, compared to actively retrieving and using the information yourself.",
+      "It's worth being precise about what \"remembering something\" really means at the level of neurons: it's not that a single neuron somewhere is storing a phone number the way a computer file stores a number. Instead, a memory is a specific pattern of connections, across many neurons, that has been reinforced enough that reactivating part of the pattern tends to reactivate the rest of it too — which is why one small reminder (a smell, a familiar tune) can sometimes bring back an entire memory in a rush. The next lesson looks at the flip side of this same mechanism: what happens to a connection that stops getting used."
+    ],
+    "example": {
+      "problem": "A student hears a new vocabulary word and its definition exactly once in class, then never encounters it again. A second student hears the same word once in class, and then deliberately quizzes themselves on it five separate times over the next week. Using this lesson's ideas, predict which student is more likely to remember the word a month later, and explain why.",
+      "steps": [
+        "Learning and memory happen through synapses being strengthened by repeated, coordinated firing — the more times the relevant neurons fire together in the right pattern, the stronger the connection becomes.",
+        "The first student's neurons for that word fired together only once (hearing it in class), which is not much reinforcement — closer to a path walked only a single time.",
+        "The second student's neurons fired together on that same first occasion, plus five more separate times through self-quizzing — much more repeated, coordinated firing.",
+        "By the reasoning of this lesson (and Lesson 3.6's \"fire together, wire together\"), more repeated reinforcement produces a stronger, more stable connection.",
+        "So the second student, with six total reinforcing occasions instead of one, should have a much stronger, longer-lasting connection for that word."
+      ],
+      "answer": "The second student is far more likely to remember the word a month later, because deliberately quizzing themselves five extra times gave their brain many more chances to strengthen the synapses involved, compared to the first student's single exposure."
+    },
+    "practice": [
+      {
+        "problem": "In terms of neuron connections, what is a memory?",
+        "solution": "A memory is a specific pattern of connections across many neurons that has been reinforced (strengthened) enough that reactivating part of the pattern tends to reliably reactivate the rest of it."
+      },
+      {
+        "problem": "Why does a phone number you just heard once often disappear from memory within a few minutes, while your own home address doesn't?",
+        "solution": "A phone number heard only once produces very little reinforcement of the relevant synapses — a weak, short-term connection that fades easily. A home address has been fired through so many times, over such a long period, that its connections are strongly reinforced, making it a stable long-term memory that comes back automatically."
+      },
+      {
+        "problem": "Why is actively quizzing yourself on new material generally a stronger way to learn it than just re-reading it passively?",
+        "solution": "Actively retrieving and using information involves firing the relevant neurons again in a coordinated way, similar to the original learning — this is the kind of repeated, coordinated activity that strengthens synapses. Passive re-reading provides much weaker, less active reinforcement of that same neural pattern."
+      },
+      {
+        "problem": "Explain why a memory isn't stored in just one single neuron, the way a number might be stored in one file on a computer.",
+        "solution": "A memory is a pattern of connections spread across many neurons, not information sitting inside a single cell. It's the strengthened relationships between many neurons — not any one neuron acting alone — that make up the memory, which is also why reactivating even part of that pattern can bring back the rest of it."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In terms of neuron connections, what does \"learning something new\" mean?",
+        "choices": [
+          "Forming and strengthening new patterns of connections between neurons",
+          "Growing an entirely new, separate brain",
+          "Erasing all previous connections in the brain",
+          "A process that has nothing to do with neurons at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "Learning is the physical process of forming and strengthening patterns of connections between neurons, through the repeated, coordinated firing described in Lesson 3.6."
+      },
+      {
+        "type": "mc",
+        "question": "Why does a home address you've used for years come back to mind instantly, while a phone number you heard once tends to fade quickly?",
+        "choices": [
+          "The home address's connections have been reinforced by repeated use over a long time, making them strong and stable, while the phone number's connections were only formed once",
+          "Addresses are physically shorter than phone numbers",
+          "The brain deletes phone numbers automatically every hour",
+          "There is no difference between the two"
+        ],
+        "answerIndex": 0,
+        "explanation": "Repeated use strengthens synapses over time, producing a stable long-term memory. A single exposure produces only a weak, short-term connection that tends to fade."
+      },
+      {
+        "type": "short",
+        "question": "What word describes a memory whose connections have not been reinforced much and tends to fade quickly?",
+        "answer": "short-term",
+        "acceptable": [
+          "short-term",
+          "short term",
+          "a short-term memory",
+          "weak"
+        ],
+        "explanation": "A short-term memory is a pattern of connections that formed but wasn't reinforced enough to become stable — it tends to fade unless reinforced further."
+      },
+      {
+        "type": "short",
+        "question": "According to this lesson, is passively re-reading information generally a stronger or weaker way to learn it compared to actively practicing / quizzing yourself on it?",
+        "answer": "weaker",
+        "acceptable": [
+          "weaker",
+          "weaker than active practice",
+          "less effective"
+        ],
+        "explanation": "Passive re-reading produces much less of the repeated, coordinated neuron firing that strengthens synapses, compared to actively retrieving and using the information."
+      },
+      {
+        "type": "mc",
+        "question": "Why can one small reminder, like a familiar smell or tune, sometimes bring back an entire memory in a rush?",
+        "choices": [
+          "Because a memory is a connected pattern across many neurons, and reactivating part of that pattern tends to reactivate the rest of it too",
+          "Because smells and tunes are stored in a completely separate part of the body from the brain",
+          "Because memories are randomly generated fresh each time, unrelated to past connections",
+          "Because reminders erase old memories and replace them with new ones"
+        ],
+        "answerIndex": 0,
+        "explanation": "Since a memory is a connected pattern spread across many neurons, activating even a small part of that pattern (like a familiar smell) can cascade and reactivate the rest of the connected pattern, bringing back the fuller memory."
+      }
+    ]
+  },
+  {
+    "id": "3.10",
+    "number": 10,
+    "title": "Forgetting — When Connections Weaken",
+    "objectives": [
+      "Explain forgetting as the weakening of rarely-used synaptic connections",
+      "State the \"use it or lose it\" idea in the context of neuron connections",
+      "Explain why review and repetition help prevent forgetting",
+      "Connect this idea to why this course itself uses practice problems and quizzes"
+    ],
+    "explanation": [
+      "Lesson 3.9 explained learning and memory as connections between neurons getting strengthened through repeated, coordinated use. It's just as important to understand the flip side: connections that stop getting used tend to weaken over time, and that weakening is what forgetting actually is, at the level of neurons.",
+      "Go back to the hiking-trail analogy from Lesson 3.6. A trail that gets walked every day stays clear and easy to follow. But imagine that same trail simply stops being used — no one walks it for months. Grass grows back over it, fallen branches pile up, and eventually it becomes hard to even tell a trail was ever there. Nothing dramatic destroyed the trail; it just faded from disuse. Synapses work the same way: a connection that isn't reinforced by continued use tends to gradually weaken, and if it's unused for long enough, it can become so weak that reactivating that memory or skill becomes difficult or impossible — which is exactly what it feels like when you \"forget\" something you used to know well.",
+      "This gives a simple, memorable rule: use it or lose it. A skill you practiced constantly in the past (say, an instrument you played every day years ago) but haven't touched in a long time often feels rusty or partly gone — not because the knowledge was violently deleted, but because the relevant connections weakened from disuse, the same way an old hiking trail gets overgrown. On the other hand, a skill or fact you keep revisiting, even briefly, gets its connections refreshed and re-strengthened before they have a chance to fade much, which is why occasional review is so much more effective at maintaining a skill than learning it once and never touching it again.",
+      "This is also, not by accident, exactly why this course is built the way it is: every lesson ends with practice problems and a quiz, and later lessons regularly draw on ideas from earlier ones. That's not busywork — it's deliberately using the same \"fire together, wire together\" mechanism from Lesson 3.6 to keep the connections for earlier material active and strong, instead of letting them quietly weaken from disuse the way an unused hiking trail does. Understanding forgetting this way also explains why cramming right before a test (one intense but brief burst of firing) tends to produce much weaker, more forgettable learning than spacing the same amount of practice out over several days (repeated firing, spaced over time, with real chances for the connection to weaken slightly and then get re-strengthened, which makes it more durable) — a pattern well-documented in how memory actually works."
+    ],
+    "example": {
+      "problem": "A student practiced multiplication tables intensively in third grade and could recall them instantly. By sixth grade, having not practiced them at all in the meantime, the student now hesitates and sometimes gets simple multiplication facts wrong. Using this lesson's ideas, explain what most likely happened, and what the student could do to fix it.",
+      "steps": [
+        "The student's original fast, instant recall reflects that the relevant synapses were, at one point, strongly reinforced through heavy practice — a well-worn trail.",
+        "Between third and sixth grade, those specific connections were not used or reinforced at all — no walking on that trail.",
+        "Following the \"use it or lose it\" idea, connections that go unused for a long time tend to weaken, which matches the student's current hesitation and mistakes — the trail became overgrown, not destroyed beyond repair.",
+        "Since the connections weakened rather than being erased entirely, the fix is the same mechanism that built them originally: renewed, repeated practice, which would re-strengthen (re-clear) those same connections again."
+      ],
+      "answer": "The student's multiplication connections weakened from years of disuse — a case of \"use it or lose it,\" not permanent deletion. Renewed, repeated practice should re-strengthen those same connections and restore fast, reliable recall."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, what is forgetting, described in terms of neuron connections?",
+        "solution": "Forgetting is the weakening of synaptic connections that have gone unused for a period of time — similar to a hiking trail becoming overgrown and hard to follow after no one walks it for a while."
+      },
+      {
+        "problem": "What does \"use it or lose it\" mean in the context of this lesson?",
+        "solution": "It means that connections between neurons need to be used (reinforced through repeated, coordinated firing) to stay strong. If a connection isn't used for a long time, it tends to weaken, which is what forgetting feels like."
+      },
+      {
+        "problem": "Why does occasional review of old material tend to prevent forgetting better than learning something once and never revisiting it?",
+        "solution": "Occasional review refreshes and re-strengthens the relevant synaptic connections before they've had much chance to weaken, keeping them active. Learning something once and never revisiting it leaves those connections to weaken from disuse over time, the way an unwalked trail becomes overgrown."
+      },
+      {
+        "problem": "Explain, using this lesson's ideas, why cramming intensely the night before a test often produces learning that's forgotten quickly afterward, compared to spacing the same amount of study out over several days.",
+        "solution": "Cramming produces one intense but brief burst of firing, without much repeated reinforcement over time. Spacing study out over several days produces repeated firing with real gaps in between, which more closely matches the pattern that builds strong, durable connections — similar to how repeated visits to a trail, spread out over time, keep it clear, compared to one long walk on a single day."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is forgetting, described in terms of neuron connections?",
+        "choices": [
+          "The weakening of synaptic connections that have gone unused for a period of time",
+          "A neuron physically disappearing from the brain",
+          "A synapse instantly becoming permanently unusable the moment it's not used once",
+          "The brain running out of room to store new information"
+        ],
+        "answerIndex": 0,
+        "explanation": "Forgetting corresponds to synaptic connections gradually weakening from disuse — not a sudden deletion, but a fading, similar to an unused trail becoming overgrown."
+      },
+      {
+        "type": "mc",
+        "question": "What does the phrase \"use it or lose it\" mean in this lesson?",
+        "choices": [
+          "Connections between neurons need to be used regularly to stay strong, or they tend to weaken over time",
+          "Every skill must be practiced exactly once and never again",
+          "The brain can only hold one skill at a time",
+          "Neurons that are used too much explode"
+        ],
+        "answerIndex": 0,
+        "explanation": "\"Use it or lose it\" captures the idea that connections weaken from disuse and need continued use (reinforcement) to stay strong."
+      },
+      {
+        "type": "short",
+        "question": "According to this lesson, is a forgotten skill usually permanently erased, or has its connection simply weakened from disuse?",
+        "answer": "weakened from disuse",
+        "acceptable": [
+          "weakened",
+          "weakened from disuse",
+          "just weakened, not erased",
+          "not permanently erased"
+        ],
+        "explanation": "Forgetting is generally the weakening of a connection from disuse, not a permanent, irreversible erasure — which is why renewed practice can often restore a \"forgotten\" skill."
+      },
+      {
+        "type": "short",
+        "question": "Why does this course include practice problems and quizzes in every lesson, based on this lesson's explanation?",
+        "answer": "to keep connections from earlier material strong and prevent forgetting",
+        "acceptable": [
+          "to reinforce earlier material",
+          "to prevent forgetting",
+          "to strengthen connections through repetition",
+          "so connections don't weaken from disuse"
+        ],
+        "explanation": "Practice problems and quizzes deliberately reuse the \"fire together, wire together\" mechanism to keep earlier material's connections active and strong, rather than letting them weaken from disuse."
+      },
+      {
+        "type": "mc",
+        "question": "Why does spacing study out over several days tend to produce more durable learning than cramming the night before a test?",
+        "choices": [
+          "Spaced study provides repeated, separated bursts of reinforcing activity, which builds stronger, more durable connections than one single intense burst",
+          "Cramming always produces the strongest possible connections",
+          "Spacing study out has no effect on memory at all",
+          "The time of day study happens is the only thing that matters"
+        ],
+        "answerIndex": 0,
+        "explanation": "Repeated, spaced-out reinforcement builds stronger and more durable connections than a single intense cramming session, because it more closely matches the repeated firing pattern that strengthens synapses over time."
+      }
+    ]
+  },
+  {
+    "id": "3.11",
+    "number": 11,
+    "title": "Weighing Many Signals at Once — How a Neuron \"Decides\"",
+    "objectives": [
+      "Explain how a neuron combines many incoming signals of different strengths before deciding whether to fire",
+      "Distinguish signals that push a neuron toward firing from signals that push it away from firing",
+      "Explain why the combination of many weighted signals, not just a signal count, determines the outcome",
+      "Connect this combining-and-deciding process back to synaptic strength and the threshold"
+    ],
+    "explanation": [
+      "This lesson pulls together several ideas from earlier in this phase into one bigger picture: exactly how does a neuron, receiving input from thousands of other neurons at once through its dendrites, actually decide whether to fire? Lesson 3.3 explained that firing depends on crossing a threshold. Lesson 3.5 explained that different synapses have different strength, so their \"votes\" don't count equally. Put those two ideas together, and here's the full picture: a neuron combines all of its incoming signals, with each one weighted by the strength of the synapse it arrived through, and fires only if that combined, weighted total crosses its threshold.",
+      "A useful analogy is a classroom vote where not every vote counts the same. Imagine a class deciding on a field trip destination, but the teacher's vote is worth 10 student votes, while each individual student's vote is worth 1. The final decision doesn't just depend on how many people voted for an option — it depends on the combined, weighted total, where the teacher's single vote can outweigh many students voting the other way. A neuron works the same way: it's not simply counting how many of its input connections are currently active; it's combining each active input's contribution, scaled by how strong that particular synapse is, into one weighted total — and only firing if that total crosses the threshold.",
+      "There's one more piece worth knowing: not every incoming signal pushes a neuron toward firing. Some synapses are excitatory, meaning an active signal through them pushes the combined total up, toward the threshold — like a \"yes\" vote. Others are inhibitory, meaning an active signal through them pushes the combined total down, away from the threshold — like a \"no\" vote that can cancel out \"yes\" votes elsewhere. A neuron might be receiving a strong excitatory push from one set of connections at the very same moment it's receiving a strong inhibitory push from another set, and its threshold decision depends on how those opposing pushes net out, not on either one alone.",
+      "This combining-many-weighted-signals-and-deciding process — weighted inputs, some pushing toward firing and some pushing away, all combined and compared against a threshold — is the single most important idea to carry out of this entire phase. It's exactly the process that inspired the artificial neuron, the basic building block of every artificial neural network, which Lesson 3.14 introduces at a conceptual level and which a much later phase of this course will build, step by step, from scratch."
+    ],
+    "example": {
+      "problem": "A neuron has three active synapses feeding into it at once: Synapse 1 is excitatory and strong, contributing +8. Synapse 2 is excitatory and weak, contributing +2. Synapse 3 is inhibitory and strong, contributing −7. The neuron's threshold is +5. Does the neuron fire?",
+      "steps": [
+        "First, combine all three contributions into one total, since the neuron responds to the combined, weighted signal, not to each synapse separately: +8 + (+2) + (−7).",
+        "Add the excitatory contributions first: +8 + 2 = +10.",
+        "Now subtract the inhibitory contribution, since it pushes the total down: +10 − 7 = +3.",
+        "Compare the combined total, +3, to the threshold, +5.",
+        "Since +3 is below the threshold of +5, the combined signal does not cross the threshold."
+      ],
+      "answer": "The neuron does not fire. Even though two of its three active synapses are excitatory, the strong inhibitory synapse pulls the combined total (+3) below the threshold (+5)."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, how does a neuron decide whether to fire when it has many active synapses at once?",
+        "solution": "It combines the contribution of every active synapse — each one weighted by that synapse's strength, and either pushing the total up (excitatory) or down (inhibitory) — into one combined total, and fires only if that combined total crosses its threshold."
+      },
+      {
+        "problem": "What is the difference between an excitatory synapse and an inhibitory synapse?",
+        "solution": "An excitatory synapse, when active, pushes the neuron's combined signal up, toward the threshold (like a \"yes\" vote toward firing). An inhibitory synapse, when active, pushes the combined signal down, away from the threshold (like a \"no\" vote against firing)."
+      },
+      {
+        "problem": "A neuron has a threshold of +6. Two active excitatory synapses contribute +4 and +5. One active inhibitory synapse contributes −2. Does the neuron fire? Show the combined total.",
+        "solution": "Combine all contributions: +4 + 5 − 2 = +7. Since +7 is greater than the threshold of +6, the neuron fires."
+      },
+      {
+        "problem": "Why is the classroom-vote analogy (with the teacher's vote worth 10 student votes) a good way to explain how a neuron combines its inputs?",
+        "solution": "Just as the final classroom decision depends on the weighted total of votes, not just the raw number of people voting for each option, a neuron's firing decision depends on the weighted total of its active synapses' contributions (each scaled by that synapse's strength), not just the raw number of active connections."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How does a neuron combine its many incoming signals to decide whether to fire?",
+        "choices": [
+          "It simply counts how many synapses are active, ignoring their individual strength",
+          "It combines each active synapse's contribution, weighted by that synapse's strength, into one total, and compares that total to its threshold",
+          "It only ever listens to its single strongest synapse and ignores all others",
+          "It fires randomly regardless of any incoming signal"
+        ],
+        "answerIndex": 1,
+        "explanation": "A neuron combines the weighted contribution of every active synapse into one combined total and fires only if that total crosses its threshold — the count of active synapses alone isn't what matters."
+      },
+      {
+        "type": "mc",
+        "question": "What does an inhibitory synapse do to a neuron's combined signal when it's active?",
+        "choices": [
+          "Pushes the combined signal up, toward the threshold",
+          "Pushes the combined signal down, away from the threshold",
+          "Has no effect on the combined signal at all",
+          "Instantly forces the neuron to fire"
+        ],
+        "answerIndex": 1,
+        "explanation": "An inhibitory synapse pushes the combined total down, away from the threshold — the opposite of an excitatory synapse, which pushes the total up."
+      },
+      {
+        "type": "short",
+        "question": "What term describes a synapse whose activity pushes a neuron's combined signal up, toward firing?",
+        "answer": "excitatory",
+        "acceptable": [
+          "excitatory",
+          "an excitatory synapse"
+        ],
+        "explanation": "An excitatory synapse pushes the combined signal up toward the threshold, like a \"yes\" vote toward firing."
+      },
+      {
+        "type": "short",
+        "question": "A neuron's threshold is +5. Its only active synapse is excitatory and contributes +9. Does the neuron fire — yes or no?",
+        "answer": "yes",
+        "acceptable": [
+          "yes",
+          "yes it fires",
+          "fires"
+        ],
+        "explanation": "The combined total (+9) crosses the threshold (+5), so the neuron fires a full pulse, following the all-or-nothing rule from Lesson 3.3."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this lesson's combining-and-deciding process matter for the rest of this course?",
+        "choices": [
+          "It's the exact biological process that inspired the artificial neuron, the basic building block of artificial neural networks built in a later phase of this course",
+          "It has no connection to anything else in this course",
+          "It only applies to insects, not to human brains",
+          "It replaces the need for a threshold entirely"
+        ],
+        "answerIndex": 0,
+        "explanation": "The idea of weighted inputs, some pushing toward firing and some away, combined and compared to a threshold, is exactly what inspired the artificial neuron — the building block this course will construct from scratch in a much later phase."
+      }
+    ]
+  },
+  {
+    "id": "3.12",
+    "number": 12,
+    "title": "Reflexes — The Brain's Fastest, Simplest Circuits",
+    "objectives": [
+      "Explain what a reflex is and why reflex circuits are so fast",
+      "Describe how a reflex can involve very few neurons, sometimes bypassing the brain entirely",
+      "Contrast a fixed reflex circuit with the more flexible, learned circuits from earlier lessons",
+      "Give an example of a reflex and trace its short circuit"
+    ],
+    "explanation": [
+      "Every lesson so far in this phase has focused on flexible circuits — connections that get stronger or weaker with experience, layered networks that learn to recognize patterns over time. This lesson looks at the opposite extreme: a reflex, a very short, very fast, mostly fixed circuit that doesn't need to learn anything at all, because it's essentially wired in from the start.",
+      "The classic example is touching something painfully hot. By the time you'd consciously thought \"that's hot, I should move my hand,\" you'd already be burned — so the body doesn't wait for that conscious process. Instead, a short circuit sometimes involving only a few neurons carries the signal from a sensor in your skin, through your spinal cord, straight to the muscles that yank your hand back — often before the signal has even finished traveling up to your brain and registering as \"pain\" you consciously notice. This is why you can snap your hand away from something hot and only feel the pain a fraction of a second afterward, once the slower signal reaches your brain.",
+      "Think about a building's fire alarm system connected directly to automatic sprinklers. The system doesn't wait for a person to notice smoke, walk to a phone, and call for help — it's wired so that detecting smoke directly and automatically triggers the sprinklers, with no decision-making step in between. A reflex circuit works the same way: it's wired for speed and reliability over flexibility, deliberately skipping the slower, more flexible decision-making circuits (the kind built up through learning and experience across earlier lessons in this phase) in favor of a short, dependable, always-the-same-response path.",
+      "This is a useful contrast to hold onto: not every part of the nervous system works the way this phase's earlier lessons described. Learned, flexible circuits — built through repeated firing, strengthened synapses, and layered pattern recognition — are what let a brain adapt, recognize new things, and improve with practice. Fixed reflex circuits are what let a body react instantly and reliably to certain kinds of danger, without waiting for that slower, more flexible processing. Real brains and bodies use both kinds of circuits side by side, each suited to a different job — fast and fixed for reflexes, and slower but adaptable for almost everything else this course has covered."
+    ],
+    "example": {
+      "problem": "A person accidentally touches a hot pan. Using the reflex idea from this lesson, put these events in the correct order: (a) the hand yanks back, (b) a heat sensor in the skin detects the danger, (c) the person consciously feels pain, (d) a short circuit through the spinal cord carries the signal to the arm muscles.",
+      "steps": [
+        "First, the heat sensor in the skin detects the dangerous temperature — this is event (b), the very start of the process.",
+        "Next, that signal travels through a short circuit through the spinal cord, rather than waiting for the full trip up to the brain — this is event (d).",
+        "That short circuit directly triggers the arm muscles to contract, yanking the hand back — this is event (a), the reflex action itself.",
+        "Only after this fast reflex has already happened does the slower signal finish its longer trip up to the brain, where it registers as conscious pain — this is event (c), which happens last."
+      ],
+      "answer": "The correct order is: (b) heat sensor detects danger → (d) short spinal-cord circuit carries the signal → (a) hand yanks back → (c) the person consciously feels pain, after the reflex has already happened."
+    },
+    "practice": [
+      {
+        "problem": "Why does a reflex, like yanking your hand away from something hot, happen before you consciously feel pain?",
+        "solution": "The reflex uses a very short circuit, sometimes routed through the spinal cord rather than all the way up to and back from the brain, so the signal to move the muscles travels a much shorter distance and happens much faster than the slower signal that eventually reaches the brain and registers as conscious pain."
+      },
+      {
+        "problem": "How does the fire-alarm-and-sprinkler analogy help explain why reflex circuits are useful?",
+        "solution": "A sprinkler system triggered directly and automatically by smoke detection, with no decision-making step, reacts much faster than waiting for a person to notice, decide, and act. Similarly, a reflex circuit reacts instantly and reliably to danger by skipping the slower, more flexible decision-making circuits used for most other brain processing."
+      },
+      {
+        "problem": "How is a reflex circuit different from the learned, flexible circuits described in earlier lessons in this phase (like the ones that get stronger with practice)?",
+        "solution": "A reflex circuit is largely fixed from the start and doesn't rely on being strengthened through repeated experience the way learned circuits do (Lesson 3.6). It's built for speed and a reliable, always-the-same response, rather than for adapting and improving with practice."
+      },
+      {
+        "problem": "Why do you think it's useful for the body to have both fast, fixed reflex circuits and slower, adaptable, learned circuits, rather than relying on just one kind?",
+        "solution": "Fast, fixed reflexes are essential for reacting instantly to sudden danger, where waiting for slower, flexible processing could cause injury. Slower, adaptable circuits are needed for everything that benefits from learning and improving over time, like recognizing patterns or getting better at a skill. Having both lets the body react instantly when speed matters most, while still being able to learn and adapt everywhere else."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a reflex, as described in this lesson?",
+        "choices": [
+          "A very short, fast, mostly fixed circuit that reacts to certain signals without needing to be learned",
+          "A type of synapse that only exists in the eye",
+          "A slow, flexible circuit that improves gradually with practice",
+          "A neuron that never fires under any circumstances"
+        ],
+        "answerIndex": 0,
+        "explanation": "A reflex is a short, fast, largely fixed circuit — built for speed and reliability rather than learning and adapting over time."
+      },
+      {
+        "type": "mc",
+        "question": "Why can a reflex, like yanking a hand away from something hot, happen faster than consciously deciding to move?",
+        "choices": [
+          "The reflex signal travels through a much shorter circuit, sometimes through the spinal cord, without waiting for the full trip through the brain",
+          "Reflexes actually happen slower than conscious decisions, not faster",
+          "The hand has its own separate brain",
+          "Pain signals travel faster than any other kind of signal in the body"
+        ],
+        "answerIndex": 0,
+        "explanation": "A reflex uses a much shorter circuit that can act before the slower signal finishes its longer trip to and from the brain, which is why the reflex action can happen before conscious pain is even felt."
+      },
+      {
+        "type": "short",
+        "question": "What body part does the reflex circuit for pulling a hand away from something hot sometimes route through, instead of waiting for the full brain?",
+        "answer": "the spinal cord",
+        "acceptable": [
+          "spinal cord",
+          "the spinal cord"
+        ],
+        "explanation": "Some reflex circuits route through the spinal cord, allowing a much faster response than waiting for the signal to travel all the way to and from the brain."
+      },
+      {
+        "type": "short",
+        "question": "Are reflex circuits generally described as fixed (mostly the same every time) or as flexible and shaped heavily by learning?",
+        "answer": "fixed",
+        "acceptable": [
+          "fixed",
+          "mostly fixed",
+          "not flexible"
+        ],
+        "explanation": "Reflex circuits are largely fixed, built for a fast, reliable, always-the-same response, unlike the flexible, learning-shaped circuits covered in earlier lessons."
+      },
+      {
+        "type": "mc",
+        "question": "Why do bodies benefit from having both fixed reflex circuits and flexible, learned circuits, rather than only one type?",
+        "choices": [
+          "Fixed reflexes react instantly to sudden danger, while flexible circuits allow learning and adapting over time — each is suited to a different job",
+          "Only reflex circuits are ever useful; learned circuits serve no purpose",
+          "Flexible circuits are always faster than reflexes",
+          "Having both types is purely accidental and serves no functional purpose"
+        ],
+        "answerIndex": 0,
+        "explanation": "Fixed reflex circuits provide fast, reliable reactions to danger, while flexible, learned circuits allow the adapting and pattern recognition covered throughout this phase — each type serves a different, complementary purpose."
+      }
+    ]
+  },
+  {
+    "id": "3.13",
+    "number": 13,
+    "title": "Specialized Regions — Different Parts of the Brain, Different Jobs",
+    "objectives": [
+      "Explain that different regions of the brain tend to specialize in different jobs",
+      "Name a few example regions and the general kind of job each one handles",
+      "Explain how specialized regions still connect and work together as one system",
+      "Connect brain specialization back to the networks-of-networks idea from earlier lessons"
+    ],
+    "explanation": [
+      "This entire phase has treated the brain as one giant network of neurons, and that's accurate — but it's not the whole picture. Real brains aren't uniform throughout; they're organized into regions, and different regions tend to specialize in different kinds of jobs. A useful way to think about this: a school isn't just one giant room where every activity happens randomly everywhere. It has a gym for physical activity, a science lab for experiments, a library for quiet reading, and a cafeteria for eating — different spaces, each set up and specialized for a different kind of work, but all part of the same school, connected by hallways, and all working together toward the same overall goal.",
+      "The brain is organized in a broadly similar way. Near the back of the brain sits the visual cortex, a region whose neurons are heavily specialized for processing information coming from the eyes — detecting edges, colors, and shapes, building up toward recognizing whole scenes, using exactly the layered pattern-recognition idea from Lesson 3.8. Toward the top of the brain sits the motor cortex, a region specialized for planning and controlling voluntary movement — deciding to raise your hand, kick a ball, or write a sentence. Other regions specialize in language, in balance, in emotional responses, and more. None of these regions work in isolation — they're constantly connected to each other, sending signals back and forth, the same many-to-many network wiring described in Lesson 3.7, just organized into recognizable neighborhoods rather than being spread completely evenly.",
+      "It helps to think of this as a network of networks. Each specialized region is, itself, a dense network of connected neurons doing a particular kind of layered processing (much like Lesson 3.8's pattern-recognition idea, but for that region's specialty). Then those regions connect to each other, forming a larger network of networks, which lets specialized processing in one region — say, recognizing a word on a page in the visual cortex — get combined with processing in another region — say, planning the arm movement in the motor cortex needed to write a reply. Nothing about any single region working alone could produce something as complex as reading a sentence and then writing a response to it; that requires multiple specialized regions, connected together, contributing their own specialty to one combined result.",
+      "This idea — specialized parts, each good at one kind of job, connected together into a larger working system — closes out the biological picture this phase has been building. The next lesson takes a step back and makes the connection explicit: how this whole picture, from a single neuron's threshold up through specialized, interconnected regions, became the direct inspiration for how artificial intelligence systems are built today."
+    ],
+    "example": {
+      "problem": "A person reads a birthday card and then writes a short thank-you note in reply. Using the idea of specialized brain regions from this lesson, name at least two different regions likely involved, and explain what job each one would be doing.",
+      "steps": [
+        "Reading the words on the card requires processing visual information — detecting shapes and patterns and recognizing them as letters and words — which is the specialty of the visual cortex.",
+        "Understanding what those words mean, and forming a reply in language, would involve regions specialized for language processing.",
+        "Physically writing the reply requires planning and controlling the hand's movements to form letters — the specialty of the motor cortex.",
+        "None of these specialized regions could produce the full task (reading, understanding, and writing a reply) alone — it requires them working together, connected as a network of networks."
+      ],
+      "answer": "At least the visual cortex (processing the written words on the card) and the motor cortex (controlling the hand movements needed to write the reply) are involved, along with language-specialized regions — all connected together, each contributing its own specialty to the combined task."
+    },
+    "practice": [
+      {
+        "problem": "In your own words, what does it mean for different regions of the brain to be \"specialized\"?",
+        "solution": "It means different regions of the brain tend to handle different kinds of jobs particularly well — for example, one region specializes in processing visual information, while another specializes in planning movement — rather than every region doing the exact same generic job."
+      },
+      {
+        "problem": "How does the school analogy (gym, science lab, library, cafeteria) help explain brain specialization?",
+        "solution": "Just as a school has different spaces specialized for different activities, all connected by hallways and working together as one school, the brain has different regions specialized for different jobs (like vision or movement), all connected together and working together as one brain."
+      },
+      {
+        "problem": "What job does the visual cortex specialize in, and what earlier lesson's idea does its processing rely on?",
+        "solution": "The visual cortex specializes in processing information from the eyes — detecting edges, colors, and shapes, and building up to recognizing whole scenes. This relies on the layered pattern-recognition idea from Lesson 3.8, where simple features are combined into increasingly complex recognitions."
+      },
+      {
+        "problem": "Why is it accurate to describe the brain as a \"network of networks\" rather than just one single network?",
+        "solution": "Each specialized region is itself a dense network of connected neurons handling its own particular job. Those regions are then connected to each other, forming a larger network made up of these smaller specialized networks — a network of networks, not one uniform, undifferentiated network."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does it mean for the brain to have \"specialized regions\"?",
+        "choices": [
+          "Different regions of the brain tend to handle different kinds of jobs, such as vision or movement, rather than every region doing the same generic job",
+          "Every region of the brain does the exact same job as every other region",
+          "The brain has no distinct regions at all — it is completely uniform throughout",
+          "Only one region of the brain is ever active at a time, and all others stay permanently off"
+        ],
+        "answerIndex": 0,
+        "explanation": "Different brain regions specialize in different kinds of jobs (like vision or movement), similar to how different rooms in a school are specialized for different activities."
+      },
+      {
+        "type": "mc",
+        "question": "What is the visual cortex specialized for?",
+        "choices": [
+          "Processing information from the eyes, like edges, colors, shapes, and whole scenes",
+          "Controlling voluntary movement of the arms and legs",
+          "Digesting food",
+          "Storing long-term memories exclusively, with no other function"
+        ],
+        "answerIndex": 0,
+        "explanation": "The visual cortex specializes in processing visual information, building up from simple features to recognizing whole scenes, using the layered pattern-recognition idea from Lesson 3.8."
+      },
+      {
+        "type": "short",
+        "question": "What region of the brain specializes in planning and controlling voluntary movement?",
+        "answer": "the motor cortex",
+        "acceptable": [
+          "motor cortex",
+          "the motor cortex"
+        ],
+        "explanation": "The motor cortex is the region specialized for planning and controlling voluntary movement, like raising a hand or writing a sentence."
+      },
+      {
+        "type": "short",
+        "question": "Do specialized brain regions work in complete isolation from each other, or are they connected and working together?",
+        "answer": "connected and working together",
+        "acceptable": [
+          "connected",
+          "they work together",
+          "connected and working together",
+          "not isolated"
+        ],
+        "explanation": "Specialized regions are constantly connected to each other, sending signals back and forth, so complex tasks combine contributions from multiple regions rather than relying on any single one alone."
+      },
+      {
+        "type": "mc",
+        "question": "Why is \"network of networks\" an accurate way to describe how the whole brain is organized?",
+        "choices": [
+          "Each specialized region is itself a dense network of neurons, and those regions are then connected to each other, forming a larger network built from those smaller specialized networks",
+          "Because the brain contains no networks at all, only isolated neurons",
+          "Because each region works completely independently with zero connections to other regions",
+          "Because there is only ever exactly one network in the entire brain"
+        ],
+        "answerIndex": 0,
+        "explanation": "Each specialized region is a network of connected neurons in its own right, and those regions connect to each other, forming a larger network of networks — exactly how the brain combines specialized processing into complex, whole-brain abilities."
+      }
+    ]
+  },
+  {
+    "id": "3.14",
+    "number": 14,
+    "title": "From Biological Neurons to Artificial Ones — The Big Idea Behind AI",
+    "objectives": [
+      "Explain why scientists got inspired by real neurons to build a simplified computer version",
+      "Match each biological idea from this phase to its simplified artificial counterpart, by name only",
+      "Explain the difference between \"inspired by\" and \"an exact copy of\"",
+      "Preview, without teaching the details, what a much later phase of this course will build"
+    ],
+    "explanation": [
+      "This entire phase has built up one idea at a time: what a neuron is (3.1), its parts (3.2), how it fires using a threshold (3.3), how it hands signals to other neurons across synapses (3.4), how those connections vary in strength (3.5) and change with experience (3.6), how huge networks of these simple units produce complex abilities like pattern recognition (3.7, 3.8), how learning and forgetting work (3.9, 3.10), how a neuron combines many weighted signals against a threshold (3.11), and how the whole brain organizes into specialized, connected regions (3.12, 3.13). This lesson connects all of that directly to a question scientists started asking decades ago: could a much simpler, math-based version of a neuron be built inside a computer?",
+      "The answer turned out to be yes, and the result is called an artificial neuron — the basic building block of every artificial neural network, including the ones behind modern AI. It's worth being precise about what \"inspired by\" means here, because it's easy to overstate the connection. Think about how an airplane wing was inspired by a bird's wing — engineers noticed that a curved wing shape could generate lift, and borrowed that basic principle, but an airplane wing doesn't flap, isn't made of feathers, and works quite differently in the details. An artificial neuron is similar: it borrows the basic principle of a real neuron's behavior, but it's a simplified mathematical version, not a literal biological copy, and works differently in the details.",
+      "Here's the direct mapping, by name only — none of the actual math is taught in this lesson, since that belongs to a much later phase of this course. A real neuron's synapses have different strengths (Lesson 3.5); an artificial neuron has \"weights,\" simplified numbers that play the same basic role of making some inputs count more than others. A real neuron combines many weighted, incoming signals and compares the total against a threshold before firing (Lesson 3.11); an artificial neuron does the same basic kind of combining-and-comparing, using simplified math instead of biological chemistry. A real neuron follows an all-or-nothing firing rule (Lesson 3.3); an artificial neuron has a similar decision rule for turning its combined total into an output. Real networks of neurons build up recognition of complex patterns in layers, from simple features to complex ones (Lesson 3.8); artificial neural networks are also organized in layers, for the exact same reason.",
+      "None of the actual formulas, numbers, or code for building an artificial neuron are part of this lesson — that's the job of a much later phase of this course, where you'll build a working artificial neuron, and then a full artificial neural network, entirely from scratch, using the programming skills from Phase 2 and math skills from phases still to come. For now, the goal is just to see the shape of the idea clearly: a real neuron's behavior — weighing many signals differently, combining them, and firing based on a threshold — was simple and understandable enough that it could be captured, in simplified form, as math a computer could run. That single insight is the seed every modern AI system grew from."
+    ],
+    "example": {
+      "problem": "Match each biological concept from this phase to the name of its simplified artificial counterpart, based on this lesson: (1) synaptic strength, (2) the all-or-nothing firing rule, (3) a layered network that builds up from simple features to complex recognition.",
+      "steps": [
+        "Synaptic strength describes how much influence a given connection has on the next neuron's combined signal (Lesson 3.5) — its artificial counterpart is called a \"weight,\" a simplified number playing the same basic role.",
+        "The all-or-nothing firing rule describes how a neuron either fires fully or not at all, based on crossing a threshold (Lesson 3.3) — an artificial neuron has an equivalent decision rule for turning its combined total into an output.",
+        "A layered network building up from simple features to complex recognition (Lesson 3.8) has a direct counterpart in artificial neural networks, which are also organized into layers for the same underlying reason.",
+        "In all three cases, the artificial version borrows the basic principle from the biological original, using simplified math instead of biological chemistry and electricity."
+      ],
+      "answer": "(1) synaptic strength → weights, (2) the all-or-nothing firing rule → an artificial neuron's decision rule for its output, (3) a layered pattern-recognition network → a layered artificial neural network — each artificial version borrows the basic principle from its biological counterpart, in simplified mathematical form."
+    },
+    "practice": [
+      {
+        "problem": "Why does the lesson use the airplane-wing-and-bird-wing comparison to describe the relationship between real neurons and artificial neurons?",
+        "solution": "Just as an airplane wing borrows the basic lift-generating principle from a bird's wing without being a literal copy (it doesn't flap or have feathers), an artificial neuron borrows the basic principle of how a real neuron behaves (combining weighted signals against a threshold) without being a literal biological copy — it's a simplified math version, inspired by but not identical to the original."
+      },
+      {
+        "problem": "What is the artificial, simplified counterpart to a synapse's strength called?",
+        "solution": "A \"weight\" — a simplified number that plays the same basic role synaptic strength plays in a real neuron, making some inputs count more than others in the combined total."
+      },
+      {
+        "problem": "Why doesn't this lesson teach the actual math or code for building an artificial neuron?",
+        "solution": "Because that's the job of a much later phase of this course, which will build a working artificial neuron and neural network from scratch, using programming skills from Phase 2 and math skills from phases still to come. This lesson's job is only to show the conceptual shape of the idea and where it comes from."
+      },
+      {
+        "problem": "Name two ideas from earlier in this phase that this lesson directly connects to an artificial neuron's design.",
+        "solution": "Any two of: synaptic strength (Lesson 3.5, becomes \"weights\"), the all-or-nothing firing rule and threshold (Lesson 3.3, becomes an artificial neuron's decision rule), combining many weighted signals (Lesson 3.11, becomes the artificial neuron's combining step), or layered pattern-recognition networks (Lesson 3.8, becomes layered artificial neural networks)."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is an artificial neuron, according to this lesson?",
+        "choices": [
+          "A simplified, math-based version of a real neuron's behavior, used as the basic building block of artificial neural networks",
+          "An exact biological copy of a real neuron, made of the same cells",
+          "A completely unrelated idea with no connection to real neurons",
+          "A type of physical robot part with no software involved"
+        ],
+        "answerIndex": 0,
+        "explanation": "An artificial neuron is a simplified mathematical version inspired by how a real neuron behaves, not a literal biological copy — it's the basic building block of artificial neural networks."
+      },
+      {
+        "type": "mc",
+        "question": "In an artificial neuron, what plays the same basic role as a synapse's strength in a real neuron?",
+        "choices": [
+          "A weight",
+          "An axon",
+          "A dendrite",
+          "A reflex"
+        ],
+        "answerIndex": 0,
+        "explanation": "A \"weight\" in an artificial neuron is a simplified number that plays the same basic role synaptic strength plays biologically — making some inputs count more than others."
+      },
+      {
+        "type": "short",
+        "question": "According to the airplane-wing analogy, is an artificial neuron meant to be an exact copy of a real neuron, or just inspired by its basic principle?",
+        "answer": "just inspired by its basic principle",
+        "acceptable": [
+          "inspired by it",
+          "just inspired",
+          "inspired, not a copy",
+          "not an exact copy"
+        ],
+        "explanation": "Like an airplane wing being inspired by a bird's wing without being an exact copy, an artificial neuron borrows the basic principle of a real neuron's behavior without literally replicating its biology."
+      },
+      {
+        "type": "short",
+        "question": "Does this lesson teach the actual math or code used to build an artificial neuron?",
+        "answer": "no",
+        "acceptable": [
+          "no",
+          "not yet",
+          "no it doesn't"
+        ],
+        "explanation": "This lesson only introduces the conceptual connection between real and artificial neurons. The actual math and code are taught in a much later phase of this course, once the needed programming and math foundations are in place."
+      },
+      {
+        "type": "mc",
+        "question": "Which biological idea from this phase directly inspired the idea of organizing artificial neural networks into layers?",
+        "choices": [
+          "Layered networks recognizing complex patterns by building up from simple features (Lesson 3.8)",
+          "Reflex circuits bypassing the brain (Lesson 3.12)",
+          "The idea that neurons are cells (Lesson 3.1)",
+          "Forgetting from disuse (Lesson 3.10)"
+        ],
+        "answerIndex": 0,
+        "explanation": "Lesson 3.8's idea of layered pattern recognition — simple features combined into increasingly complex recognitions — is the direct inspiration for organizing artificial neural networks into layers."
+      }
+    ]
+  },
+  {
+    "id": "3.15",
+    "number": 15,
+    "title": "Mini-Project — Trace a Signal Through a Neural Circuit You Design",
+    "objectives": [
+      "Combine synaptic strength, excitatory/inhibitory input, and threshold firing into one worked circuit",
+      "Trace a signal correctly through a small multi-neuron circuit under different scenarios",
+      "Explain, without any math formulas, why a given circuit does or doesn't fire in a given scenario",
+      "Summarize, in your own words, the full path from a single neuron to the idea of artificial intelligence"
+    ],
+    "explanation": [
+      "This phase started with a single neuron and built outward, one idea at a time, until reaching the doorstep of artificial intelligence. This final lesson is a synthesis: no new biology, just combining everything already covered into one small circuit you can trace by hand — the same kind of reasoning, without any of the actual math, that a much later phase of this course will turn into real, working code.",
+      "Here's the circuit for this lesson. Three neurons: A, B, and C. Both A and B are presynaptic to C, meaning their axon terminals connect to C's dendrites (Lesson 3.4). A's synapse onto C is strong and excitatory, contributing +6 to C's combined signal whenever A fires (Lessons 3.5, 3.11). B's synapse onto C is weak and excitatory, contributing +2 to C's combined signal whenever B fires. C's threshold is +7 (Lesson 3.3). Following Lesson 3.11's combining rule, C only fires if the combined total from whichever of A and B are currently firing reaches or crosses +7.",
+      "Notice that neither A alone (+6) nor B alone (+2) can reach C's threshold of +7 by itself — this circuit requires both A and B firing together at the same time for C to fire at all. This is a nice concrete illustration of Lesson 3.11's core idea: a neuron's decision depends on the combined, weighted total of its active inputs, not on any single input viewed in isolation. It's also a small echo of Lesson 3.6's \"fire together, wire together\" idea — if A and B end up firing together this way often enough, the synapses feeding C would, over time, tend to strengthen further, making C even more reliably responsive to that same combined pattern.",
+      "Working through a circuit like this by hand — checking which inputs are active, weighting each one by its synaptic strength, combining the totals, and comparing to the threshold — is exactly the reasoning process this phase has been building toward since Lesson 3.1's single neuron. It's also, in simplified biological language rather than code or math notation, the exact same reasoning an artificial neuron performs, as Lesson 3.14 explained. Nothing about that later, math-based version will feel unfamiliar when you get there — it will just be this same idea, written in a more precise language, once the necessary programming and math foundations from other phases are in place."
+    ],
+    "example": {
+      "problem": "Using the circuit from this lesson (A's synapse onto C: strong excitatory, +6 when A fires; B's synapse onto C: weak excitatory, +2 when B fires; C's threshold: +7), determine whether C fires in each of these four scenarios: (1) only A fires, (2) only B fires, (3) neither fires, (4) both A and B fire together.",
+      "steps": [
+        "Scenario 1, only A fires: C's combined total is +6 (from A) + 0 (B not firing) = +6. Since +6 is below the threshold of +7, C does not fire.",
+        "Scenario 2, only B fires: C's combined total is 0 (A not firing) + +2 (from B) = +2. Since +2 is below +7, C does not fire.",
+        "Scenario 3, neither fires: C's combined total is 0 + 0 = 0. Since 0 is below +7, C does not fire.",
+        "Scenario 4, both A and B fire together: C's combined total is +6 (from A) + +2 (from B) = +8. Since +8 crosses the threshold of +7, C fires a full pulse, following the all-or-nothing rule."
+      ],
+      "answer": "C fires only in Scenario 4, when both A and B fire together (combined total +8, crossing the +7 threshold). In every other scenario, the combined total (at most +6) stays below threshold, so C stays silent."
+    },
+    "practice": [
+      {
+        "problem": "Using the same circuit (A: +6 excitatory, B: +2 excitatory, threshold +7), suppose a new synapse from Neuron D is added onto C: D's synapse is inhibitory, contributing −3 to C's combined total whenever D fires. If A, B, and D all fire together at once, does C fire?",
+        "solution": "Combine all active contributions: +6 (A) + 2 (B) − 3 (D) = +5. Since +5 is below the threshold of +7, C does not fire — the inhibitory input from D pulled the combined total below threshold, even though it had crossed threshold with just A and B."
+      },
+      {
+        "problem": "In the original circuit (no D), explain in plain language why C requires both A and B to fire together, rather than either one being enough on its own.",
+        "solution": "A's contribution alone (+6) and B's contribution alone (+2) are each individually below C's threshold of +7. Only when both are combined (+6 + 2 = +8) does the total cross the threshold. This is a direct example of Lesson 3.11's idea that a neuron responds to the combined, weighted total of its active inputs, not to any single input alone."
+      },
+      {
+        "problem": "Suppose repeated practice, following \"fire together, wire together\" (Lesson 3.6), strengthens A's synapse onto C from +6 to +9, while B's synapse stays at +2. With this new, stronger A synapse, does A alone now cross C's threshold of +7?",
+        "solution": "Yes. A's contribution alone is now +9, which is greater than the threshold of +7, so A firing alone (even without B) would now be enough to make C fire — a direct illustration of how a strengthened synapse increases a connection's influence, exactly as described in Lesson 3.5."
+      },
+      {
+        "problem": "In one or two sentences, summarize the overall path this phase took, from Lesson 3.1's single neuron to Lesson 3.14's artificial neuron.",
+        "solution": "This phase started with a single neuron's parts and firing rule, built up to how neurons connect and combine weighted signals against a threshold, then to how huge networks of these simple units create pattern recognition, learning, and forgetting, and finally showed how that entire behavior — weighted inputs, combined and compared to a threshold — was simple and precise enough to be captured in simplified math as the artificial neuron, the seed of modern AI."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In this lesson's circuit (A: +6 excitatory, B: +2 excitatory, C's threshold: +7), what happens if only A fires?",
+        "choices": [
+          "C fires, because +6 is close enough to the threshold",
+          "C does not fire, because the combined total (+6) stays below the threshold of +7",
+          "C fires twice",
+          "A's synapse becomes inhibitory"
+        ],
+        "answerIndex": 1,
+        "explanation": "A's contribution alone is +6, which is below C's threshold of +7, so C does not fire — A alone isn't enough on its own in this circuit."
+      },
+      {
+        "type": "mc",
+        "question": "Why does C fire when both A and B fire together, even though neither fires C alone?",
+        "choices": [
+          "Because C combines the weighted contributions of all active inputs, and +6 + 2 = +8, which crosses the +7 threshold",
+          "Because two neurons firing at once always doubles the threshold automatically",
+          "Because B's synapse becomes stronger just by being near A",
+          "Because C ignores A and only responds to B when both fire"
+        ],
+        "answerIndex": 0,
+        "explanation": "C combines the weighted contributions of all currently active inputs into one total (+6 + 2 = +8), and since that combined total crosses the +7 threshold, C fires — exactly the combining rule from Lesson 3.11."
+      },
+      {
+        "type": "short",
+        "question": "In this lesson's circuit, is A's synapse onto C excitatory or inhibitory?",
+        "answer": "excitatory",
+        "acceptable": [
+          "excitatory",
+          "it is excitatory"
+        ],
+        "explanation": "A's synapse onto C is described as strong and excitatory, contributing +6 (a positive push toward the threshold) whenever A fires."
+      },
+      {
+        "type": "short",
+        "question": "According to this phase, what is the name of the simplified, math-based building block that a real neuron's weighted-combining-and-threshold behavior directly inspired?",
+        "answer": "artificial neuron",
+        "acceptable": [
+          "artificial neuron",
+          "an artificial neuron",
+          "the artificial neuron"
+        ],
+        "explanation": "The artificial neuron, introduced in Lesson 3.14, is the simplified mathematical version of this same weighted-combining-and-threshold behavior, and it's the basic building block of artificial neural networks."
+      },
+      {
+        "type": "mc",
+        "question": "What is the main purpose of this mini-project lesson?",
+        "choices": [
+          "To combine this phase's ideas — synaptic strength, excitatory/inhibitory input, and threshold firing — into one small circuit you can trace by hand, previewing the reasoning behind an artificial neuron without any of its math",
+          "To teach the exact code used to build a real artificial neural network",
+          "To introduce entirely new biology not covered anywhere else in this phase",
+          "To replace the need for Phase 4 and later phases entirely"
+        ],
+        "answerIndex": 0,
+        "explanation": "This lesson deliberately introduces no new biology — it combines everything from this phase into one worked circuit, giving hands-on practice with the exact reasoning process an artificial neuron performs, ahead of the math and code that a much later phase will teach."
+      }
+    ]
+  },
 ];

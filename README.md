@@ -23,9 +23,10 @@ no network afterward (same pattern as the sibling flashcard apps below).
 
 ## Status
 
-**Phases 1-2 are fully written** — Phase 1 (Math Foundations I, 20/20 lessons)
-and Phase 2 (Programming Foundations I — Python, 17/17 lessons).
-Phases 3-14 are visible in the roadmap as titles only ("coming soon") so the
+**Phases 1-3 are fully written** — Phase 1 (Math Foundations I, 20/20 lessons),
+Phase 2 (Programming Foundations I — Python, 17/17 lessons), and Phase 3
+(How Brains Work, 15/15 lessons).
+Phases 4-14 are visible in the roadmap as titles only ("coming soon") so the
 whole path is motivating to see, but have no lesson content yet. See
 `STATUS.md` for the exact cutoff and what's next.
 
@@ -91,19 +92,19 @@ automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 3:
-   "How Brains Work — neurons, signals, synapses as connection strength").
+1. Pick the next phase from `ROADMAP` (currently phase 4:
+   "Logic & Computing Basics — binary, logic gates, threshold decisions").
 2. Write that phase's lesson list (title-only breakdown first, then full content
-   per lesson using the exact schema above — same content bar as Phase 1-2: a
+   per lesson using the exact schema above — same content bar as Phase 1-3: a
    real 300-500 word explanation with analogies, a worked example, 3-5
    practice problems with solutions, a 5-question quiz). Each lesson may
    assume only earlier-phase content plus earlier lessons in the same phase —
    never anything from a later phase or later lesson.
 3. Append those lesson objects to `LESSONS` in `data/curriculum.js`, ids
-   `"3.1"`, `"3.2"`, ... (id format is always `"<phase>.<lesson>"`).
+   `"4.1"`, `"4.2"`, ... (id format is always `"<phase>.<lesson>"`).
 4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
    any phase with matching `LESSONS` entries automatically.
-5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v2` → `bab-v3`) so
+5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v3` → `bab-v4`) so
    returning users actually pick up the new content instead of a stale cache.
 6. Commit, push to `main` — GitHub Pages serves straight from `main` / `/root`,
    no separate deploy step required.
