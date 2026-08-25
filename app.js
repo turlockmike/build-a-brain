@@ -43,13 +43,27 @@
     toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
   }
 
-  const PHASE1_LESSONS = LESSONS.slice().sort((a,b)=>a.number-b.number);
+  const ALL_LESSONS = LESSONS.slice().sort((a,b)=>a.number-b.number);
   const LESSON_BY_ID = {};
-  PHASE1_LESSONS.forEach(l => LESSON_BY_ID[l.id] = l);
+  ALL_LESSONS.forEach(l => LESSON_BY_ID[l.id] = l);
 
-  function phase1Progress(){
-    const total = PHASE1_LESSONS.length;
-    const done = PHASE1_LESSONS.filter(l => lessonState(l.id).complete).length;
+  // A lesson's phase is the part of its id before the dot ("2.3" -> phase 2).
+  // This is how a phase "has content": at least one LESSONS entry with that prefix.
+  function phaseOf(l){ return +String(l.id).split('.')[0]; }
+  function lessonsForPhase(num){
+    return ALL_LESSONS.filter(l => phaseOf(l) === num).sort((a,b)=>a.number-b.number);
+  }
+
+  function phaseProgress(num){
+    const lessons = lessonsForPhase(num);
+    const total = lessons.length;
+    const done = lessons.filter(l => lessonState(l.id).complete).length;
+    return {done, total};
+  }
+
+  function overallProgress(){
+    const total = ALL_LESSONS.length;
+    const done = ALL_LESSONS.filter(l => lessonState(l.id).complete).length;
     return {done, total};
   }
 
@@ -67,12 +81,16 @@
 
   // ================= ROADMAP VIEW =================
   function renderRoadmap(){
-    const {done, total} = phase1Progress();
+    const {done, total} = overallProgress();
+    const unlockedCount = ROADMAP.filter(p => lessonsForPhase(p.number).length > 0).length;
     const pct = total ? Math.round(done/total*100) : 0;
 
     const phasesHtml = ROADMAP.map(p => {
-      if(p.number === 1){
-        const lessonsHtml = PHASE1_LESSONS.map(l => {
+      const phaseLessons = lessonsForPhase(p.number);
+      if(phaseLessons.length > 0){
+        const {done: pdone, total: ptotal} = phaseProgress(p.number);
+        const ppct = ptotal ? Math.round(pdone/ptotal*100) : 0;
+        const lessonsHtml = phaseLessons.map(l => {
           const st = lessonState(l.id);
           const cls = st.complete ? 'complete' : (st.started ? 'started' : 'new');
           const icon = st.complete ? '✓' : (st.started ? '•' : '');
@@ -85,11 +103,11 @@
               <span class="chev">›</span>
             </button>`;
         }).join('');
-        return `<div class="phase unlocked" data-phase="1">
-            <div class="node"><span class="node-num">1</span></div>
+        return `<div class="phase unlocked" data-phase="${p.number}">
+            <div class="node"><span class="node-num">${p.number}</span></div>
             <div class="phase-body">
               <div class="phase-title">${esc(p.title)}</div>
-              <div class="phase-progress"><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span>${done}/${total}</span></div>
+              <div class="phase-progress"><div class="bar"><div class="fill" style="width:${ppct}%"></div></div><span>${pdone}/${ptotal}</span></div>
               <div class="lesson-list">${lessonsHtml}</div>
             </div>
           </div>`;
@@ -109,7 +127,7 @@
         <p class="tagline">Your path from arithmetic to a real, working neural network — one lesson at a time. 14 phases. Start with the math.</p>
         <div class="overall-progress">
           <div class="bar big"><div class="fill" style="width:${pct}%"></div></div>
-          <span>${done}/${total} lessons complete in Phase 1</span>
+          <span>${done}/${total} lessons complete across ${unlockedCount} phase${unlockedCount===1?'':'s'}</span>
         </div>
       </div>
       <div class="path">${phasesHtml}</div>
@@ -125,8 +143,20 @@
     if(!l){ location.hash = ''; return; }
     markStarted(id);
 
-    const idx = PHASE1_LESSONS.findIndex(x => x.id === id);
-    const prev = PHASE1_LESSONS[idx-1], next = PHASE1_LESSONS[idx+1];
+    const phaseNum = phaseOf(l);
+    const phaseLessons = lessonsForPhase(phaseNum);
+    const idx = phaseLessons.findIndex(x => x.id === id);
+    let prev = phaseLessons[idx-1], next = phaseLessons[idx+1];
+    // Falling off the end of a phase's lesson list crosses into the next
+    // unlocked phase (if it has content) so the path feels continuous.
+    if(!next){
+      const nextPhaseLessons = lessonsForPhase(phaseNum+1);
+      if(nextPhaseLessons.length) next = nextPhaseLessons[0];
+    }
+    if(!prev && phaseNum > 1){
+      const prevPhaseLessons = lessonsForPhase(phaseNum-1);
+      if(prevPhaseLessons.length) prev = prevPhaseLessons[prevPhaseLessons.length-1];
+    }
 
     const objectivesHtml = l.objectives.map(o => `<li>${esc(o)}</li>`).join('');
     const explanationHtml = l.explanation.map(p => `<p>${esc(p)}</p>`).join('');
@@ -141,7 +171,7 @@
 
     main.innerHTML = `
       <button class="back-btn" id="backBtn">← Roadmap</button>
-      <div class="lesson-crumb">Phase 1 · Lesson ${l.number} of ${PHASE1_LESSONS.length}</div>
+      <div class="lesson-crumb">Phase ${phaseNum} · Lesson ${l.number} of ${phaseLessons.length}</div>
       <h1 class="lesson-title">${esc(l.title)}</h1>
 
       <section class="card">
@@ -282,9 +312,9 @@
   $('#closeSheet').onclick = () => $('#sheet').classList.remove('show');
   $('#sheet').addEventListener('click', e => { if(e.target.id === 'sheet') e.target.classList.remove('show'); });
   function openSheet(){
-    const {done, total} = phase1Progress();
+    const {done, total} = overallProgress();
     $('#s_done').textContent = `${done}/${total}`;
-    const scored = PHASE1_LESSONS.filter(l => lessonState(l.id).complete);
+    const scored = ALL_LESSONS.filter(l => lessonState(l.id).complete);
     if(scored.length){
       const avg = scored.reduce((sum,l) => {
         const s = lessonState(l.id);
