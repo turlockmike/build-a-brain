@@ -9385,4 +9385,1309 @@ const LESSONS = [
       }
     ]
   }
+,
+  {
+    "id": "7.1",
+    "number": 1,
+    "title": "2D lists — rows and columns as a table",
+    "objectives": [
+      "Represent a table of numbers as a 2D list — a list where each item is itself a list, one inner list per row",
+      "Access a specific cell in a 2D list using two indices, table[row][col]",
+      "Connect a 2D list's shape to Phase 5's row/column dataset idea and Phase 6's matrix",
+      "Write a nested loop that visits every row, and every value within each row, of a 2D list"
+    ],
+    "explanation": [
+      "Back in lesson 2.13, a list held one row's worth of values under a single name: scores = [85, 92, 78]. But plenty of real data doesn't fit in a single row — it's a whole table, with several rows and several columns, the exact shape lesson 5.1 called a dataset (row = example, column = feature). Python has a wonderfully simple way to represent a table like that: a list of lists, usually just called a 2D list. Each inner list is one row, and all of those inner lists sit together inside one outer list. A gym coach tracking 3 kids' pushup counts across 4 weeks could write it as pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]] — the first inner list, [10, 12, 15, 18], is Ana's four weekly counts; the second is Ben's; the third is Cleo's.",
+      "This is exactly the same shape lesson 6.9 used to define a matrix — recall M = [[60, 110], [64, 130], [58, 95]], a grid of numbers with 3 rows and 2 columns, each row itself a vector. A 2D list in Python IS that grid, written out in code: outer list = the whole grid, each inner list = one row (one vector, in 6.9's terms). The only real difference is intent rather than mechanics, the same distinction lesson 6.5 drew between a vector and a plain Python list: a matrix's rows usually represent examples with a fixed meaning per column (age, weight; or week 1, week 2, week 3, week 4), just like a vector's components do.",
+      "To reach a single cell inside a 2D list, you index it twice: table[row][col]. The first index picks out one inner list (one row); the second index then picks out one item within that row. For pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]], pushups[1] by itself is Ben's whole row, [8, 9, 11, 14] — still just an ordinary list, so you can index into it a second time: pushups[1][2] takes that row and grabs its item at index 2 (the third value, counting from 0, exactly as in lesson 2.13), which is 11 — Ben's week-3 pushup count. Both indices are zero-based, and both follow the same 'largest valid index is length minus one' rule from 2.13, applied once to the outer list (which rows exist) and once to whichever inner list you land in (which columns exist in that row).",
+      "Visiting every cell in a 2D list needs a loop inside a loop — a nested loop, one of the most useful patterns you'll use from here on. for row in table: loops over the outer list, handing you one inner list (one row) at a time, exactly like looping over any list in 2.14; then a second for value in row: loop, indented one level deeper, loops over that row's own items. Two full lines of indentation, one nested inside the other, mirrors two dimensions of data exactly — the outer loop moves down the rows, the inner loop moves across the columns of whichever row it's currently on."
+    ],
+    "example": {
+      "problem": "A gym coach records pushup counts for 3 kids across 4 weeks as pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]], where row 0 is Ana, row 1 is Ben, row 2 is Cleo, and column 0 is week 1 through column 3 is week 4. What is pushups[1][2], and what does it represent?",
+      "steps": [
+        "The first index, 1, selects row 1 — Ben's row, [8, 9, 11, 14] (row 0 = Ana, row 1 = Ben, row 2 = Cleo).",
+        "The second index, 2, selects position 2 within that row — counting from 0, that's the third value in [8, 9, 11, 14], which is 11.",
+        "Position 2 corresponds to week 3 (column 0 = week 1, column 1 = week 2, column 2 = week 3).",
+        "So pushups[1][2] = 11, Ben's pushup count in week 3."
+      ],
+      "answer": "pushups[1][2] = 11 — Ben's week-3 pushup count."
+    },
+    "practice": [
+      {
+        "problem": "Given grid = [[1, 2, 3], [4, 5, 6]], what is grid[0][2]?",
+        "solution": "grid[0] is the first row, [1, 2, 3]. Index 2 within that row is its third item, 3. Answer: 3."
+      },
+      {
+        "problem": "Given grid = [[1, 2, 3], [4, 5, 6]], what is grid[1][0]?",
+        "solution": "grid[1] is the second row, [4, 5, 6]. Index 0 within that row is its first item, 4. Answer: 4."
+      },
+      {
+        "problem": "A dataset of 3 students' scores on 2 quizzes is scores = [[80, 90], [70, 85], [95, 100]]. Which student got 85, and how would you write that cell using two indices?",
+        "solution": "85 sits in row 1 (the second student, counting from 0), column 1 (quiz 2). It's scores[1][1] — the second student's second-quiz score."
+      },
+      {
+        "problem": "Write nested-loop code that prints every value in grid = [[1, 2], [3, 4], [5, 6]], one value per line.",
+        "solution": "for row in grid:\n    for val in row:\n        print(val)\nThis prints 1, 2, 3, 4, 5, 6, one per line, moving across each row before dropping to the next."
+      },
+      {
+        "problem": "Explain how the 2D list pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]] is similar to the matrix M = [[60, 110], [64, 130], [58, 95]] from lesson 6.9, and whether anything about the underlying shape is actually different.",
+        "solution": "Both are a list of lists — an outer list holding several inner lists, each inner list one row of fixed-meaning values (M's columns are height/weight; pushups' columns are week 1 through week 4). Structurally, nothing is different: both are exactly the 2D-grid shape, just applied to different real-world numbers. A 2D list in Python literally IS a matrix's shape written out in code."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a 2D list?",
+        "choices": [
+          "A list that can only hold two items",
+          "A list where each item is itself a list, forming rows and columns",
+          "A list sorted in two different orders",
+          "A dictionary with two keys"
+        ],
+        "answerIndex": 1,
+        "explanation": "A 2D list is a list of lists — each inner list is one row, and the outer list holds all the rows together, forming a table shape."
+      },
+      {
+        "type": "mc",
+        "question": "Given g = [[5, 6], [7, 8]], what is g[1][1]?",
+        "choices": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "answerIndex": 3,
+        "explanation": "g[1] is the second row, [7, 8]. Index 1 within that row is its second item, 8."
+      },
+      {
+        "type": "mc",
+        "question": "In table[row][col], what does the second index select?",
+        "choices": [
+          "Which inner list (row) to use",
+          "The total number of rows",
+          "A position within the row already selected by the first index",
+          "Nothing — only the first index matters"
+        ],
+        "answerIndex": 2,
+        "explanation": "The first index picks out one row (one inner list); the second index then picks out a single item's position within that already-chosen row."
+      },
+      {
+        "type": "short",
+        "question": "Given g = [[2, 4], [6, 8], [10, 12]], what is g[2][0]?",
+        "answer": "10",
+        "acceptable": [
+          "10"
+        ],
+        "explanation": "g[2] is the third row, [10, 12]. Index 0 within that row is its first item, 10."
+      },
+      {
+        "type": "short",
+        "question": "Name the earlier-phase mathematical object that a 2D list of numbers has exactly the same shape as.",
+        "answer": "a matrix",
+        "acceptable": [
+          "matrix",
+          "a matrix (lesson 6.9)",
+          "matrices"
+        ],
+        "explanation": "A 2D list — an outer list of inner row-lists — is exactly the grid-of-numbers shape lesson 6.9 defined as a matrix."
+      }
+    ]
+  },
+  {
+    "id": "7.2",
+    "number": 2,
+    "title": "Indexing and slicing — beyond the basics",
+    "objectives": [
+      "Extract a sub-list from a list using slice notation list[start:end]",
+      "Use negative indices to count positions from the end of a list",
+      "Use a step value in a slice, list[start:end:step], to skip items",
+      "Apply slicing to a row of a 2D list and to a 2D list's rows themselves"
+    ],
+    "explanation": [
+      "Lesson 2.13 taught you to reach one item at a time with list[i]. Often you want a whole chunk of a list at once instead — a slice. The notation list[start:end] returns a brand-new list containing the items from index start up through, but NOT including, index end — the exact same half-open counting rule range() used back in Phase 2, where range(1, 3) produced 1 and 2 but stopped before 3. So for nums = [5, 10, 15, 20, 25], nums[1:4] grabs indices 1, 2, and 3 — [10, 15, 20] — stopping right before index 4.",
+      "You can also leave off either side of the colon: nums[:2] means 'start from the very beginning, stop before index 2,' giving [5, 10]; nums[2:] means 'start from index 2, go all the way to the end,' giving [15, 20, 25]. Leaving off both sides, nums[:], simply returns every item — a full copy of the list.",
+      "Negative indices count backward from the end of the list: -1 is always the last item, -2 the second-to-last, and so on. For nums = [5, 10, 15, 20, 25], nums[-1] is 25 and nums[-3] is 15 (counting back: -1=25, -2=20, -3=15). Negative indices work inside slices too — nums[-2:] means 'start two from the end, go to the end,' giving the last two items, [20, 25], without you needing to know or count the list's actual length.",
+      "A slice can also take a third number, a step: list[start:end:step] moves through the range start-to-end taking every step-th item instead of every single one. nums[::2] (start and end both left blank, step 2) takes every other item starting from index 0: [5, 15, 25]. All of this works exactly the same way on one row of a 2D list, since a row is just an ordinary list — pushups[0][1:3] would slice Ana's own row — and it also works on the 2D list itself, since the outer list is just a list of rows: pushups[0:2] returns the first two rows as a 2D list, [[10, 12, 15, 18], [8, 9, 11, 14]], without touching what's inside each row at all."
+    ],
+    "example": {
+      "problem": "Ana's 6 weekly pushup counts are ana = [10, 12, 15, 18, 20, 22] (index 0 = week 1 through index 5 = week 6). Using slicing, find her counts from week 2 through week 4 (inclusive), and separately, her counts for her last two weeks.",
+      "steps": [
+        "Week 2 through week 4 inclusive means indices 1, 2, and 3 (week 1 = index 0, so week 2 = index 1, week 3 = index 2, week 4 = index 3).",
+        "A slice stops right before its end index, so to include index 3 the slice must end at 4: ana[1:4].",
+        "ana[1:4] = [12, 15, 18] — her week 2, week 3, and week 4 counts.",
+        "For the last two weeks, use a negative slice: ana[-2:] takes the last two items regardless of the list's length, giving [20, 22]."
+      ],
+      "answer": "Weeks 2-4: [12, 15, 18]. Last two weeks: [20, 22]."
+    },
+    "practice": [
+      {
+        "problem": "Given nums = [5, 10, 15, 20, 25], what is nums[1:4]?",
+        "solution": "The slice takes indices 1, 2, and 3, stopping before index 4: [10, 15, 20]."
+      },
+      {
+        "problem": "Given nums = [5, 10, 15, 20, 25], what is nums[:2]?",
+        "solution": "Starting from the beginning and stopping before index 2 takes indices 0 and 1: [5, 10]."
+      },
+      {
+        "problem": "Given nums = [5, 10, 15, 20, 25], what are nums[-1] and nums[-3]?",
+        "solution": "Counting from the end: -1 is the last item, 25; -2 is 20; -3 is 15. So nums[-1] = 25 and nums[-3] = 15."
+      },
+      {
+        "problem": "Given nums = [5, 10, 15, 20, 25], what is nums[::2]?",
+        "solution": "With no start/end given and a step of 2, this takes every other item starting at index 0: indices 0, 2, 4, giving [5, 15, 25]."
+      },
+      {
+        "problem": "Given table = [[1, 2, 3], [4, 5, 6], [7, 8, 9]], what is table[0:2]?",
+        "solution": "This slices the OUTER list of rows, taking rows at indices 0 and 1 and stopping before index 2: [[1, 2, 3], [4, 5, 6]] — the first two rows, each one still a full, untouched inner list."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Given nums = [2, 4, 6, 8, 10], what is nums[1:3]?",
+        "choices": [
+          "[4, 6]",
+          "[2, 4, 6]",
+          "[6, 8]",
+          "[4, 6, 8]"
+        ],
+        "answerIndex": 0,
+        "explanation": "The slice takes indices 1 and 2, stopping before index 3: [4, 6]."
+      },
+      {
+        "type": "mc",
+        "question": "What does a slice's end index tell Python to do?",
+        "choices": [
+          "Include that index as the last item in the result",
+          "Stop the slice right before that index, the same half-open rule as range()",
+          "Start the slice at that index",
+          "Count backward from that index"
+        ],
+        "answerIndex": 1,
+        "explanation": "A slice's end index is never included — the slice stops the moment it reaches that index, exactly like range()'s stopping value in Phase 2."
+      },
+      {
+        "type": "mc",
+        "question": "Given nums = [2, 4, 6, 8, 10], what is nums[-2]?",
+        "choices": [
+          "10",
+          "8",
+          "6",
+          "2"
+        ],
+        "answerIndex": 1,
+        "explanation": "Counting from the end: -1 is 10, -2 is 8."
+      },
+      {
+        "type": "short",
+        "question": "Given nums = [3, 6, 9, 12, 15], what is nums[2:]?",
+        "answer": "[9, 12, 15]",
+        "acceptable": [
+          "[9, 12, 15]",
+          "9, 12, 15"
+        ],
+        "explanation": "Starting at index 2 and going to the end gives the items at indices 2, 3, and 4: [9, 12, 15]."
+      },
+      {
+        "type": "short",
+        "question": "Given nums = [1, 2, 3, 4, 5, 6], what is nums[::2]?",
+        "answer": "[1, 3, 5]",
+        "acceptable": [
+          "[1, 3, 5]",
+          "1, 3, 5"
+        ],
+        "explanation": "With a step of 2 and no start/end given, this takes every other item starting at index 0: indices 0, 2, 4, giving [1, 3, 5]."
+      }
+    ]
+  },
+  {
+    "id": "7.3",
+    "number": 3,
+    "title": "Functions that return multiple values — tuples",
+    "objectives": [
+      "Return more than one value from a function using a comma-separated return statement",
+      "Explain that Python packs multiple returned values into a tuple",
+      "Unpack a function's multiple return values into separate variables at the call site",
+      "Combine multi-parameter functions from lesson 2.16 with multi-value returns"
+    ],
+    "explanation": [
+      "Lesson 2.16 showed a function taking several parameters at once, but every function you've written so far has still handed back exactly one value with return. Sometimes one value isn't enough — a function scanning a list of test scores might reasonably need to report BOTH the lowest and the highest score in a single call. Python lets a function return more than one value by separating them with a comma: return low, high. Doing this packs the two values together into a new kind of object called a tuple, written with parentheses like (60, 95) — a small, ordered, fixed-size bundle of values, similar in spirit to a list but generally used for a handful of different, specifically-positioned results rather than many same-kind items you'd grow with append().",
+      "Here's a function using exactly this pattern, reusing the accumulator-style tracking from 2.14 but tracking two running values instead of one running total: def find_range(scores): low = scores[0]; high = scores[0]; then loop over scores, updating low whenever a smaller value shows up and high whenever a larger one does; finally return low, high. Called on [70, 95, 60, 88, 77], low starts and ends at 60 (the smallest value seen), and high starts and ends at 95 (the largest), so the function returns the tuple (60, 95).",
+      "At the call site, you can unpack a returned tuple straight into separate variables in one line: low, high = find_range(scores). Just like a multi-parameter function call matches its arguments to parameters in order (2.16), unpacking matches tuple positions to variable names in order — the FIRST returned value goes into the FIRST variable named, the second into the second, and so on. This is the same 'position carries meaning' idea lesson 6.5 introduced for vectors: (60, 95) isn't just two numbers sitting together, position 0 specifically means 'the low value' and position 1 specifically means 'the high value,' by the function's own design.",
+      "Multi-parameter functions and multi-value returns combine freely — a function can take several inputs AND hand back several outputs in the very same call. def divide_with_remainder(a, b): return a // b, a % b takes two parameters and returns two values; q, r = divide_with_remainder(17, 5) unpacks them, giving q = 3 and r = 2 (17 divided by 5 is 3, remainder 2). This 'many in, many out' shape will come up constantly for the rest of this phase, since real data almost never arrives, or needs to leave, as just one lonely number."
+    ],
+    "example": {
+      "problem": "Trace this function on scores = [70, 95, 60, 88, 77] and state what low, high = find_range(scores) stores:\ndef find_range(scores):\n    low = scores[0]\n    high = scores[0]\n    for s in scores:\n        if s < low:\n            low = s\n        if s > high:\n            high = s\n    return low, high",
+      "steps": [
+        "Before the loop: low = scores[0] = 70, high = scores[0] = 70.",
+        "s = 70: 70 is not less than low (70), and not greater than high (70) — no changes.",
+        "s = 95: 95 is not less than low, but IS greater than high, so high becomes 95.",
+        "s = 60: 60 IS less than low (70), so low becomes 60. 60 is not greater than high (95).",
+        "s = 88: 88 is not less than low (60) and not greater than high (95) — no changes.",
+        "s = 77: no changes, for the same reason.",
+        "The loop ends. return low, high hands back the tuple (60, 95), which low, high = find_range(scores) unpacks: low = 60, high = 95."
+      ],
+      "answer": "The function returns (60, 95); after unpacking, low = 60 and high = 95."
+    },
+    "practice": [
+      {
+        "problem": "Given def divide_with_remainder(a, b): return a // b, a % b, what do q, r = divide_with_remainder(17, 5) store?",
+        "solution": "17 // 5 (integer division) is 3, and 17 % 5 (remainder) is 2. So q = 3 and r = 2."
+      },
+      {
+        "problem": "Trace find_range([10, 4, 8, 2, 9]) using the function from the explanation, and state the returned tuple.",
+        "solution": "low and high both start at 10 (scores[0]). s=10: no change. s=4: 4<10, so low=4. s=8: no changes (8 is not <4 and not >10). s=2: 2<4, so low=2. s=9: no changes. Final: low=2, high=10, so the function returns (2, 10)."
+      },
+      {
+        "problem": "Write a function min_max(nums) that returns the smallest and largest values in a list as a tuple, using the same tracking pattern as find_range.",
+        "solution": "def min_max(nums):\n    smallest = nums[0]\n    largest = nums[0]\n    for n in nums:\n        if n < smallest:\n            smallest = n\n        if n > largest:\n            largest = n\n    return smallest, largest"
+      },
+      {
+        "problem": "Given def stats(a, b): return a + b, a - b, a * b (three return values), what do x, y, z = stats(6, 2) store?",
+        "solution": "a + b = 6 + 2 = 8, a - b = 6 - 2 = 4, a * b = 6 * 2 = 12. Unpacking in order: x = 8, y = 4, z = 12."
+      },
+      {
+        "problem": "Explain why return low, high produces a tuple rather than a list, connecting your answer to lesson 6.5's distinction between a vector and a Python list.",
+        "solution": "Like a vector in 6.5, a tuple returned this way has a fixed number of slots, each with a specific, position-based meaning assigned by the function itself (position 0 is always 'low', position 1 is always 'high') — it's not meant to grow or shrink the way a list of many same-kind items (like scores) can. Python's tuple exists specifically for this 'small, fixed, positionally-meaningful bundle' use case, which is exactly what a multi-value return produces."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What kind of object does Python create when a function does return a, b?",
+        "choices": [
+          "A list",
+          "A tuple",
+          "A dictionary",
+          "Two separate functions"
+        ],
+        "answerIndex": 1,
+        "explanation": "Comma-separated values after return are packed together into a tuple, a fixed-size, ordered bundle of values."
+      },
+      {
+        "type": "mc",
+        "question": "Given def f(x): return x + 1, x - 1, what do a, b = f(10) store?",
+        "choices": [
+          "a = 10, b = 10",
+          "a = 11, b = 9",
+          "a = 9, b = 11",
+          "a = (11, 9), b = nothing"
+        ],
+        "answerIndex": 1,
+        "explanation": "x + 1 = 11 and x - 1 = 9, returned as (11, 9); unpacking in order gives a = 11, b = 9."
+      },
+      {
+        "type": "mc",
+        "question": "In low, high = find_range(scores), what determines which returned value ends up in which variable?",
+        "choices": [
+          "The variable names must match the parameter names",
+          "Position/order — the first returned value goes to the first named variable, and so on",
+          "Python assigns them randomly",
+          "Whichever value is larger always goes to the first variable"
+        ],
+        "answerIndex": 1,
+        "explanation": "Unpacking matches tuple positions to variables in order, the same order-matters idea from multi-parameter function calls in lesson 2.16."
+      },
+      {
+        "type": "short",
+        "question": "Given def f(): return 1, 2, 3, what does x = f() (a single variable, no unpacking) store?",
+        "answer": "the whole tuple (1, 2, 3)",
+        "acceptable": [
+          "(1, 2, 3)",
+          "the tuple (1,2,3)",
+          "x becomes the tuple 1,2,3"
+        ],
+        "explanation": "Without unpacking into multiple variables, a single variable simply receives the entire returned tuple as one object, (1, 2, 3)."
+      },
+      {
+        "type": "short",
+        "question": "Given def minmax(nums): ... return smallest, largest, and the call lo, hi = minmax([5, 1, 9, 3]), what are lo and hi?",
+        "answer": "lo = 1, hi = 9",
+        "acceptable": [
+          "lo=1, hi=9",
+          "1 and 9",
+          "lo is 1, hi is 9"
+        ],
+        "explanation": "The smallest value in [5, 1, 9, 3] is 1 and the largest is 9, so lo = 1 and hi = 9 after unpacking."
+      }
+    ]
+  },
+  {
+    "id": "7.4",
+    "number": 4,
+    "title": "The accumulator pattern in two dimensions — nested loops over a table",
+    "objectives": [
+      "Write a nested-loop accumulator that computes a grand total across an entire 2D list",
+      "Compute per-row totals (row sums) using one accumulator per row",
+      "Compute per-column totals (column sums) by looping over column positions across all rows",
+      "Explain why column sums require a different loop structure than row sums"
+    ],
+    "explanation": [
+      "Lesson 2.14 introduced the accumulator pattern — start a total at 0 before a loop, add to it inside the loop — and lesson 7.1 showed how a nested loop visits every cell of a 2D list. Put them together and you can total up an entire table in one pass: total = 0, then for row in table: for val in row: total = total + val. Applied to pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]], this adds all 12 numbers together one at a time, giving a grand total of 188 — the whole class's pushups across every kid and every week.",
+      "Often you want more detail than one grand total — you want a total PER ROW, like each kid's own 4-week total. That just means restarting the accumulator once per row instead of once for the whole table: for each row, run a fresh total = 0, then a single-row accumulator loop (exactly 2.14's pattern, unchanged) to sum that one row, then append the result to a running list of row sums using append() from 2.13. For pushups, this gives row sums [55, 42, 91] — Ana's, Ben's, and Cleo's season totals — and, reassuringly, adding those three numbers together (55 + 42 + 91 = 188) reproduces the exact same grand total from the paragraph above, just built up a different way.",
+      "Column sums ask a different question — not 'how much did Ana do in total?' but 'how much did the WHOLE CLASS do in week 3?' — and that means adding straight down a fixed column position, across every row. A plain for row in table: loop can't do this directly, because each pass only has one row in hand, not one column. Instead, loop over the column POSITIONS themselves: for col in range(len(table[0])): (using len() on any one row to find how many columns there are), and inside that, loop over the rows to reach table[row][col] for every row at that fixed column. For pushups, this gives column sums [38, 43, 50, 57] — the class's total pushups in week 1, week 2, week 3, and week 4 — and once again, adding those four numbers (38 + 43 + 50 + 57 = 188) reproduces the same grand total a third time.",
+      "This row-sum-versus-column-sum contrast is exactly lesson 5.1's 'row = example, column = feature' idea in action: a row sum answers a question about one EXAMPLE (one kid, added across all their features/weeks), while a column sum answers a question about one FEATURE (one week, added down every example/kid). Both are legitimate, useful summaries of the exact same table — which one you need depends entirely on which question you're actually asking, and getting the loop structure backward is the single most common mistake once tables get bigger than one row."
+    ],
+    "example": {
+      "problem": "Using pushups = [[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]] (row 0 = Ana, row 1 = Ben, row 2 = Cleo; columns = weeks 1-4), find the grand total, the row sums (each kid's season total), and the column sums (the class's total per week).",
+      "steps": [
+        "Row sums: Ana = 10+12+15+18 = 55. Ben = 8+9+11+14 = 42. Cleo = 20+22+24+25 = 91.",
+        "Grand total from row sums: 55 + 42 + 91 = 188.",
+        "Column sums: week 1 = 10+8+20 = 38. week 2 = 12+9+22 = 43. week 3 = 15+11+24 = 50. week 4 = 18+14+25 = 57.",
+        "Check: grand total from column sums: 38 + 43 + 50 + 57 = 188 — matches the row-sum total exactly, confirming both approaches counted every number once."
+      ],
+      "answer": "Grand total = 188. Row sums = [55, 42, 91]. Column sums = [38, 43, 50, 57]."
+    },
+    "practice": [
+      {
+        "problem": "Given grid = [[1, 2], [3, 4], [5, 6]], compute the grand total using a nested-loop accumulator.",
+        "solution": "Adding every value: 1+2+3+4+5+6 = 21."
+      },
+      {
+        "problem": "Given grid = [[1, 2], [3, 4], [5, 6]], compute the row sums.",
+        "solution": "Row 0: 1+2=3. Row 1: 3+4=7. Row 2: 5+6=11. Row sums: [3, 7, 11]."
+      },
+      {
+        "problem": "Given grid = [[1, 2], [3, 4], [5, 6]], compute the column sums, and check that they add up to the same grand total as the previous two problems.",
+        "solution": "Column 0: 1+3+5=9. Column 1: 2+4+6=12. Column sums: [9, 12]. Check: 9+12=21, matching the grand total of 21 from the row sums (3+7+11=21) and the direct total."
+      },
+      {
+        "problem": "Write Python code that builds row_sums as a list, one total per row, for a generic 2D list called table, using append().",
+        "solution": "row_sums = []\nfor row in table:\n    total = 0\n    for val in row:\n        total = total + val\n    row_sums.append(total)"
+      },
+      {
+        "problem": "Explain, in your own words, why computing column sums needs a loop structured around column positions instead of a plain for row in table: loop.",
+        "solution": "A column sum needs values from a FIXED column position but from EVERY row — the same index applied across all rows, not all the values inside one row. A plain for row in table: loop only ever hands you one whole row at a time, with no way to grab 'just column 2 of every row' from that alone, so instead you loop over column positions (for col in range(len(table[0]))) and, for each one, gather table[row][col] across every row at that fixed position."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "To compute a grand total over an entire 2D list with an accumulator, what's the minimum loop structure needed?",
+        "choices": [
+          "A single loop over the outer list only",
+          "Two nested loops — an outer loop over rows and an inner loop over each row's values",
+          "Three nested loops",
+          "No loop is needed, just len(table)"
+        ],
+        "answerIndex": 1,
+        "explanation": "Visiting every cell of a 2D list requires an outer loop over rows and an inner loop over the values within each row — the same nested structure from lesson 7.1."
+      },
+      {
+        "type": "mc",
+        "question": "Given grid = [[2, 4], [6, 8]], what is the row sum of row 1 (index 1)?",
+        "choices": [
+          "6",
+          "8",
+          "14",
+          "20"
+        ],
+        "answerIndex": 2,
+        "explanation": "Row 1 is [6, 8], and 6 + 8 = 14."
+      },
+      {
+        "type": "mc",
+        "question": "Given grid = [[2, 4], [6, 8]], what is the column sum of column 0?",
+        "choices": [
+          "2",
+          "6",
+          "8",
+          "8 (2 + 6)"
+        ],
+        "answerIndex": 3,
+        "explanation": "Column 0 holds 2 (from row 0) and 6 (from row 1); 2 + 6 = 8."
+      },
+      {
+        "type": "short",
+        "question": "Given grid = [[1, 1, 1], [2, 2, 2], [3, 3, 3]], what is the grand total?",
+        "answer": "18",
+        "acceptable": [
+          "18"
+        ],
+        "explanation": "Adding every value: 1+1+1+2+2+2+3+3+3 = 18."
+      },
+      {
+        "type": "short",
+        "question": "Given grid = [[1, 1, 1], [2, 2, 2], [3, 3, 3]], what are the column sums, as a list?",
+        "answer": "[6, 6, 6]",
+        "acceptable": [
+          "[6, 6, 6]",
+          "6, 6, 6"
+        ],
+        "explanation": "Each column has one 1, one 2, and one 3 (since every row repeats its own number three times): 1+2+3 = 6 for every column, giving [6, 6, 6]."
+      }
+    ]
+  },
+  {
+    "id": "7.5",
+    "number": 5,
+    "title": "Iterating in parallel with zip()",
+    "objectives": [
+      "Use zip() to loop over two or more lists in parallel, one matched pair at a time",
+      "Unpack zip()'s paired items directly inside a for loop",
+      "Reimplement lesson 6.6's vector addition and 6.7's dot product in Python using zip()",
+      "Explain why zip() avoids needing for i in range(len(...)) when combining same-length lists"
+    ],
+    "explanation": [
+      "Lesson 2.14 showed for i in range(len(list)): as the way to loop when you also need an index — useful, for instance, when two separate lists need to be walked through together at matching positions, like a names list and a scores list. Python has a cleaner, purpose-built tool for exactly that job: zip(). Given two lists of the same length, zip(names, scores) pairs up their items position by position, and for name, score in zip(names, scores): lets you unpack each matched pair directly into two loop variables, with no index variable, and no names[i] / scores[i] lookups, anywhere in sight.",
+      "Compare the two styles on names = ['Ana', 'Ben', 'Cleo'] and scores = [85, 92, 78]. The old style: for i in range(len(names)): print(f'{names[i]}: {scores[i]}'). The zip() style: for name, score in zip(names, scores): print(f'{name}: {score}'). Both print the identical three lines, but zip()'s version never mentions an index at all — it hands you the matched VALUES directly, which is almost always what you actually wanted in the first place.",
+      "This is exactly the tool for rebuilding lesson 6.6's vector addition and 6.7's dot product as real, runnable Python functions, since both operations start with 'match components by position.' Vector addition: def add_vectors(a, b): result = []; for x, y in zip(a, b): result.append(x + y); return result — reusing append() from 2.13 to build up the result list. Called on 6.6's own cart example, add_vectors([4, 1, 6], [2, 3, 0]) walks through the pairs (4,2), (1,3), (6,0), appending 4+2=6, then 1+3=4, then 6+0=6, and returns [6, 4, 6] — exactly matching 6.6's hand-computed combined cart.",
+      "The dot product follows the same shape, just multiplying before accumulating instead of appending: def dot(a, b): total = 0; for x, y in zip(a, b): total = total + x * y; return total. Called on 6.7's own grades example, dot([90, 85, 95], [0.5, 0.3, 0.2]) walks through (90, 0.5), (85, 0.3), (95, 0.2), accumulating 90×0.5=45, then 45+85×0.3=45+25.5=70.5, then 70.5+95×0.2=70.5+19=89.5 — the same weighted grade 6.7 found by hand. One quick caveat worth flagging now: zip() simply stops as soon as either list runs out, so pairing two lists of different lengths silently produces fewer pairs than the longer list has items, rather than raising an error — the same 'both must match' discipline lesson 6.6 required for vector addition still matters here, zip() just doesn't enforce it for you."
+    ],
+    "example": {
+      "problem": "Using def add_vectors(a, b): result = []; for x, y in zip(a, b): result.append(x + y); return result, trace add_vectors([4, 1, 6], [2, 3, 0]) — the same shopping-cart vectors from lesson 6.6's worked example.",
+      "steps": [
+        "result starts as an empty list, [].",
+        "zip(a, b) pairs up (4, 2), (1, 3), and (6, 0), one pair per pass.",
+        "Pass 1: x=4, y=2. x+y=6. result.append(6) makes result = [6].",
+        "Pass 2: x=1, y=3. x+y=4. result.append(4) makes result = [6, 4].",
+        "Pass 3: x=6, y=0. x+y=6. result.append(6) makes result = [6, 4, 6].",
+        "The loop ends (zip() has no more pairs). return result hands back [6, 4, 6]."
+      ],
+      "answer": "add_vectors([4, 1, 6], [2, 3, 0]) returns [6, 4, 6] — matching 6.6's hand-computed combined cart exactly."
+    },
+    "practice": [
+      {
+        "problem": "Given names = ['Ana', 'Ben'] and ages = [10, 12], what does this print?\nfor n, a in zip(names, ages):\n    print(f'{n} is {a}')",
+        "solution": "zip() pairs ('Ana', 10) and ('Ben', 12). The loop prints: Ana is 10, then Ben is 12."
+      },
+      {
+        "problem": "Write add_vectors(a, b) using zip(), the same function shown in the explanation.",
+        "solution": "def add_vectors(a, b):\n    result = []\n    for x, y in zip(a, b):\n        result.append(x + y)\n    return result"
+      },
+      {
+        "problem": "Trace add_vectors([3, 5, 2], [1, 1, 1]) using the zip()-based function.",
+        "solution": "Pairs: (3,1), (5,1), (2,1). Appending sums in order: 3+1=4, 5+1=6, 2+1=3. Returns [4, 6, 3] — matching 6.6's first practice problem."
+      },
+      {
+        "problem": "Write dot(a, b) using zip() (multiply each pair, accumulate the total), then trace dot([2, 3], [4, 1]).",
+        "solution": "def dot(a, b):\n    total = 0\n    for x, y in zip(a, b):\n        total = total + x * y\n    return total\nTrace: pairs (2,4) and (3,1). total = 0 + 2*4 = 8, then total = 8 + 3*1 = 11. dot([2, 3], [4, 1]) returns 11, matching 6.7's first practice problem."
+      },
+      {
+        "problem": "Explain why zip() is more convenient than for i in range(len(a)): ... a[i], b[i] when you need to walk through two same-length lists together.",
+        "solution": "zip() hands you the matched VALUES from both lists directly, in one unpacking step, with no index variable to create, increment, or use for lookups — you never write a[i] or b[i] at all. The range(len(...)) style only exists to manufacture an index so you can look values up by position; zip() skips that need entirely whenever you don't actually need the index itself."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does zip(list1, list2) do?",
+        "choices": [
+          "Merges the two lists into one long list",
+          "Pairs up items from both lists by matching position, one pair per loop pass",
+          "Sorts both lists together",
+          "Multiplies every pair of items together"
+        ],
+        "answerIndex": 1,
+        "explanation": "zip() pairs items from both lists by position, letting a for loop unpack each matched pair directly, without any index variable."
+      },
+      {
+        "type": "mc",
+        "question": "Given fruits = ['apple', 'pear'] and counts = [3, 5], what does for f, c in zip(fruits, counts): print(f, c) print?",
+        "choices": [
+          "apple 3, then pear 5",
+          "apple pear, then 3 5",
+          "Only apple 3",
+          "An error, since zip() isn't a real function"
+        ],
+        "answerIndex": 0,
+        "explanation": "zip() pairs 'apple' with 3 and 'pear' with 5 by position, so the loop prints apple 3, then pear 5."
+      },
+      {
+        "type": "mc",
+        "question": "What happens if you zip() two lists of different lengths, like zip([1, 2, 3], [10, 20])?",
+        "choices": [
+          "Python raises an error immediately",
+          "It stops pairing as soon as the shorter list runs out, producing fewer pairs",
+          "The shorter list is automatically padded with zeros",
+          "It pairs every item in the longer list with the last item of the shorter one"
+        ],
+        "answerIndex": 1,
+        "explanation": "zip() stops as soon as either list is exhausted, so pairing [1, 2, 3] with [10, 20] produces only 2 pairs: (1, 10) and (2, 20)."
+      },
+      {
+        "type": "short",
+        "question": "Using the zip()-based add_vectors(a, b) function, what does add_vectors([10, 0, -2], [-4, 6, 2]) return?",
+        "answer": "[6, 6, 0]",
+        "acceptable": [
+          "[6, 6, 0]",
+          "6, 6, 0"
+        ],
+        "explanation": "Pairs: (10,-4), (0,6), (-2,2). Sums: 10+(-4)=6, 0+6=6, -2+2=0. Result: [6, 6, 0], matching 6.6's second practice problem."
+      },
+      {
+        "type": "short",
+        "question": "In the zip()-based dot(a, b) function, what two operations does the loop body perform on each matched pair, in order?",
+        "answer": "multiply the pair, then add the product to a running total",
+        "acceptable": [
+          "multiply then accumulate/add",
+          "multiply x and y, then add to total",
+          "multiply each pair and sum the results"
+        ],
+        "explanation": "Each pass computes x * y (the multiply step) and then adds that product into the running total (the accumulate step) — the same 'multiply, then add' shape as lesson 6.7's dot product."
+      }
+    ]
+  },
+  {
+    "id": "7.6",
+    "number": 6,
+    "title": "Concept: why loops don't scale, and the case for vectorized thinking",
+    "objectives": [
+      "Identify the boilerplate a hand-written loop needs even for a simple elementwise operation",
+      "Distinguish the mathematical idea behind an operation from the loop code used to carry it out",
+      "Define vectorized thinking as expressing a whole-list operation directly, without writing the loop yourself",
+      "Preview NumPy as a tool built specifically to support vectorized code in Python"
+    ],
+    "explanation": [
+      "Look back at everything lesson 7.5 built: add_vectors needed an empty result list, a zip() loop, an append() call, and a return statement — four separate lines of scaffolding — just to carry out one simple idea: 'add each pair of matching numbers.' The dot() function needed almost the same scaffolding, just swapping append() for a running total. Every operation this phase has built by hand — row sums, column sums, vector addition, the dot product — has followed this identical shape: set up a container or accumulator, loop through the data, do one small thing per pass, hand back the result.",
+      "That scaffolding isn't free. It's not that a computer runs it slowly — a computer tears through a loop over three numbers instantly — it's that a HUMAN has to correctly write and read it every single time: initialize the right kind of container, get zip() or the indexing right, remember to append() instead of forgetting, and return the right thing at the end. The actual mathematical idea behind add_vectors is one short sentence, but the code needed four lines to say it, and three of those four lines are pure bookkeeping that has nothing to do with 'add matching numbers' — they exist only because Python's for loop demands them.",
+      "Vectorized thinking is the shift from 'for each item, do X' to 'do X to the whole list at once,' and letting some tool handle visiting every element internally instead of you writing that visit-every-element loop yourself. This isn't actually a new mathematical idea — [a1, a2, a3] + [b1, b2, b3] already meant 'add matching components' all the way back in lesson 6.6's notation. Vectorized thinking just means writing CODE that matches that shorthand directly, the way a + b already reads on paper, instead of translating it into a result=[]/zip()/append()/return loop every single time you need it.",
+      "The next lesson introduces NumPy, a library — an add-on toolbox for Python — built specifically to let you write code this way: a + b will directly add two numeric lists elementwise, with no loop, no container, no append(), anywhere in your code. Every operation this phase has hand-built so far with a loop — vector addition, scalar multiplication, the dot product, sum, mean — has a one-line vectorized equivalent waiting in the lessons ahead."
+    ],
+    "example": {
+      "problem": "Look at def add_vectors(a, b): result = []; for x, y in zip(a, b): result.append(x + y); return result — 5 lines total. Identify which lines are pure bookkeeping (scaffolding the loop needs) versus which line actually carries the mathematical idea, and explain what vectorized thinking would let you skip.",
+      "steps": [
+        "Line 1, the def line, is bookkeeping — it just names the function and its parameters.",
+        "Line 2, result = [], is bookkeeping — an empty container that has nothing to do with 'add matching numbers' by itself.",
+        "Line 3, the for x, y in zip(a, b): line, is bookkeeping — it exists only to visit each matched pair one at a time.",
+        "Line 4, result.append(x + y), is half idea and half bookkeeping — x + y IS the actual mathematical idea, but append(...) is scaffolding needed to collect the results.",
+        "Line 5, return result, is bookkeeping — handing back the container that was built.",
+        "So 4 of the 5 lines (and half of the 5th) are scaffolding that has nothing to do with the actual idea, 'add matching components.' Vectorized thinking would let a single expression, a + b, state that idea directly, with none of the container-setup, looping, or collecting."
+      ],
+      "answer": "4 full lines (and half of the 5th) are bookkeeping; only the phrase x + y inside line 4 actually carries the mathematical idea. Vectorized code aims to let a + b say exactly that, with none of the surrounding scaffolding."
+    },
+    "practice": [
+      {
+        "problem": "List the bookkeeping steps a loop-based function would need to scale every item in a list by a scalar (like lesson 6.6's scalar multiplication), even though the underlying idea is just 'multiply every component by the same number.'",
+        "solution": "It would need: a def line naming the function and its parameters; an empty result list created before the loop; a for loop visiting each item one at a time; an append() call inside the loop to collect each scaled value; and a return statement at the end. All five pieces exist purely to carry out the one short idea, 'multiply every component by the same number.'"
+      },
+      {
+        "problem": "In the zip()-based dot(a, b) function from lesson 7.5 (total = 0; for x, y in zip(a, b): total = total + x * y; return total), which part of the loop body is the actual mathematical idea, and which parts are bookkeeping?",
+        "solution": "x * y (multiplying the matched pair) is the mathematical idea. total = 0 before the loop, the for x, y in zip(a, b): loop structure itself, and total = total + ... (accumulating into a running total) are all bookkeeping needed to carry that one multiplication out across every pair and collect the result."
+      },
+      {
+        "problem": "In one sentence, explain the difference between 'loop-based thinking' and 'vectorized thinking.'",
+        "solution": "Loop-based thinking says 'for each item, do X,' requiring you to write and manage the visiting-each-item step yourself; vectorized thinking says 'do X to the whole list at once,' letting a tool handle visiting every element internally so you can write the operation directly, the way it already reads in math notation."
+      },
+      {
+        "problem": "If you wanted vector addition, scalar multiplication, the dot product, sum, and mean all written as loop-based Python functions, how many separate functions would you need, and what do they all have in common structurally, even though the 'idea' inside each one is different?",
+        "solution": "Five separate functions. Structurally, every one of them needs the exact same skeleton — set up a container or accumulator before the loop, visit each item (or matched pair) with a loop, do one small operation per pass, and return the result at the end — even though the specific 'one small operation' (add, multiply-by-scalar, multiply-then-accumulate, just accumulate, or accumulate-then-divide) is different in each case."
+      },
+      {
+        "problem": "Based on this lesson's preview, what is NumPy expected to let you avoid when performing operations like vector addition?",
+        "solution": "NumPy is expected to let you avoid writing the loop-and-container scaffolding entirely — no result = [], no for/zip loop, no append(), no return — by letting an expression like a + b apply the operation to the whole array directly, in one line, matching the math notation itself."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "According to this lesson, what is the main 'cost' of writing a loop for a simple operation like vector addition?",
+        "choices": [
+          "The computer runs it too slowly for small lists",
+          "The bookkeeping — container setup, looping, collecting results — that a human has to correctly write and read every time, even though the actual idea is one short sentence",
+          "Python doesn't allow loops inside functions",
+          "Loops always produce the wrong answer for vectors"
+        ],
+        "answerIndex": 1,
+        "explanation": "The lesson's point isn't about runtime speed — it's that the scaffolding a loop needs (containers, loop mechanics, collecting results) is real work for a human to write and verify, even for a one-sentence idea."
+      },
+      {
+        "type": "mc",
+        "question": "What does 'vectorized thinking' mean?",
+        "choices": [
+          "Writing more loops to be extra careful",
+          "Expressing an operation on a whole list/array directly (like a + b), letting a tool handle visiting each element internally",
+          "Only using vectors, never lists",
+          "Converting every list into a dictionary first"
+        ],
+        "answerIndex": 1,
+        "explanation": "Vectorized thinking shifts from 'for each item, do X' to 'do X to the whole array at once' — the operation is expressed directly, without a hand-written loop."
+      },
+      {
+        "type": "mc",
+        "question": "Which tool does this lesson preview as being built specifically to support vectorized code in Python?",
+        "choices": [
+          "range()",
+          "zip()",
+          "NumPy",
+          "append()"
+        ],
+        "answerIndex": 2,
+        "explanation": "NumPy is a library built specifically so operations like a + b apply directly to whole arrays, without a hand-written loop."
+      },
+      {
+        "type": "short",
+        "question": "Name one thing a loop-based add_vectors function needs that a vectorized a + b does not.",
+        "answer": "an empty result list (or a loop, or an append() call)",
+        "acceptable": [
+          "a result container/list",
+          "the for/zip loop",
+          "append()",
+          "manually looping over the items"
+        ],
+        "explanation": "A loop-based version needs a container to collect results, a loop to visit each pair, and an append() call — none of which a vectorized a + b requires."
+      },
+      {
+        "type": "short",
+        "question": "Is the underlying math idea behind vectorized addition — [a1, a2] + [b1, b2] = [a1+b1, a2+b2] — new content introduced in this lesson?",
+        "answer": "No, it's the same idea from lesson 6.6; what's new is code that matches that shorthand directly",
+        "acceptable": [
+          "no, it's from 6.6",
+          "no, only the code style is new, not the math",
+          "no - same rule as 6.6's vector addition"
+        ],
+        "explanation": "The 'add matching components' rule is unchanged from lesson 6.6 — vectorized thinking is about writing code that expresses that existing idea directly, not about a new mathematical rule."
+      }
+    ]
+  },
+  {
+    "id": "7.7",
+    "number": 7,
+    "title": "Meet NumPy — arrays vs. lists",
+    "objectives": [
+      "Import NumPy and create a NumPy array from a Python list using np.array()",
+      "Explain what makes a NumPy array different from a Python list",
+      "Read a NumPy array's length with len() and its shape with .shape",
+      "Recognize how a printed NumPy array differs from a printed Python list"
+    ],
+    "explanation": [
+      "Lesson 7.6 promised a tool built for vectorized code — that tool is NumPy (short for 'Numerical Python'), and this lesson meets it properly. After import numpy as np (the standard convention you'll see in virtually every NumPy program), you create a NumPy array directly from an ordinary Python list you already know how to build: grades = np.array([90, 85, 95]). Nothing about grades = [90, 85, 95] itself changed — np.array() just wraps that familiar list, handing back a new kind of object, an array, built specifically for the vectorized math the rest of this phase is leading toward.",
+      "An array looks a lot like a list at first glance, but printing one gives a small, reliable tell: print(grades) shows [90 85 95] — no commas between the numbers — while a plain Python list would print as [90, 85, 95] with commas. Everything else feels familiar: len(grades) still works exactly like it does on a list, returning 3. Arrays also carry a new piece of information a plain list doesn't: grades.shape, which for this array is (3,), meaning '3 items, arranged in a single row' — shape becomes especially useful once 2D arrays (grids, like lesson 7.1's tables) enter the picture in a later lesson.",
+      "So what's actually different underneath? A Python list can hold anything at all, mixed types, and grow or shrink freely with append(). A NumPy array is built to hold one consistent type of number, at a fixed size once created — a real restriction compared to a list. In exchange for that restriction, NumPy can apply math directly to the WHOLE array at once, the vectorized way lesson 7.6 previewed, which the next lesson shows in action. That trade — a little flexibility given up in exchange for direct, whole-array math — is the entire reason NumPy arrays exist alongside plain Python lists rather than replacing them.",
+      "This should also feel like a familiar idea wearing new clothes: a NumPy array is lesson 6.5's vector — an ordered collection of numbers, fixed size, each position meaningful — finally given an actual, runnable form. Everything you learned about vectors on paper in lessons 6.5 through 6.8 (addition, scalar multiplication, the dot product, magnitude) now has a literal, computable object to be performed on, which is exactly what the next few lessons put to work."
+    ],
+    "example": {
+      "problem": "Convert grades = [90, 85, 95] into a NumPy array, then find what print() shows for it, what len() returns, and what its .shape is.",
+      "steps": [
+        "Import NumPy with the standard convention: import numpy as np.",
+        "Create the array from the existing list: grades_arr = np.array([90, 85, 95]).",
+        "print(grades_arr) shows [90 85 95] — the same three numbers as the list, but with no commas between them, the visual sign you're looking at an array.",
+        "len(grades_arr) counts the items exactly like it would for a list: 3.",
+        "grades_arr.shape reports (3,), meaning a single row of 3 items."
+      ],
+      "answer": "print(grades_arr) shows [90 85 95]; len(grades_arr) is 3; grades_arr.shape is (3,)."
+    },
+    "practice": [
+      {
+        "problem": "Given scores = [70, 80, 90], what does np.array(scores) create, and what would print() show for it?",
+        "solution": "np.array(scores) creates a NumPy array built from the same three numbers. print() would show [70 80 90] — no commas, unlike the original list's [70, 80, 90]."
+      },
+      {
+        "problem": "If arr = np.array([1, 2, 3, 4, 5]), what does len(arr) return?",
+        "solution": "len() counts the items in the array exactly like it would for a list: len(arr) is 5."
+      },
+      {
+        "problem": "If arr = np.array([4, 8, 15, 16]), what does arr.shape return?",
+        "solution": "The array has 4 items arranged in a single row, so arr.shape is (4,)."
+      },
+      {
+        "problem": "Name one way a NumPy array is different from a Python list.",
+        "solution": "A NumPy array holds one consistent type of number and has a fixed size once created, while a Python list can hold mixed types and grow or shrink freely with append(). (Any one correctly stated difference is a complete answer.)"
+      },
+      {
+        "problem": "Lesson 6.7's weights vector was [0.5, 0.3, 0.2]. Convert it to a NumPy array and state what print() would show.",
+        "solution": "weights_arr = np.array([0.5, 0.3, 0.2]). print(weights_arr) would show [0.5 0.3 0.2] — the same three numbers, with no commas."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How do you create a NumPy array from an existing Python list called nums?",
+        "choices": [
+          "np.array(nums)",
+          "nums.array()",
+          "array.np(nums)",
+          "np.list(nums)"
+        ],
+        "answerIndex": 0,
+        "explanation": "np.array() takes an existing list (or other sequence) and returns a NumPy array built from its values."
+      },
+      {
+        "type": "mc",
+        "question": "What visually distinguishes a printed NumPy array from a printed Python list?",
+        "choices": [
+          "The array is printed in a different color",
+          "The array's values are printed with no commas between them",
+          "The array is always printed backward",
+          "Nothing — they print identically"
+        ],
+        "answerIndex": 1,
+        "explanation": "A NumPy array prints with spaces between values and no commas, like [90 85 95], while a Python list prints with commas, like [90, 85, 95]."
+      },
+      {
+        "type": "mc",
+        "question": "What is the key trade-off a NumPy array makes compared to a Python list?",
+        "choices": [
+          "Arrays give up direct whole-array math in exchange for flexible size and mixed types",
+          "Arrays give up flexible size and mixed types in exchange for the ability to do direct, whole-array math",
+          "There is no trade-off; arrays are strictly better in every way",
+          "Arrays can only ever hold exactly 3 items"
+        ],
+        "answerIndex": 1,
+        "explanation": "A NumPy array is restricted to one consistent number type and a fixed size, and in exchange gains the ability to apply math directly to the whole array at once."
+      },
+      {
+        "type": "short",
+        "question": "If arr = np.array([2, 4, 6, 8, 10]), what does arr.shape return?",
+        "answer": "(5,)",
+        "acceptable": [
+          "(5,)",
+          "5,",
+          "5"
+        ],
+        "explanation": "The array has 5 items in a single row, so its shape is (5,)."
+      },
+      {
+        "type": "short",
+        "question": "Which earlier-phase mathematical object does a NumPy array give an actual, runnable form to?",
+        "answer": "a vector (lesson 6.5)",
+        "acceptable": [
+          "vector",
+          "the vector from 6.5",
+          "vectors"
+        ],
+        "explanation": "A NumPy array is lesson 6.5's vector — an ordered, fixed-size list of numbers with positional meaning — implemented as a real, computable Python object."
+      }
+    ]
+  },
+  {
+    "id": "7.8",
+    "number": 8,
+    "title": "Elementwise operations — array + array, array - array, array * array",
+    "objectives": [
+      "Add, subtract, and multiply two NumPy arrays elementwise using +, -, and *",
+      "Compare a vectorized elementwise operation to its loop-based equivalent from lesson 7.5",
+      "Explain that elementwise operations require arrays of matching length, the same rule as lesson 6.6's vector addition",
+      "Distinguish elementwise multiplication (an array result) from the dot product (a single-number result)"
+    ],
+    "explanation": [
+      "This is the payoff lessons 7.6 and 7.7 were building toward: NumPy arrays support +, -, and * DIRECTLY, applying each operator elementwise — matching components by position, exactly lesson 6.6's rule — with no loop, no zip(), no append(), anywhere in sight. np.array([4, 1, 6]) + np.array([2, 3, 0]) evaluates immediately to an array holding [6, 4, 6] — the identical result lesson 7.5's zip()-based add_vectors function needed four lines of scaffolding to produce, now written in exactly one line that reads the same way the math notation always did.",
+      "Subtraction works identically: np.array([3, 5, 2]) - np.array([1, 1, 1]) subtracts matching components, giving [2, 4, 1]. Multiplication, np.array([2, 1, 1]) * np.array([1, 2, 1]), also matches components by position, giving [2, 2, 1] — but pay close attention here, because this is NOT the dot product from lesson 6.7. Elementwise multiplication keeps a whole array of products, one per position, with no summing; the dot product multiplies matching components AND THEN adds all those products into a single number. In fact, the dot product is really just elementwise multiplication followed by a sum — 6.7's own 'multiply matching pairs, then add' description was already describing exactly that two-step combination, which the next few lessons will show as one more NumPy shortcut.",
+      "Just like lesson 6.6 required two vectors to have the same number of components before adding them, NumPy arrays need matching lengths for elementwise operations to make sense — position 4 of one array has to have SOME position 4 in the other array to combine with. Trying to add arrays of different lengths raises an error in NumPy, for the identical reason 6.6 gave: without a full set of matching positions, there's nothing sensible to combine.",
+      "Step back and notice what just happened to lesson 7.5's whole toolbox: add_vectors, and now subtraction and elementwise multiplication too, each of which would need its own custom loop function written the 7.5 way, collapse into one-line operator expressions — a + b, a - b, a * b — with NumPy. This is vectorized thinking, precisely as lesson 7.6 previewed it: the math notation and the code are now the same thing."
+    ],
+    "example": {
+      "problem": "Mia's two smoothie recipes from lesson 6.9 are berry = np.array([2, 1, 1]) (Berry Blast: fruit, yogurt, juice cups) and tropical = np.array([1, 2, 1]) (Tropical Twist). Find berry + tropical (combined ingredients for one batch of each), berry - tropical (the difference in ingredients), and berry * tropical (the elementwise product — and explain why this is NOT the same as their dot product).",
+      "steps": [
+        "berry + tropical adds matching components: 2+1=3, 1+2=3, 1+1=2, giving [3, 3, 2] cups total if making one batch of each recipe.",
+        "berry - tropical subtracts matching components: 2-1=1, 1-2=-1, 1-1=0, giving [1, -1, 0] — Berry Blast uses 1 more cup of fruit, 1 less cup of yogurt, and the same amount of juice, compared to Tropical Twist.",
+        "berry * tropical multiplies matching components but does NOT add them: 2×1=2, 1×2=2, 1×1=1, giving the array [2, 2, 1].",
+        "The dot product, by contrast, would take that same elementwise product [2, 2, 1] and sum it: 2+2+1=5, collapsing it down to the single number 5 — a completely different kind of result (one number, not an array) from a completely different operation."
+      ],
+      "answer": "berry + tropical = [3, 3, 2]; berry - tropical = [1, -1, 0]; berry * tropical (elementwise) = [2, 2, 1] — an array, unlike the dot product berry · tropical = 5, which is a single number."
+    },
+    "practice": [
+      {
+        "problem": "Compute np.array([4, 7]) + np.array([3, -2]).",
+        "solution": "Add matching components: 4+3=7, 7+(-2)=5. Result: [7, 5], matching lesson 6.6's quiz question with the same numbers."
+      },
+      {
+        "problem": "Compute np.array([3, 5, 2]) - np.array([1, 1, 1]).",
+        "solution": "Subtract matching components: 3-1=2, 5-1=4, 2-1=1. Result: [2, 4, 1]."
+      },
+      {
+        "problem": "Compute the elementwise product np.array([2, 3]) * np.array([4, 1]), and separately compute the dot product of the same two arrays. Explain why the two results differ.",
+        "solution": "Elementwise product: 2×4=8, 3×1=3, giving the array [8, 3]. Dot product: sum those same products, 8+3=11, giving the single number 11 (matching lesson 6.7's first practice problem). They differ because elementwise multiplication stops after multiplying and keeps an array of individual products, while the dot product takes that extra summing step to collapse everything into one number."
+      },
+      {
+        "problem": "Explain the difference between array elementwise multiplication and the dot product from lesson 6.7, in your own words.",
+        "solution": "Elementwise multiplication (a * b in NumPy) multiplies matching components and keeps each product separately, producing an array of the same length as the inputs. The dot product multiplies matching components AND THEN adds all of those products together, producing a single number instead of an array — it's elementwise multiplication with one extra summing step."
+      },
+      {
+        "problem": "If you tried to compute np.array([1, 2, 3]) + np.array([1, 2]) (arrays of different lengths), what would happen, and why, based on lesson 6.6's rule for vector addition?",
+        "solution": "NumPy would raise an error, because elementwise addition needs every position in one array to have a matching position in the other. Just like lesson 6.6 required two vectors to have the same number of components before adding them, a 3-item array and a 2-item array don't have a full set of matching positions, so there's nothing sensible for NumPy to combine at position 3."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does np.array([4, 7]) + np.array([3, -2]) evaluate to?",
+        "choices": [
+          "[7, 5]",
+          "[1, 9]",
+          "[12, -14]",
+          "[7, -5]"
+        ],
+        "answerIndex": 0,
+        "explanation": "Adding matching components: 4+3=7 and 7+(-2)=5, giving [7, 5]."
+      },
+      {
+        "type": "mc",
+        "question": "What does elementwise multiplication of two same-length arrays produce?",
+        "choices": [
+          "A single number (a scalar)",
+          "An array of the same length, one product per matching position",
+          "An array twice as long as the inputs",
+          "A Python list of strings"
+        ],
+        "answerIndex": 1,
+        "explanation": "Elementwise multiplication multiplies matching components and keeps every product separately, producing an array the same length as the two inputs."
+      },
+      {
+        "type": "mc",
+        "question": "How does the dot product differ from elementwise multiplication of the same two arrays?",
+        "choices": [
+          "They are exactly the same operation",
+          "The dot product adds all the elementwise products together into a single number",
+          "The dot product only works on arrays of length 1",
+          "Elementwise multiplication always gives a bigger result"
+        ],
+        "answerIndex": 1,
+        "explanation": "The dot product is elementwise multiplication followed by one extra step — summing all the products into a single number — instead of keeping them as a separate array."
+      },
+      {
+        "type": "short",
+        "question": "Compute np.array([3, 5, 2]) - np.array([1, 1, 1]).",
+        "answer": "[2, 4, 1]",
+        "acceptable": [
+          "[2, 4, 1]",
+          "2, 4, 1"
+        ],
+        "explanation": "Subtracting matching components: 3-1=2, 5-1=4, 2-1=1, giving [2, 4, 1]."
+      },
+      {
+        "type": "short",
+        "question": "Compute the elementwise product of np.array([2, 1, 1]) and np.array([1, 2, 1]) (Mia's Berry Blast and Tropical Twist recipes).",
+        "answer": "[2, 2, 1]",
+        "acceptable": [
+          "[2, 2, 1]",
+          "2, 2, 1"
+        ],
+        "explanation": "Multiplying matching components: 2×1=2, 1×2=2, 1×1=1, giving the array [2, 2, 1]."
+      }
+    ]
+  },
+  {
+    "id": "7.9",
+    "number": 9,
+    "title": "Broadcasting — combining an array with a single scalar",
+    "objectives": [
+      "Apply a scalar operation (+, -, *, /) to every element of a NumPy array at once",
+      "Reproduce lesson 6.6's scalar multiplication the NumPy way",
+      "Explain broadcasting as NumPy 'stretching' a single scalar to match an array's shape",
+      "Combine broadcasting with elementwise array operations in one expression"
+    ],
+    "explanation": [
+      "Lesson 7.8 combined two arrays of the SAME length elementwise. What about combining an array with a single plain number — a scalar, not another array — the way lesson 6.6 scaled a whole vector by one number? NumPy handles this even more simply: 3 * np.array([2, 4, 1]) evaluates directly to [6, 12, 3], tripling every ingredient in a recipe array, exactly matching 6.6's own tripled-recipe practice problem.",
+      "This is called broadcasting: NumPy's rule for combining an array with a single scalar by conceptually 'stretching' that one number across every position, without you ever writing a matching-length array yourself. You never build [3, 3, 3] by hand to multiply against [2, 4, 1] — NumPy simply knows to apply the lone scalar 3 to every position, the same way 6.6 described scalar multiplication applying 'to the whole vector at once, never to just one component.' Broadcasting is really just that same rule, now built directly into the + - * / operators themselves.",
+      "All four arithmetic operators broadcast a scalar this way: np.array([9, 6, 3]) - 1 subtracts 1 from every element, giving [8, 5, 2]; np.array([10, 20, 30]) / 10 divides every element by 10, giving [1, 2, 3] — a common move for scaling a whole array down, and one you'll see again the next time you need every value expressed relative to some total.",
+      "Broadcasting also combines freely with lesson 7.8's array-with-array elementwise operations in a single expression, since NumPy simply evaluates the parentheses first, exactly like ordinary math notation always has: 2 * (np.array([4, 1, 6]) + np.array([2, 3, 0])) first adds the two arrays elementwise, getting [6, 4, 6], then broadcasts the scalar 2 across that result, getting [12, 8, 12]) — reproducing lesson 6.6's own worked example (Mia and Jake's combined-and-doubled shopping cart) in a single line, with the exact same final answer."
+    ],
+    "example": {
+      "problem": "Reproduce lesson 6.6's worked example the NumPy way: Mia's cart is np.array([4, 1, 6]) and Jake's cart is np.array([2, 3, 0]). Combine the two carts, then double the combined cart, all using array operations.",
+      "steps": [
+        "Add the two carts elementwise (lesson 7.8): np.array([4, 1, 6]) + np.array([2, 3, 0]) gives [6, 4, 6].",
+        "Broadcast the scalar 2 across the combined cart (this lesson): 2 * [6, 4, 6] multiplies every element by 2, giving [12, 8, 12].",
+        "Written as one expression: 2 * (np.array([4, 1, 6]) + np.array([2, 3, 0])) evaluates directly to [12, 8, 12]."
+      ],
+      "answer": "The final cart is [12, 8, 12] — identical to lesson 6.6's hand-computed answer, now produced in one line with no loop."
+    },
+    "practice": [
+      {
+        "problem": "Compute 3 * np.array([2, 4, 1]).",
+        "solution": "Broadcasting multiplies every element by 3: 3×2=6, 3×4=12, 3×1=3. Result: [6, 12, 3], matching lesson 6.6's tripled-recipe practice problem."
+      },
+      {
+        "problem": "Compute np.array([8, -2, 5]) * -1.",
+        "solution": "Broadcasting multiplies every element by -1: -1×8=-8, -1×(-2)=2, -1×5=-5. Result: [-8, 2, -5], matching lesson 6.6's sign-flip practice problem."
+      },
+      {
+        "problem": "Compute np.array([10, 20, 30]) / 10.",
+        "solution": "Broadcasting divides every element by 10: 10/10=1, 20/10=2, 30/10=3. Result: [1, 2, 3]."
+      },
+      {
+        "problem": "Compute 4 * (np.array([5, 3]) + np.array([2, -1])).",
+        "solution": "First add elementwise: 5+2=7, 3+(-1)=2, giving [7, 2]. Then broadcast the scalar 4: 4×7=28, 4×2=8. Result: [28, 8], matching lesson 6.6's final practice problem."
+      },
+      {
+        "problem": "Explain, without using the word 'loop,' what broadcasting does when you combine a NumPy array with a single scalar.",
+        "solution": "Broadcasting applies the single scalar value to every position of the array at once, conceptually stretching that one number to match the array's shape, so the operation (+, -, *, or /) happens between the scalar and each element in turn — all handled internally by NumPy rather than by any code you write yourself."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does 2 * np.array([3, 5, 2]) evaluate to?",
+        "choices": [
+          "[6, 10, 4]",
+          "[5, 7, 4]",
+          "[3, 5, 2, 3, 5, 2]",
+          "[1.5, 2.5, 1]"
+        ],
+        "answerIndex": 0,
+        "explanation": "Broadcasting multiplies every element by 2: 2×3=6, 2×5=10, 2×2=4, giving [6, 10, 4]."
+      },
+      {
+        "type": "mc",
+        "question": "What is broadcasting?",
+        "choices": [
+          "NumPy's rule for combining an array with a single scalar by applying it to every position at once",
+          "A way to send an array over a network",
+          "A method that only works on arrays with exactly 2 elements",
+          "A way to convert an array into a Python list"
+        ],
+        "answerIndex": 0,
+        "explanation": "Broadcasting lets a single scalar combine with every element of an array at once, without writing a matching-length array or a loop yourself."
+      },
+      {
+        "type": "mc",
+        "question": "What does np.array([9, 6, 3]) - 1 evaluate to?",
+        "choices": [
+          "[8, 5, 2]",
+          "[10, 7, 4]",
+          "[9, 6, 3, -1]",
+          "[-8, -5, -2]"
+        ],
+        "answerIndex": 0,
+        "explanation": "Broadcasting subtracts 1 from every element: 9-1=8, 6-1=5, 3-1=2, giving [8, 5, 2]."
+      },
+      {
+        "type": "short",
+        "question": "Compute np.array([4, 8, 12]) / 4.",
+        "answer": "[1, 2, 3]",
+        "acceptable": [
+          "[1, 2, 3]",
+          "1, 2, 3",
+          "[1.0, 2.0, 3.0]"
+        ],
+        "explanation": "Broadcasting divides every element by 4: 4/4=1, 8/4=2, 12/4=3, giving [1, 2, 3]."
+      },
+      {
+        "type": "short",
+        "question": "Compute 3 * (np.array([1, 2]) + np.array([3, 4])).",
+        "answer": "[12, 18]",
+        "acceptable": [
+          "[12, 18]",
+          "12, 18"
+        ],
+        "explanation": "First add elementwise: 1+3=4, 2+4=6, giving [4, 6]. Then broadcast the scalar 3: 3×4=12, 3×6=18, giving [12, 18]."
+      }
+    ]
+  },
+  {
+    "id": "7.10",
+    "number": 10,
+    "title": "Vectorized sum, mean, and dot product — NumPy's built-in reductions",
+    "objectives": [
+      "Compute the sum and mean of a NumPy array using .sum() and .mean()",
+      "Compute the dot product of two arrays using np.dot()",
+      "Reproduce lesson 5.2's mean and lesson 6.7's dot product the NumPy way, confirming they match the hand-computed results",
+      "Explain sum, mean, and dot product as reductions — operations that collapse a whole array down into a single number"
+    ],
+    "explanation": [
+      "Lesson 7.6 named sum and mean, alongside the dot product, as operations this phase had built entirely from loops. NumPy replaces every one of those loops with a single method call. For an array, arr.sum() adds up every element, and arr.mean() computes the average directly — no total = 0, no accumulator loop, no dividing by len() yourself. Using lesson 5.2's own quiz-scores dataset, scores = np.array([18, 12, 20, 15, 9]), scores.sum() gives 74 and scores.mean() gives 14.8 — the identical total and mean 5.2 computed by hand with the accumulator pattern, now produced in one line each.",
+      "Sum, mean, and the dot product all share something important: each one takes a whole array and collapses it down into a single number. This is the same family of idea lesson 6.8 used the word 'collapse' for when describing magnitude, and lesson 6.7 used for the dot product itself — operations like this are often called reductions, since they reduce many numbers down to one. Sum and mean reduce a single array; the dot product, magnitude, and (later) matrix operations all reduce in a similar spirit, just starting from more than one array or more structure.",
+      "The dot product itself gets its own one-line replacement: np.dot(a, b) computes it directly, with no zip() loop and no running total. np.dot(np.array([90, 85, 95]), np.array([0.5, 0.3, 0.2])) evaluates straight to 89.5 — lesson 6.7's exact weighted-grade example. (You may also see the @ operator used as shorthand for the same operation, a @ b, in other NumPy code — both compute the identical dot product.)",
+      "Recall lesson 6.7's closing point: a plain mean is secretly a dot product against a weights array where every weight equals 1/count. That connection now checks out with real code, not just algebra: for grades = np.array([80, 90, 70]), grades.mean() gives 80.0, and np.dot(grades, np.array([1/3, 1/3, 1/3])) also gives 80.0 — two completely different-looking NumPy calls, computing the exact same reduction, because a mean really is nothing more than a dot product with equal weights."
+    ],
+    "example": {
+      "problem": "Using lesson 6.7's grades array grades = np.array([90, 85, 95]) and weights array weights = np.array([0.5, 0.3, 0.2]), compute the plain sum, the plain (unweighted) mean, and the weighted dot product. Compare the plain mean to the weighted result.",
+      "steps": [
+        "grades.sum() adds every element: 90 + 85 + 95 = 270.",
+        "grades.mean() divides that sum by the count: 270 / 3 = 90.0 — the unweighted average of the three scores.",
+        "np.dot(grades, weights) multiplies each grade by its matching weight and adds the products: 90×0.5 + 85×0.3 + 95×0.2 = 45 + 25.5 + 19 = 89.5.",
+        "The plain mean (90.0) treats all three assignments equally; the weighted dot product (89.5) reflects that the teacher actually weighted them unevenly (50%/30%/20%), matching lesson 6.7's original point about what the dot product buys you over a plain mean."
+      ],
+      "answer": "sum = 270, plain mean = 90.0, weighted dot product = 89.5 — different numbers because the dot product accounts for the assignments' unequal weights, while the plain mean does not."
+    },
+    "practice": [
+      {
+        "problem": "Given arr = np.array([10, 20, 30, 40]), compute arr.sum() and arr.mean().",
+        "solution": "sum = 10+20+30+40 = 100. mean = 100 / 4 = 25.0."
+      },
+      {
+        "problem": "Using lesson 5.2's pet-sitting walk times, walks = np.array([20, 25, 22, 24, 21, 90]), compute walks.mean() and compare it to 5.2's hand-computed answer.",
+        "solution": "Sum = 20+25+22+24+21+90 = 202. mean = 202 / 6 ≈ 33.67, matching lesson 5.2's own hand-computed result of about 33.7 minutes, still pulled upward by the 90-minute outlier."
+      },
+      {
+        "problem": "Compute np.dot(np.array([2, 3]), np.array([4, 1])).",
+        "solution": "Multiply matching components and add: 2×4=8, 3×1=3, 8+3=11 — matching lesson 6.7's first practice problem."
+      },
+      {
+        "problem": "For grades = np.array([80, 90, 70]), compute grades.mean(), then compute np.dot(grades, np.array([1/3, 1/3, 1/3])), and confirm they match.",
+        "solution": "mean: (80+90+70)/3 = 240/3 = 80.0. Dot product: 80×(1/3) + 90×(1/3) + 70×(1/3) = (80+90+70)/3 = 80.0. Both give 80.0, confirming a plain mean equals a dot product with equal (1/count) weights."
+      },
+      {
+        "problem": "Explain what a 'reduction' means in the context of .sum(), .mean(), and the dot product, connecting your answer to lesson 6.8's magnitude.",
+        "solution": "A reduction is an operation that takes a whole array (or arrays) and collapses it down to a single number. .sum() and .mean() reduce one array to one number; the dot product reduces two arrays to one number. This is the same 'collapse into a single number' idea lesson 6.8 used for a vector's magnitude — magnitude is also a reduction, just using a square-sum-square-root shape instead of a plain sum, an average, or a multiply-then-sum."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does arr.sum() do?",
+        "choices": [
+          "Adds up every element of the array into a single number",
+          "Counts how many elements are in the array",
+          "Sorts the array from smallest to largest",
+          "Returns the largest element"
+        ],
+        "answerIndex": 0,
+        "explanation": "arr.sum() adds together every element of the array, collapsing it down to a single total."
+      },
+      {
+        "type": "mc",
+        "question": "Given arr = np.array([5, 10, 15]), what does arr.mean() return?",
+        "choices": [
+          "30",
+          "10.0",
+          "15",
+          "5.0"
+        ],
+        "answerIndex": 1,
+        "explanation": "Sum = 5+10+15 = 30, and 30 / 3 = 10.0."
+      },
+      {
+        "type": "mc",
+        "question": "Which NumPy function computes the dot product of two arrays directly, without a loop?",
+        "choices": [
+          "np.dot()",
+          "np.zip()",
+          "np.append()",
+          "np.range()"
+        ],
+        "answerIndex": 0,
+        "explanation": "np.dot(a, b) multiplies matching components and sums the results in one call, replacing a hand-written zip()-based loop."
+      },
+      {
+        "type": "short",
+        "question": "Compute np.dot(np.array([1, 2, 3]), np.array([4, 0, 2])).",
+        "answer": "10",
+        "acceptable": [
+          "10",
+          "= 10"
+        ],
+        "explanation": "Multiply matching components: 1×4=4, 2×0=0, 3×2=6. Add: 4+0+6=10, matching lesson 6.7's own quiz question."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, what does a 'reduction' operation do to an array?",
+        "answer": "It collapses a whole array down into a single number.",
+        "acceptable": [
+          "it reduces many numbers to one number",
+          "it combines all the values into a single summary number",
+          "collapses an array into one value"
+        ],
+        "explanation": "A reduction — like sum, mean, or the dot product — takes an entire array (or pair of arrays) and produces just one number from it."
+      }
+    ]
+  },
+  {
+    "id": "7.11",
+    "number": 11,
+    "title": "2D NumPy arrays — shape, indexing, and row/column sums",
+    "objectives": [
+      "Create a 2D NumPy array from a 2D Python list and read its .shape as (rows, columns)",
+      "Index into a 2D array using the arr[row, col] notation",
+      "Compute row sums and column sums using .sum(axis=1) and .sum(axis=0), replacing lesson 7.4's nested loops",
+      "Connect 2D NumPy arrays to lesson 6.9's matrix and lesson 7.1's 2D list"
+    ],
+    "explanation": [
+      "Everything from lessons 7.7 through 7.10 has worked on one-row (1D) arrays. NumPy arrays aren't limited to that — np.array() also accepts a 2D Python list directly, building a 2D array in one call: pushups_arr = np.array([[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]]) turns lesson 7.1's exact pushups table into a real NumPy array. Its .shape is now a 2-number tuple instead of the 1D (3,) style from lesson 7.7: pushups_arr.shape is (3, 4) — 3 rows, 4 columns — the identical 'rows x columns' shape language lesson 6.9 used to describe a matrix.",
+      "Indexing a 2D array uses a slightly more compact style than lesson 7.1's double brackets: instead of table[row][col], NumPy lets you write both indices inside ONE set of brackets, separated by a comma: arr[row, col]. pushups_arr[1, 2] reaches the exact same cell 7.1's pushups[1][2] did — Ben's row, position 2 — returning 11. Both notations reach the identical value; arr[row, col] is simply NumPy's own preferred shorthand for it.",
+      "The real payoff is replacing lesson 7.4's nested-loop row sums and column sums with one method call each, using an argument called axis. pushups_arr.sum(axis=1) sums ACROSS each row, collapsing the 4 columns down to 1 number per row: [55, 42, 91] — matching 7.4's row sums exactly. pushups_arr.sum(axis=0) sums DOWN each column, collapsing the 3 rows down to 1 number per column: [38, 43, 50, 57] — matching 7.4's column sums exactly. It's worth memorizing which is which, since it's easy to get backward: axis=0 moves down the rows (one result per COLUMN); axis=1 moves across the columns (one result per ROW). Calling .sum() with no axis argument at all still works the old way, collapsing everything into the single grand total, 188.",
+      "Step back and look at what just replaced lesson 7.4's entire nested-loop chapter: two carefully ordered loops (outer over rows, inner over values, or the reversed column-position version) have become two method calls that differ only in one small argument. This is vectorized thinking applied to a full table instead of a single list — the exact same shift lesson 7.6 previewed, now covering 2D data as completely as lessons 7.8-7.10 covered 1D arrays."
+    ],
+    "example": {
+      "problem": "Build a 2D NumPy array from lesson 7.1's pushups table, pushups_arr = np.array([[10, 12, 15, 18], [8, 9, 11, 14], [20, 22, 24, 25]]). Find its shape, the value at pushups_arr[1, 2], the row sums, the column sums, and the grand total.",
+      "steps": [
+        "Shape: the array has 3 rows and 4 columns, so pushups_arr.shape is (3, 4).",
+        "pushups_arr[1, 2]: row 1 is Ben's row, [8, 9, 11, 14]; position 2 within it is 11.",
+        "Row sums, pushups_arr.sum(axis=1): Ana 10+12+15+18=55, Ben 8+9+11+14=42, Cleo 20+22+24+25=91, giving [55, 42, 91].",
+        "Column sums, pushups_arr.sum(axis=0): week 1 10+8+20=38, week 2 12+9+22=43, week 3 15+11+24=50, week 4 18+14+25=57, giving [38, 43, 50, 57].",
+        "Grand total, pushups_arr.sum() with no axis: 188 — matching both the sum of the row sums (55+42+91=188) and the sum of the column sums (38+43+50+57=188), exactly as lesson 7.4 found."
+      ],
+      "answer": "shape = (3, 4); pushups_arr[1, 2] = 11; row sums = [55, 42, 91]; column sums = [38, 43, 50, 57]; grand total = 188."
+    },
+    "practice": [
+      {
+        "problem": "Given arr = np.array([[1, 2, 3], [4, 5, 6]]), what is arr.shape?",
+        "solution": "The array has 2 rows and 3 columns, so arr.shape is (2, 3)."
+      },
+      {
+        "problem": "Given arr = np.array([[1, 2, 3], [4, 5, 6]]), what is arr[1, 2]?",
+        "solution": "Row 1 is [4, 5, 6]; position 2 within it is 6. arr[1, 2] is 6."
+      },
+      {
+        "problem": "Given arr = np.array([[1, 2], [3, 4], [5, 6]]), compute arr.sum(axis=1).",
+        "solution": "axis=1 sums across each row: row 0: 1+2=3, row 1: 3+4=7, row 2: 5+6=11, giving [3, 7, 11] — matching lesson 7.4's row sums for the same grid."
+      },
+      {
+        "problem": "Given the same arr = np.array([[1, 2], [3, 4], [5, 6]]), compute arr.sum(axis=0).",
+        "solution": "axis=0 sums down each column: column 0: 1+3+5=9, column 1: 2+4+6=12, giving [9, 12] — matching lesson 7.4's column sums for the same grid."
+      },
+      {
+        "problem": "Explain the difference between axis=0 and axis=1 in .sum(axis=...), using the pushups example to illustrate both.",
+        "solution": "axis=0 collapses DOWN the rows, producing one number per COLUMN — pushups_arr.sum(axis=0) gives one total per week across all three kids, [38, 43, 50, 57]. axis=1 collapses ACROSS the columns, producing one number per ROW — pushups_arr.sum(axis=1) gives one total per kid across all four weeks, [55, 42, 91]. The axis number tells NumPy which direction to collapse, not which direction the result is 'about.'"
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Given arr = np.array([[1, 2], [3, 4]]), what is arr.shape?",
+        "choices": [
+          "(2, 2)",
+          "(4,)",
+          "(1, 4)",
+          "(2,)"
+        ],
+        "answerIndex": 0,
+        "explanation": "The array has 2 rows and 2 columns, so its shape is (2, 2)."
+      },
+      {
+        "type": "mc",
+        "question": "Given arr = np.array([[10, 20], [30, 40]]), what is arr[0, 1]?",
+        "choices": [
+          "10",
+          "20",
+          "30",
+          "40"
+        ],
+        "answerIndex": 1,
+        "explanation": "Row 0 is [10, 20]; position 1 within it is 20."
+      },
+      {
+        "type": "mc",
+        "question": "Which axis argument to .sum(axis=...) produces one total per ROW?",
+        "choices": [
+          "axis=0",
+          "axis=1",
+          "axis=2",
+          "No axis argument produces per-row totals"
+        ],
+        "answerIndex": 1,
+        "explanation": "axis=1 sums across the columns within each row, producing one total per row."
+      },
+      {
+        "type": "short",
+        "question": "Given arr = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]]), what does arr.sum(axis=0) return?",
+        "answer": "[6, 6, 6]",
+        "acceptable": [
+          "[6, 6, 6]",
+          "6, 6, 6"
+        ],
+        "explanation": "Each column has one 1, one 2, and one 3, so every column sums to 1+2+3=6, giving [6, 6, 6] — matching lesson 7.4's column sums for the same grid."
+      },
+      {
+        "type": "short",
+        "question": "Given the same arr = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]]), what does arr.sum() (no axis argument) return?",
+        "answer": "18",
+        "acceptable": [
+          "18"
+        ],
+        "explanation": "Adding every value in the array: 1+1+1+2+2+2+3+3+3 = 18, the grand total across the whole array."
+      }
+    ]
+  },
+  {
+    "id": "7.12",
+    "number": 12,
+    "title": "Mini-project: Programming Foundations II synthesis",
+    "objectives": [
+      "Combine 2D lists, slicing, a multi-return function, zip(), and NumPy's vectorized tools in one worked scenario",
+      "Choose the right tool from this phase for a given question about a table of data",
+      "Compute elementwise, broadcasted, and reduction operations correctly on the same dataset",
+      "Explain how every tool from this phase builds toward the same goal: replacing hand-written loops with direct, vectorized operations"
+    ],
+    "explanation": [
+      "You've now met every tool this phase has to offer: the 2D list as a table (7.1), slicing (7.2), functions that return multiple values as tuples (7.3), the 2D accumulator pattern (7.4), parallel iteration with zip() (7.5), the concept of vectorized thinking (7.6), NumPy arrays (7.7), elementwise operations (7.8), broadcasting (7.9), vectorized sum/mean/dot product (7.10), and 2D array row/column sums (7.11). This lesson doesn't teach anything new — it's your chance to run one small, concrete scenario through every one of those tools, one after another, the same way lesson 6.13 combined every tool from Math Foundations II into Mia's smoothie truck.",
+      "Speaking of which — you'll return to Mia's smoothie truck for this mini-project, now grown a little: instead of one recipe at a time, Mia tracks a small table of unit sales for her top 3 smoothies across 4 days, alongside each smoothie's price. Every question below is answerable with exactly one tool from this phase, and part of the challenge is recognizing which one — a single-cell lookup calls for indexing, a range of a row calls for slicing, 'both the best and worst day' calls for a tuple-returning function, pairing names with numbers for a readable report calls for zip(), and any whole-table calculation (a revenue table, a total, an average, a day's combined earnings across every smoothie) calls for NumPy's vectorized tools instead of a hand-written loop.",
+      "Keep the discipline lesson 6.13 asked of you with vectors and matrices: before reaching for a tool, ask exactly which job the question is calling for. A units-sold lookup, a tuple of two values, a zip()-paired report, an elementwise revenue array, a broadcasted price scaling, and an axis-based row or column sum all look, and are computed, differently — even while every one of them is being applied to the very same small table of smoothie sales.",
+      "This synthesis also completes the arc lesson 7.6 opened: every one of the loop-based tools this phase built by hand early on — combining lists, running totals, row-by-row and column-by-column accumulation — has a one-line, vectorized NumPy equivalent by the time you reach this lesson. That's the entire point of 'vectorized thinking': not a brand new set of ideas, but the exact same ideas from lesson 6.6 onward, now written the way the math itself always read."
+    ],
+    "example": {
+      "problem": "Mia's smoothie truck tracks unit sales for 3 smoothies over 4 days (Mon, Tue, Wed, Thu) as sales = [[12, 15, 10, 18], [8, 9, 14, 11], [20, 18, 22, 25]] (row 0 = Berry Blast, row 1 = Tropical Twist, row 2 = Green Glow), with names = ['Berry Blast', 'Tropical Twist', 'Green Glow'] and prices = [5.00, 5.50, 6.00] (dollars per cup, in the same row order). (a) How many units of Tropical Twist sold on Wednesday, and how many did Berry Blast sell Tuesday through Thursday? (b) Write a function that returns Green Glow's best and worst sales day counts as a tuple, and find them. (c) Use zip() to pair each smoothie's name with its price into a short menu. (d) Convert Green Glow's row to a NumPy array and compute its revenue for each day (units x price), using broadcasting. (e) Find Green Glow's total revenue over the 4 days, and separately, the combined revenue of ALL THREE smoothies on Monday, using the dot product. (f) Find each smoothie's total units sold (row sums) and each day's total units sold across all smoothies (column sums).",
+      "steps": [
+        "(a) Indexing and slicing (7.1-7.2): sales[1][2] is Tropical Twist's row, [8, 9, 14, 11], at position 2 — 14 units on Wednesday. sales[0][1:4] slices Berry Blast's row from index 1 up to (not including) index 4 — [15, 10, 18], its Tuesday-Thursday counts.",
+        "(b) Multi-return function (7.3): def find_range(row): low = row[0]; high = row[0]; loop updating low/high; return low, high. Called on Green Glow's row [20, 18, 22, 25]: low ends at 18 (Tuesday), high ends at 25 (Thursday), so the function returns (18, 25).",
+        "(c) zip() (7.5): for name, price in zip(names, prices): print(f'{name}: ${price:.2f}') prints Berry Blast: $5.00, then Tropical Twist: $5.50, then Green Glow: $6.00, pairing each name with its matching price with no index variable anywhere.",
+        "(d) NumPy array + elementwise/broadcasting (7.7-7.9): green = np.array([20, 18, 22, 25]). Green Glow's revenue is a single scalar (its price, $6.00) broadcast across the whole array: green * 6.00 gives [120, 108, 132, 150] — each day's units multiplied by the same per-cup price.",
+        "(e) Vectorized sum and dot product (7.10): Green Glow's total revenue is that revenue array's sum: 120+108+132+150 = 510 dollars. Monday's combined revenue across all three smoothies is the dot product of Monday's units column, [12, 8, 20] (Berry, Tropical, Green, in that order), with the prices array [5.00, 5.50, 6.00]: 12x5.00 + 8x5.50 + 20x6.00 = 60 + 44 + 120 = 224 dollars.",
+        "(f) 2D array axis sums (7.11): converting the whole table to sales_arr = np.array(sales), row sums (axis=1) give each smoothie's 4-day total: Berry 12+15+10+18=55, Tropical 8+9+14+11=42, Green 20+18+22+25=85 -> [55, 42, 85]. Column sums (axis=0) give each day's total across all three smoothies: Mon 12+8+20=40, Tue 15+9+18=42, Wed 10+14+22=46, Thu 18+11+25=54 -> [40, 42, 46, 54]. Both check out: 55+42+85=182 and 40+42+46+54=182, the same grand total either way."
+      ],
+      "answer": "(a) 14 units; [15, 10, 18]. (b) (18, 25) — worst day 18 (Tue), best day 25 (Thu). (c) menu pairs Berry Blast/$5.00, Tropical Twist/$5.50, Green Glow/$6.00. (d) Green Glow's daily revenue = [120, 108, 132, 150]. (e) Green Glow's 4-day total = $510; Monday's combined 3-smoothie revenue (via dot product) = $224. (f) row sums (units per smoothie) = [55, 42, 85]; column sums (units per day) = [40, 42, 46, 54]; grand total = 182 units either way."
+    },
+    "practice": [
+      {
+        "problem": "Using sales = [[12, 15, 10, 18], [8, 9, 14, 11], [20, 18, 22, 25]], find how many units of Berry Blast sold on Thursday, and Tropical Twist's sales from Monday through Wednesday using slicing.",
+        "solution": "sales[0][3] is Berry Blast's row, position 3 (Thursday): 18 units. sales[1][0:3] slices Tropical Twist's row from index 0 up to (not including) index 3: [8, 9, 14]."
+      },
+      {
+        "problem": "Using the find_range(row) function from the worked example, find Tropical Twist's best and worst sales day counts from its row [8, 9, 14, 11].",
+        "solution": "low starts and tracks toward the smallest value, 8 (Monday); high tracks toward the largest, 14 (Wednesday). The function returns (8, 14)."
+      },
+      {
+        "problem": "Add a fourth smoothie, 'Mango Sunrise', priced at $5.75, to the menu. Using zip() with names = ['Berry Blast', 'Tropical Twist', 'Green Glow', 'Mango Sunrise'] and prices = [5.00, 5.50, 6.00, 5.75], what would the fourth printed menu line say?",
+        "solution": "zip() pairs 'Mango Sunrise' with 5.75 in the fourth pass, so the fourth line prints: Mango Sunrise: $5.75."
+      },
+      {
+        "problem": "Convert Berry Blast's row, [12, 15, 10, 18], to a NumPy array and compute its daily revenue using its $5.00 price and broadcasting. Then find its total revenue using .sum().",
+        "solution": "berry = np.array([12, 15, 10, 18]). berry * 5.00 gives [60, 75, 50, 90] (each day's units times the $5.00 price). Total revenue: 60+75+50+90 = 280 dollars, via berry_revenue.sum()."
+      },
+      {
+        "problem": "Using sales_arr = np.array(sales) for the full 3-smoothie table, what would sales_arr.sum(axis=1) and sales_arr.sum(axis=0) return, and which one tells you each smoothie's 4-day total?",
+        "solution": "sales_arr.sum(axis=1) returns [55, 42, 85] — one total per ROW (per smoothie), which is the one that answers 'each smoothie's 4-day total.' sales_arr.sum(axis=0) returns [40, 42, 46, 54] — one total per COLUMN (per day) instead, answering a different question."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In Mia's sales table, which tool would you use to find just Green Glow's sales from Tuesday through Thursday (a range within one row)?",
+        "choices": [
+          "Slicing (lesson 7.2)",
+          "zip() (lesson 7.5)",
+          "A tuple-returning function (lesson 7.3)",
+          "Broadcasting (lesson 7.9)"
+        ],
+        "answerIndex": 0,
+        "explanation": "Pulling a contiguous range of values out of one row is exactly what slicing, list[start:end], is built for."
+      },
+      {
+        "type": "short",
+        "question": "Which lesson's tool would you reach for to pair each smoothie's name with its price for a printed menu, without managing an index variable?",
+        "answer": "zip()",
+        "acceptable": [
+          "zip",
+          "zip()",
+          "lesson 7.5's zip()"
+        ],
+        "explanation": "zip() pairs two same-length lists (names and prices) by position directly, exactly the job it was introduced for in lesson 7.5."
+      },
+      {
+        "type": "mc",
+        "question": "To find BOTH a smoothie's best and worst sales day in a single function call, which lesson's tool applies?",
+        "choices": [
+          "A function returning multiple values as a tuple (lesson 7.3)",
+          "Elementwise multiplication (lesson 7.8)",
+          "2D indexing (lesson 7.1)",
+          "The dot product (lesson 7.10)"
+        ],
+        "answerIndex": 0,
+        "explanation": "Reporting two related results — best day and worst day — from one function call is exactly what a comma-separated return statement, packed into a tuple, is for."
+      },
+      {
+        "type": "short",
+        "question": "Using Green Glow's units [20, 18, 22, 25] and its $6.00 price, what is Green Glow's total revenue over the 4 days?",
+        "answer": "$510",
+        "acceptable": [
+          "510",
+          "$510",
+          "510 dollars"
+        ],
+        "explanation": "Daily revenue is [20, 18, 22, 25] * 6.00 = [120, 108, 132, 150], and summing that array gives 120+108+132+150 = 510."
+      },
+      {
+        "type": "mc",
+        "question": "What is the single overall idea that every tool in this phase — from 2D lists through NumPy — was building toward?",
+        "choices": [
+          "Making programs run using less memory",
+          "Replacing hand-written, element-by-element loops with direct operations on whole arrays at once",
+          "Making Python code shorter regardless of what it computes",
+          "Removing the need for functions entirely"
+        ],
+        "answerIndex": 1,
+        "explanation": "From lesson 7.6's concept lesson onward, every NumPy tool in this phase existed to let you express an operation on a whole list or table directly, instead of writing the visit-every-element loop yourself — the core idea of vectorized thinking."
+      }
+    ]
+  }
 ];

@@ -1,6 +1,6 @@
 /* Offline-first service worker. Cache-first for the app shell so the course works
  * with no network after the first successful load (kana-cards family pattern). */
-const CACHE = 'bab-v7';
+const CACHE = 'bab-v8';
 const ASSETS = [
   './', './index.html', './app.js', './manifest.json', './icon.svg',
   './data/curriculum.js'

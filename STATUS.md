@@ -1,8 +1,8 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-6 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** Phases 1-7 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
-2026-08-27) — live on GitHub Pages.
+2026-08-27, Phase 7: 2026-08-27) — live on GitHub Pages.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -26,7 +26,7 @@ Repo: https://github.com/turlockmike/build-a-brain
 - Progress tracking in `localStorage` only (`bab_progress_v1`): started /
   complete / quiz score per lesson, phase progress bar, overall progress bar.
   No account, no login, no backend.
-- Offline support: service worker (`sw.js`, cache `bab-v7` as of the Phase 6
+- Offline support: service worker (`sw.js`, cache `bab-v8` as of the Phase 7
   ship) caches the whole app shell on first load; works with no network after
   that. Cache version gets bumped every time new phase content ships so
   returning users' service workers pick it up.
@@ -147,21 +147,59 @@ Repo: https://github.com/turlockmike/build-a-brain
   including 3-4-5/6-8-10/5-12-13/8-15-17 triples, and every matrix
   multiplication entry) before merging into `data/curriculum.js` (89 lessons
   total across Phases 1-6).
+- **Phase 7 (Programming Foundations II) content: 12/12 lessons fully
+  written** — starts at 2D lists as tables (rows/columns, tying to Phase 5's
+  dataset rows and Phase 6's matrix), through indexing and slicing beyond
+  Phase 2's basics (negative indices, step slices, slicing a 2D list's rows),
+  functions that return multiple values as tuples (extending Phase 2's
+  multi-parameter functions with a comma-separated return, tuple unpacking
+  at the call site), and the accumulator pattern extended to two dimensions
+  (nested-loop grand totals, row sums, column sums, tied to Phase 5's
+  row=example/column=feature idea); then parallel iteration with zip()
+  (reimplementing Phase 6's vector addition and dot product as real Python
+  functions), an explicit concept lesson on why hand-written loops don't
+  scale and what "vectorized thinking" means, a gentle NumPy introduction
+  (np.array(), shape, the array/list print-format tell), elementwise
+  operations (+, -, *, explicitly distinguishing elementwise multiplication
+  from Phase 6's dot product), broadcasting a scalar across an array
+  (reproducing Phase 6's scalar multiplication example exactly), and
+  NumPy's vectorized sum/mean/dot-product reductions and 2D-array
+  axis-based row/column sums (replacing this phase's own earlier nested
+  loops one method call at a time) — ending in a mini-project that returns
+  to Mia's smoothie truck from Phase 6, now tracking a small sales table,
+  and runs every tool from the phase (2D indexing/slicing, a tuple-returning
+  function, zip(), NumPy arrays, elementwise/broadcasting operations, the
+  dot product, and axis sums) through one coherent worked scenario,
+  mirroring 4.12/5.12/6.13's synthesis structure. Every lesson assumes only
+  Phase 1-6 + earlier Phase 7 lessons — content was generated in 3
+  lesson-groups (7.1-7.4, 7.5-7.8, 7.9-7.12) each briefed on the prior
+  groups' ACTUAL content plus the actual Phase 2, Phase 5, and Phase 6
+  content needed for callbacks (grepped/pasted from the real lesson
+  objects, not assumed), then schema-validated programmatically (12/12
+  lessons: correct id/number sequence, non-empty objectives/explanation/
+  practice, exactly 5 practice problems and 5 quiz questions each, valid mc
+  answerIndex bounds, no duplicate ids across all 101 lessons) plus
+  hand-verified arithmetic (via actual Python/NumPy execution, not just
+  mental math) on every worked example, practice problem, and quiz question
+  across all 12 lessons — including every NumPy elementwise/broadcasting/
+  reduction/axis-sum computation and its cross-check against the equivalent
+  Phase 6 hand-computed result — before merging into `data/curriculum.js`
+  (101 lessons total across Phases 1-7).
 - Deployed: pushed to `main` on `turlockmike/build-a-brain`, GitHub Pages
   enabled serving from `main` / root (same setup as kana-cards). Verified
   live with a `curl -sI` 200 check + a content check on `data/curriculum.js`
-  post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and
-  Phase 6 ships.
+  post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6,
+  and Phase 7 ships.
 
 ## Pending — next session(s)
 
-- **Phases 7-14 have no lesson content yet** — only their phase titles show
+- **Phases 8-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
-- Next up: Phase 7, "Programming Foundations II — arrays, multi-input
-  functions, vectorized thinking (NumPy)." Needs its own lesson-title
-  breakdown (like Phase 1-6 got) before full lesson content in the same
+- Next up: Phase 8, "The Perceptron — inputs × weights + threshold =
+  decision, built by hand and in code." Needs its own lesson-title
+  breakdown (like Phase 1-7 got) before full lesson content in the same
   schema.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)
