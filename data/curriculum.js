@@ -1,8 +1,8 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 4-14 — content not written yet).
- * LESSONS: full lesson content for Phase 1 (20 lessons), Phase 2 (17 lessons), and
- * Phase 3 (15 lessons). Phases 4-14 will each get their own LESSONS entries in a
- * future session — see README.md "Adding a new phase".
+ * ROADMAP: all 14 phases (title only for phases 5-14 — content not written yet).
+ * LESSONS: full lesson content for Phase 1 (20 lessons), Phase 2 (17 lessons),
+ * Phase 3 (15 lessons), and Phase 4 (12 lessons). Phases 5-14 will each get their
+ * own LESSONS entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -5534,4 +5534,1123 @@ const LESSONS = [
       }
     ]
   },
+
+{
+  "id": "4.1",
+  "number": 1,
+  "title": "What is binary? Why computers think in two states",
+  "objectives": [
+    "Explain why computers use two states (on/off) instead of ten digits",
+    "Define a bit and state its two possible values",
+    "Connect the on/off idea in computers to the neuron's all-or-nothing firing threshold from Phase 3",
+    "Explain why grouping several two-state bits together lets a computer represent far more than just two things"
+  ],
+  "explanation": [
+    "Think about a light switch on your bedroom wall. It doesn't have a dial you can turn to 37% brightness — it's either flipped up (on) or flipped down (off). There's no in-between resting position, and that's actually the whole point. A switch that can only be in one of two clear states is simple, reliable, and hard to get wrong. You never have to squint at it and wonder \"wait, is that a 6 or an 8?\" the way you might misread a fuzzy number. Computers, deep down, are built out of billions of tiny electronic switches, and just like your light switch, each one is either on or off. That two-state simplicity is the foundation of everything a computer does, from displaying this lesson to running your favorite game.",
+    "You might wonder why computers don't just use ten states, like the ten digits 0 through 9 we use every day. The problem is that telling ten different voltage levels apart inside a chip is genuinely hard — a tiny bit of electrical noise (a little static, heat, or interference) could easily blur the line between \"this is a 4\" and \"this is a 5,\" causing errors. But telling the difference between \"there's a strong electrical signal here\" and \"there's basically no signal here\" is easy, even with some noise mixed in. Engineers realized decades ago that building reliable two-state switches (called transistors) was far more practical than building reliable ten-state ones, so the entire computer industry standardized on two states instead of ten.",
+    "Here's where this connects to something you already know. Back in Phase 3, you learned that a neuron doesn't fire \"a little bit\" or \"kind of\" — once the incoming signals cross its threshold, it fires completely, and if they don't cross the threshold, it doesn't fire at all. That's an all-or-nothing, two-state decision, just like a light switch being on or off. It turns out this isn't a coincidence: both brains and computers landed on two-state, threshold-based decisions because they're simple and reliable ways to process information without ambiguity. Later in Phase 4, you'll see this threshold idea show up again directly inside the tiny electronic circuits that make computers work.",
+    "In computing, a single two-state unit — one on/off switch — is called a bit, short for \"binary digit.\" A bit can only ever be 0 (off) or 1 (on); there is no third option. On its own, one bit isn't very useful, since it can only ever describe two possibilities, like heads-or-tails on a coin. But computers don't use just one bit at a time — they group lots of bits together. And here's the surprising part: a small group of bits can represent a huge number of different things, because each additional bit doubles how many combinations are possible. That doubling trick is exactly what turns simple on/off switches into something powerful enough to store numbers, letters, photos, and video."
+  ],
+  "example": {
+    "problem": "A single bit can be 0 or 1 — just two possibilities. Suppose we use two bits together instead of one. List every possible combination of two bits, and use that list to explain why computers group bits together instead of using just one bit at a time.",
+    "steps": [
+      "Each bit can independently be 0 or 1, so we need to list every possible pairing of a first bit and a second bit.",
+      "Start with the first bit set to 0: that gives us 00 and 01 (second bit is 0, then 1).",
+      "Now set the first bit to 1: that gives us 10 and 11 (second bit is 0, then 1).",
+      "Putting it all together, the complete list is: 00, 01, 10, 11 — that's 4 different combinations.",
+      "Compare this to a single bit, which can only ever be 0 or 1 (just 2 possibilities). Adding one more bit didn't add 1 more possibility, it doubled the possibilities from 2 to 4."
+    ],
+    "answer": "Two bits produce 4 distinct combinations (00, 01, 10, 11), because each extra bit doubles the number of possible patterns — this is why computers group many bits together to represent far more than just \"on\" and \"off.\""
+  },
+  "practice": [
+    {
+      "problem": "Name two everyday objects (besides a light switch) that are naturally two-state, on/off systems, and explain why each one fits that description.",
+      "solution": "Two good examples: (1) A doorbell button — it's either being pressed (on) or not pressed (off), with no in-between state that matters. (2) A phone's airplane mode toggle — it's either switched on or switched off, never partway. Both fit the two-state description because there are exactly two meaningful states, with no useful middle ground, just like a bit's 0 or 1."
+    },
+    {
+      "problem": "A volume knob on an old stereo can be turned smoothly to any position between fully off and fully loud. Is a volume knob a good real-world example of a bit? Explain why or why not.",
+      "solution": "No, a volume knob is not a good example of a bit. A bit must be one of exactly two states with nothing in between, but a volume knob can rest at any point along a continuous range (quiet, medium, loud, and everywhere between). A bit needs a system like a switch or a button, where the only options are fully on or fully off, with no valid middle position."
+    },
+    {
+      "problem": "Explain, in your own words, why engineers chose two-state (binary) switches for computers instead of ten-state switches that would match our normal digits 0-9.",
+      "solution": "Reliably telling apart ten different voltage levels inside a tiny chip is hard, because small amounts of electrical noise can blur the difference between neighboring levels, causing mistakes. But telling the difference between \"signal present\" and \"signal absent\" (two states) is much easier to do reliably, even with some noise. Since accuracy matters enormously in computing, engineers built computers around simple, reliable two-state switches rather than error-prone ten-state ones."
+    },
+    {
+      "problem": "How many possible combinations exist for three bits used together? List them all to check your answer.",
+      "solution": "Following the doubling pattern from the example (1 bit = 2 combinations, 2 bits = 4 combinations), 3 bits should give 2 x 4 = 8 combinations. Listing them confirms it: 000, 001, 010, 011, 100, 101, 110, 111 — exactly 8 distinct combinations."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What are the only two possible values a single bit can hold?",
+      "choices": ["0 and 1", "A and B", "True and Maybe", "1 and 10"],
+      "answerIndex": 0,
+      "explanation": "A bit (short for \"binary digit\") is defined as having exactly two possible states, written as 0 and 1, representing off and on."
+    },
+    {
+      "type": "mc",
+      "question": "Why do computers use two-state switches instead of ten-state switches matching our normal 0-9 digits?",
+      "choices": [
+        "Ten-state switches don't exist and have never been built",
+        "Two-state signals are much easier to tell apart reliably, even with electrical noise",
+        "Computers can't count past 2",
+        "It's a historical accident with no real engineering reason"
+      ],
+      "answerIndex": 1,
+      "explanation": "Reliably distinguishing ten voltage levels is difficult because noise can blur the boundaries between them, while distinguishing \"on\" from \"off\" is much more robust and reliable, which is why engineers chose two states."
+    },
+    {
+      "type": "short",
+      "question": "What idea from Phase 3, about how neurons fire, is directly similar to a bit being either 0 or 1?",
+      "answer": "The all-or-nothing firing threshold",
+      "acceptable": ["all-or-nothing firing", "all or nothing threshold", "neuron threshold firing", "the neuron either fires or it doesn't", "all-or-nothing"],
+      "explanation": "A neuron either fires completely once its threshold is crossed, or doesn't fire at all — there's no partial firing. That two-state, all-or-nothing behavior is the same basic idea as a bit only ever being 0 or 1."
+    },
+    {
+      "type": "mc",
+      "question": "If 1 bit gives 2 possible combinations and 2 bits give 4 possible combinations, how many combinations should 4 bits give?",
+      "choices": ["8", "12", "16", "20"],
+      "answerIndex": 2,
+      "explanation": "Each additional bit doubles the number of combinations: 1 bit = 2, 2 bits = 4, 3 bits = 8, 4 bits = 16. This doubling pattern is why small groups of bits can represent surprisingly large numbers of possibilities."
+    },
+    {
+      "type": "short",
+      "question": "In your own words, what is a bit?",
+      "answer": "A single unit of information that can only be one of two states, 0 or 1 (off or on)",
+      "acceptable": ["a binary digit that is 0 or 1", "an on/off switch", "a two-state unit of information", "the smallest unit of data, either 0 or 1"],
+      "explanation": "A bit is the smallest possible unit of information in a computer, and it always holds exactly one of two values: 0 (off) or 1 (on)."
+    }
+  ]
+},
+{
+  "id": "4.2",
+  "number": 2,
+  "title": "Converting between binary and decimal",
+  "objectives": [
+    "Explain how binary place value works using powers of 2, the same way decimal place value uses powers of 10",
+    "Convert a binary number to its decimal equivalent",
+    "Convert a decimal number to its binary equivalent",
+    "Compare base-10 and base-2 place value systems side by side"
+  ],
+  "explanation": [
+    "Back in Phase 1, you learned that in a number like 5,382, the digit 3 isn't just \"three\" — it's worth 300 because it's sitting in the hundreds place, while that same digit one spot to the right would only be worth 30. Every digit's value depends on its position, and each position going left is worth 10 times more than the one before it: ones, tens, hundreds, thousands. That system is called base-10, because each place is a power of 10 (1, 10, 100, 1000, and so on) and we have ten possible digits (0-9) to put in each spot. Binary works exactly the same way, except it's base-2: there are only two possible digits (0 and 1) to put in each spot, and each place going left is worth 2 times more than the one before it, not 10 times.",
+    "So instead of decimal place values of 1, 10, 100, 1000 (powers of 10), binary place values are 1, 2, 4, 8, 16, 32, 64, and so on (powers of 2), reading right to left. Take the binary number 1011. Just like you'd multiply each decimal digit by its place value and add them up, you do the same thing here: the rightmost 1 is in the \"1s place\" (worth 1 x 1 = 1), the next 1 is in the \"2s place\" (worth 1 x 2 = 2), the 0 is in the \"4s place\" (worth 0 x 4 = 0), and the leftmost 1 is in the \"8s place\" (worth 1 x 8 = 8). Add those up — 8 + 0 + 2 + 1 — and you get 11. So binary 1011 equals decimal 11.",
+    "Going the other direction — decimal to binary — works like a game of \"how much can I peel off using the biggest power of 2 available.\" Say you want to convert 13 to binary. You ask: does 8 fit into 13? Yes, so you use it (write a 1) and you have 13 - 8 = 5 left over. Does 4 fit into 5? Yes, so you use it (write a 1) and you have 5 - 4 = 1 left over. Does 2 fit into 1? No, so you skip it (write a 0). Does 1 fit into 1? Yes, so you use it (write a 1) and you have 0 left over. Reading the digits you wrote in order (8s, 4s, 2s, 1s places), 13 in binary is 1101.",
+    "It's worth noticing what stayed the same and what changed between the two systems. What stayed the same: place value is still about position, and you still multiply each digit by its place's worth and add everything up. What changed: the \"multiplier per step\" went from 10 to 2, and the digits available in each spot shrank from ten choices (0-9) down to just two (0-1), which is exactly why binary numbers tend to look longer than decimal numbers for the same value — you're spending more digits, each one worth less extra, to build up the same total."
+  ],
+  "example": {
+    "problem": "Convert the binary number 10110 to decimal. Then convert the decimal number 22 to binary.",
+    "steps": [
+      "For 10110 to decimal, first write out the place values from right to left: 1s, 2s, 4s, 8s, 16s.",
+      "Line up the digits under their place values: 1(16s) 0(8s) 1(4s) 1(2s) 0(1s).",
+      "Multiply each digit by its place value: 1x16=16, 0x8=0, 1x4=4, 1x2=2, 0x1=0.",
+      "Add the results: 16 + 0 + 4 + 2 + 0 = 22. So binary 10110 equals decimal 22.",
+      "For 22 to binary, find the largest power of 2 that fits: 16 fits into 22 (write 1), leaving 22 - 16 = 6.",
+      "Does 8 fit into 6? No (write 0). Does 4 fit into 6? Yes (write 1), leaving 6 - 4 = 2.",
+      "Does 2 fit into 2? Yes (write 1), leaving 0. Does 1 fit into 0? No (write 0).",
+      "Reading the digits in place-value order (16s, 8s, 4s, 2s, 1s): 1, 0, 1, 1, 0 — so 22 in binary is 10110."
+    ],
+    "answer": "Binary 10110 equals decimal 22, and decimal 22 equals binary 10110 — the two conversions check each other and match."
+  },
+  "practice": [
+    {
+      "problem": "Convert the binary number 1101 to decimal.",
+      "solution": "Place values right to left are 1, 2, 4, 8. The digits are 1(8s) 1(4s) 0(2s) 1(1s). Multiply and add: 1x8 + 1x4 + 0x2 + 1x1 = 8 + 4 + 0 + 1 = 13. So 1101 in binary equals 13 in decimal."
+    },
+    {
+      "problem": "Convert the binary number 100000 to decimal.",
+      "solution": "Place values right to left are 1, 2, 4, 8, 16, 32. Only the leftmost digit (in the 32s place) is a 1; every other digit is 0. So the total is just 32 + 0 + 0 + 0 + 0 + 0 = 32. This shows a useful pattern: a single 1 followed by n zeros in binary equals 2^n in decimal."
+    },
+    {
+      "problem": "Convert the decimal number 9 to binary.",
+      "solution": "Powers of 2 available: 8, 4, 2, 1. Does 8 fit into 9? Yes (write 1), leaving 9 - 8 = 1. Does 4 fit into 1? No (write 0). Does 2 fit into 1? No (write 0). Does 1 fit into 1? Yes (write 1), leaving 0. Reading the digits (8s, 4s, 2s, 1s place): 1, 0, 0, 1. So 9 in decimal is 1001 in binary."
+    },
+    {
+      "problem": "Convert the decimal number 27 to binary.",
+      "solution": "Powers of 2 available up to 27: 16, 8, 4, 2, 1. Does 16 fit into 27? Yes (write 1), leaving 27 - 16 = 11. Does 8 fit into 11? Yes (write 1), leaving 11 - 8 = 3. Does 4 fit into 3? No (write 0). Does 2 fit into 3? Yes (write 1), leaving 3 - 2 = 1. Does 1 fit into 1? Yes (write 1), leaving 0. Reading the digits (16s, 8s, 4s, 2s, 1s): 1, 1, 0, 1, 1. So 27 in decimal is 11011 in binary."
+    },
+    {
+      "problem": "A friend converts binary 1010 to decimal and gets 5. Find their mistake and give the correct answer.",
+      "solution": "The place values right to left are 1, 2, 4, 8, not 1, 2, 3, 4 or something similar — each place is double the one before it, since this is base-2. Lining up 1010 correctly: 1(8s) 0(4s) 1(2s) 0(1s). Multiply and add: 1x8 + 0x4 + 1x2 + 0x1 = 8 + 0 + 2 + 0 = 10. Their mistake was probably adding up the digit positions like a count (1+2+... ) instead of using powers of 2 as the place values. The correct answer is 10, not 5."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In binary (base-2), what are the place values, reading right to left?",
+      "choices": ["1, 10, 100, 1000", "1, 2, 3, 4", "1, 2, 4, 8, 16", "2, 4, 6, 8, 10"],
+      "answerIndex": 2,
+      "explanation": "Binary place values are powers of 2 (1, 2, 4, 8, 16, ...) reading from right to left, the same way decimal place values are powers of 10 (1, 10, 100, ...)."
+    },
+    {
+      "type": "mc",
+      "question": "What is the decimal value of the binary number 111?",
+      "choices": ["3", "6", "7", "111"],
+      "answerIndex": 2,
+      "explanation": "The place values right to left are 1, 2, 4. Multiplying and adding: 1x4 + 1x2 + 1x1 = 4 + 2 + 1 = 7."
+    },
+    {
+      "type": "short",
+      "question": "Convert the decimal number 6 to binary.",
+      "answer": "110",
+      "acceptable": ["110", "0110"],
+      "explanation": "The largest power of 2 that fits into 6 is 4, leaving 2; 2 fits exactly, leaving 0; and 1 does not fit into the remaining 0. So the digits are 1 (4s), 1 (2s), 0 (1s), giving 110. Check: 4 + 2 + 0 = 6."
+    },
+    {
+      "type": "mc",
+      "question": "Why does converting a decimal number to binary tend to produce a longer string of digits than the original decimal number?",
+      "choices": [
+        "Binary numbers are always written backwards",
+        "Each binary digit can only be 0 or 1, so more digits are needed to build up the same total compared to decimal's ten possible digits per place",
+        "Binary doesn't actually support numbers bigger than 10",
+        "It's a typo convention that programmers use on purpose"
+      ],
+      "answerIndex": 1,
+      "explanation": "Since each binary place can only hold a 0 or a 1 (versus 0-9 in decimal), binary needs more digit positions to represent the same value, which is why binary numbers usually look longer than their decimal equivalents."
+    },
+    {
+      "type": "short",
+      "question": "What number base does binary use, and how many possible digits are available at each place value?",
+      "answer": "Base-2, with 2 possible digits (0 and 1)",
+      "acceptable": ["base 2, two digits", "base-2 with two digits, 0 and 1", "binary is base 2 with digits 0 and 1"],
+      "explanation": "Binary is a base-2 system, meaning each place value is a power of 2 and only two digits, 0 and 1, are available to fill each position — unlike decimal's base-10 system with ten digits (0-9)."
+    }
+  ]
+},
+{
+  "id": "4.3",
+  "number": 3,
+  "title": "Binary addition",
+  "objectives": [
+    "Add two binary numbers together, digit by digit, from right to left",
+    "Explain how carrying works in binary and how it compares to carrying in decimal addition",
+    "Verify a binary addition result by converting both numbers and the sum to decimal",
+    "Recognize when a column's sum in binary requires a carry"
+  ],
+  "explanation": [
+    "Remember doing addition with carrying back in Phase 1 — stacking two numbers like 47 and 38, adding the ones column (7 + 8 = 15), writing down the 5 and carrying the 1 over into the tens column? You carry whenever a column's sum is too big to fit in a single digit at that place value. Binary addition works with exactly the same logic — line up the numbers by place value, add each column from right to left, and carry whenever a column's total is too big to fit. The only real difference is what \"too big\" means: in decimal, a column overflows once it reaches 10 (since each place can only hold 0-9), but in binary, a column overflows as soon as it reaches 2 (since each place can only hold 0 or 1).",
+    "Here's the full set of binary addition facts you need, and there are only four of them: 0 + 0 = 0, 0 + 1 = 1, 1 + 0 = 1, and 1 + 1 = 10 (that's binary \"one-zero,\" not the number ten). That last one is the important one: when you add 1 + 1 in binary, you get a result of 2, but 2 can't be written as a single binary digit — the largest single binary digit is 1. So just like decimal carrying, you write down a 0 in that column and carry a 1 into the next column to the left.",
+    "Let's walk through an example: add binary 1011 and binary 0110. Starting from the rightmost column: 1 + 0 = 1, write 1. Next column: 1 + 1 = 10, write 0 and carry 1. Next column: 0 + 1 (plus the carried 1) = 10, write 0 and carry 1. Leftmost column: 1 + 0 (plus the carried 1) = 10, write 0 and carry 1. Since there's a carry left over after the last column, we write it down too. Reading the result left to right: 10001. If you convert 1011 (which is 11 in decimal), 0110 (which is 6 in decimal), and 10001 (which is 17 in decimal), you'll find 11 + 6 = 17 checks out perfectly — the binary math and decimal math agree, because they're describing the same quantities, just written differently.",
+    "One handy habit: whenever you're unsure if your binary addition is right, convert everything to decimal, add normally, and check that your binary answer converts to the same total. This is exactly the kind of \"estimate or double-check your work\" instinct from Phase 1 — except here, instead of rounding to estimate, you're switching number systems to verify. As you get more comfortable, you'll trust the binary carrying rules directly, the same way you trust decimal carrying without re-checking every time. But when in doubt, converting back to decimal is a reliable safety net."
+  ],
+  "example": {
+    "problem": "Add the binary numbers 1101 and 0101, showing each column and any carries. Then verify the result by converting all three numbers to decimal.",
+    "steps": [
+      "Line up the numbers by place value:   1101 (13s digit places: 8,4,2,1) and 0101.",
+      "Rightmost column (1s place): 1 + 1 = 10 in binary. Write 0, carry 1.",
+      "Next column (2s place): 0 + 0 = 0, plus the carried 1 makes 1. Write 1, no carry.",
+      "Next column (4s place): 1 + 1 = 10 in binary. Write 0, carry 1.",
+      "Leftmost column (8s place): 1 + 0 = 1, plus the carried 1 makes 10 in binary. Write 0, carry 1.",
+      "No more columns remain, so the final carried 1 gets written at the front: result is 10010.",
+      "Verify: 1101 = 8+4+0+1 = 13 in decimal. 0101 = 0+4+0+1 = 5 in decimal. 13 + 5 = 18.",
+      "Convert the binary result 10010 to decimal: 16+0+0+1+0 = 18. It matches, so the addition is correct."
+    ],
+    "answer": "1101 + 0101 = 10010 in binary, which checks out because 13 + 5 = 18 in decimal and 10010 also equals 18."
+  },
+  "practice": [
+    {
+      "problem": "Add binary 11 + 01.",
+      "solution": "Rightmost column: 1 + 1 = 10, write 0, carry 1. Next column: 1 + 0 = 1, plus the carried 1 makes 10, write 0, carry 1. No columns left, so write the final carry: 100. Check: 11 = 3, 01 = 1, and 3 + 1 = 4, and binary 100 = 4. It matches."
+    },
+    {
+      "problem": "Add binary 1000 + 0001.",
+      "solution": "Rightmost column: 0 + 1 = 1, write 1. Next: 0 + 0 = 0, write 0. Next: 0 + 0 = 0, write 0. Leftmost: 1 + 0 = 1, write 1. Result: 1001. Check: 1000 = 8, 0001 = 1, and 8 + 1 = 9, and binary 1001 = 8+0+0+1 = 9. It matches."
+    },
+    {
+      "problem": "Add binary 111 + 111.",
+      "solution": "Rightmost column: 1 + 1 = 10, write 0, carry 1. Next column: 1 + 1 = 10, plus the carried 1 makes 11, write 1, carry 1. Next column: 1 + 1 = 10, plus the carried 1 makes 11, write 1, carry 1. Write the final carry: 1110. Check: 111 = 7, and 7 + 7 = 14, and binary 1110 = 8+4+2+0 = 14. It matches."
+    },
+    {
+      "problem": "A student adds binary 101 + 011 and gets 118 as their answer. Explain what went wrong and give the correct answer.",
+      "solution": "The digit 8 can never appear in a binary result, since binary only ever uses the digits 0 and 1 — the student likely tried to add the numbers as if they were regular decimal numbers instead of applying binary's carry-at-2 rule. Working it correctly: rightmost column 1+1=10, write 0 carry 1; next column 0+1=1 plus carried 1 = 10, write 0 carry 1; leftmost column 1+0=1 plus carried 1 = 10, write 0 carry 1; write the final carry: 1000. Check: 101 = 5, 011 = 3, 5+3=8, and binary 1000 = 8. The correct answer is 1000."
+    },
+    {
+      "problem": "Add binary 1010 + 1011.",
+      "solution": "Rightmost column: 0 + 1 = 1, write 1. Next: 1 + 1 = 10, write 0, carry 1. Next: 0 + 0 = 0, plus the carried 1 makes 1, write 1. Leftmost: 1 + 1 = 10, write 0, carry 1. Write the final carry: 10101. Check: 1010 = 10, 1011 = 11, 10+11 = 21, and binary 10101 = 16+0+4+0+1 = 21. It matches."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What is 1 + 1 in binary?",
+      "choices": ["2", "1", "10", "11"],
+      "answerIndex": 2,
+      "explanation": "In binary, 1 + 1 equals the quantity two, but since binary only has the digits 0 and 1, that quantity is written as 10 (read as \"one-zero,\" not ten) — write 0 and carry 1, exactly like decimal carrying."
+    },
+    {
+      "type": "mc",
+      "question": "In decimal addition, a column carries once its sum reaches 10. At what sum does a binary column carry?",
+      "choices": ["2", "8", "10", "It never carries"],
+      "answerIndex": 0,
+      "explanation": "Because each binary place value can only hold a single 0 or 1, any column sum of 2 or more overflows that single digit and requires carrying into the next column to the left."
+    },
+    {
+      "type": "short",
+      "question": "Add binary 10 + 11 and give the result in binary.",
+      "answer": "101",
+      "acceptable": ["101", "0101"],
+      "explanation": "Rightmost column: 0+1=1, write 1. Next column: 1+1=10, write 0, carry 1. Write the final carry: 101. Check: 10=2, 11=3, 2+3=5, and binary 101=4+0+1=5."
+    },
+    {
+      "type": "mc",
+      "question": "Why is converting both addends and your final binary sum to decimal a good way to check your work?",
+      "choices": [
+        "It isn't useful, decimal and binary describe totally different quantities",
+        "Because the decimal and binary numbers represent the same quantities, so their sums must match if the binary addition was done correctly",
+        "Because binary addition rules are different from real addition",
+        "Because computers can only check answers in decimal"
+      ],
+      "answerIndex": 1,
+      "explanation": "A binary number and its decimal equivalent represent the exact same quantity, just written in different place-value systems, so adding the decimal versions and converting the binary sum back to decimal should always produce matching totals if the work is correct."
+    },
+    {
+      "type": "short",
+      "question": "When you add 1 + 1 in a binary column and there is already a carried 1 coming in from the previous column, what two-digit binary result do you get for that column (1 + 1 + 1)?",
+      "answer": "11",
+      "acceptable": ["11", "binary 11", "one one"],
+      "explanation": "1 + 1 + 1 equals the quantity three, which in binary is written 11 (one times 2, plus one times 1). So you write down 1 for that column and carry a 1 into the next column."
+    }
+  ]
+},
+{
+  "id": "4.4",
+  "number": 4,
+  "title": "Bits and bytes — representing more than numbers",
+  "objectives": [
+    "Define a byte as a group of 8 bits",
+    "Calculate how many distinct values N bits can represent using 2^N",
+    "Explain how bits can represent things other than numbers, such as letters, using a lookup code",
+    "Preview how threshold-based, two-state circuits (logic gates) will build on binary in the next lessons"
+  ],
+  "explanation": [
+    "In lesson 4.1, you found that 2 bits produce 4 combinations and figured out that every extra bit doubles the possibilities. That doubling pattern is really just an exponent in disguise: N bits produce exactly 2^N distinct combinations, using the same powers idea from Phase 1's algebra work. One bit gives 2^1 = 2 combinations. Two bits give 2^2 = 4. Three bits give 2^3 = 8. Computers almost never work with bits one at a time — instead, they group 8 bits together into a unit called a byte. A single byte can represent 2^8 = 256 different combinations, which is a lot of distinct patterns to build from just eight simple on/off switches.",
+    "Here's an idea you already used constantly in Phase 2 without necessarily naming it: len() tells you how many items are in a list, and more items in a list means more things you can track. Bits work the same way — more bits in a group means more distinct patterns available, the same way a longer list has more room to hold distinct values. A byte's 256 combinations is like having a list with 256 possible \"slots,\" each one available to mean something different, whether that something is a number, a letter, or anything else you decide to assign to it.",
+    "And that's the real twist of this lesson: bits don't have to represent numbers at all. A bit pattern only means whatever we agree it means, using a lookup code, or table. In Phase 2, you worked with strings — sequences of text characters like \"cat\" or \"hello.\" It turns out computers store every character in a string as a number under the hood, using a standard lookup table called ASCII, where, for example, the number 65 stands for the capital letter A, 66 stands for B, and so on. So the byte holding the binary pattern 01000001 (which is 65 in decimal) doesn't secretly \"know\" it's the letter A — a program just agrees to interpret that pattern as A whenever it's displaying text, the same way you might agree that 1 means \"true\" in a boolean.",
+    "This same trick — agree on a code, then let bit patterns stand for whatever the code says — is how computers represent everything: images use bit patterns to represent the exact brightness of red, green, and blue light in each tiny pixel; sound uses bit patterns to represent thousands of tiny air-pressure measurements per second; even the code of the programs you write in Python eventually becomes bit patterns. It's all built from the same simple two-state switches from lesson 4.1, just organized into bigger and bigger groups with agreed-upon meanings.",
+    "So where does the threshold idea from Phase 3 actually show up inside real circuits? That's exactly where we're headed next: the coming lessons in Phase 4 introduce logic gates, tiny circuits that make threshold-style decisions about combinations of bits, similar to how a neuron decides whether to fire based on its inputs. You now have the two ingredients logic gates need to make sense — binary numbers and grouped bits — so you're ready for how simple circuits actually make decisions."
+  ],
+  "example": {
+    "problem": "How many distinct values can a byte (8 bits) represent? Then, using the simplified 4-letter code table A=00, B=01, C=10, D=11, decode the 2-bit binary message that spells out a word from the sequence: 00 10 11.",
+    "steps": [
+      "A byte has 8 bits, and N bits produce 2^N combinations, so a byte produces 2^8 combinations.",
+      "2^8 means 2 multiplied by itself 8 times: 2x2x2x2x2x2x2x2 = 256.",
+      "So a byte can represent 256 distinct values.",
+      "For the decoding part, break the sequence 00 10 11 into its three 2-bit chunks: 00, then 10, then 11.",
+      "Using the code table (A=00, B=01, C=10, D=11), look up each chunk: 00 -> A, 10 -> C, 11 -> D.",
+      "Reading the decoded letters in order gives the word: A, C, D."
+    ],
+    "answer": "A byte can represent 256 distinct values (2^8), and the binary sequence 00 10 11 decodes to the letters A, C, D using the given code table."
+  },
+  "practice": [
+    {
+      "problem": "How many distinct values can 5 bits represent?",
+      "solution": "Using 2^N with N = 5: 2^5 = 2x2x2x2x2 = 32. So 5 bits can represent 32 distinct values."
+    },
+    {
+      "problem": "A certain sensor needs to be able to represent at least 100 different readings. What is the smallest number of bits it needs, and why?",
+      "solution": "Check powers of 2: 2^6 = 64 (not enough, since 64 < 100). 2^7 = 128 (enough, since 128 >= 100). So the sensor needs at least 7 bits, since 6 bits only offers 64 possible values, which isn't enough to cover 100 readings, while 7 bits offers 128, which comfortably covers all 100."
+    },
+    {
+      "problem": "Using the code table A=00, B=01, C=10, D=11 from the example, encode the word \"BAD\" into binary.",
+      "solution": "Look up each letter: B=01, A=00, D=11. Writing them in order for \"BAD\" gives: 01 00 11."
+    },
+    {
+      "problem": "Explain why the same byte pattern, say 01000001, could be interpreted as either the number 65 or the letter A, depending on context.",
+      "solution": "A bit pattern by itself has no built-in meaning — it's just a sequence of on/off switches. Software decides how to interpret that pattern based on context: if a program treats the byte as a plain number, 01000001 means 65 (using the binary-to-decimal place values from lesson 4.2). If a program treats the byte as text using the ASCII code table, that same exact pattern means the letter A instead. The bits don't change; only the agreed-upon interpretation changes."
+    },
+    {
+      "problem": "If 1 bit gives 2 combinations and each additional bit doubles that, how many combinations do 10 bits give, and how does this connect to the len() function idea from Phase 2?",
+      "solution": "Doubling from 2 repeatedly: 1 bit=2, 2=4, 3=8, 4=16, 5=32, 6=64, 7=128, 8=256, 9=512, 10=1024. So 10 bits give 1,024 combinations. This connects to len() because just as a longer list (bigger len()) has more slots available to hold distinct values, a longer bit group has more combinations available to represent distinct things — more \"room,\" whether it's list items or bit patterns."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "How many bits make up one byte?",
+      "choices": ["4", "8", "10", "16"],
+      "answerIndex": 1,
+      "explanation": "A byte is defined as a group of 8 bits, which can represent 2^8 = 256 distinct combinations."
+    },
+    {
+      "type": "mc",
+      "question": "How many distinct values can a byte represent?",
+      "choices": ["8", "16", "128", "256"],
+      "answerIndex": 3,
+      "explanation": "A byte has 8 bits, and N bits give 2^N combinations, so 2^8 = 256 distinct values are possible in a single byte."
+    },
+    {
+      "type": "short",
+      "question": "What is the standard lookup table called that lets computers use numbers (and therefore bit patterns) to represent text characters like letters?",
+      "answer": "ASCII",
+      "acceptable": ["ascii", "ASCII code", "the ASCII table"],
+      "explanation": "ASCII is the standard code table that assigns a specific number (and therefore a specific binary bit pattern) to each text character, such as 65 for capital A, letting computers store text as numbers."
+    },
+    {
+      "type": "mc",
+      "question": "Why can the exact same bit pattern be interpreted as a number in one context and a letter in another?",
+      "choices": [
+        "Bit patterns physically change their electrical charge depending on context",
+        "A bit pattern has no built-in meaning; software assigns meaning to it based on an agreed-upon code",
+        "Numbers and letters are actually stored using completely different types of bits",
+        "This isn't actually possible; each pattern only ever means one thing"
+      ],
+      "answerIndex": 1,
+      "explanation": "Bits are just on/off switches with no inherent meaning. A program decides how to interpret a given pattern — as a plain number, as a letter via ASCII, as a color, or as anything else — based on the code it agrees to use."
+    },
+    {
+      "type": "short",
+      "question": "What topic does Phase 4 cover next, building directly on binary numbers and the all-or-nothing threshold idea from Phase 3?",
+      "answer": "Logic gates",
+      "acceptable": ["logic gates", "gates", "logic circuits"],
+      "explanation": "The next lessons introduce logic gates, tiny circuits that make threshold-style decisions using combinations of bits, directly extending the neuron threshold idea from Phase 3 into real computer hardware."
+    }
+  ]
+},
+{
+  "id": "4.5",
+  "number": 5,
+  "title": "What is a logic gate? AND, OR, NOT and truth tables",
+  "objectives": [
+    "Explain what a logic gate is and why computers are built out of them",
+    "Build a truth table for AND, OR, and NOT gates from scratch",
+    "Use a light-switch analogy to tell the difference between AND (switches in series) and OR (switches in parallel)",
+    "Predict the output of an AND, OR, or NOT gate for any combination of 0/1 inputs"
+  ],
+  "explanation": [
+    "You already know AND, OR, and NOT as words in Python — and, or, not, deciding whether an if statement runs. A logic gate is what happens when you build that exact same decision out of real hardware instead of code. It's a tiny device, usually a handful of transistors on a chip, that takes one or two binary inputs (0s and 1s, which really means LOW or HIGH voltage on a wire) and produces one binary output, following one fixed, unchanging rule. Every single calculation a computer performs, from adding two numbers to rendering a video game frame, eventually breaks down into millions of these gates flipping their outputs on and off, billions of times per second.",
+    "The AND gate matches two switches wired one after another, in series, between a battery and a lightbulb. Current can only complete the loop and light the bulb if BOTH switches are closed at the same time — one open switch anywhere in the line breaks the whole path, no matter what the other switch is doing. That's exactly AND's rule: output 1 only when every input is 1. A bank vault that needs two employees to turn two separate keys at once is an AND gate in disguise — one key turned alone accomplishes nothing.",
+    "The OR gate matches two switches wired side-by-side, in parallel, each with its own separate path to the bulb. Closing EITHER switch completes a circuit and lights the bulb, and closing both works too — there's more than one way to succeed. Picture a house with a front doorbell button and a back doorbell button, both wired to the same bell: pressing either one, or both, rings it. That's OR's rule: output 1 if at least one input is 1, and only 0 when every input is 0.",
+    "The NOT gate is different from the other two because it only ever takes a single input, and its job is to flip it — an inverter. Picture a nightlight with a light sensor: when the room is dark, the sensor reads 0 (no light detected), and the NOT gate flips that into an output of 1, turning the nightlight on. When the room is bright, the sensor reads 1, and NOT flips it to 0, turning the nightlight off. Whatever comes in, the opposite goes out.",
+    "A truth table is simply a grid that lists every single possible combination of inputs a gate could ever see, along with the output for each one — nothing is left out or assumed. For a 2-input gate like AND or OR, there are exactly 4 possible input combinations, the same 00, 01, 10, 11 pattern you already counted through when you learned binary place value back in lesson 4.2. Reading a truth table just means finding the row that matches your actual inputs and reading off the output in that row, like looking up an entry in a chart."
+  ],
+  "example": {
+    "problem": "A janitor's closet door has an electronic lock that only opens when a keycard sensor (A) reads 1 AND a PIN pad sensor (B) reads 1. Build the truth table for this lock's AND gate, then use it to figure out whether the door opens when A=1 and B=0.",
+    "steps": [
+      "List every possible pair of binary inputs for A and B: (0,0), (0,1), (1,0), (1,1) — that's all 4 combinations of two bits, the same counting order used in binary place value.",
+      "For AND, the output is 1 only when both inputs are 1. Fill in each row: A=0,B=0 -> 0; A=0,B=1 -> 0; A=1,B=0 -> 0; A=1,B=1 -> 1.",
+      "That table is the complete truth table for a 2-input AND gate — four rows, one output column.",
+      "Now check the specific case in the problem: A=1 (keycard read) and B=0 (PIN pad not confirmed). Look up the row where A=1, B=0 in the table: the output is 0.",
+      "Since the AND gate's output is 0, the lock's control signal is LOW, so the door stays locked — both sensors must show 1 at the same time for it to open."
+    ],
+    "answer": "The AND truth table is 00->0, 01->0, 10->0, 11->1, and with A=1, B=0 the output is 0, so the door stays locked."
+  },
+  "practice": [
+    {
+      "problem": "A car's dashboard warning chime uses an OR gate: input A is 'seatbelt unbuckled' and input B is 'door open,' and the chime sounds if the output is 1. Build the OR truth table, then find the output when A=0 and B=1.",
+      "solution": "OR outputs 1 whenever at least one input is 1: 0,0->0; 0,1->1; 1,0->1; 1,1->1. Looking up A=0, B=1 gives output 1, so the chime sounds — the door being open alone is enough to trigger it, even with the seatbelt buckled."
+    },
+    {
+      "problem": "A NOT gate is wired to a car's headlights-off sensor, and its output turns on the automatic running lights. The sensor input is 1 when headlights ARE on and 0 when they are off. What does the NOT gate output when the input is 1, and what does that mean for the running lights?",
+      "solution": "A NOT gate always flips its single input: input 1 becomes output 0, and input 0 becomes output 1. Here the input is 1 (headlights already on), so the output is 0. Since that output drives the running lights, 0 means the running lights stay off — they're not needed because the real headlights are already handling it."
+    },
+    {
+      "problem": "Two switches are wired in series to a garage door motor: switch A is a safety sensor that must be closed (1) for the beam to be unbroken, and switch B is the wall button. Using the AND gate model, list all 4 rows of the truth table and state in words what real situation each row represents.",
+      "solution": "0,0->0: beam broken and button not pressed, motor gets no signal. 0,1->0: beam broken but button pressed, motor STILL gets no signal, because the safety sensor blocks it, which is the whole point of wiring it as AND. 1,0->0: beam clear but button not pressed, nothing happens because nobody asked for the door to move. 1,1->1: beam clear and button pressed, motor gets the go signal and the door moves. This shows why AND suits safety interlocks — every required condition has to be true at once."
+    },
+    {
+      "problem": "A smoke detector's silence button (S) feeds into a NOT gate, and the NOT gate's output feeds the siren driver directly, where 1 means the siren is allowed to sound. Fill in the 2-row truth table for this NOT gate, and explain why pressing the button (S=1) should not mean the siren is silenced forever.",
+      "solution": "NOT gate table: S=0 -> output 1; S=1 -> output 0. Pressing the silence button (S=1) makes the output 0, turning the siren driver off, matching expectations. But in a real smoke detector this NOT gate is only one piece of a bigger circuit (you'll see how gates combine in the next lessons) — a real design keeps checking the smoke sensor, so if smoke is still present after a timeout, the silence effect is designed to expire, which a single NOT gate alone can't guarantee."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "A logic gate with two inputs wired in series (one after another) on a physical circuit board behaves like which gate?",
+      "choices": ["OR", "AND", "NOT", "XOR"],
+      "answerIndex": 1,
+      "explanation": "Switches in series only let current through when every switch along the path is closed, matching AND's rule: output 1 only when all inputs are 1."
+    },
+    {
+      "type": "mc",
+      "question": "What is the output of an OR gate when both of its inputs are 0?",
+      "choices": ["0", "1", "It depends on which input is checked first", "OR gates can't take two 0 inputs"],
+      "answerIndex": 0,
+      "explanation": "OR only outputs 1 if at least one input is 1. With both inputs at 0, there's nothing to satisfy that condition, so the output is 0."
+    },
+    {
+      "type": "mc",
+      "question": "How many rows does a complete truth table need for a gate with two inputs?",
+      "choices": ["2", "3", "4", "8"],
+      "answerIndex": 2,
+      "explanation": "Two binary inputs can each be 0 or 1, giving 2 x 2 = 4 possible combinations, so a 2-input gate's truth table always has exactly 4 rows."
+    },
+    {
+      "type": "short",
+      "question": "A NOT gate receives an input of 1. What is its output?",
+      "answer": "0",
+      "acceptable": ["0", "zero", "output is 0", "0, because NOT flips the input"],
+      "explanation": "NOT is an inverter — it always flips its single input, so an input of 1 always produces an output of 0."
+    },
+    {
+      "type": "short",
+      "question": "Two switches are wired in parallel to a lamp. Switch A is open (0) and switch B is closed (1). Does the lamp turn on, and which gate does this setup represent?",
+      "answer": "Yes, the lamp turns on; this is an OR gate",
+      "acceptable": ["yes, OR gate", "the lamp turns on, OR", "yes it turns on because it's an OR gate", "on, OR"],
+      "explanation": "Parallel switches model an OR gate, since current can flow through either path. With B closed, current flows through that path even though A is open, so the lamp lights — matching OR's rule that only one input needs to be 1."
+    }
+  ]
+},
+{
+  "id": "4.6",
+  "number": 6,
+  "title": "More gates: NAND, NOR, and XOR",
+  "objectives": [
+    "Build the truth table for NAND by combining AND with NOT",
+    "Build the truth table for NOR by combining OR with NOT",
+    "Build and explain the truth table for XOR, where the output is 1 only when the inputs differ",
+    "Compare NAND, NOR, and XOR outputs against AND, OR, and NOT for the same inputs"
+  ],
+  "explanation": [
+    "You've got three gates in your toolbox now: AND, OR, and NOT. It turns out gates can be chained together to create brand-new named gates, and two of today's three are literally just yesterday's gates wired in a row. NAND is short for 'NOT AND' — take an AND gate's output and immediately run it through a NOT gate. NOR is short for 'NOT OR' — same trick, starting from OR instead. XOR, on the other hand, is a genuinely new rule you haven't built yet, and it's one of the most useful gates in all of computing.",
+    "NAND flips every single output of AND. Since AND only outputs 1 in the 1,1 row, NAND outputs 0 only in that same row, and 1 everywhere else: 0,0->1; 0,1->1; 1,0->1; 1,1->0. Picture a car's unfastened-seatbelt warning light wired as a NAND: input A is 'driver buckled' and input B is 'passenger buckled.' The reminder light stays ON (output 1) unless BOTH seatbelts are buckled at once, in which case it finally turns OFF. That's a NAND doing its job — a reminder that only shuts off once every condition is satisfied.",
+    "NOR flips every output of OR. Since OR only outputs 0 in the 0,0 row, NOR outputs 1 only in that row, and 0 everywhere else: 0,0->1; 0,1->0; 1,0->0; 1,1->0. Picture a game console's quiet-mode indicator light wired as a NOR: input A is 'controller 1 powered on' and input B is 'controller 2 powered on.' The quiet light glows only when BOTH controllers are off; power up either one and the quiet light immediately switches off.",
+    "XOR ('exclusive or') outputs 1 only when its two inputs are different from each other, and 0 when they match: 0,0->0; 0,1->1; 1,0->1; 1,1->0. The classic real-world example is a hallway with a light switch at each end, wired so either switch toggles the light. The light is on whenever the two switches are pointing in different directions, one up and one down, and off whenever they match, both up or both down — flip either switch by itself and the light state flips too.",
+    "Line up the same two inputs against all six gates you now know and you get six different answers, and that variety is the whole point of having a full toolbox instead of just one tool. Chip designers particularly love NAND gates because of a neat trick: you can actually build every other gate you've learned, even AND, OR, and NOT themselves, using nothing but NAND gates wired together in different patterns — like discovering one single Lego brick shape that, combined cleverly enough, can build every other brick shape you own."
+  ],
+  "example": {
+    "problem": "A hallway has two light switches, one at each end (call them A and B). The light is wired as an XOR gate: on when the switches are in different positions, off when they match. The light starts off with A=0 and B=0. Someone at the north end flips switch A. What are the new input values, and is the light on or off? Then someone at the south end flips switch B. What happens now?",
+    "steps": [
+      "Start with A=0, B=0. Since both inputs match, XOR outputs 0, so the light is off — matching the 0,0 row of the XOR truth table.",
+      "Flipping switch A changes it from 0 to 1, so the inputs are now A=1, B=0.",
+      "Look up A=1, B=0 in the XOR table: since the inputs differ, XOR outputs 1, so the light turns ON.",
+      "Now someone flips switch B from 0 to 1, so the inputs become A=1, B=1.",
+      "Look up A=1, B=1 in the XOR table: since the inputs now match, XOR outputs 0, so the light turns back OFF."
+    ],
+    "answer": "After both flips the light ends up off again — XOR only lights the hallway when exactly one switch has been flipped from the starting position, not zero and not both."
+  },
+  "practice": [
+    {
+      "problem": "Build the full NAND truth table by starting from the AND truth table (0,0->0; 0,1->0; 1,0->0; 1,1->1) and flipping every output with NOT.",
+      "solution": "Flipping each AND output: 0,0: AND=0, NOT flips to 1. 0,1: AND=0, NOT flips to 1. 1,0: AND=0, NOT flips to 1. 1,1: AND=1, NOT flips to 0. So the NAND table is 0,0->1; 0,1->1; 1,0->1; 1,1->0 — the opposite output of AND in every single row."
+    },
+    {
+      "problem": "Build the full NOR truth table by starting from the OR truth table (0,0->0; 0,1->1; 1,0->1; 1,1->1) and flipping every output with NOT.",
+      "solution": "Flipping each OR output: 0,0: OR=0, NOT flips to 1. 0,1: OR=1, NOT flips to 0. 1,0: OR=1, NOT flips to 0. 1,1: OR=1, NOT flips to 0. So the NOR table is 0,0->1; 0,1->0; 1,0->0; 1,1->0 — output 1 only in the single row where both inputs are 0."
+    },
+    {
+      "problem": "A classroom reminder light is wired as a NAND, where A=1 means partner A has checked in and B=1 means partner B has checked in, and the light is ON whenever a reminder is still needed. Using the NAND table, is the light on or off when A=1 and B=0? What about when A=1 and B=1?",
+      "solution": "From the NAND table, A=1, B=0 gives output 1, so the reminder light is ON — only one partner has checked in, so a reminder is still useful. For A=1, B=1, NAND gives output 0, so the light turns OFF — both partners are checked in, so there's nothing left to remind anyone about. This is the exact inverse of an AND gate: AND would only turn something on when both are true, while NAND turns something off only when both are true."
+    },
+    {
+      "problem": "A two-player video game shows a ready-check XOR light meant to flash only when exactly one player has pressed ready, not zero, not both. Player 1 presses ready (A=1) but Player 2 has not (B=0). Is the light on? Then Player 2 also presses ready. Now what?",
+      "solution": "With A=1, B=0, the inputs differ, so XOR outputs 1 and the ready light flashes — exactly one player is ready, which is the situation this light flags. Once Player 2 also presses ready, the inputs become A=1, B=1. Since both inputs now match, XOR outputs 0, and the light turns off. In a real game, that light turning off might actually trigger the match to start, using a separate AND gate to check both players are ready at the same time — exactly the kind of gate-combining you'll see in the next lesson."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What is the output of a NAND gate when both inputs are 1?",
+      "choices": ["1", "0", "It alternates", "NAND can't take two 1 inputs"],
+      "answerIndex": 1,
+      "explanation": "NAND is AND followed by NOT. AND outputs 1 when both inputs are 1, and NOT flips that to 0, so NAND's only 0-output row is when both inputs are 1."
+    },
+    {
+      "type": "mc",
+      "question": "A NOR gate outputs 1 in exactly which situation?",
+      "choices": ["When at least one input is 1", "When both inputs are 1", "When both inputs are 0", "Never — NOR always outputs 0"],
+      "answerIndex": 2,
+      "explanation": "NOR is OR followed by NOT. OR only outputs 0 when both inputs are 0, and flipping that single 0 with NOT gives the only 1 in the NOR table, at the 0,0 row."
+    },
+    {
+      "type": "mc",
+      "question": "Which gate models a hallway light controlled by two switches, where the light is on whenever the switches are in different positions?",
+      "choices": ["AND", "NOR", "XOR", "NAND"],
+      "answerIndex": 2,
+      "explanation": "XOR ('exclusive or') outputs 1 only when its two inputs differ, which is exactly the classic two-switch hallway light setup."
+    },
+    {
+      "type": "short",
+      "question": "What are the two building-block gates that combine to make a NOR gate?",
+      "answer": "OR and NOT",
+      "acceptable": ["OR and NOT", "OR then NOT", "NOT OR", "OR followed by NOT"],
+      "explanation": "NOR's name literally means 'NOT OR' — you take an OR gate's output and run it through a NOT gate to invert every result."
+    },
+    {
+      "type": "short",
+      "question": "For an XOR gate, what is the output when A=0 and B=0?",
+      "answer": "0",
+      "acceptable": ["0", "zero", "output is 0"],
+      "explanation": "XOR only outputs 1 when the inputs differ. When A and B are both 0, they match, so XOR outputs 0."
+    }
+  ]
+},
+{
+  "id": "4.7",
+  "number": 7,
+  "title": "Combining gates into circuits",
+  "objectives": [
+    "Trace binary signals step by step through a circuit made of 2-3 connected gates",
+    "Read a gate circuit described in words and identify which gate's output feeds into which gate's input",
+    "Build a full truth table for a small multi-gate circuit",
+    "Explain how simple gates combine into circuits the same way simple functions combine into bigger programs"
+  ],
+  "explanation": [
+    "You now have six gates in your toolbox — AND, OR, NOT, NAND, NOR, XOR — and none of them alone is very smart. Real computers, though, make incredibly complex decisions, and the trick is wiring: gates connect gate to gate, one gate's output becoming the next gate's input, over and over, snapping small pieces together into circuits. This is the exact same idea as Python functions calling other functions from Phase 2 — a big function is often just several small functions wired together in sequence, and a gate circuit is that identical idea, built in hardware instead of code.",
+    "There's one firm rule for tracing any circuit: start from the raw inputs, and work gate by gate in the order signals actually flow. You can't compute a gate's output until you already know every one of its inputs, so if gate 2 depends on gate 1's output, gate 1 has to be computed first. Label every wire with a 0 or a 1 as you work through it, the same way you'd show your work on a math problem, so you never lose track of what's known and what's still waiting.",
+    "Take NAND from the last lesson and rebuild it out of two separate raw gates instead of one named gate: inputs A and B both go into an AND gate, and the AND gate's single output wire becomes the ONLY input to a NOT gate. The NOT gate's output is the whole circuit's final output. Trace it for A=1, B=0: the AND gate sees 1 and 0, so it outputs 0; that 0 becomes NOT's input, and NOT flips it to 1. The final output is 1 — exactly matching the NAND truth table you already memorized.",
+    "Bigger circuits are described the same way, just with more gates. Picture a security alarm: a door sensor (A) and a window sensor (B) both feed into an OR gate, producing an internal signal X that means 'any entry point breached.' That signal X, along with an armed switch (C), both feed into a final AND gate, whose output is the alarm siren. Reading a description like this is exactly like reading a circuit diagram without a picture: each named gate is a box, each 'feeds into' is a wire, and a gate can have wires arriving from more than one earlier gate at once.",
+    "This pattern doesn't stop at two or three gates. Real computer chips wire together billions of gates this exact same way to do everything from calculator math to loading a video game frame, and every one of those billions of gates is still just doing one of the six simple jobs you've now learned. Complexity in computing doesn't come from any single gate getting smarter — it comes from wiring enormous numbers of simple gates together."
+  ],
+  "example": {
+    "problem": "An alarm circuit works like this: Door sensor A and Window sensor B both feed into an OR gate, producing an internal signal X (1 if either sensor detects an opening). Signal X and the Armed switch C both feed into a final AND gate, whose output is the alarm siren. Trace this circuit for A=1 (door open), B=0 (window closed), C=1 (system armed), and determine whether the siren sounds.",
+    "steps": [
+      "First find every gate's inputs before computing its output. The OR gate depends only on the raw inputs A and B, so it can be computed first: A=1, B=0.",
+      "Look up OR's rule: output 1 if at least one input is 1. With A=1 and B=0, the OR gate outputs X=1.",
+      "The final AND gate needs X and C as its two inputs. We now know X=1, and C=1 is given directly.",
+      "Look up AND's rule: output 1 only if both inputs are 1. With X=1 and C=1, the AND gate outputs 1.",
+      "The AND gate's output IS the siren signal, and it came out as 1."
+    ],
+    "answer": "The siren sounds, because the door being open set X=1, and with the system armed (C=1) the final AND gate had both its inputs at 1."
+  },
+  "practice": [
+    {
+      "problem": "Using the same alarm circuit (A OR B -> X; X AND C -> siren), trace the circuit for A=0, B=0, C=1 (both sensors clear, but system armed). Does the siren sound?",
+      "solution": "First compute the OR gate: A=0, B=0, and OR only outputs 1 if at least one input is 1, so X=0. Next compute the final AND gate with X=0 and C=1: AND needs both inputs to be 1, and X is 0, so the AND gate outputs 0. The siren does not sound — even though the system is armed, no sensor detected anything, so there's nothing to react to."
+    },
+    {
+      "problem": "Using the same alarm circuit, trace it for A=1, B=1, C=0 (both sensors triggered, but the system is NOT armed). Does the siren sound? What does this tell you about the purpose of the armed switch C?",
+      "solution": "The OR gate: A=1, B=1, at least one is 1, so X=1. The final AND gate: X=1, C=0, and since AND needs BOTH inputs to be 1, having C=0 forces the output to 0. The siren stays silent even with both sensors triggered. This shows the purpose of wiring C into a final AND gate: it acts as a master override — no matter what the sensors detect, the alarm can never sound unless the system has also been armed."
+    },
+    {
+      "problem": "A circuit rebuilds NAND from raw gates: inputs A and B both feed an AND gate, and that AND gate's output feeds the single input of a NOT gate, whose output is the circuit's final output. Trace this circuit for A=1, B=0, and confirm the result matches the NAND truth table from the last lesson.",
+      "solution": "First compute the AND gate, since it only depends on the raw inputs: A=1, B=0, and AND needs both inputs to be 1, so the AND gate outputs 0. Next, that 0 becomes the single input to the NOT gate. NOT flips its input, so an input of 0 becomes an output of 1. The circuit's final output is 1. Checking against the NAND truth table from lesson 4.6, the row for A=1, B=0 is indeed 1, so this two-gate circuit behaves exactly like a single NAND gate."
+    },
+    {
+      "problem": "A porch light circuit: a motion sensor (A) and a light-level sensor that outputs 1 when it's dark (B) both feed into an AND gate, so the light only turns on when there's motion AND it's dark. Build the complete 4-row truth table for this circuit's final output and describe in one sentence when a homeowner would actually see the porch light turn on.",
+      "solution": "Since this circuit is just a single AND gate on inputs A and B, its truth table is the same as any AND gate: A=0,B=0 -> 0; A=0,B=1 -> 0; A=1,B=0 -> 0; A=1,B=1 -> 1. The only row producing 1 is A=1 (motion detected) and B=1 (it's dark), so the homeowner only sees the porch light turn on at night when something is actually moving nearby — daytime motion or nighttime stillness both leave it off."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In a circuit where gate 2's input is gate 1's output, in what order must you compute the gates?",
+      "choices": ["Either order, it doesn't matter", "Gate 2 first, then gate 1", "Gate 1 first, then gate 2", "Both at exactly the same time"],
+      "answerIndex": 2,
+      "explanation": "You can't know gate 2's inputs until gate 1 has produced its output, so signals must be traced in the order they actually flow — gate 1 before gate 2."
+    },
+    {
+      "type": "mc",
+      "question": "A circuit has inputs A and B feeding an OR gate, whose output feeds a NOT gate. This two-gate circuit behaves exactly like which single named gate?",
+      "choices": ["AND", "NAND", "NOR", "XOR"],
+      "answerIndex": 2,
+      "explanation": "OR followed by NOT is the literal definition of NOR ('NOT OR') — the same building trick used for NAND (AND followed by NOT), just starting from OR instead."
+    },
+    {
+      "type": "mc",
+      "question": "In the alarm circuit from this lesson (A OR B -> X; X AND C -> siren), what is the purpose of computing the internal signal X before the final gate?",
+      "choices": ["X is not actually needed", "The final AND gate cannot be computed until X, one of its two inputs, is known", "X replaces the need for input C", "Circuits never use internal signals"],
+      "answerIndex": 1,
+      "explanation": "The final AND gate takes X and C as its inputs, so X has to be computed first — the same reasoning as computing an inner function's result before calling an outer function that uses it."
+    },
+    {
+      "type": "short",
+      "question": "In a circuit description, what does it mean when 'the output of gate 1 feeds into gate 2'?",
+      "answer": "Gate 1's output becomes one of gate 2's inputs",
+      "acceptable": ["gate 1's output is used as an input to gate 2", "it becomes an input to gate 2", "gate 1's output wire connects to gate 2's input", "output of gate 1 is input of gate 2"],
+      "explanation": "Wires in a circuit carry a single gate's output value to become an input value for the next gate down the line — that connection is what lets small gates build bigger decisions."
+    },
+    {
+      "type": "short",
+      "question": "For the porch light circuit (motion sensor A AND dark sensor B, both feeding one AND gate), what is the output when A=1 and B=0?",
+      "answer": "0",
+      "acceptable": ["0", "zero", "output is 0", "the light stays off"],
+      "explanation": "AND requires both inputs to be 1. With B=0 (it's not dark), the AND gate outputs 0 even though motion was detected, so the porch light stays off."
+    }
+  ]
+},
+{
+  "id": "4.8",
+  "number": 8,
+  "title": "From switches to gates — threshold decisions",
+  "objectives": [
+    "Explain how a physical switch's electrical state maps to a binary 0 or 1",
+    "Describe a logic gate's HIGH/LOW output decision as a threshold decision, the same shape as a neuron's firing threshold",
+    "Connect this lesson back to the Phase 3 neuron threshold and explain the shared pattern in one's own words",
+    "Describe why 'many simple threshold-deciders wired together' is a core idea in both circuits and brains"
+  ],
+  "explanation": [
+    "Back in Phase 3, you learned exactly this: \"This threshold idea is going to come back twice more in this course: later in this very phase, when you learn how a neuron combines many different incoming signals... and again in Phase 4, on logic and computing, where 'threshold decisions' show up as a core idea in how simple computer circuits make decisions.\" A neuron doesn't react to a single tiny nudge — it adds up all its incoming excitatory and inhibitory signals, and only fires, sending its own signal onward, once that combined total crosses a threshold. Below threshold: silence. At or above: fire. This lesson is where that exact same shape shows up in the circuits you've been building all through Phase 4.",
+    "Start with what a physical switch's voltage actually becomes inside a real circuit board. It isn't usually a clean \"exactly 0 volts or exactly 5 volts.\" Real chips define a threshold voltage — for example, on a 5-volt system, anything at or above roughly 2.5 volts counts as HIGH (a 1), and anything meaningfully below that counts as LOW (a 0). The chip is constantly making this threshold decision on every wire, many times per second: is this voltage high enough to count as a 1, or not? That's also why noisy, in-between signals in real electronics can cause glitches — the threshold decision is exactly where the deciding happens.",
+    "Every logic gate you've built this phase, AND, OR, NOT, NAND, NOR, XOR, ultimately produces a HIGH or LOW voltage as its output, and that output is itself the result of one of these threshold decisions happening inside its transistors. Even something as simple as an AND gate is, underneath the clean truth table you memorized, really a tiny circuit of transistors performing a threshold check on combined input voltages, only outputting HIGH once the combined signal is big enough. The truth table is the outside view of a gate; the threshold decision is what's actually happening on the inside.",
+    "Line the two up side by side. A neuron gathers many incoming signals, adds them up, and fires only past a threshold. A gate's transistors gather incoming voltage signals, combine them, and output HIGH only past a threshold. Different materials entirely — a neuron runs on chemistry and electricity inside a living cell, a gate runs on silicon and metal on a chip — but the exact same shape of decision: combine what's coming in, then make an all-or-nothing HIGH/LOW, fire/don't-fire call once a threshold is crossed. Neither one ever does anything halfway. A gate's output is never 'sort of 1,' the same way a neuron never 'sort of' fires.",
+    "This 'many simple threshold-deciders, wired together' pattern is what both computing and brains are built from at their smallest scale. A single neuron can't recognize a face, and a single logic gate can't run a video game — but wire enough of either one together, layer upon layer, and genuinely complex behavior emerges out of nothing but tiny yes/no threshold calls. That's the real reason this idea kept resurfacing across Phase 3 and Phase 4: it isn't a coincidence that brains and computers share this shape, it's the same basic building strategy showing up in two very different materials, and it's an idea you'll keep running into as you go deeper into how both of them actually work."
+  ],
+  "example": {
+    "problem": "A digital chip defines HIGH as any voltage at or above 2.5V and LOW as anything below 2.5V. A single wire inside an AND gate carries a combined signal of 3.1V after its two input transistors' effects are combined. Using the threshold-decision idea, is this wire read as a 1 or a 0? Then compare this exact same 'combine, then check a threshold' shape to how a neuron from Phase 3 decides whether to fire.",
+    "steps": [
+      "Identify the threshold rule for this chip: 2.5V is the dividing line — at or above it counts as HIGH (1), below it counts as LOW (0).",
+      "Compare the wire's actual voltage, 3.1V, to that threshold: 3.1V is above 2.5V.",
+      "Since 3.1V crosses the threshold, the chip reads this wire as HIGH, meaning a binary value of 1.",
+      "Now compare this to a neuron: a neuron doesn't check a single wire's voltage against 2.5V, but it performs the same shape of check — it adds up all its incoming excitatory and inhibitory signals into one combined total, then compares that total to its own firing threshold.",
+      "In both cases the underlying question is identical in shape: has the combined incoming signal crossed the line that separates OFF from ON? The gate answers with a voltage threshold and outputs 0 or 1; the neuron answers with a firing threshold and either stays silent or fires."
+    ],
+    "answer": "The wire is read as a 1 (HIGH), because 3.1V is above the 2.5V threshold — and this is the exact same all-or-nothing threshold shape as a neuron deciding whether to fire, just built out of voltage and transistors instead of chemistry and cells."
+  },
+  "practice": [
+    {
+      "problem": "A circuit defines HIGH as 3.3V or above. A wire reads 1.2V. Is this a 1 or a 0? Explain your answer using the threshold idea.",
+      "solution": "1.2V is below the 3.3V threshold, so this wire is read as LOW, which is a 0. The threshold decision here is simple: compare the actual voltage to the dividing line, and since 1.2V doesn't cross it, the circuit treats it exactly the same as if the wire had 0V — anything below the threshold gets lumped together as 'not enough,' the same way a neuron below its firing threshold produces no signal at all, regardless of how close it got."
+    },
+    {
+      "problem": "Explain in your own words why a logic gate's truth table (the AND/OR/NOT tables you memorized) is really just a shortcut for a threshold decision happening underneath.",
+      "solution": "A truth table lists clean 0s and 1s as if a gate just magically 'knows' the rule, but underneath, the gate's transistors are combining real input voltages and checking that combined result against a threshold, exactly like the 2.5V example in this lesson. The truth table is the outside behavior you can rely on without needing to know the wiring details, but the threshold check on combined voltage is what's actually producing that behavior inside the chip — the truth table hides the mechanism, the threshold decision IS the mechanism."
+    },
+    {
+      "problem": "A neuron in Phase 3 receives excitatory and inhibitory signals that sum to a total below its firing threshold. A logic gate's combined input voltage also lands below its HIGH threshold. What does each one output, and why are these two situations described as 'the same shape' in this lesson even though one is biological and one is electronic?",
+      "solution": "The neuron stays silent — it does not fire, and sends no signal onward. The gate outputs LOW (0). Both situations are the same shape because in each case, something is combining multiple incoming signals into one total, then comparing that total against a fixed threshold, and producing a strict all-or-nothing result (fire/don't-fire, or HIGH/LOW) rather than a partial answer. The materials are completely different — living cells versus silicon and metal — but the decision-making pattern is identical, which is exactly why this lesson connects them."
+    },
+    {
+      "problem": "Why can't a single logic gate, all by itself, do something as complex as running a video game, even though it's making genuine threshold decisions? Use the 'many simple threshold-deciders wired together' idea from this lesson to explain.",
+      "solution": "A single gate can only answer one tiny yes/no question about its own inputs — it has no way to represent something as complicated as a whole game. The real power comes from wiring huge numbers of these simple threshold-deciders together (as you practiced doing in lesson 4.7), so that the combined output of many small decisions builds up into far more complex behavior. This mirrors why a single neuron can't recognize a face either — it takes networks of many neurons, layered together, for genuinely complex behavior to emerge, and that's the same 'simple pieces, wired together, create complexity' strategy showing up in both machines and brains."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In this lesson's chip example, HIGH is defined as 2.5V or above. What binary value does a wire reading exactly 2.5V represent?",
+      "choices": ["0, because it's exactly on the line", "1, because it meets the 'at or above' threshold", "It's undefined and the chip crashes", "Exactly 2.5V is impossible in real circuits"],
+      "answerIndex": 1,
+      "explanation": "The threshold rule in this lesson was defined as 'at or above 2.5V counts as HIGH,' so a wire reading exactly 2.5V meets that condition and is read as a 1."
+    },
+    {
+      "type": "mc",
+      "question": "Which of these best describes the shared 'shape' between a neuron firing and a logic gate outputting HIGH?",
+      "choices": ["Both use exactly the same chemicals", "Both combine incoming signals, then make an all-or-nothing decision once a threshold is crossed", "Both always output a value somewhere between 0 and 1", "There is no real similarity, it's just a coincidence of wording"],
+      "answerIndex": 1,
+      "explanation": "The lesson's central point is structural, not material: a neuron sums signals and fires past a threshold, a gate combines voltages and outputs HIGH past a threshold — same decision shape, different materials."
+    },
+    {
+      "type": "mc",
+      "question": "What happens to a neuron's output signal when its combined incoming signal stays below its firing threshold?",
+      "choices": ["It fires at half strength", "It fires late", "It does not fire at all", "It fires early to compensate"],
+      "answerIndex": 2,
+      "explanation": "Threshold decisions are all-or-nothing. Below the threshold, a neuron simply does not fire — there's no partial or delayed firing, matching how a gate's output is either LOW or HIGH with nothing in between."
+    },
+    {
+      "type": "short",
+      "question": "What was the exact promise made back in Phase 3 about where the threshold idea would show up again in this course, in your own words?",
+      "answer": "It would come back later in Phase 3 with how a neuron combines many signals, and again in Phase 4 with how logic circuits make decisions",
+      "acceptable": ["neuron combining signals and phase 4 logic gates/circuits", "it comes back in the neuron's own threshold and then in phase 4 circuits", "later in phase 3 and then in phase 4 logic/circuits", "threshold decisions in circuits, phase 4"],
+      "explanation": "Phase 3 explicitly promised the threshold idea would return twice: once later in Phase 3 covering how a neuron combines multiple incoming signals, and again here in Phase 4, where a gate's HIGH/LOW output is itself a threshold decision."
+    },
+    {
+      "type": "short",
+      "question": "Fill in the blank: a logic gate's output is never 'sort of 1' — it is always a strict ______ decision.",
+      "answer": "all-or-nothing (threshold)",
+      "acceptable": ["all-or-nothing", "threshold", "all or nothing", "binary threshold", "on/off"],
+      "explanation": "Just like a neuron either fires or doesn't, a gate's output is always a clean HIGH or LOW with no in-between — that strict all-or-nothing quality is what makes it a threshold decision."
+    }
+  ]
+},
+{
+  "id": "4.9",
+  "number": 9,
+  "title": "Boolean logic in code — gates and Python's and/or/not",
+  "objectives": [
+    "Recognize that Python's and, or, and not operators are the exact same logic as the AND, OR, and NOT gates from earlier lessons",
+    "Write Python boolean expressions that combine True/False values using and, or, and not",
+    "Predict the output of a Python boolean expression given the values of its variables, using the truth tables you already know",
+    "Translate a real-world combined condition into working Python code using gate logic"
+  ],
+  "explanation": [
+    "Back in lessons 4.5 through 4.8, you built AND, OR, and NOT gates out of truth tables — little machines that take True/False inputs and spit out a True/False answer. Here's the twist: you already know how to build those exact machines, because you learned it back in Phase 2. Python's and, or, and not keywords aren't a new idea dressed up to look like something else — they ARE the gates. When you write `switch_a and switch_b` in Python, the computer evaluates it using the identical truth table you memorized for an AND gate. The wires just became words.",
+    "Take the AND gate first. Its truth table says the output is True only when both inputs are True — everywhere else, it's False. Now open a Python file and write `light_on = switch_a and switch_b`. If switch_a is True and switch_b is True, light_on becomes True. Flip either switch to False, and light_on becomes False, no exceptions. That's not a coincidence or a rough analogy — Python's and operator is defined to behave exactly like an AND gate's truth table, row for row. You could print out every combination of switch_a and switch_b and it would match the truth table perfectly.",
+    "The OR gate works the same way through Python's or keyword: True if at least one input is True, False only when both are False. So `alarm_on = door_sensor or window_sensor` fires the alarm if either sensor trips — just like an OR gate lighting up if either input wire is live. The NOT gate becomes Python's not keyword, flipping a single value to its opposite: `not True` gives False, and `not False` gives True. If `door_locked` is False, then `not door_locked` is True, meaning \"the door is unlocked\" — a single-input gate doing exactly what it always did, just spelled out in letters instead of drawn with a symbol.",
+    "This matters because it means every circuit you've already designed on paper with AND/OR/NOT gates can be typed directly into a program and it will behave identically. A security system, a game's unlock condition, a thermostat's decision to turn on the heat — anything you can draw as gates, you can now write as code, because the underlying logic never changed. You spent four lessons learning digital logic, and it turns out you were secretly learning Python syntax at the same time. The gate diagram and the line of code are two pictures of the exact same decision."
+  ],
+  "example": {
+    "problem": "A smart porch light should turn on only if the motion sensor detects movement AND it is after dark. Write a Python boolean expression for this, then trace through what happens when motion is True and dark is False.",
+    "steps": [
+      "First, identify the two inputs as boolean variables: motion (True if the sensor detects movement, False if not) and dark (True if it's after dark, False if not).",
+      "The rule is \"turn on only if BOTH conditions are true,\" which is exactly the AND gate's truth table — output True only when every input is True.",
+      "Translate that into Python: light_on = motion and dark.",
+      "Now plug in the given values: motion = True, dark = False.",
+      "Apply the AND truth table row for (True, False): the output is False, because AND requires every input to be True and dark is not.",
+      "So light_on evaluates to False — the light stays off, even though motion was detected, because it isn't dark yet."
+    ],
+    "answer": "light_on = motion and dark; with motion=True and dark=False, light_on is False, so the light stays off."
+  },
+  "practice": [
+    {
+      "problem": "Write a Python expression using and, or, or not that models: \"A car will start if the key is turned AND the car is NOT in gear.\" Then evaluate it for key_turned=True, in_gear=True.",
+      "solution": "The rule needs both the key turned AND the car not in gear, so: car_starts = key_turned and (not in_gear). With in_gear=True, not in_gear becomes False. Now we AND key_turned (True) with False, and AND requires both to be True, so car_starts = False. The car does not start because it's still in gear."
+    },
+    {
+      "problem": "You have two boolean variables, has_ticket = False and is_vip = True. Evaluate has_ticket or is_vip and explain what real-world rule this models.",
+      "solution": "OR is True if at least one input is True. Here has_ticket is False but is_vip is True, so has_ticket or is_vip evaluates to True. This models a rule like \"you may enter if you have a ticket OR you are a VIP\" — since being a VIP alone is enough, entry is allowed even without a ticket."
+    },
+    {
+      "problem": "Evaluate not (True and False) step by step.",
+      "solution": "Work from the inside out, just like order of operations in math. First evaluate the parentheses: True and False. AND requires both inputs True, and False fails that, so True and False = False. Now apply not to that result: not False = True. So the full expression evaluates to True."
+    },
+    {
+      "problem": "Write a Python expression for a vending machine that dispenses a snack if enough_money is True AND slot_is_empty is False. Evaluate it for enough_money=True, slot_is_empty=False.",
+      "solution": "The second condition needs to be flipped with not, since we want the slot to NOT be empty: dispense = enough_money and (not slot_is_empty). Plugging in: not slot_is_empty = not False = True. Then enough_money and True = True and True = True. AND requires both to be True, and both are, so dispense = True — the snack is dispensed."
+    },
+    {
+      "problem": "Predict, without running any code, what sprinklers_on = (temperature > 80) and (not raining) evaluates to when temperature=90 and raining=True. Explain each step.",
+      "solution": "First evaluate the comparison: temperature > 80 becomes 90 > 80, which is True. Next evaluate not raining: raining is True, so not raining is False. Now combine with and: True and False. AND needs both sides True, but the second side is False, so the result is False. sprinklers_on is False — even though it's hot enough, the sprinklers stay off because it's raining."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "Python's and keyword behaves the same way as which logic gate?",
+      "choices": ["OR gate", "NOT gate", "AND gate", "XOR gate"],
+      "answerIndex": 2,
+      "explanation": "Python's and operator follows the exact same truth table as an AND gate: the result is True only when every input is True, and False in every other case."
+    },
+    {
+      "type": "mc",
+      "question": "What does False or True evaluate to in Python?",
+      "choices": ["True", "False", "None", "Error"],
+      "answerIndex": 0,
+      "explanation": "OR is True when at least one input is True. Here the second value is True, so False or True evaluates to True, matching the OR gate's truth table."
+    },
+    {
+      "type": "mc",
+      "question": "You write is_open = shop_hours and (not holiday). If shop_hours=True and holiday=True, what is is_open?",
+      "choices": ["True", "False", "shop_hours", "holiday"],
+      "answerIndex": 1,
+      "explanation": "not holiday flips True to False. Then True and False requires both sides to be True, but the second side is False, so is_open evaluates to False — the shop is closed on a holiday even during shop hours."
+    },
+    {
+      "type": "short",
+      "question": "In one sentence, explain why Python's and/or/not keywords aren't just 'similar to' logic gates but are actually the same logic.",
+      "answer": "Because Python's and/or/not operators are defined using the exact same truth tables as AND/OR/NOT gates, so for every possible combination of True/False inputs they produce identical outputs.",
+      "acceptable": [
+        "they use the same truth tables as the gates",
+        "same truth table, same outputs for every input combination",
+        "python and/or/not follow the identical truth tables as AND/OR/NOT gates",
+        "because the truth tables match exactly"
+      ],
+      "explanation": "A truth table completely defines a gate's behavior for every input combination. Since Python's and/or/not produce the same outputs for every combination as the corresponding gates, they aren't an approximation of gate logic — they are gate logic, just written as code."
+    },
+    {
+      "type": "short",
+      "question": "Write a single Python boolean expression for: \"The washing machine starts if the door is closed AND it is NOT overloaded.\" Use the variable names door_closed and overloaded.",
+      "answer": "starts = door_closed and (not overloaded)",
+      "acceptable": [
+        "door_closed and not overloaded",
+        "door_closed and (not overloaded)",
+        "starts = door_closed and not overloaded"
+      ],
+      "explanation": "The rule requires both conditions at once, which is AND. The second condition needs to be flipped from 'overloaded' to 'not overloaded' since we want it to be False for the machine to start, so not overloaded handles that flip."
+    }
+  ]
+},
+{
+  "id": "4.10",
+  "number": 10,
+  "title": "From logic gates to conditionals — how if/elif/else decides",
+  "objectives": [
+    "Explain how a comparison operator (==, <, >, etc.) produces a True/False value that can feed into a decision, just like a gate input",
+    "Describe how an if statement's condition acts like a gate whose output decides which code block runs",
+    "Trace an if/elif/else chain as a sequence of gate-like decisions checked in order",
+    "Combine comparison operators with and/or/not to build multi-condition conditionals"
+  ],
+  "explanation": [
+    "In Phase 2 you learned that comparisons like age > 12 or score == 100 produce a True or False value. You probably typed them without thinking too hard about what that actually meant. Now you know exactly what it means: a comparison operator is a tiny machine that takes in a value and spits out True or False, the same currency that gates and Python's and/or/not deal in. age > 12 isn't just a question — it's a signal, exactly like a wire carrying a high or low voltage into a gate. Once you see comparisons this way, the rest of this lesson falls into place fast.",
+    "So what does an if statement actually do with that signal? Recall from lesson 4.8 that a gate's output is a decision — True means \"fire,\" False means \"don't.\" An if statement is built on the exact same shape: `if condition:` checks whether its condition evaluated to True, and if so, it \"fires\" by running the indented code underneath. If the condition is False, it doesn't fire, and Python skips straight past that block. There's no difference in kind between a logic gate deciding whether current flows and an if statement deciding whether a block of code runs — both are threshold decisions built on a single True/False signal.",
+    "Now stack decisions together with elif and else, and you get a chain of gates checked one at a time, in order, until one of them fires. Picture `if score >= 90: grade = \"A\" elif score >= 80: grade = \"B\" else: grade = \"C\"`. Python checks the first condition like a gate: did it fire? If not, move to the next gate in line, elif score >= 80. Only when a gate finally fires does its code run, and every gate after it gets skipped entirely — just like a security system that stops checking sensors the moment one of them already triggered the alarm.",
+    "The real power shows up when you combine comparisons with and/or/not, because now each \"input\" to your decision is itself the output of a smaller gate. `if age >= 13 and has_permission_slip:` is a two-gate circuit feeding into an AND, and the whole thing feeds into the if statement's threshold check. You could draw this exact if statement as a little diagram: two comparison gates, an AND gate combining them, and an if-block that fires only when that AND gate outputs True. Conditionals aren't a brand-new skill — they're gate circuits wearing Python syntax."
+  ],
+  "example": {
+    "problem": "A roller coaster's height-check program should print \"You may ride\" only if height_cm is at least 122 AND age is at least 8. Otherwise it should print \"Sorry, not yet.\" Trace the program for height_cm=130, age=6.",
+    "steps": [
+      "Identify the two comparison gates needed: height_cm >= 122 and age >= 8. Each one produces its own True/False output before anything is combined.",
+      "Evaluate the first comparison: height_cm >= 122 becomes 130 >= 122, which is True.",
+      "Evaluate the second comparison: age >= 8 becomes 6 >= 8, which is False.",
+      "Combine the two gate outputs with and, since the rule requires both: True and False.",
+      "Apply the AND truth table: AND needs every input to be True, and the second one is False, so the combined result is False.",
+      "The if statement checks this combined result. Because it's False, the if-block does not fire, so Python moves to the else block instead and prints \"Sorry, not yet.\""
+    ],
+    "answer": "The program prints \"Sorry, not yet.\" because although the rider is tall enough, they are not old enough, and the AND gate requires both conditions to be True."
+  },
+  "practice": [
+    {
+      "problem": "Write the comparison-gate output (True or False) for each of these, given x = 7: x == 7, x < 5, x != 3.",
+      "solution": "x == 7 checks if x equals 7; since x is 7, this is True. x < 5 checks if x is less than 5; 7 is not less than 5, so this is False. x != 3 checks if x is NOT equal to 3; 7 is not 3, so this is True. Each comparison acts as its own independent gate, producing True or False based only on the value of x."
+    },
+    {
+      "problem": "Trace this code for temperature = 45: `if temperature > 90: print(\"Hot\") elif temperature > 60: print(\"Warm\") else: print(\"Cold\")`. What prints, and why do the earlier branches get skipped?",
+      "solution": "Python checks the first gate: temperature > 90 becomes 45 > 90, which is False, so that block doesn't fire and Python moves on. Next it checks elif temperature > 60, which becomes 45 > 60, also False, so that block doesn't fire either. Since no earlier gate fired, Python falls through to the else block, which always runs if nothing above it did, printing \"Cold\". Only one branch ever runs per pass through the chain — once none of the checked gates fire, the else acts as the default."
+    },
+    {
+      "problem": "Rewrite `if not (age < 18): print(\"Adult\")` using a comparison operator that avoids the not, and explain why it's equivalent.",
+      "solution": "not (age < 18) means \"it is NOT true that age is less than 18,\" which is the same as saying age is 18 or greater. So the equivalent line is `if age >= 18: print(\"Adult\")`. Both versions produce identical True/False outputs for every possible age — flipping a less-than gate with not is logically the same as using greater-than-or-equal directly, just like NOT flipping an AND into a NAND produces the opposite truth table."
+    },
+    {
+      "problem": "A library checkout system should allow checkout if is_member is True OR has_guest_pass is True, AND the book is not already checked_out. Write the if statement, then trace it for is_member=False, has_guest_pass=True, checked_out=False.",
+      "solution": "The expression is: `if (is_member or has_guest_pass) and (not checked_out):`. First evaluate the OR gate: is_member or has_guest_pass = False or True = True, since OR only needs one True input. Next evaluate not checked_out: checked_out is False, so not checked_out is True. Finally combine with AND: True and True = True, since AND needs both to be True and both are. The if-block fires, so checkout is allowed."
+    },
+    {
+      "problem": "Explain, using the gate idea, why only one block in an if/elif/else chain ever runs, even if multiple conditions would technically be True.",
+      "solution": "Python checks each gate in the chain one at a time, from top to bottom, and stops at the very first one that fires (evaluates True) — it never checks the remaining gates after that. So even if a later condition would also have evaluated to True on its own, Python never gets there because the chain already committed to the first gate that fired. This is different from writing separate if statements back-to-back, where every single condition gets checked independently regardless of what fired before it."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What does the comparison score >= 60 produce when score = 45?",
+      "choices": ["45", "60", "True", "False"],
+      "answerIndex": 3,
+      "explanation": "A comparison operator always produces a boolean, never a number. Since 45 is not greater than or equal to 60, the comparison evaluates to False, which is the signal an if statement would then check."
+    },
+    {
+      "type": "mc",
+      "question": "In an if/elif/else chain, what happens once one branch's condition evaluates to True and its block runs?",
+      "choices": [
+        "Python still checks every remaining elif and else condition anyway",
+        "Python skips all remaining elif/else branches in that chain and moves on",
+        "Python runs the else block too, just in case",
+        "Python throws an error because two conditions might be True"
+      ],
+      "answerIndex": 1,
+      "explanation": "Once a gate in the chain fires, Python runs its block and skips every branch after it in that same if/elif/else chain, just like a decision circuit that stops checking once it has already fired."
+    },
+    {
+      "type": "mc",
+      "question": "Which if statement correctly models \"allow entry if the guest has an invite AND is NOT on the banned list\"?",
+      "choices": [
+        "if has_invite or not banned:",
+        "if has_invite and banned:",
+        "if has_invite and not banned:",
+        "if not has_invite and banned:"
+      ],
+      "answerIndex": 2,
+      "explanation": "The rule requires both conditions at once (AND), and the banned condition needs to be flipped with not since entry requires banned to be False. if has_invite and not banned: matches the AND gate combining has_invite with the flipped banned signal."
+    },
+    {
+      "type": "short",
+      "question": "In your own words, what role does a comparison operator like > or == play when it's used inside an if statement's condition?",
+      "answer": "It produces a True or False value from comparing two things, and that True/False value is the signal the if statement checks to decide whether to run its block, just like a gate's output feeds a threshold decision.",
+      "acceptable": [
+        "it produces the true/false signal the if statement checks",
+        "turns a comparison into a boolean that the if statement uses to decide",
+        "produces the gate-like true or false input for the decision"
+      ],
+      "explanation": "A comparison operator is what generates the boolean input to the decision. Without it, there would be nothing for the if statement to check — it's the equivalent of a gate's input wire carrying a True or False signal into the decision point."
+    },
+    {
+      "type": "short",
+      "question": "Write an if statement that prints \"Ready\" only when both is_charged is True and is_connected is True, using and.",
+      "answer": "if is_charged and is_connected: print(\"Ready\")",
+      "acceptable": [
+        "if is_charged and is_connected: print('Ready')",
+        "if (is_charged and is_connected): print(\"Ready\")",
+        "if is_charged and is_connected:\\n    print(\"Ready\")"
+      ],
+      "explanation": "The rule requires both conditions simultaneously, which is exactly what and checks for — the if-block only fires when both is_charged and is_connected are True, matching an AND gate's truth table."
+    }
+  ]
+},
+{
+  "id": "4.11",
+  "number": 11,
+  "title": "A half adder — using gates to actually add two bits",
+  "objectives": [
+    "Recall how adding two single binary bits can produce a carry, and identify the four possible input combinations",
+    "Explain why a single XOR gate can produce the correct sum bit but not the carry bit on its own",
+    "Describe how combining an XOR gate and an AND gate builds a half adder",
+    "Trace all four input combinations of a half adder to find its sum and carry outputs"
+  ],
+  "explanation": [
+    "Back in lesson 4.3, you learned to add binary numbers by hand, and you ran into carrying: 1 + 1 in binary isn't a single digit, it's \"10\" — a 0 in that column and a 1 carried into the next one. At the time, that carry was just a rule you followed with a pencil. Now that you know gates, you can ask a sharper question: can a circuit made of gates actually produce both the sum digit AND the carry digit, entirely on its own, with no human doing the carrying by hand? The answer is yes, and the circuit that does it is called a half adder.",
+    "Start by listing every possible way to add two single bits, A and B: 0+0, 0+1, 1+0, and 1+1. Three of those four give you a normal single-digit answer (0, 1, and 1). Only the last one, 1+1, produces a two-digit result: 10 in binary, meaning sum=0 with a carry of 1. Now compare that sum column to the XOR gate's truth table from lesson 4.6: XOR outputs True exactly when its two inputs differ, and False when they match. Check it against the four cases — 0 XOR 0 = 0, 0 XOR 1 = 1, 1 XOR 1 = 0. That's a perfect match for the sum digit in every single case.",
+    "But XOR alone can't be the whole answer, because it never tells you when a carry happened — 1 XOR 1 gives 0, same as 0 XOR 0, so XOR by itself can't distinguish \"no carry, sum zero\" from \"carry happened, sum zero.\" You need a second gate watching specifically for the one case where a carry occurs: both inputs are 1. That's exactly the AND gate's truth table — True only when both inputs are True, False everywhere else. So AND(A, B) gives you the carry bit perfectly, in every one of the four cases, with zero exceptions.",
+    "Put those two gates side by side, both fed the same two inputs A and B, and you've built a half adder: XOR(A, B) gives the sum bit, AND(A, B) gives the carry bit. Feed it A=1, B=1 and it correctly outputs sum=0, carry=1 — exactly the \"10\" you learned to write by hand in lesson 4.3, produced automatically by two gates working side by side. It's called a \"half\" adder because it doesn't yet handle an incoming carry from a previous column — that's a full adder, a circuit built later by chaining half adders together, but that's a story for another day."
+  ],
+  "example": {
+    "problem": "Trace a half adder for inputs A=1, B=0. Find the sum bit (from the XOR gate) and the carry bit (from the AND gate).",
+    "steps": [
+      "Write down the two inputs feeding both gates: A = 1, B = 0.",
+      "Compute the sum bit using the XOR gate: XOR outputs True (1) when the inputs differ, False (0) when they match. Here A and B differ (1 and 0), so sum = 1.",
+      "Compute the carry bit using the AND gate: AND outputs True (1) only when both inputs are True. Here A=1 but B=0, so not both inputs are 1, and carry = 0.",
+      "Combine the results: sum = 1, carry = 0.",
+      "Check this against binary addition by hand from lesson 4.3: 1 + 0 = 1, a single digit with no carry needed — which matches sum=1, carry=0 exactly."
+    ],
+    "answer": "For A=1, B=0, the half adder outputs sum=1 and carry=0, matching ordinary binary addition of 1 + 0 = 1."
+  },
+  "practice": [
+    {
+      "problem": "Trace a half adder for A=0, B=0. Give the sum and carry bits.",
+      "solution": "XOR(0, 0): the inputs match, so XOR outputs 0. AND(0, 0): both inputs need to be 1 for AND to output 1, and neither is, so AND outputs 0. Sum = 0, carry = 0. This matches 0 + 0 = 0 by hand, with no carry."
+    },
+    {
+      "problem": "Trace a half adder for A=0, B=1. Give the sum and carry bits.",
+      "solution": "XOR(0, 1): the inputs differ, so XOR outputs 1. AND(0, 1): both inputs need to be 1, but A is 0, so AND outputs 0. Sum = 1, carry = 0. This matches 0 + 1 = 1 by hand, a single digit with no carry."
+    },
+    {
+      "problem": "Trace a half adder for A=1, B=1, and connect the result back to lesson 4.3's binary addition.",
+      "solution": "XOR(1, 1): the inputs match (both 1), so XOR outputs 0. AND(1, 1): both inputs are 1, so AND outputs 1. Sum = 0, carry = 1. In lesson 4.3, adding 1 + 1 in binary gave the two-digit result \"10\" — a 0 written in that column and a 1 carried to the next column. That's exactly sum=0, carry=1, showing the half adder reproduces carrying automatically."
+    },
+    {
+      "problem": "Explain why a single AND gate by itself could never be used as a half adder's sum output.",
+      "solution": "AND only outputs True when both inputs are True — its truth table is 0,0,0,1 for the four input pairs (0,0), (0,1), (1,0), (1,1). But the correct sum bit needs to be 0,1,1,0 for those same four cases (matching binary addition: 0+0=0, 0+1=1, 1+0=1, 1+1=0-with-carry). AND's truth table doesn't match the sum column at all — it only lines up with when a carry happens, which is why AND is used for the carry output, not the sum."
+    },
+    {
+      "problem": "Suppose you built a circuit with only an XOR gate and no AND gate, and used it to add binary bits. For which input combination would it silently give a wrong overall answer, and why?",
+      "solution": "For A=1, B=1, the XOR-only circuit would output sum=1 XOR 1=0, and since there's no AND gate, it would report no carry at all. But the correct answer to 1+1 is sum=0 with carry=1. Without the carry bit, the circuit would silently report the answer as just \"0,\" losing the information that a carry occurred — which would produce wrong totals the moment this result needed to be added into a further column, exactly the case the AND gate exists to catch."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In a half adder, which gate produces the sum bit?",
+      "choices": ["AND", "OR", "XOR", "NAND"],
+      "answerIndex": 2,
+      "explanation": "XOR's truth table (True when inputs differ, False when they match) exactly matches the sum digit of binary addition across all four input combinations, which is why XOR is used for the sum output."
+    },
+    {
+      "type": "mc",
+      "question": "In a half adder, which gate produces the carry bit?",
+      "choices": ["XOR", "AND", "NOT", "OR"],
+      "answerIndex": 1,
+      "explanation": "AND is True only when both inputs are True, and a carry only happens in binary addition when both bits being added are 1 — the exact same condition, so AND correctly generates the carry bit."
+    },
+    {
+      "type": "mc",
+      "question": "A half adder is given A=1, B=1. What are its sum and carry outputs?",
+      "choices": ["sum=1, carry=0", "sum=0, carry=1", "sum=1, carry=1", "sum=0, carry=0"],
+      "answerIndex": 1,
+      "explanation": "XOR(1,1) = 0 because the inputs match, giving sum=0. AND(1,1) = 1 because both inputs are True, giving carry=1. This matches 1+1=10 in binary, a 0 with a carry of 1."
+    },
+    {
+      "type": "short",
+      "question": "Why can't a single XOR gate alone correctly report the full result of adding two bits?",
+      "answer": "Because XOR gives the correct sum digit but never signals when a carry happened — for both 0+0 and 1+1 it outputs 0, so it can't tell those two very different cases apart without a separate carry output.",
+      "acceptable": [
+        "xor can't distinguish no-carry-zero from carry-happened-zero",
+        "it doesn't produce a carry signal, 0+0 and 1+1 both give xor output 0",
+        "xor only gives the sum, not the carry, so 1+1 looks the same as 0+0"
+      ],
+      "explanation": "XOR(0,0)=0 and XOR(1,1)=0 are identical outputs even though one case has no carry and the other does. Without a second gate tracking the carry separately, the circuit would lose the information that a carry occurred."
+    },
+    {
+      "type": "short",
+      "question": "Why is this circuit called a 'half' adder rather than a full adder?",
+      "answer": "Because it only adds two bits and doesn't account for an incoming carry bit from a previous column — a full adder handles that extra carry-in input, but a half adder doesn't.",
+      "acceptable": [
+        "it doesn't handle an incoming carry bit from a previous column",
+        "no carry-in input, only adds two bits",
+        "it can't accept a carry from an earlier addition, only a full adder can"
+      ],
+      "explanation": "A half adder only has two inputs (A and B) and can't accept a carry produced by a previous column's addition. Handling that extra carry-in requires a more complete circuit called a full adder, built by combining half adders."
+    }
+  ]
+},
+{
+  "id": "4.12",
+  "number": 12,
+  "title": "Mini-project: design a decision circuit",
+  "objectives": [
+    "Combine multiple binary sensor inputs using AND, OR, and NOT gates to model a real-world decision",
+    "Trace a multi-gate circuit through several different input combinations to find its final output",
+    "Explain how a combined-gate circuit's final decision echoes the same 'many signals combine into one threshold decision' shape seen in both logic gates and neurons",
+    "Design an original decision circuit for a new scenario and justify each gate choice"
+  ],
+  "explanation": [
+    "You've now met every piece you need to design a real decision-making circuit from scratch: binary values, AND/OR/NOT gates, Python's and/or/not, if/elif/else, and the half adder, which showed you that combining just two gates can produce a genuinely useful result. This lesson is your chance to put all of it together in one project: a fish-tank alarm system that watches multiple sensors and decides, using nothing but gates, whether to sound an alert. There's no new logic to learn here — this is about seeing how far AND, OR, and NOT can go once you start combining them on purpose.",
+    "Here's the shape worth noticing before you dive in. Back in Phase 3, a neuron didn't fire off a single signal — it summed up many excitatory and inhibitory inputs and compared the total against a threshold, firing only when enough of the right signals lined up. A gate circuit does the same job in a different costume: several True/False inputs get combined through AND/OR/NOT, and the final gate's output is the circuit's one all-or-nothing decision. Neither a neuron nor a logic circuit needs to \"average\" anything or do math on the inputs to make this work — both are simply asking, \"given everything coming in right now, does this cross the line into firing or not?\"",
+    "That's exactly what you'll build below: a circuit with three sensor inputs feeding through gates into one final alarm decision, exactly the way many synapses fed into one neuron's firing decision, and exactly the way many switches fed into one light's on/off decision back in lesson 4.9. The gates are simple, but stacking them is powerful — this is the same basic move, at tiny scale, that real computer chips use billions of times over to make far more complicated decisions.",
+    "As you work through the example and practice problems, keep asking yourself two questions for every gate you place: \"what real-world condition is this gate standing in for?\" and \"does the wiring actually match the rule I want?\" Those two questions are the entire job of a circuit designer, whether the circuit has three gates or three billion."
+  ],
+  "example": {
+    "problem": "Design an alarm system for a home fish tank with three sensors: water_low (True if the water level has dropped too far), temp_bad (True if the temperature is out of safe range), and armed (True if the owner has turned the alarm system on). The alarm should sound if the system is armed AND at least one problem (low water OR bad temperature) is happening. Build the circuit, write it as a Python expression, and trace it for water_low=True, temp_bad=False, armed=True.",
+    "steps": [
+      "Break the rule into pieces: \"at least one problem\" means water_low OR temp_bad — this is an OR gate, since only one of the two needs to be true.",
+      "\"the system is armed AND a problem exists\" means the OR gate's output needs to be combined with armed using an AND gate — the alarm should never sound if the system isn't armed, no matter what the sensors say.",
+      "Draw the circuit: water_low and temp_bad feed into an OR gate; that OR gate's output and armed feed into a final AND gate; the AND gate's output is alarm_sounds.",
+      "Write it as Python: alarm_sounds = armed and (water_low or temp_bad).",
+      "Plug in the values: water_low=True, temp_bad=False, armed=True. First evaluate the inner OR gate: water_low or temp_bad = True or False = True, since OR only needs one True input.",
+      "Now evaluate the outer AND gate: armed and True = True and True = True, since AND needs both sides True and both are.",
+      "The final gate fires: alarm_sounds = True. Just like a neuron only fires once its combined inputs cross the threshold, this circuit only 'fires' the alarm once both the armed-gate and the problem-gate are satisfied together."
+    ],
+    "answer": "alarm_sounds = armed and (water_low or temp_bad); for water_low=True, temp_bad=False, armed=True, the alarm sounds (True), because the system is armed and at least one problem sensor tripped."
+  },
+  "practice": [
+    {
+      "problem": "Using the same fish-tank circuit, alarm_sounds = armed and (water_low or temp_bad), trace it for water_low=False, temp_bad=False, armed=True.",
+      "solution": "First evaluate the OR gate: water_low or temp_bad = False or False = False, since OR needs at least one True input and neither is True. Then the AND gate: armed and False = True and False = False, since AND needs both sides True. alarm_sounds = False — even though the system is armed, there's no problem to report, so the circuit correctly stays quiet."
+    },
+    {
+      "problem": "Trace the same circuit for water_low=True, temp_bad=True, armed=False. Explain in words why the result makes sense.",
+      "solution": "The OR gate: water_low or temp_bad = True or True = True, since at least one (in fact both) inputs are True. The AND gate: armed and True = False and True = False, since AND needs both sides True and armed is False. alarm_sounds = False. This makes sense because the owner turned the system off (armed=False) — even with two real problems happening, the AND gate with armed acts as a master switch that overrides everything else, exactly like a NOT-armed system should never alert."
+    },
+    {
+      "problem": "The tank owner wants to add a fourth condition: a manual test button, test_button, that sounds the alarm immediately regardless of any sensor or the armed switch. Write the new Python expression and explain where the new gate goes in the circuit.",
+      "solution": "Since the test button should override everything else and force the alarm no matter what, it needs to be combined with OR at the very outermost level, after the armed/sensor logic: alarm_sounds = (armed and (water_low or temp_bad)) or test_button. The original armed-and-sensor circuit becomes just one input into a final OR gate, alongside test_button. This way, if test_button is True, the OR gate outputs True automatically, no matter what the rest of the circuit computed — matching the requirement that the button works 'regardless.'"
+    },
+    {
+      "problem": "Design a video game's 'boss door unlock' circuit: the door should unlock if the player has_key AND (defeated_boss OR has_cheat_code). Write the Python expression, then trace it for has_key=True, defeated_boss=False, has_cheat_code=True.",
+      "solution": "door_unlocked = has_key and (defeated_boss or has_cheat_code). Evaluate the inner OR gate first: defeated_boss or has_cheat_code = False or True = True, since OR only needs one True input. Then the AND gate: has_key and True = True and True = True, since both sides are True. door_unlocked = True — the player has the key and satisfied one of the two acceptable ways to prove they're allowed through (in this case, the cheat code instead of defeating the boss)."
+    },
+    {
+      "problem": "A friend suggests replacing the fish-tank circuit's final AND gate with an OR gate: alarm_sounds = armed or (water_low or temp_bad). Explain the real-world problem this change would cause.",
+      "solution": "With OR instead of AND at the top level, the alarm would sound whenever EITHER armed is True OR a problem exists — meaning if armed=True but there's no actual problem (water_low=False, temp_bad=False), the circuit would still output True, sounding the alarm just because the system is turned on. Worse, if armed=False but a real problem occurs, water_low or temp_bad would still be True, so OR would still sound the alarm even though the owner turned the system off. This breaks the intended rule, since armed was supposed to act as a required master switch, which only AND enforces correctly."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In the fish-tank circuit alarm_sounds = armed and (water_low or temp_bad), what real-world role does the outer AND gate play?",
+      "choices": [
+        "It checks whether at least one sensor problem exists",
+        "It acts as a master switch requiring the system to be armed before anything else matters",
+        "It converts the sensor readings from binary to decimal",
+        "It adds the two sensor readings together like a half adder"
+      ],
+      "answerIndex": 1,
+      "explanation": "The outer AND combines the armed signal with the OR'd sensor results, requiring both to be True. This makes armed function as a master switch — no combination of sensor problems can sound the alarm unless the system is also armed."
+    },
+    {
+      "type": "mc",
+      "question": "Why is OR the right gate to combine water_low and temp_bad, rather than AND?",
+      "choices": [
+        "Because the alarm should only sound if both problems happen at the exact same time",
+        "Because OR is always more accurate than AND in real circuits",
+        "Because the alarm should sound if either problem happens on its own, and OR fires when at least one input is True",
+        "Because AND gates cannot accept sensor inputs"
+      ],
+      "answerIndex": 2,
+      "explanation": "The design goal is to catch any single problem, not require both simultaneously. OR's truth table fires when at least one input is True, matching \"water_low OR temp_bad\" exactly, whereas AND would wrongly require both problems at once before alerting."
+    },
+    {
+      "type": "mc",
+      "question": "Which idea from Phase 3 does this mini-project's circuit most directly echo?",
+      "choices": [
+        "A neuron summing multiple inputs and firing only once a threshold is crossed",
+        "The idea that neurons only ever have one input each",
+        "The idea that brains store memories as decimal numbers",
+        "The idea that synapses can only be excitatory, never inhibitory"
+      ],
+      "answerIndex": 0,
+      "explanation": "Just like a neuron combines many excitatory/inhibitory inputs and fires only when the combined result crosses a threshold, this circuit combines several sensor signals through gates and produces one all-or-nothing final decision."
+    },
+    {
+      "type": "short",
+      "question": "In the boss-door circuit door_unlocked = has_key and (defeated_boss or has_cheat_code), what happens if has_key=False, even if defeated_boss=True? Explain using the AND gate's rule.",
+      "answer": "The door stays locked (door_unlocked=False), because AND requires every input to be True, and has_key being False makes the whole AND gate output False no matter what the OR gate inside it computed.",
+      "acceptable": [
+        "door stays locked because and requires both sides true and has_key is false",
+        "false, since and needs all inputs true, and has_key=false breaks that",
+        "door_unlocked is false regardless of defeated_boss because has_key is false and AND needs both true"
+      ],
+      "explanation": "AND's truth table only outputs True when every single input is True. Even if the inner OR gate outputs True (because the boss was defeated), the outer AND still fails because has_key is False, so the door remains locked — the key is a hard requirement no other condition can bypass."
+    },
+    {
+      "type": "short",
+      "question": "Describe, in one or two sentences, how a multi-gate decision circuit like the fish-tank alarm is similar in shape to a neuron, without using any math or weights.",
+      "answer": "Both take in several separate True/False (or on/off) signals and combine them into a single final decision that either fires or doesn't — a neuron by summing signals against a threshold, and a gate circuit by combining signals through AND/OR/NOT, but the underlying shape of 'many inputs, one all-or-nothing decision' is the same in both.",
+      "acceptable": [
+        "both combine many inputs into one all-or-nothing firing decision",
+        "many signals in, one true/false decision out, same shape as a neuron firing",
+        "both take multiple inputs and produce a single fire/no-fire output"
+      ],
+      "explanation": "The key similarity is structural, not mathematical: both a neuron and a gate circuit take multiple separate signals and collapse them into one final True/False (fire/don't-fire) decision, even though a neuron does it by summing against a threshold and a gate circuit does it through AND/OR/NOT logic."
+    }
+  ]
+}
 ];
