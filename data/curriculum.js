@@ -6652,5 +6652,1337 @@ const LESSONS = [
       "explanation": "The key similarity is structural, not mathematical: both a neuron and a gate circuit take multiple separate signals and collapse them into one final True/False (fire/don't-fire) decision, even though a neuron does it by summing against a threshold and a gate circuit does it through AND/OR/NOT logic."
     }
   ]
+},
+
+{
+  "id": "5.1",
+  "number": 1,
+  "title": "What is a dataset? Rows, columns, examples, and features",
+  "objectives": [
+    "Define a dataset as a collection of examples, each described by the same set of features",
+    "Identify rows as examples/observations and columns as features/attributes in a table of data",
+    "Translate a small table of data into a Python list-of-dicts representation",
+    "Read a specific value out of a dataset by naming an example and a feature"
+  ],
+  "explanation": [
+    "Every idea in this phase — averages, spread, probability, even the eventual idea of \"training\" a model — starts from the same place: a dataset. A dataset is just a collection of examples, where every example is described using the same set of measurements. Picture a teacher's grade sheet: each row is one student, and each column is one thing measured about that student, like their quiz score, their attendance, or their grade level. The row is called an example (sometimes an observation), and the column is called a feature (sometimes an attribute). The whole sheet, all the rows and columns together, is the dataset.",
+    "Here's a small one to hold in your head for the rest of this lesson. Five students took a 20-point quiz: Ana scored 18 and is in grade 9, Ben scored 12 and is in grade 10, Cleo scored 20 and is in grade 9, Dev scored 15 and is in grade 11, and Ella scored 9 and is in grade 10. Written as a table, it looks like this: name, score, grade — Ana 18 9, Ben 12 10, Cleo 20 9, Dev 15 11, Ella 9 10. Notice there are 5 rows (5 examples, one per student) and 3 columns (3 features: name, score, grade). Every single row has a value for every single column — that's what makes it a proper dataset rather than just a pile of numbers. If Ben were missing a grade level, that would be a hole in the table, not a fourth feature.",
+    "You already have the perfect tool for representing this in Python, from Phase 2: a list of dictionaries. Each student becomes one dictionary with the same keys, and the whole class becomes a list holding all of them: students = [ {\"name\": \"Ana\", \"score\": 18, \"grade\": 9}, {\"name\": \"Ben\", \"score\": 12, \"grade\": 10}, {\"name\": \"Cleo\", \"score\": 20, \"grade\": 9}, {\"name\": \"Dev\", \"score\": 15, \"grade\": 11}, {\"name\": \"Ella\", \"score\": 9, \"grade\": 10} ]. Each dictionary in the list is one row (one example); the keys inside each dictionary — \"name\", \"score\", \"grade\" — are the columns (the features), and they're identical across every dictionary in the list. To pull out a single value, you index into the list the same way you did in Phase 2, then grab a key: students[1][\"score\"] gives you 12, Ben's score. len(students) tells you how many examples the dataset has, exactly the same len() that's been counting list items and string characters since Phase 2.",
+    "This rows-and-columns shape is universal — it doesn't matter if the dataset describes students, pets, houses, or sensor readings, the same two questions always apply: how many examples do I have (how many rows), and what features describe each one (what are the columns). Almost everything else in this phase, mean, median, mode, spread, is really a question you ask about one single column at a time, running down all the rows. Getting comfortable with \"row = example, column = feature\" now is what makes every later lesson in this phase click into place immediately."
+  ],
+  "example": {
+    "problem": "A vet clinic recorded data on 4 dogs: Rex is 3 years old and weighs 62 pounds, Milo is 7 years old and weighs 18 pounds, Coco is 1 year old and weighs 9 pounds, and Duke is 5 years old and weighs 71 pounds. Write this as a Python list of dictionaries, state how many examples and features the dataset has, and find Coco's weight using indexing.",
+    "steps": [
+      "Identify the features (columns) that describe every dog the same way: name, age, and weight — every dog has all three.",
+      "Identify the examples (rows): there are 4 dogs, so 4 examples, one dictionary per dog.",
+      "Write each dog as a dictionary with matching keys: {\"name\": \"Rex\", \"age\": 3, \"weight\": 62}, {\"name\": \"Milo\", \"age\": 7, \"weight\": 18}, {\"name\": \"Coco\", \"age\": 1, \"weight\": 9}, {\"name\": \"Duke\", \"age\": 5, \"weight\": 71}.",
+      "Put the four dictionaries into one list, in order: dogs = [ {\"name\": \"Rex\", \"age\": 3, \"weight\": 62}, {\"name\": \"Milo\", \"age\": 7, \"weight\": 18}, {\"name\": \"Coco\", \"age\": 1, \"weight\": 9}, {\"name\": \"Duke\", \"age\": 5, \"weight\": 71} ].",
+      "Count rows and columns: len(dogs) is 4, so there are 4 examples; each dictionary has 3 keys (name, age, weight), so there are 3 features.",
+      "Find Coco's weight by indexing: Coco is at position 2 (0-indexed: Rex=0, Milo=1, Coco=2, Duke=3), so dogs[2][\"weight\"] gives 9."
+    ],
+    "answer": "dogs = [{\"name\": \"Rex\", \"age\": 3, \"weight\": 62}, {\"name\": \"Milo\", \"age\": 7, \"weight\": 18}, {\"name\": \"Coco\", \"age\": 1, \"weight\": 9}, {\"name\": \"Duke\", \"age\": 5, \"weight\": 71}] — 4 examples, 3 features (name, age, weight); Coco's weight is dogs[2][\"weight\"] = 9 pounds."
+  },
+  "practice": [
+    {
+      "problem": "A dataset has 8 rows and 5 columns. How many examples does it have, and how many features does each example have?",
+      "solution": "Rows are examples and columns are features, so the dataset has 8 examples, and each example is described by 5 features."
+    },
+    {
+      "problem": "Using the students dataset from the explanation (students = [{\"name\": \"Ana\", \"score\": 18, \"grade\": 9}, {\"name\": \"Ben\", \"score\": 12, \"grade\": 10}, {\"name\": \"Cleo\", \"score\": 20, \"grade\": 9}, {\"name\": \"Dev\", \"score\": 15, \"grade\": 11}, {\"name\": \"Ella\", \"score\": 9, \"grade\": 10}]), what does students[3][\"grade\"] return, and what does len(students) return?",
+      "solution": "students[3] is Dev's dictionary (index 0=Ana, 1=Ben, 2=Cleo, 3=Dev), so students[3][\"grade\"] returns 11. len(students) counts the number of dictionaries in the list, which is 5, matching the 5 students (5 examples) in the dataset."
+    },
+    {
+      "problem": "A librarian wants to build a dataset describing books: title, author, number of pages, and whether it's currently checked out. Write one example row for a single book of your choosing as a Python dictionary, and state which parts are the features.",
+      "solution": "One possible row: {\"title\": \"The Wind\", \"author\": \"J. Rivas\", \"pages\": 240, \"checked_out\": True}. The features are title, author, pages, and checked_out — the four measurements recorded about every book. This one dictionary is a single example (row); the full dataset would be a list of many such dictionaries, one per book, all sharing these same four keys."
+    },
+    {
+      "problem": "A dataset of weather readings has columns temperature, humidity, and wind_speed, with one row per day for 10 days. If a value for humidity is missing on day 7, why is that a problem for the dataset's structure, in terms of rows and columns?",
+      "solution": "A proper dataset requires every row (example) to have a value for every column (feature) it claims to have. If day 7's humidity is missing, that row no longer matches the shape of the other 9 rows — it has a gap in one of its three required features. This doesn't turn humidity into an optional column; it means day 7's row is incomplete and needs to be fixed (filled in, estimated, or removed) before treating the dataset as fully rectangular."
+    },
+    {
+      "problem": "Explain, in your own words, why 'row = example, column = feature' is a useful way to think about a dataset, using the vet clinic dogs example from the worked example above.",
+      "solution": "In the dogs dataset, each row (Rex, Milo, Coco, Duke) is one complete real-world thing being described — one dog — while each column (name, age, weight) is one specific kind of measurement applied consistently to every dog. Thinking this way lets you ask two separate, useful questions: 'how many things do I have data about?' (count the rows) and 'what do I know about each one?' (list the columns) — which is exactly the mental split every later statistics question in this phase relies on, since ideas like the mean or median are computed by looking down a single column across all the rows."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In a dataset table, what does a single row represent?",
+      "choices": [
+        "One feature measured across every example",
+        "One example (observation), described by all the features",
+        "The total count of all examples in the dataset",
+        "A Python function that computes a statistic"
+      ],
+      "answerIndex": 1,
+      "explanation": "A row is one example (or observation) — one complete real-world thing, like one student or one dog — described across all of the dataset's columns (features)."
+    },
+    {
+      "type": "mc",
+      "question": "Given students = [{\"name\": \"Ana\", \"score\": 18}, {\"name\": \"Ben\", \"score\": 12}, {\"name\": \"Cleo\", \"score\": 20}], what does students[2][\"score\"] return?",
+      "choices": [
+        "12",
+        "18",
+        "20",
+        "3"
+      ],
+      "answerIndex": 2,
+      "explanation": "Index 2 (0-indexed) is the third dictionary in the list, Cleo's, so students[2][\"score\"] returns 20."
+    },
+    {
+      "type": "mc",
+      "question": "A dataset of houses has columns price, square_feet, and num_bedrooms, with 40 rows. How many features does each house (example) have?",
+      "choices": [
+        "40",
+        "3",
+        "1",
+        "It depends on the price"
+      ],
+      "answerIndex": 1,
+      "explanation": "Columns are features. This dataset has 3 columns (price, square_feet, num_bedrooms), so every house example has 3 features, regardless of how many rows (40 houses) there are total."
+    },
+    {
+      "type": "short",
+      "question": "In your own words, what is the difference between an example and a feature in a dataset?",
+      "answer": "An example is one full row of the dataset — one specific real-world thing being described (like one student or one dog) — while a feature is one column, a single measurement or attribute recorded the same way for every example (like score or weight).",
+      "acceptable": [
+        "example is a row, feature is a column",
+        "an example is one observation, a feature is one attribute measured about every observation",
+        "rows are examples (individual items), columns are features (the measurements taken about them)"
+      ],
+      "explanation": "Rows and examples are the same idea (one complete observation), and columns and features are the same idea (one consistent measurement taken across all rows) — keeping this pairing straight is the foundation for everything else in this phase."
+    },
+    {
+      "type": "short",
+      "question": "Write a Python list-of-dicts representation for a tiny 2-row dataset of two pets: a cat named Whiskers who is 4 years old, and a dog named Biscuit who is 2 years old.",
+      "answer": "pets = [{\"name\": \"Whiskers\", \"age\": 4}, {\"name\": \"Biscuit\", \"age\": 2}]",
+      "acceptable": [
+        "[{\"name\": \"Whiskers\", \"age\": 4}, {\"name\": \"Biscuit\", \"age\": 2}]",
+        "a list with two dictionaries, one for whiskers age 4 and one for biscuit age 2, both using the keys name and age",
+        "pets = [ {'name': 'Whiskers', 'age': 4}, {'name': 'Biscuit', 'age': 2} ]"
+      ],
+      "explanation": "Each pet becomes one dictionary (one example/row) with the same keys, name and age (the features/columns), and both dictionaries live together in a single list, exactly the pattern used for the students and dogs datasets in this lesson."
+    }
+  ]
+},
+{
+  "id": "5.2",
+  "number": 2,
+  "title": "Mean (average): computing it and what it tells you",
+  "objectives": [
+    "Compute the mean of a list of numbers by summing all values and dividing by the count",
+    "Implement the mean using Phase 2's accumulator pattern in a for loop",
+    "Interpret what the mean represents as a single number summarizing an entire column of a dataset",
+    "Recognize that a single very large or very small value can pull the mean noticeably away from most of the data"
+  ],
+  "explanation": [
+    "Now that you know a dataset's column is just a list of values for one feature, the natural next question is: what's a single number that summarizes that whole column? The most common answer is the mean, which most people just call the average. The mean is computed the same way you've probably already done it by hand: add up every value, then divide by how many values there are. If a column has 5 quiz scores, 18, 12, 20, 15, and 9, the mean is (18 + 12 + 20 + 15 + 9) divided by 5, which is 74 divided by 5, which is 14.8. That single number, 14.8, is meant to represent a 'typical' score for the whole group, even though no student actually scored exactly 14.8.",
+    "You've already written the exact code for this back in Phase 2's accumulator pattern, and even used it directly in the Phase 2 mini-project's average() function — this lesson is really just naming and formalizing something you've already built. Here's the pattern again, applied to a list of scores: start a total variable at 0 before the loop, add every item to it inside the loop, and divide by len() once the loop is done. scores = [18, 12, 20, 15, 9] \\n total = 0 \\n for s in scores: \\n     total = total + s \\n mean = total / len(scores). After the loop, total holds 74, and dividing by len(scores), which is 5, gives 14.8 — matching the by-hand calculation exactly. Notice that dividing by count is doing real work here, and it's the same division-as-splitting-into-equal-parts idea from Phase 1's fractions and ratios lessons: the mean asks, 'if this total were split perfectly evenly across everyone, how much would each one get?'",
+    "The mean is useful precisely because it's a single number, which makes it easy to compare one group against another — you could say Ana's class averaged 14.8 while another class averaged 16.2, without having to compare every single student one at a time. But the mean's biggest weakness comes from exactly how it's computed: because every value gets added into the same total, one unusually large or small value pulls the total (and therefore the mean) noticeably in its direction. Suppose four students score 14, 15, 16, and 15, and a fifth student scores 0 because they were absent and the assignment was recorded as a zero. The mean of all five is (14 + 15 + 16 + 15 + 0) divided by 5, which is 60 divided by 5, which is 12 — dragged down from the 15-ish 'typical' score by that single zero.",
+    "This sensitivity to unusual values, often called outliers, isn't a flaw exactly, but it is something you always need to watch for when the mean is reported to you. A single extremely rich household's income, or a single machine's rare error reading, can shift a mean far away from what 'most' data points actually look like. The next lesson introduces the median, a different way of summarizing a column that handles exactly this kind of situation much more gracefully — but the mean remains the right tool anytime you genuinely care about the total being split evenly, since it uses every single value in the calculation rather than ignoring most of them."
+  ],
+  "example": {
+    "problem": "A pet-sitting service recorded the number of minutes each of 6 dogs spent on a walk: 20, 25, 22, 24, 21, and 90 (the last dog's walk ran long because the owner asked for an extra loop around the park). Compute the mean walk time using the accumulator pattern, and comment on what the 90 does to the result.",
+    "steps": [
+      "List the values: 20, 25, 22, 24, 21, 90. There are 6 values, so len(walks) = 6.",
+      "Set up the accumulator: total = 0.",
+      "Add each value to total one at a time, the same as a for loop would: total = 0 + 20 = 20; total = 20 + 25 = 45; total = 45 + 22 = 67; total = 67 + 24 = 91; total = 91 + 21 = 112; total = 112 + 90 = 202.",
+      "After all 6 values are added, total = 202.",
+      "Divide by the count: mean = total / len(walks) = 202 / 6 = 33.666..., which rounds to about 33.7 minutes.",
+      "Compare this to the other 5 walks, which were all between 20 and 25 minutes — the mean of 33.7 is noticeably higher than every single one of those 5 typical walks, because the one 90-minute walk pulled the total upward."
+    ],
+    "answer": "The mean walk time is about 33.7 minutes (202 / 6), which is higher than all 5 of the 'normal' walks (20-25 minutes) because the single 90-minute outlier pulled the mean upward — the mean doesn't reflect what a typical walk actually looked like here."
+  },
+  "practice": [
+    {
+      "problem": "Compute the mean of the test scores 70, 85, 90, 75, 80 using the sum-then-divide method, showing the running total step by step.",
+      "solution": "Running total: 0 + 70 = 70; 70 + 85 = 155; 155 + 90 = 245; 245 + 75 = 320; 320 + 80 = 400. There are 5 values, so mean = 400 / 5 = 80."
+    },
+    {
+      "problem": "Write a Python for loop using the accumulator pattern that computes the mean of a list called temps = [68, 72, 70, 74, 71], and state what value mean would hold after it runs.",
+      "solution": "total = 0\nfor t in temps:\n    total = total + t\nmean = total / len(temps)\nRunning total: 0+68=68, 68+72=140, 140+70=210, 210+74=284, 284+71=355. len(temps) is 5, so mean = 355 / 5 = 71.0."
+    },
+    {
+      "problem": "A small company has 5 employees earning 40000, 45000, 42000, 48000, and 300000 dollars (the last is the founder). Compute the mean salary, and explain why reporting only this mean to a job applicant could be misleading.",
+      "solution": "Sum: 40000 + 45000 + 42000 + 48000 + 300000 = 475000. Mean = 475000 / 5 = 95000. Reporting only the mean of 95000 would be misleading because four of the five employees earn between 40000 and 48000, far below 95000 — the founder's 300000 salary is an outlier that drags the mean far above what a typical employee actually earns."
+    },
+    {
+      "problem": "If a list of 4 numbers has a mean of 10, what must the sum of those 4 numbers be? Show the algebra, tying it back to how mean is defined.",
+      "solution": "Mean is defined as sum / count, so mean = sum / 4 = 10. Multiplying both sides by 4 (undoing the division, as in Phase 1 algebra): sum = 10 * 4 = 40. The sum of the 4 numbers must be 40."
+    },
+    {
+      "problem": "Two lists both have 5 values. List A is [10, 10, 10, 10, 10] and list B is [0, 0, 0, 0, 50]. Compute the mean of each. Are the means equal, and does that mean the two lists 'look' the same? Explain.",
+      "solution": "Mean of A: (10+10+10+10+10)/5 = 50/5 = 10. Mean of B: (0+0+0+0+50)/5 = 50/5 = 10. Both means are exactly 10, but the lists look completely different — list A has 5 identical, perfectly typical values of 10, while list B has four zeros and one large outlier of 50 that alone produces the same mean. This shows the mean alone can hide very different underlying patterns, which is exactly why later lessons on spread (like variance) matter alongside it."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What is the correct formula for computing the mean of a list of numbers?",
+      "choices": [
+        "The largest value in the list",
+        "The sum of all values divided by the count of values",
+        "The middle value once the list is sorted",
+        "The most frequently occurring value"
+      ],
+      "answerIndex": 1,
+      "explanation": "The mean (average) is computed by adding up every value in the list and dividing that total by how many values there are, i.e. sum / count."
+    },
+    {
+      "type": "mc",
+      "question": "In the accumulator-pattern code for computing a mean (total = 0, then total = total + x inside a for loop, then dividing by len()), what would happen if total = 0 were placed inside the loop instead of before it?",
+      "choices": [
+        "The mean would be computed correctly either way",
+        "total would reset to 0 on every pass, so it would never build up the real sum",
+        "The loop would raise an error and stop running",
+        "len() would return the wrong count"
+      ],
+      "answerIndex": 1,
+      "explanation": "This is the same accumulator-pattern rule from Phase 2: total must start at 0 BEFORE the loop begins. If it were reset inside the loop, every pass would erase the running total, and the final total would just equal the last item added to 0, not the true sum."
+    },
+    {
+      "type": "mc",
+      "question": "A dataset of 5 house prices includes one mansion worth far more than the other 4 houses. What effect does this mansion have on the mean house price?",
+      "choices": [
+        "No effect at all, since the mean ignores the highest value",
+        "It pulls the mean upward, away from what the other 4 typical houses are worth",
+        "It makes the mean equal to the mansion's price exactly",
+        "It automatically gets removed before computing the mean"
+      ],
+      "answerIndex": 1,
+      "explanation": "The mean adds every value into the total before dividing, so one unusually large value (an outlier) raises the total and therefore raises the mean, pulling it away from what the other, more typical values look like."
+    },
+    {
+      "type": "short",
+      "question": "A list of 4 numbers is [5, 7, 6, 50]. Compute the mean, and explain in one sentence why it doesn't feel 'typical' of most of the list.",
+      "answer": "The mean is (5+7+6+50)/4 = 68/4 = 17, which doesn't feel typical because three of the four values (5, 6, 7) are much smaller than 17, and the single outlier 50 is what pulls the mean up that high.",
+      "acceptable": [
+        "mean is 17, it's pulled up by the outlier 50 since three of the four numbers are around 5-7",
+        "17, because 50 is an outlier dragging the average away from the other three small numbers",
+        "the mean is 17 but most values (5,6,7) are far below it due to the 50"
+      ],
+      "explanation": "Sum = 5+7+6+50 = 68, and 68/4 = 17. Since three of the four values cluster around 5-7, the mean of 17 is pulled well above what's 'typical' by the single large outlier, 50."
+    },
+    {
+      "type": "short",
+      "question": "In one sentence, explain what dividing the sum by the count actually represents when computing a mean.",
+      "answer": "Dividing the sum by the count represents splitting the total evenly across every item, asking 'if this total were shared equally among everyone, how much would each one get?'",
+      "acceptable": [
+        "it splits the total equally among all the values, like sharing evenly",
+        "it distributes the sum evenly across every item in the list",
+        "dividing shows what each item would get if the total were shared perfectly evenly"
+      ],
+      "explanation": "This connects back to Phase 1's idea of division as splitting into equal parts: the mean answers the question of what value each item would hold if the total sum were distributed perfectly evenly across all of them."
+    }
+  ]
+},
+{
+  "id": "5.3",
+  "number": 3,
+  "title": "Median: the middle value, and why outliers can mislead the mean",
+  "objectives": [
+    "Find the median of a list with an odd number of values by sorting and taking the middle value",
+    "Find the median of a list with an even number of values by averaging the two middle values",
+    "Explain why the median stays stable when a single outlier is present, unlike the mean",
+    "Choose between mean and median appropriately when an outlier is suspected in the data"
+  ],
+  "explanation": [
+    "The previous lesson ended on a warning: the mean can be dragged far away from what's 'typical' by a single unusually large or small value. The median is a different way to summarize a column that sidesteps this problem entirely, because it doesn't add up every value at all — it just finds the middle one. To compute a median, first sort the values from smallest to largest, then look at the value sitting exactly in the middle of that sorted list. For the 5 scores 18, 12, 20, 15, 9, sort them first: 9, 12, 15, 18, 20. With 5 values, the middle position is the 3rd one (2 values below it, 2 values above it), which is 15. So the median score is 15 — notice this is close to, but not identical to, the mean of 14.8 computed in the previous lesson, since this particular dataset doesn't have any extreme outliers.",
+    "When the list has an even number of values, there's no single middle position — instead there are two values tied for the middle, and the median is the mean of just those two. Take 4 scores: 20, 12, 18, 15. Sorted: 12, 15, 18, 20. With 4 values, the two middle positions are the 2nd and 3rd (15 and 18), so the median is (15 + 18) / 2 = 33 / 2 = 16.5. This uses the exact same mean calculation from the last lesson, sum divided by count, just applied to only those two middle numbers instead of the whole list.",
+    "Now here's where the median really earns its place: revisit the pet-sitting example from the previous lesson, walk times of 20, 25, 22, 24, 21, and 90 minutes, where the mean came out to about 33.7, higher than every single 'normal' walk because of the one 90-minute outlier. Sort those same 6 values instead: 20, 21, 22, 24, 25, 90. With 6 values (even), the two middle positions are the 3rd and 4th, which are 22 and 24, so the median is (22 + 24) / 2 = 46 / 2 = 23. Compare 23 (the median) to 33.7 (the mean): the median sits comfortably among the 5 normal walks, right where a 'typical' walk actually falls, while the mean was pulled upward and doesn't represent any real walk well at all. This is because the median only cares about position in sorted order, not magnitude — whether that last walk had been 90 minutes or 9000 minutes, it would still just be 'the largest value,' and the median wouldn't move an inch.",
+    "This is exactly why household income statistics are almost always reported as medians rather than means: a country's income data always includes a small number of extremely wealthy households whose income numbers are enormous compared to everyone else's, and including them in a mean would make 'average income' look far higher than what a typical household actually earns. The general rule going forward: reach for the mean when you want every value to count equally toward a total (and no big outliers are lurking), and reach for the median when you suspect a few extreme values might otherwise give a misleading picture of what's typical."
+  ],
+  "example": {
+    "problem": "A small neighborhood has 7 households with these yearly incomes, in thousands of dollars: 45, 52, 48, 61, 55, 50, and 400 (one household runs a very successful business). Find the median income, and compare it to the mean to show why the median is the better summary here.",
+    "steps": [
+      "List the values: 45, 52, 48, 61, 55, 50, 400. There are 7 values.",
+      "Sort them from smallest to largest: 45, 48, 50, 52, 55, 61, 400.",
+      "Since 7 is odd, there's a single middle position: the 4th value (3 values below it, 3 above it). Counting: 45(1st), 48(2nd), 50(3rd), 52(4th), 55(5th), 61(6th), 400(7th). The 4th value is 52.",
+      "Median = 52 (thousand dollars).",
+      "For comparison, compute the mean: sum = 45+52+48+61+55+50+400 = 711. Mean = 711 / 7 = 101.57 (thousand dollars), rounding to about 101.6.",
+      "Compare: 6 of the 7 households earn between 45 and 61 (thousand), clustering close to the median of 52. The mean of 101.6 is roughly double every one of those 6 typical incomes, entirely because of the single 400 outlier — the median of 52 is a far more honest description of what a 'typical' household in this neighborhood earns."
+    ],
+    "answer": "The median income is 52 (thousand dollars), which reflects the 6 typical households well, while the mean of about 101.6 (thousand dollars) is pulled far higher by the single 400 outlier and doesn't represent a typical household at all."
+  },
+  "practice": [
+    {
+      "problem": "Find the median of the list 33, 12, 45, 20, 8. Show the sorting step.",
+      "solution": "Sorted: 8, 12, 20, 33, 45. There are 5 values (odd), so the middle position is the 3rd value: 8(1st), 12(2nd), 20(3rd), 33(4th), 45(5th). The median is 20."
+    },
+    {
+      "problem": "Find the median of the list 10, 40, 20, 30. Show the sorting step and the averaging step.",
+      "solution": "Sorted: 10, 20, 30, 40. There are 4 values (even), so the two middle positions are the 2nd and 3rd: 20 and 30. Median = (20 + 30) / 2 = 50 / 2 = 25."
+    },
+    {
+      "problem": "A list of exam scores is 88, 91, 85, 2, 90 (the 2 was a student who accidentally submitted a blank exam). Compute both the mean and the median, and explain which one better represents the typical student's performance.",
+      "solution": "Mean: sum = 88+91+85+2+90 = 356, mean = 356/5 = 71.2. Median: sorted is 2, 85, 88, 90, 91; with 5 values (odd), the middle (3rd) value is 88. The median of 88 far better represents typical performance, since 4 of the 5 students scored between 85 and 91, right around 88 — the mean of 71.2 was pulled far downward by the single 2, which doesn't reflect how the class actually did."
+    },
+    {
+      "problem": "Explain why sorting the list is a required first step before finding the median, using the list 50, 5, 30 as an example of what would go wrong if you skipped it.",
+      "solution": "The median specifically means 'the value in the middle position once everything is arranged smallest to largest' — without sorting, 'the middle of the list' just means whatever happens to be listed in the middle, which carries no meaning. In 50, 5, 30, the unsorted middle value is 5, the smallest number in the whole list — clearly not a sensible 'middle' value. Sorting first gives 5, 30, 50, where the true middle value, 30, is correctly identified as the median."
+    },
+    {
+      "problem": "A dataset has 6 values: 10, 10, 10, 10, 10, 1000. Compute the median and the mean, and explain in one or two sentences why this is a dramatic illustration of the difference between them.",
+      "solution": "Sorted: 10, 10, 10, 10, 10, 1000. With 6 values (even), the two middle positions are the 3rd and 4th, both equal to 10, so median = (10+10)/2 = 10. Mean: sum = 10*5 + 1000 = 1050, mean = 1050/6 = 175. This is dramatic because 5 of the 6 values are identically 10 (about as 'typical' as data can get), yet the mean of 175 is more than 17 times larger than that typical value, entirely because of the single 1000 outlier, while the median of 10 exactly matches what 5 out of 6 values actually are."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What is the first step in finding the median of a list of numbers?",
+      "choices": [
+        "Add all the values together",
+        "Sort the values from smallest to largest",
+        "Find the value that appears most often",
+        "Divide the largest value by the count"
+      ],
+      "answerIndex": 1,
+      "explanation": "The median is defined as the middle value once the data is arranged in order, so sorting from smallest to largest must happen before the middle value (or two middle values) can be identified."
+    },
+    {
+      "type": "mc",
+      "question": "For a sorted list with an EVEN number of values, how is the median found?",
+      "choices": [
+        "Take the single value exactly in the middle",
+        "Average the two values that sit in the two middle positions",
+        "Take the largest of the two middle values only",
+        "The median doesn't exist for even-length lists"
+      ],
+      "answerIndex": 1,
+      "explanation": "With an even count, there's no single middle position, so the median is defined as the mean (sum divided by 2) of the two values tied for the middle position."
+    },
+    {
+      "type": "mc",
+      "question": "Why does the median stay stable when a dataset contains one extreme outlier, unlike the mean?",
+      "choices": [
+        "Because the median automatically deletes outliers before calculating",
+        "Because the median only depends on which position a value holds once sorted, not on how large or small that value actually is",
+        "Because the median is always exactly equal to the mean",
+        "Because outliers are impossible in real datasets"
+      ],
+      "answerIndex": 1,
+      "explanation": "The median only cares about sorted position — the outlier is still just 'the largest value' whether it's slightly large or enormously large, so its exact size never affects where the middle position falls. The mean, by contrast, adds every value's actual size into the total, so a huge outlier directly inflates it."
+    },
+    {
+      "type": "short",
+      "question": "A neighborhood's incomes are mostly between 40 and 60 (thousand dollars), except for one household earning 900 (thousand dollars). Would you recommend reporting the mean or the median as the 'typical' income, and why?",
+      "answer": "The median, because a single extremely large outlier like the 900 household would pull the mean far above what most households actually earn, while the median stays close to the cluster of typical incomes between 40 and 60 since it only depends on middle position, not the outlier's actual size.",
+      "acceptable": [
+        "median, because the outlier income would distort the mean but not the median",
+        "report the median since one huge value would drag the mean way up",
+        "median is better here to avoid the 900 outlier skewing the typical value"
+      ],
+      "explanation": "This mirrors the household-income example from the lesson: the median resists the pull of a single extreme value because it only depends on sorted position, making it the more honest summary of what's typical whenever a big outlier is present."
+    },
+    {
+      "type": "short",
+      "question": "Find the median of the list 100, 4, 6, 8, 2 and show your sorted list.",
+      "answer": "Sorted: 2, 4, 6, 8, 100. With 5 values (odd), the middle (3rd) value is 6, so the median is 6.",
+      "acceptable": [
+        "sorted is 2,4,6,8,100 and the median is 6",
+        "6, since sorting gives 2 4 6 8 100 and the middle one is 6",
+        "median = 6"
+      ],
+      "explanation": "Sorting 100, 4, 6, 8, 2 from smallest to largest gives 2, 4, 6, 8, 100. With 5 values, the middle (3rd) position holds 6, which is the median."
+    }
+  ]
+},
+{
+  "id": "5.4",
+  "number": 4,
+  "title": "Mode, and comparing mean/median/mode on the same dataset",
+  "objectives": [
+    "Define the mode as the most frequently occurring value in a list",
+    "Identify datasets with no mode, one mode, or multiple modes (bimodal/multimodal)",
+    "Compute mean, median, and mode on the same shared dataset and compare the results",
+    "Choose the most appropriate measure of center (mean, median, or mode) for a given situation and data type"
+  ],
+  "explanation": [
+    "You now have two ways to summarize a column with a single number: the mean (sum divided by count) and the median (the middle value once sorted). This lesson adds a third: the mode, which is simply the value that appears most often in the data. If a shoe store sells sizes 8, 9, 8, 10, 8, and 9 over one afternoon, size 8 appears three times, more than any other size, so the mode is 8. Finding the mode doesn't require any sorting or arithmetic at all — it just requires counting how many times each distinct value shows up, and reporting whichever value's count is highest.",
+    "Unlike the mean and median, which always produce exactly one number, a dataset can have zero, one, or several modes. If every value in a list appears exactly once (say, 4, 7, 2, 9, 1), there's no value that appears 'most' often since they're all tied at once each — this dataset simply has no mode. If two different values are tied for the highest count (say, 8 appears three times and 9 also appears three times, more than anything else), the dataset has two modes and is called bimodal; three or more tied-for-most values makes it multimodal. This makes the mode the only one of the three measures where 'how many answers are there' is itself part of the answer.",
+    "The mode is also the only one of the three measures that works sensibly on data that isn't numeric at all. You can't take the mean or median of a list of favorite colors (\"red\", \"blue\", \"red\", \"green\", \"red\") because there's no meaningful way to add colors together or sort them smallest-to-largest — but you absolutely can find the mode, since it's just the most frequently occurring category, which here is \"red\" (appearing 3 times). This makes mode the go-to measure whenever a feature's values are categories or labels rather than genuine numbers you could do arithmetic on.",
+    "Let's now put all three measures side by side on one shared dataset, the same 7 neighborhood incomes (in thousands) from the previous lesson: 45, 48, 50, 52, 55, 61, 400. The mean was about 101.6 (dragged high by the 400 outlier), the median was 52 (representing the typical household well), and checking for a mode: every one of these 7 values is different, so this dataset has no mode at all. This single example shows exactly when to reach for each measure: use the mean when you want every value's exact size to count and no big outliers are present (like averaging a class's evenly-spread test scores); use the median when outliers might distort the picture and you want a robust sense of 'typical' (like income, or house prices); and use the mode when you care about which single value or category is most common, especially for non-numeric data (like the most popular shoe size to keep in stock, or a survey's most common answer). None of the three is universally \"best\" — each answers a slightly different question about the same column of data, and knowing which question you're actually asking is the real skill this whole phase has been building toward."
+  ],
+  "example": {
+    "problem": "A pizza shop recorded the number of toppings ordered on 8 pizzas one evening: 2, 3, 2, 1, 2, 4, 3, 2. Find the mean, median, and mode of this dataset, and explain what each one tells the shop owner.",
+    "steps": [
+      "Mean: sum the 8 values: 2+3+2+1+2+4+3+2 = 19. Divide by count: mean = 19 / 8 = 2.375 toppings.",
+      "Median: sort the values first: 1, 2, 2, 2, 2, 3, 3, 4. There are 8 values (even), so the two middle positions are the 4th and 5th: both are 2. Median = (2 + 2) / 2 = 2.",
+      "Mode: count how often each value appears: 1 appears once, 2 appears four times, 3 appears twice, 4 appears once. The value 2 appears most often (4 times), so the mode is 2.",
+      "Compare all three: mean = 2.375, median = 2, mode = 2. All three land close together here since there's no extreme outlier pulling the mean away.",
+      "Interpret for the shop owner: the mode (2) is the single most useful number for deciding how many toppings to prep extra of, since it directly tells them the single most common order size, which the mean and median can't specify as precisely (an order of exactly 2.375 toppings isn't a real order anyone can place)."
+    ],
+    "answer": "Mean = 2.375, median = 2, mode = 2. The mode is most directly useful for stocking decisions since it names the single most common order size, while the mean and median both confirm that a typical order clusters around 2 toppings."
+  },
+  "practice": [
+    {
+      "problem": "Find the mode of the list 5, 7, 5, 9, 5, 7, 2. Show the count for each distinct value.",
+      "solution": "Counts: 5 appears 3 times, 7 appears 2 times, 9 appears 1 time, 2 appears 1 time. The value with the highest count is 5 (3 times), so the mode is 5."
+    },
+    {
+      "problem": "Find the mode of the list 3, 3, 6, 6, 9. Explain why this dataset is called bimodal.",
+      "solution": "Counts: 3 appears 2 times, 6 appears 2 times, 9 appears 1 time. Both 3 and 6 are tied for the highest count (2 each), more than any other value, so there are two modes, 3 and 6. A dataset with exactly two tied-for-most values like this is called bimodal."
+    },
+    {
+      "problem": "A survey asks 6 people their favorite season: summer, winter, spring, summer, fall, summer. Find the mode, and explain why computing a mean or median for this data wouldn't make sense.",
+      "solution": "Counts: summer appears 3 times, winter 1 time, spring 1 time, fall 1 time. Summer has the highest count, so the mode is summer. A mean or median wouldn't make sense here because seasons are categories (labels), not numbers — there's no way to add \"summer\" and \"winter\" together or decide which season is numerically 'greater' to sort them, so only the mode (most frequent category) is a meaningful measure for this kind of data."
+    },
+    {
+      "problem": "For the dataset 4, 8, 15, 16, 23, every value appears exactly once. What is the mode of this dataset, and why?",
+      "solution": "Since every value (4, 8, 15, 16, 23) appears exactly once, there's no value that occurs more often than the others — they're all tied at a count of 1. This dataset has no mode at all, which is a perfectly valid outcome; not every dataset needs to have one."
+    },
+    {
+      "problem": "Using the same pizza topping data from the worked example (2, 3, 2, 1, 2, 4, 3, 2), the shop owner adds one very unusual order: a pizza with 20 toppings. Recompute the mean, median, and mode with this new value included, and explain which measure changed the most and why.",
+      "solution": "New list: 2, 3, 2, 1, 2, 4, 3, 2, 20 (9 values). Mean: sum = 19 + 20 = 39, mean = 39/9 = 4.33 (up sharply from 2.375). Median: sorted is 1, 2, 2, 2, 2, 3, 3, 4, 20; with 9 values (odd), the middle (5th) value is 2, so median = 2 (unchanged). Mode: counts are 1 once, 2 four times, 3 twice, 4 once, 20 once — mode is still 2 (unchanged). The mean changed the most, jumping from 2.375 to 4.33, because it adds every value's actual size into the total and the 20-topping order is a large outlier; the median and mode barely moved because they depend on position and frequency rather than the outlier's actual size."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "How is the mode of a dataset defined?",
+      "choices": [
+        "The sum of all values divided by the count",
+        "The middle value once the data is sorted",
+        "The value that occurs most frequently in the data",
+        "The largest value minus the smallest value"
+      ],
+      "answerIndex": 2,
+      "explanation": "The mode is the most frequently occurring value in the dataset — found by counting how many times each distinct value appears and picking the one with the highest count."
+    },
+    {
+      "type": "mc",
+      "question": "A dataset is 6, 6, 9, 9, 3. What best describes its mode?",
+      "choices": [
+        "It has no mode",
+        "It is bimodal, with modes 6 and 9",
+        "Its single mode is 3",
+        "Its single mode is 9 only"
+      ],
+      "answerIndex": 1,
+      "explanation": "6 appears twice and 9 appears twice, tied for the highest count, while 3 appears only once. Since two different values are tied for most frequent, the dataset is bimodal with modes 6 and 9."
+    },
+    {
+      "type": "mc",
+      "question": "Why is the mode especially useful for categorical (non-numeric) data, like favorite colors or survey answers?",
+      "choices": [
+        "Because categorical data always has exactly one mode",
+        "Because the mode only requires counting how often each category appears, with no need to add or sort the values",
+        "Because categorical data can always be converted into numbers first",
+        "Because the mean and median are always more accurate than the mode"
+      ],
+      "answerIndex": 1,
+      "explanation": "The mean requires adding values and the median requires sorting them smallest-to-largest, neither of which is meaningful for categories like colors or survey labels. The mode only needs counting occurrences, which works for any kind of data, numeric or not."
+    },
+    {
+      "type": "short",
+      "question": "For the dataset 10, 12, 10, 15, 10, 20, compute the mean, median, and mode, and state which one is most affected if the 20 were replaced by 200.",
+      "answer": "Mean = (10+12+10+15+10+20)/6 = 77/6 = 12.83. Median: sorted is 10,10,10,12,15,20, so the middle two (3rd and 4th) are 10 and 12, median = 11. Mode = 10 (appears 3 times, more than any other value). If 20 were replaced by 200, the mean would be most affected, since it directly sums in the outlier's size, while the median and mode would barely change.",
+      "acceptable": [
+        "mean 12.83, median 11, mode 10; the mean would change the most if 20 became 200",
+        "mean=12.83, median=11, mode=10, and mean is most sensitive to the outlier swap",
+        "mean about 12.8, median 11, mode 10 -- mean reacts most to changing 20 to 200"
+      ],
+      "explanation": "Mean sums every value (77/6 ≈ 12.83), median averages the two middle sorted values (10 and 12, giving 11), and mode picks the most frequent value (10, appearing 3 times). Since the mean incorporates every value's actual magnitude, swapping 20 for 200 would push it up sharply, while the median and mode, which depend on position and frequency rather than magnitude, would hardly move."
+    },
+    {
+      "type": "short",
+      "question": "In one or two sentences, explain when you would prefer to report the mode instead of the mean or median.",
+      "answer": "You'd prefer the mode when you care about which single value or category occurs most often (especially for non-numeric/categorical data, or when you want to know the single most common outcome, like the most popular shoe size), rather than a number representing a numeric center of the data.",
+      "acceptable": [
+        "when data is categorical or you want the single most common value/category",
+        "mode is best for non-numeric data or when you want the most frequent outcome",
+        "use mode when you need to know the single most popular value, especially with categories"
+      ],
+      "explanation": "The mode is the right choice whenever the question is 'what's the single most common value or category,' which is the only sensible measure for non-numeric data and is often the most actionable measure even for numeric data, like deciding which single product size to stock the most of."
+    }
+  ]
+},
+{
+  "id": "5.5",
+  "number": 5,
+  "title": "Range and why spread matters",
+  "objectives": [
+    "Compute the range of a dataset as max minus min",
+    "Explain why two datasets can share the same mean but tell very different stories",
+    "Use range as a first, quick measure of how spread out a dataset is",
+    "Recognize situations where 'center' alone (mean, median, or mode) hides important information"
+  ],
+  "explanation": [
+    "You've spent the last few lessons learning three ways to describe the 'center' of a dataset: the mean, the median, and the mode. Each one answers a version of the question 'what's typical here?' But center is only half the story. Two datasets can have the exact same mean and still behave completely differently in practice, because they differ in how spread out their values are. This lesson introduces the simplest possible way to measure that spread: the range, which is just the biggest value minus the smallest value, max - min.",
+    "Here's why this matters with a concrete example. Imagine two students, Amy and Ben, who both average exactly 80 on five tests. Amy's scores are 78, 80, 81, 79, 82 — she's steady, always landing close to 80. Ben's scores are 50, 95, 100, 60, 95 — he swings wildly between disaster and near-perfect. If you only report the mean, both students look identical: 'averages 80.' But anyone choosing between them (a scholarship committee, a tutor deciding who needs help, Ben himself trying to predict his next test) needs to know that Amy is dependably an 80-ish student while Ben is a coin flip between a D and an A. The mean alone erases that entire difference. This is the same lesson you saw with outliers and the median back in lesson 5.3, but pointed at a new question: not 'can one weird value distort the center,' but 'does knowing the center even tell you what you need to know.'",
+    "Range gives you the fastest possible check on this. For Amy: range = 82 - 78 = 4. For Ben: range = 100 - 50 = 50. Even though their means are identical, Ben's range is more than ten times larger than Amy's. That single number, computed with nothing more than subtraction, already tells you these two datasets have very different personalities. Range is popular precisely because it's cheap: no sorting the whole list mentally, no averaging, just find the biggest value, find the smallest value, and subtract — a job you could hand to a simple accumulator-style scan of a list, keeping a running max and running min as you loop through, the same pattern you used for running totals back in Phase 2.",
+    "Range does have a weak spot worth flagging honestly: because it only looks at the two most extreme values, it can be thrown off by a single freak outlier and it says nothing about what's happening in between. If Ben had one 100 and four scores tightly packed at 60, the range would look identical to a case where his scores were evenly scattered across the whole 50-100 stretch — same max, same min, same range, very different overall spread. That's exactly the gap the next two lessons close: variance and standard deviation give you a way to measure spread that accounts for every value, not just the two extremes. Range is your quick first look; the tools coming next are the fuller picture."
+  ],
+  "example": {
+    "problem": "Two vending machines are each restocked to have an average of 20 snacks per slot. Machine A's slot counts over a week are: 19, 20, 21, 20, 20. Machine B's slot counts are: 5, 35, 15, 30, 15. Find the range of each machine's counts and explain what that tells a technician deciding which machine needs closer monitoring.",
+    "steps": [
+      "Find Machine A's max and min: max = 21, min = 19.",
+      "Compute Machine A's range: 21 - 19 = 2.",
+      "Find Machine B's max and min: max = 35, min = 5.",
+      "Compute Machine B's range: 35 - 5 = 30.",
+      "Compare: both machines could have the same mean (verify: A's mean = (19+20+21+20+20)/5 = 100/5 = 20; B's mean = (5+35+15+30+15)/5 = 100/5 = 20), so a report that only listed 'average 20 snacks' would make them look identical.",
+      "Interpret the ranges: Machine A's range of 2 says its slots stay tightly clustered near 20 — predictable and low-risk. Machine B's range of 30 says its slots swing from nearly empty (5) to overflowing (35) — a technician should investigate Machine B first, since a slot count of 5 risks running out even though the average looks fine."
+    ],
+    "answer": "Machine A's range is 2; Machine B's range is 30. Even though both average 20 snacks per slot, Machine B is far less predictable and deserves closer monitoring, because its range shows some slots are nearly empty while others are overstuffed."
+  },
+  "practice": [
+    {
+      "problem": "A recipe calls for baking at a temperature that should stay close to 350 degrees. An oven's actual readings over six checks are: 348, 351, 349, 352, 347, 350. Find the range.",
+      "solution": "Find the max: 352. Find the min: 347. Range = 352 - 347 = 5. The oven's temperature stays within a tight 5-degree band, suggesting it's holding steady near 350 as intended."
+    },
+    {
+      "problem": "Two delivery drivers each average 30 minutes per delivery. Driver X's times: 28, 31, 29, 32, 30. Driver Y's times: 10, 50, 15, 55, 20. Compute both ranges and explain which driver a customer should expect more consistent service from.",
+      "solution": "Driver X: max = 32, min = 28, range = 32 - 28 = 4. Driver Y: max = 55, min = 10, range = 55 - 10 = 45. Driver X's small range of 4 means deliveries reliably land close to 30 minutes. Driver Y's huge range of 45 means a customer might get lucky with a 10-minute delivery or wait almost an hour for a 55-minute one — even though both drivers average 30 minutes, X is the far more predictable choice."
+    },
+    {
+      "problem": "A dataset of daily step counts is: 8000, 8200, 7900, 8100, 30000, 8050. Find the range, and explain why this range might be misleading about the 'typical' day.",
+      "solution": "Max = 30000, min = 7900. Range = 30000 - 7900 = 22100. This range is huge, but it's driven almost entirely by the single outlier of 30000 — every other day is packed tightly between 7900 and 8200. Just like an outlier can drag the mean away from the 'typical' value (lesson 5.3), a single outlier can make the range look far larger than what a typical day actually looks like. The range alone can't tell you whether the spread is spread evenly or caused by one freak value."
+    },
+    {
+      "problem": "A class's quiz scores (out of 10) are: 6, 7, 8, 7, 6, 9, 7. Find the range of these scores.",
+      "solution": "Max = 9, min = 6. Range = 9 - 6 = 3. The scores are packed into a fairly narrow 3-point band, suggesting the class performed fairly consistently on this quiz."
+    },
+    {
+      "problem": "You're comparing two stock investments that both averaged a $5 gain per day last week. Investment P's daily gains: 4, 5, 6, 5, 5. Investment Q's daily gains: -20, 30, -10, 25, 0. Find both ranges and explain which investment is riskier even though the average gain is identical.",
+      "solution": "Investment P: max = 6, min = 4, range = 6 - 4 = 2. Investment Q: max = 30, min = -20, range = 30 - (-20) = 50. Even though both average a $5 gain per day, Investment Q's range of 50 shows it swings between big losses and big gains, while Investment P's range of 2 shows steady, small daily changes. Investment Q is far riskier, since the same $5 average could result from a terrible day and a great day canceling out, rather than five stable days like Investment P."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "How is the range of a dataset calculated?",
+      "choices": [
+        "The sum of all values divided by the count",
+        "The maximum value minus the minimum value",
+        "The middle value when the data is sorted",
+        "The most frequently occurring value"
+      ],
+      "answerIndex": 1,
+      "explanation": "Range = max - min. It measures the total spread by looking at the gap between the largest and smallest values in the dataset."
+    },
+    {
+      "type": "mc",
+      "question": "Two datasets have the exact same mean but very different ranges. What does this tell you?",
+      "choices": [
+        "The datasets must actually be identical",
+        "The mean was calculated incorrectly for one of them",
+        "One dataset's values are more tightly clustered near the mean, while the other's are more spread out",
+        "The dataset with the larger range must have more data points"
+      ],
+      "answerIndex": 2,
+      "explanation": "Two datasets can share an identical mean while behaving very differently — a small range means values stay close together, while a large range means values swing widely, even if they average out to the same center."
+    },
+    {
+      "type": "mc",
+      "question": "What is a key weakness of using range to measure spread?",
+      "choices": [
+        "It can only be computed for even numbers of data points",
+        "It requires sorting the entire dataset before it can be used at all",
+        "It only looks at the two most extreme values, so a single outlier can distort it and it ignores everything in between",
+        "It always gives the same answer as the mean"
+      ],
+      "answerIndex": 2,
+      "explanation": "Because range only depends on the maximum and minimum, one unusual extreme value can make the range look large even if the rest of the data is tightly packed, and it tells you nothing about how the values in between are distributed."
+    },
+    {
+      "type": "short",
+      "question": "A dataset is: 12, 15, 11, 14, 13. Compute its range and show your work.",
+      "answer": "Range = 15 - 11 = 4. Max is 15, min is 11, and 15 minus 11 equals 4.",
+      "acceptable": [
+        "4",
+        "range is 4 because max 15 minus min 11 is 4",
+        "15 - 11 = 4"
+      ],
+      "explanation": "Scan the list for the maximum (15) and minimum (11), then subtract: 15 - 11 = 4."
+    },
+    {
+      "type": "short",
+      "question": "Why can two students with identical test-score averages still need very different kinds of support or attention?",
+      "answer": "Because the mean only describes the center, not the spread — one student's scores might cluster tightly near the average (consistent performance), while the other's scores might swing wildly between very low and very high, meaning they need help with consistency even though their average looks fine.",
+      "acceptable": [
+        "same mean can hide very different spread, one consistent one inconsistent",
+        "average doesn't show how spread out the scores are, one student could be volatile",
+        "identical averages can come from very different ranges of scores"
+      ],
+      "explanation": "The mean collapses a whole dataset into one 'center' number, discarding information about spread. Two students can average the same score while one is steady and the other alternates between failing and acing tests — a difference only a spread measure like range reveals."
+    }
+  ]
+},
+{
+  "id": "5.6",
+  "number": 6,
+  "title": "Variance: measuring how far values typically stray from the mean",
+  "objectives": [
+    "Compute the deviation of each data point from the mean",
+    "Explain why deviations are squared before being averaged, rather than added directly",
+    "Calculate the population variance of a small dataset step by step using a calculation table",
+    "Interpret a larger variance as evidence of more spread, and a smaller variance as evidence of tighter clustering"
+  ],
+  "explanation": [
+    "Lesson 5.5 showed that range gives you a fast but rough sense of spread, since it only looks at the two extreme values and ignores everyone in between. Variance fixes that blind spot by using every single value in the dataset to measure spread. The core idea is simple: for each data point, measure how far it strays from the mean — that distance is called its deviation — and then combine all those deviations into one number that represents the 'typical' amount of straying across the whole dataset.",
+    "The tricky part is how to combine the deviations, and this is where a clever trick comes in. If you just add up the raw deviations (value minus mean) for every point, you always get zero — the points above the mean and the points below the mean cancel each other out perfectly, by the very definition of the mean as a balancing point. Squaring each deviation before combining them fixes this in two ways at once: squaring a negative number makes it positive, so deviations below the mean stop canceling out deviations above it, and squaring also weights larger deviations more heavily than smaller ones (a deviation of 4 becomes 16, while a deviation of 2 becomes only 4 — four times bigger, not just twice), which matches the intuition that a value way out from the mean should count more toward 'spread' than a value only slightly off. Once every deviation is squared, you average those squared deviations the same way you learned to average anything back in lesson 5.2: sum them up and divide by how many there are. That average of squared deviations is the variance. In this course we always divide by N, the total count of data points — this is called population variance, and it's the simplest version to compute by hand; you may encounter a dividing-by-(N-1) version called sample variance in later study, but N works fine for everything here.",
+    "Let's build one from scratch with a small dataset: 2, 4, 4, 4, 5, 5, 7, 9. First, find the mean: sum = 2+4+4+4+5+5+7+9 = 40, count = 8, mean = 40/8 = 5. Now build a table with each value's deviation (value - mean) and squared deviation: 2 has deviation -3 (squared 9), 4 has deviation -1 (squared 1) and this repeats for the three 4's, 5 has deviation 0 (squared 0) and repeats for both 5's, 7 has deviation 2 (squared 4), and 9 has deviation 4 (squared 16). Summing the squared deviations: 9+1+1+1+0+0+4+16 = 32. Dividing by the count of 8 gives a variance of 32/8 = 4. Notice this is exactly the same accumulator pattern you used for computing a mean in Phase 2 — a running total built up one loop iteration at a time — just with an extra squaring step folded into each pass through the list.",
+    "So what does a variance of 4 actually tell you? On its own, not much you can picture directly, because the units are squared: if the original data were test scores, variance is measured in 'points squared,' which isn't a unit anyone experiences directly. What variance is great for is comparison: a dataset with variance 4 is more tightly clustered around its mean than a dataset with variance 40, and less tightly clustered than a dataset with variance 0.5. Go back to Amy and Ben from lesson 5.5 — Amy's steady scores would produce a small variance, while Ben's wild swings would produce a much larger one, even though both average 80. The next lesson, 5.7, fixes the squared-units problem by taking the square root of variance to get back to the original, human-readable units."
+  ],
+  "example": {
+    "problem": "A small coffee shop records the number of customers served in five consecutive hours: 10, 14, 12, 16, 8. Compute the population variance of this dataset, showing every step of the calculation table.",
+    "steps": [
+      "Find the mean: sum = 10+14+12+16+8 = 60, count = 5, mean = 60/5 = 12.",
+      "Build the deviation for each value (value - mean): 10-12=-2, 14-12=2, 12-12=0, 16-12=4, 8-12=-4.",
+      "Square each deviation: (-2)^2=4, 2^2=4, 0^2=0, 4^2=16, (-4)^2=16.",
+      "Sum the squared deviations: 4+4+0+16+16=40.",
+      "Divide by the count (N=5) to get variance: 40/5=8."
+    ],
+    "answer": "The population variance is 8. On average, an hour's customer count squared-deviates by 8 'customers squared' from the mean of 12 — the next lesson will convert this back into a normal customer-count unit."
+  },
+  "practice": [
+    {
+      "problem": "A dataset of five plant heights (in cm) is: 20, 22, 18, 24, 16. Compute the population variance, showing the mean, each deviation, each squared deviation, and the final variance.",
+      "solution": "Mean: sum = 20+22+18+24+16 = 100, count = 5, mean = 100/5 = 20. Deviations: 20-20=0, 22-20=2, 18-20=-2, 24-20=4, 16-20=-4. Squared deviations: 0, 4, 4, 16, 16. Sum of squared deviations: 0+4+4+16+16=40. Variance = 40/5 = 8."
+    },
+    {
+      "problem": "Using the same dataset from the lesson's worked example — customer counts 10, 14, 12, 16, 8, with mean 12 and variance 8 — explain in words why simply averaging the raw deviations (-2, 2, 0, 4, -4) instead of squaring them would fail to measure spread.",
+      "solution": "Adding the raw deviations gives -2+2+0+4-4 = 0, and averaging zero always gives zero, no matter how spread out the actual data is — this happens for every dataset, because deviations above the mean and below the mean always cancel out exactly by the definition of the mean. Squaring first (turning -2 and -4 into positive 4 and 16) prevents this cancellation, so the result actually reflects how far the values typically stray from the mean instead of always coming out to zero."
+    },
+    {
+      "problem": "A six-value dataset of daily rainfall in mm is: 0, 0, 2, 2, 4, 4. Compute the population variance step by step.",
+      "solution": "Mean: sum = 0+0+2+2+4+4 = 12, count = 6, mean = 12/6 = 2. Deviations: 0-2=-2, 0-2=-2, 2-2=0, 2-2=0, 4-2=2, 4-2=2. Squared deviations: 4, 4, 0, 0, 4, 4. Sum of squared deviations = 4+4+0+0+4+4 = 16. Variance = 16/6 = 2.666... (about 2.67)."
+    },
+    {
+      "problem": "Dataset A is 5, 5, 5, 5, 5 (all identical). Compute its variance and explain what a variance of zero means physically.",
+      "solution": "Mean = (5+5+5+5+5)/5 = 25/5 = 5. Deviations: 0, 0, 0, 0, 0 (every value equals the mean). Squared deviations: 0, 0, 0, 0, 0. Sum = 0. Variance = 0/5 = 0. A variance of zero means every single value in the dataset is exactly equal to the mean — there is no spread at all, the data is perfectly consistent."
+    },
+    {
+      "problem": "A dataset of test scores is: 60, 70, 80, 90, 100. Compute the population variance, and compare it conceptually to a dataset of 78, 79, 80, 81, 82 (which also has mean 80) without computing the second dataset's variance exactly — just reason about which should be larger.",
+      "solution": "Mean of 60,70,80,90,100: sum = 60+70+80+90+100 = 400, count = 5, mean = 400/5 = 80. Deviations: -20, -10, 0, 10, 20. Squared deviations: 400, 100, 0, 100, 400. Sum = 400+100+0+100+400 = 1000. Variance = 1000/5 = 200. The second dataset (78,79,80,81,82) has the same mean of 80 but every value sits within just 2 of the mean, compared to swings as large as 20 in the first dataset — so its deviations, and therefore its squared deviations and variance, must be far smaller than 200, since squaring small deviations produces small results."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "Why are deviations squared before being averaged to compute variance?",
+      "choices": [
+        "Squaring makes the numbers smaller and easier to work with",
+        "Squaring prevents positive and negative deviations from canceling to zero, and weights larger deviations more heavily",
+        "Squaring converts the deviations into percentages",
+        "Squaring is only done to keep the units the same as the original data"
+      ],
+      "answerIndex": 1,
+      "explanation": "Without squaring, positive and negative deviations always cancel to exactly zero, since the mean is a balancing point. Squaring makes every deviation positive so they don't cancel, and it magnifies larger deviations more than smaller ones."
+    },
+    {
+      "type": "mc",
+      "question": "For the dataset 2, 4, 4, 4, 5, 5, 7, 9 (mean = 5), what is the population variance?",
+      "choices": [
+        "8",
+        "4",
+        "32",
+        "5.6"
+      ],
+      "answerIndex": 1,
+      "explanation": "The squared deviations are 9, 1, 1, 1, 0, 0, 4, 16, which sum to 32. Dividing by the count of 8 gives a variance of 32/8 = 4."
+    },
+    {
+      "type": "mc",
+      "question": "A dataset has a variance of 0. What does this tell you about the data?",
+      "choices": [
+        "The dataset has no mean",
+        "Every value in the dataset is identical to the mean, so there is no spread",
+        "The dataset must contain only negative numbers",
+        "The mean must be zero"
+      ],
+      "answerIndex": 1,
+      "explanation": "A variance of 0 means every squared deviation is 0, which only happens when every value equals the mean exactly — there is zero spread in the data."
+    },
+    {
+      "type": "short",
+      "question": "Compute the population variance of the dataset 1, 3, 5, 7, 9, showing the mean, deviations, squared deviations, and final variance.",
+      "answer": "Mean = (1+3+5+7+9)/5 = 25/5 = 5. Deviations: -4, -2, 0, 2, 4. Squared deviations: 16, 4, 0, 4, 16. Sum = 40. Variance = 40/5 = 8.",
+      "acceptable": [
+        "8",
+        "variance is 8",
+        "mean 5, squared deviations sum to 40, divided by 5 is 8"
+      ],
+      "explanation": "Mean is 5; deviations are -4, -2, 0, 2, 4; squared they become 16, 4, 0, 4, 16, summing to 40; dividing by the count of 5 gives a variance of 8."
+    },
+    {
+      "type": "short",
+      "question": "Why can't you directly compare a variance measured in 'dollars squared' to a everyday sense of spread in dollars?",
+      "answer": "Because squaring the deviations during the variance calculation changes the units from dollars to dollars squared, which isn't a unit that matches real-world quantities, so variance alone doesn't tell you the typical spread in the original, intuitive units.",
+      "acceptable": [
+        "variance is in squared units, not the original units, so it's hard to interpret directly",
+        "squaring the deviations squares the units too, making it hard to compare to real dollar amounts",
+        "the units get squared during the calculation, so it no longer matches the original scale"
+      ],
+      "explanation": "Because variance is built by squaring each deviation, its units are also squared (dollars become dollars squared), which is why it's useful for comparing spread between datasets but awkward to interpret directly — a problem the next lesson's standard deviation solves by taking a square root."
+    }
+  ]
+},
+{
+  "id": "5.7",
+  "number": 7,
+  "title": "Standard deviation: variance back in the original units",
+  "objectives": [
+    "Explain why taking the square root of variance returns the measure of spread to the data's original units",
+    "Compute the population standard deviation of a small dataset from its variance",
+    "Interpret a standard deviation value as the 'typical' distance of a data point from the mean",
+    "Compare the spread of two datasets using their standard deviations"
+  ],
+  "explanation": [
+    "Lesson 5.6 left off with an honest complaint about variance: it's an excellent tool for comparing spread between datasets, but its units are squared, which makes it hard to picture directly. If your data is in dollars, variance comes out in 'dollars squared' — a unit that doesn't correspond to anything you'd actually experience. Standard deviation fixes this with one simple move: take the square root of the variance. Since variance was built by squaring deviations, taking the square root at the end undoes that squaring at the level of units, bringing you right back to the original scale of the data. If variance is in dollars squared, standard deviation is back in plain dollars.",
+    "Let's pick up exactly where lesson 5.6's worked example left off, using the same dataset so the numbers connect directly: 2, 4, 4, 4, 5, 5, 7, 9, which had a mean of 5 and a population variance of 4. Standard deviation is just the square root of that variance: the square root of 4 is 2. So this dataset's standard deviation is 2. Compare that to the raw variance of 4 — the variance number alone doesn't map onto anything concrete, but a standard deviation of 2 has a direct, intuitive reading: a typical value in this dataset sits about 2 units away from the mean of 5. Look back at the actual data: 2 is 3 away from the mean, 4 is 1 away (three times), 5 is 0 away (twice), 7 is 2 away, and 9 is 4 away. Averaging the sizes of those distances roughly lines up with 'about 2 away' being a reasonable typical answer — not exact, since standard deviation weighs bigger deviations more heavily due to the squaring step underneath it, but recognizably in the right neighborhood, which is exactly the kind of common-sense check that confirms the number means what you think it means.",
+    "This is the same reasoning you used back in Phase 1 when converting between related units or checking that an answer to a word problem 'made sense' by the size of the numbers involved: whenever a calculation produces a number in an awkward unit, look for the operation that undoes the awkward step. Squaring created dollars-squared or points-squared; square-rooting undoes exactly that squaring and hands the unit back unchanged. This is also why standard deviation, not variance, is the number people usually report and talk about out loud — 'this test's scores typically stray about 6 points from the average' is something you can picture immediately, while 'the variance is 36 points squared' requires a mental translation step first.",
+    "Once you have standard deviation for two or more datasets, comparing spread becomes a direct, apples-to-apples comparison in real units. Recall Amy and Ben from lesson 5.5, both averaging 80: if Amy's scores produce a standard deviation of about 1.5 and Ben's produce a standard deviation of about 20, you can say plainly that Ben's scores typically swing about 20 points from his average, more than thirteen times further than Amy's typical 1.5-point wobble — a claim that's both precise (it came from an exact calculation) and immediately meaningful (it's expressed in the same points the tests were graded in)."
+  ],
+  "example": {
+    "problem": "A small coffee shop's hourly customer counts are 10, 14, 12, 16, 8 — the same dataset from lesson 5.6's worked example, which had mean 12 and population variance 8. Compute the population standard deviation and interpret what it tells you about the shop's hourly traffic.",
+    "steps": [
+      "Recall the variance already computed in lesson 5.6: variance = 8.",
+      "Standard deviation is the square root of variance: standard deviation = square root of 8.",
+      "The square root of 8 is not a whole number; estimate it: 2^2=4 and 3^2=9, so the square root of 8 is between 2 and 3, closer to 3 — approximately 2.83.",
+      "Interpret: the shop's hourly customer count typically strays about 2.83 customers from the mean of 12.",
+      "Sanity-check against the raw deviations from lesson 5.6 (-2, 2, 0, 4, -4, ignoring sign): these range from 0 to 4, and 2.83 falls comfortably in the middle of that range, confirming the answer is reasonable."
+    ],
+    "answer": "The population standard deviation is approximately 2.83 customers. A typical hour's customer count strays about 2.83 customers from the mean of 12, expressed back in the original units of 'customers' rather than the squared units variance used."
+  },
+  "practice": [
+    {
+      "problem": "Using lesson 5.6's plant-height dataset (20, 22, 18, 24, 16 cm, mean 20, variance 8), compute the population standard deviation and interpret it in plain words.",
+      "solution": "Standard deviation = square root of variance = square root of 8, approximately 2.83. This means a typical plant height in this dataset strays about 2.83 cm from the mean height of 20 cm — back in the same centimeters the heights were originally measured in, rather than the awkward 'cm squared' that variance produced."
+    },
+    {
+      "problem": "A dataset has a population variance of 25. What is its standard deviation, and why is this particular variance a convenient example?",
+      "solution": "Standard deviation = square root of 25 = 5. This variance is convenient because 25 is a perfect square, so its square root comes out to a clean whole number (5) with no estimating required, making it easy to double check the square-root step: 5 x 5 = 25."
+    },
+    {
+      "problem": "Dataset A has a standard deviation of 3 points and Dataset B has a standard deviation of 12 points, and both datasets have the same mean. Explain in words what this difference tells you about the two datasets.",
+      "solution": "Since both datasets share the same mean but Dataset B's standard deviation of 12 is four times larger than Dataset A's standard deviation of 3, Dataset B's values typically stray four times farther from the mean than Dataset A's values do. Dataset A is tightly clustered and consistent, while Dataset B is far more spread out and unpredictable, even though both center on the same average."
+    },
+    {
+      "problem": "Recall the all-identical dataset from lesson 5.6, 5, 5, 5, 5, 5, which had a variance of 0. Compute its standard deviation and explain what this value means.",
+      "solution": "Standard deviation = square root of 0 = 0. A standard deviation of 0 means there is no spread whatsoever — every value in the dataset is exactly equal to the mean, so there's no typical distance from the mean to measure, because that distance is always zero."
+    },
+    {
+      "problem": "A dataset of test scores has a variance of 49. A second dataset of the same test scores, but measured in a different scoring system, has a variance of 4. Compute both standard deviations and explain which dataset's scores are more tightly clustered around their mean.",
+      "solution": "First dataset: standard deviation = square root of 49 = 7. Second dataset: standard deviation = square root of 4 = 2. Since 2 is smaller than 7, the second dataset's scores are more tightly clustered around their mean — its values typically stray only about 2 points from the average, compared to about 7 points for the first dataset."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "Why do we take the square root of the variance to get the standard deviation?",
+      "choices": [
+        "To make the number bigger and easier to compare",
+        "Because square roots are always easier to compute than variances",
+        "To undo the squaring step from the variance calculation, returning the measure of spread to the data's original units",
+        "Because standard deviation and variance are actually unrelated calculations"
+      ],
+      "answerIndex": 2,
+      "explanation": "Variance squares each deviation during its calculation, which squares the units too. Taking the square root at the end undoes exactly that squaring, bringing the measure of spread back to the same units as the original data."
+    },
+    {
+      "type": "mc",
+      "question": "A dataset has a population variance of 16. What is its population standard deviation?",
+      "choices": [
+        "256",
+        "8",
+        "4",
+        "32"
+      ],
+      "answerIndex": 2,
+      "explanation": "Standard deviation is the square root of variance. The square root of 16 is 4, since 4 x 4 = 16."
+    },
+    {
+      "type": "mc",
+      "question": "Two datasets share the same mean. Dataset X has a standard deviation of 2, and Dataset Y has a standard deviation of 10. What does this tell you?",
+      "choices": [
+        "Dataset X's values typically stray farther from the mean than Dataset Y's",
+        "Dataset Y's values typically stray farther from the mean than Dataset X's",
+        "Both datasets must have identical values",
+        "The means must actually be different, since standard deviations differ"
+      ],
+      "answerIndex": 1,
+      "explanation": "A larger standard deviation means values typically stray farther from the mean. Since 10 is larger than 2, Dataset Y's values are more spread out around the shared mean than Dataset X's."
+    },
+    {
+      "type": "short",
+      "question": "A dataset has a population variance of 9. Compute its standard deviation, and state what this value represents in plain language.",
+      "answer": "Standard deviation = square root of 9 = 3. This means a typical value in the dataset strays about 3 units from the mean.",
+      "acceptable": [
+        "3, the typical distance from the mean is about 3",
+        "square root of 9 is 3",
+        "standard deviation is 3 units from the mean on average"
+      ],
+      "explanation": "The square root of 9 is exactly 3, since 3 x 3 = 9. This 3 represents the typical distance a data point strays from the mean, expressed in the original units of the data."
+    },
+    {
+      "type": "short",
+      "question": "Why is standard deviation usually reported instead of variance when describing spread to someone in plain language?",
+      "answer": "Because variance is expressed in squared units (like dollars squared or points squared), which don't correspond to anything intuitive, while standard deviation takes the square root and returns the measure of spread to the data's original, easy-to-picture units.",
+      "acceptable": [
+        "standard deviation is in the original units, variance is in squared units which are confusing",
+        "because variance's squared units are hard to interpret but standard deviation isn't",
+        "standard deviation is easier to picture since it's back in the same units as the data"
+      ],
+      "explanation": "Variance's squared units make it awkward to interpret directly, since 'points squared' or 'dollars squared' don't map onto real-world quantities. Standard deviation's square root undoes that squaring, making it the number people actually use when describing spread out loud."
+    }
+  ]
+},
+{
+  "id": "5.8",
+  "number": 8,
+  "title": "Intro to probability: outcomes, events, and probability as a fraction",
+  "objectives": [
+    "Define an outcome as a single possible result of a random process",
+    "Define an event as a set of one or more outcomes you care about",
+    "Compute the probability of an event with equally-likely outcomes as favorable outcomes divided by total possible outcomes",
+    "Connect probability directly to the fraction concept from Phase 1"
+  ],
+  "explanation": [
+    "You've spent this whole phase measuring datasets you already have in hand: means, medians, modes, ranges, variances, standard deviations. Probability flips the direction of the question. Instead of describing data you've already collected, probability describes what's likely to happen before it happens — how likely is it that a rolled die shows a 6, or that a flipped coin lands heads, or that you draw a red marble from a bag. To talk about this precisely, we need two building-block words: outcome and event.",
+    "An outcome is a single possible result of some random process — roll a six-sided die and the outcome is whichever one number actually comes up, say a 4. Flip a coin and the outcome is either heads or tails, whichever one you actually get. An event, by contrast, is a set of outcomes you've decided to care about — it can be as narrow as a single outcome ('rolling exactly a 4') or as broad as several outcomes grouped together ('rolling an even number,' which bundles together the outcomes 2, 4, and 6). Every event is built out of outcomes, but not every outcome by itself counts as the event you're asking about.",
+    "Once you can name outcomes and events clearly, probability itself is just a fraction, exactly like the fractions you worked with back in Phase 1: probability equals the number of favorable outcomes (the ones that count toward your event) divided by the number of total possible outcomes — but only when every outcome is equally likely to happen. Take a fair six-sided die: there are 6 total possible outcomes (1, 2, 3, 4, 5, 6), each equally likely. The event 'rolling an even number' includes 3 favorable outcomes (2, 4, 6), so its probability is 3/6, which simplifies to 1/2 — exactly the same fraction-simplifying skill from Phase 1, just now attached to a real-world chance instead of a slice of pizza. A probability of 1/2 also converts the same way any fraction does: as a decimal it's 0.5, and as a percent it's 50%, meaning you'd expect that event to happen about half the time over many repeats.",
+    "This same fraction logic works for a bag of colored marbles, a favorite running example for this topic. Imagine a bag with 3 red marbles, 2 blue marbles, and 5 green marbles — 10 marbles total, each equally likely to be the one you pull out blindly. The event 'drawing a red marble' has 3 favorable outcomes out of 10 total, so its probability is 3/10, or 0.3, or 30%. The event 'drawing a blue or green marble' bundles together 2+5=7 favorable outcomes out of the same 10 total, giving a probability of 7/10. Notice that every probability you compute this way is a fraction between 0 and 1 (or equivalently between 0% and 100%): an event with probability 0 can never happen (like drawing a purple marble from this bag), and an event with probability 1 is guaranteed (like drawing 'any color marble at all' — every outcome qualifies)."
+  ],
+  "example": {
+    "problem": "A bag contains 4 yellow marbles, 3 purple marbles, and 3 orange marbles, 10 marbles total, each equally likely to be drawn. Find the probability of drawing a purple marble, and the probability of drawing a marble that is NOT yellow.",
+    "steps": [
+      "Identify the total possible outcomes: there are 10 marbles total, so 10 total possible outcomes.",
+      "For 'drawing a purple marble': count the favorable outcomes — there are 3 purple marbles, so 3 favorable outcomes.",
+      "Probability of purple = favorable / total = 3/10.",
+      "For 'drawing a marble that is NOT yellow': this event includes every marble except yellow, meaning the purple and orange marbles both count as favorable outcomes: 3 purple + 3 orange = 6 favorable outcomes.",
+      "Probability of not-yellow = 6/10, which simplifies to 3/5, since both 6 and 10 share a common factor of 2 (6/2=3, 10/2=5).",
+      "Convert 3/5 to a decimal and percent to double check it's a sensible probability: 3/5 = 0.6 = 60%, which is between 0% and 100% as expected."
+    ],
+    "answer": "The probability of drawing a purple marble is 3/10 (30%). The probability of drawing a marble that is not yellow is 6/10, which simplifies to 3/5 (60%)."
+  },
+  "practice": [
+    {
+      "problem": "A fair six-sided die is rolled once. Find the probability of the event 'rolling a number greater than 4.'",
+      "solution": "Total possible outcomes: 6 (the numbers 1 through 6, each equally likely). Favorable outcomes for 'greater than 4': the numbers 5 and 6, so 2 favorable outcomes. Probability = 2/6, which simplifies to 1/3 (since both 2 and 6 share a common factor of 2)."
+    },
+    {
+      "problem": "A coin is flipped once. Find the probability of the event 'landing on tails,' and express it as a fraction, decimal, and percent.",
+      "solution": "Total possible outcomes: 2 (heads or tails, equally likely). Favorable outcomes for 'tails': 1. Probability = 1/2 as a fraction, which equals 0.5 as a decimal, which equals 50% as a percent."
+    },
+    {
+      "problem": "A bag has 6 red marbles and 4 blue marbles, 10 total, each equally likely to be drawn. Find the probability of drawing a red marble, and explain why this probability plus the probability of drawing a blue marble must add up to 1.",
+      "solution": "Favorable outcomes for red: 6. Total: 10. Probability of red = 6/10 = 3/5 (simplified). Probability of blue = 4/10 = 2/5 (simplified). Adding them: 3/5 + 2/5 = 5/5 = 1. This makes sense because every single marble in the bag is either red or blue — together, red and blue cover every possible outcome, so their probabilities must add up to the full whole, which is 1 (or equivalently 100%)."
+    },
+    {
+      "problem": "A standard deck-style spinner has 8 equal-sized slices numbered 1 through 8. Find the probability of the event 'spinning a multiple of 3.'",
+      "solution": "Total possible outcomes: 8 (the numbers 1 through 8, each equally likely). Favorable outcomes for 'multiple of 3' among 1-8: 3 and 6, so 2 favorable outcomes (9 would be a multiple of 3 but is not in the range 1-8). Probability = 2/8, which simplifies to 1/4."
+    },
+    {
+      "problem": "A bag contains only green marbles, 8 of them, and nothing else. Find the probability of drawing a green marble, and separately, the probability of drawing a marble that is any color other than green. Explain both results in terms of what probability 1 and probability 0 mean.",
+      "solution": "Total possible outcomes: 8, all green. Favorable outcomes for 'green': all 8. Probability of green = 8/8 = 1, meaning this event is guaranteed to happen every single time, since every marble in the bag qualifies. Favorable outcomes for 'any color other than green': 0, since there are no non-green marbles in the bag. Probability = 0/8 = 0, meaning this event can never happen, since no outcome in the bag satisfies it."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "What is the difference between an outcome and an event?",
+      "choices": [
+        "An outcome is a single possible result of a random process, while an event is a set of one or more outcomes you care about",
+        "An outcome and an event are exactly the same thing with different names",
+        "An event always contains exactly two outcomes",
+        "An outcome can only happen with a coin flip, while an event can only happen with a die roll"
+      ],
+      "answerIndex": 0,
+      "explanation": "An outcome is one single possible result (like rolling a 4), while an event groups together one or more outcomes you're interested in (like 'rolling an even number,' which groups the outcomes 2, 4, and 6)."
+    },
+    {
+      "type": "mc",
+      "question": "A fair spinner has 5 equal slices numbered 1 through 5. What is the probability of landing on an odd number?",
+      "choices": [
+        "2/5",
+        "3/5",
+        "1/5",
+        "4/5"
+      ],
+      "answerIndex": 1,
+      "explanation": "The odd numbers in 1 through 5 are 1, 3, and 5 — 3 favorable outcomes out of 5 total possible outcomes, giving a probability of 3/5."
+    },
+    {
+      "type": "mc",
+      "question": "For equally-likely outcomes, how is the probability of an event calculated?",
+      "choices": [
+        "Total possible outcomes divided by favorable outcomes",
+        "Favorable outcomes divided by total possible outcomes",
+        "Favorable outcomes multiplied by total possible outcomes",
+        "The average of the favorable outcomes"
+      ],
+      "answerIndex": 1,
+      "explanation": "Probability, when every outcome is equally likely, is defined as the count of favorable outcomes (the ones satisfying the event) divided by the count of total possible outcomes — exactly the structure of a fraction."
+    },
+    {
+      "type": "short",
+      "question": "A bag has 2 white marbles and 8 black marbles, 10 total, each equally likely to be drawn. What is the probability of drawing a white marble? Give your answer as a simplified fraction.",
+      "answer": "2/10, which simplifies to 1/5.",
+      "acceptable": [
+        "1/5",
+        "2/10 simplified to 1/5",
+        "0.2 or 20%"
+      ],
+      "explanation": "Favorable outcomes (white marbles) = 2, total outcomes = 10, so probability = 2/10, which simplifies to 1/5 since both 2 and 10 share a common factor of 2."
+    },
+    {
+      "type": "short",
+      "question": "Explain why probability is essentially the same idea as a fraction from Phase 1, using the die-roll example of 'rolling an even number' (probability 3/6, or 1/2).",
+      "answer": "Probability counts favorable outcomes over total possible outcomes, exactly like a fraction counts a part over a whole — 'rolling an even number' has 3 favorable outcomes (2, 4, 6) out of 6 total outcomes, giving the fraction 3/6, which simplifies to 1/2, just like simplifying any other fraction from Phase 1.",
+      "acceptable": [
+        "probability is favorable over total, same as a part over a whole in a fraction",
+        "3/6 simplifies to 1/2 the same way any fraction simplifies",
+        "probability is just a fraction of favorable outcomes out of all possible outcomes"
+      ],
+      "explanation": "Probability's structure — favorable count over total count — is identical to a fraction's structure of part over whole, and it simplifies using the exact same rules learned in Phase 1, as shown by 3/6 reducing to 1/2."
+    }
+  ]
+},
+{
+  "id": "5.9",
+  "number": 9,
+  "title": "Combining probabilities: AND/OR for independent events",
+  "objectives": [
+    "Explain what it means for two events to be independent",
+    "Calculate the probability of two independent events both happening by multiplying their probabilities",
+    "Calculate the probability of at least one of two events happening, including when the events overlap",
+    "Connect probability's AND (multiply) and OR (add) to the AND/OR logic gates from Phase 4"
+  ],
+  "explanation": [
+    "In lesson 5.8 you learned to find the probability of a single event: count the favorable outcomes, divide by the total possible outcomes. But most real questions aren't about a single event in isolation. What's the chance of flipping heads twice in a row? What's the chance it rains today OR tomorrow? What's the chance you draw a face card AND it's a heart? These are all questions about combining two events into one probability, and that's exactly what this lesson teaches you to do.",
+    "Start with independent events: two events are independent when the outcome of one has no effect on the outcome of the other. Flipping a coin twice is independent, because the second flip doesn't know or care what the first flip landed on. Rolling a die twice is independent for the same reason. When two events are independent, the probability that BOTH happen is found by multiplying their individual probabilities: P(A and B) = P(A) x P(B). If a fair coin has a 1/2 chance of heads, the chance of heads on flip one AND heads on flip two is 1/2 x 1/2 = 1/4 — the same fraction-multiplication skill you built back in lesson 1.4, just applied to chances instead of pizza slices.",
+    "Here's the callback worth sitting with: in Phase 4, an AND gate only output True when BOTH of its inputs were True — nothing else would do. Probability's AND rule has exactly that same shape. It's still asking \"do both of these have to happen together?\" — the only difference is that instead of True/False, you're now working with numbers between 0 and 1, and instead of a truth table you multiply. The OR gate from lesson 4.5 fired when AT LEAST ONE input was True, and probability's OR mirrors that too: if two events can never happen at the same time (mutually exclusive, like rolling a 2 or a 5 on a single die roll), you simply add their probabilities, P(A or B) = P(A) + P(B). But if the two events CAN both happen at once — like heads on flip one and heads on flip two, which could both come up True together — adding would double-count that overlap, so the full rule is P(A or B) = P(A) + P(B) − P(A and B), subtracting out the case you counted twice.",
+    "That subtraction is the one genuinely new piece here, so don't skip past it: whenever you're not sure if two events overlap, it's always safe to use the full formula, since subtracting zero overlap just gives you back the simple addition rule anyway. As you work through the example and practice problems, keep asking the same two questions from lesson 4.12's circuit-design mindset: does this situation need BOTH events (multiply), or does it need AT LEAST ONE (add, and check for overlap)?"
+  ],
+  "example": {
+    "problem": "A fair coin is flipped twice. What is the probability of getting heads on the first flip AND heads on the second flip? What is the probability of getting heads on the first flip OR heads on the second flip (meaning at least one of the two flips is heads)?",
+    "steps": [
+      "Each flip has P(heads) = 1/2, and the two flips are independent, since the first flip's result doesn't affect the second flip at all.",
+      "For the AND question: P(first heads and second heads) = P(first heads) x P(second heads) = 1/2 x 1/2 = 1/4.",
+      "For the OR question, first check whether the two events can happen together: yes, both flips could land heads at the same time, so this is NOT the mutually-exclusive case — you need the full formula with subtraction.",
+      "P(first heads or second heads) = P(first heads) + P(second heads) − P(first heads and second heads) = 1/2 + 1/2 − 1/4 = 4/4 − 1/4 = 3/4.",
+      "Double-check by listing every equally-likely outcome of two flips, the same counting approach from lesson 5.8: HH, HT, TH, TT — four outcomes total. 'At least one heads' covers HH, HT, and TH, which is 3 out of 4 outcomes, confirming 3/4."
+    ],
+    "answer": "P(heads and heads) = 1/4. P(heads or heads, meaning at least one heads) = 3/4."
+  },
+  "practice": [
+    {
+      "problem": "Two fair six-sided dice are rolled. What is the probability that the first die shows a 6 AND the second die also shows a 6?",
+      "solution": "Each die independently has P(6) = 1/6, since one die's result never affects the other die. Because the events are independent, multiply: P(first 6 and second 6) = 1/6 x 1/6 = 1/36."
+    },
+    {
+      "problem": "A single fair six-sided die is rolled once. What is the probability of rolling a 2 OR a 5?",
+      "solution": "On a single roll, you cannot get a 2 and a 5 at the same time — the two events are mutually exclusive, so there's no overlap to subtract. P(2 or 5) = P(2) + P(5) = 1/6 + 1/6 = 2/6 = 1/3."
+    },
+    {
+      "problem": "A spinner is divided into three equal sections: red, blue, and green, so each color has probability 1/3 on a single spin. The spinner is spun twice. What is the probability of landing on red on the first spin AND blue on the second spin?",
+      "solution": "The two spins are independent, since the first spin doesn't affect the second. P(red first and blue second) = P(red) x P(blue) = 1/3 x 1/3 = 1/9."
+    },
+    {
+      "problem": "Two fair six-sided dice are rolled. What is the probability that the first die is even OR the second die shows a 6?",
+      "solution": "P(first die even) = 3/6 = 1/2, since 2, 4, and 6 are the even faces. P(second die is 6) = 1/6. These events can happen together (first die even AND second die is 6 at the same time), so subtract the overlap: P(first even and second 6) = 1/2 x 1/6 = 1/12, using the independent-events AND rule. Now combine: P(first even or second 6) = 1/2 + 1/6 − 1/12 = 6/12 + 2/12 − 1/12 = 7/12."
+    },
+    {
+      "problem": "A bag contains 3 red marbles and 2 blue marbles. You draw one marble and do NOT put it back, then draw a second marble. Explain in words why you cannot use P(A and B) = P(A) x P(B) the same simple way you did for two dice rolls.",
+      "solution": "The AND multiplication rule only works for independent events, and these two draws are NOT independent. After the first marble is removed and not replaced, there is one fewer marble total, and the count of red versus blue marbles left behind depends on what color was drawn first. Since the second draw's probabilities change based on the first draw's outcome, the events are dependent, unlike two separate dice rolls where each roll always has the same six equally-likely faces no matter what happened before."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "Two events are independent when...",
+      "choices": [
+        "they can never happen at the same time",
+        "the outcome of one has no effect on the probability of the other",
+        "they always have the same probability as each other",
+        "one of them must be impossible"
+      ],
+      "answerIndex": 1,
+      "explanation": "Independence means the events don't influence each other's chances — like two separate coin flips or two separate dice rolls, where the earlier result has no bearing on the next one."
+    },
+    {
+      "type": "mc",
+      "question": "For two independent events A and B, how do you find P(A and B)?",
+      "choices": [
+        "Add P(A) and P(B)",
+        "Subtract P(B) from P(A)",
+        "Multiply P(A) and P(B)",
+        "Divide P(A) by P(B)"
+      ],
+      "answerIndex": 2,
+      "explanation": "When events are independent, the probability that both happen is the product of their individual probabilities: P(A and B) = P(A) x P(B)."
+    },
+    {
+      "type": "short",
+      "question": "A fair coin is flipped twice. What is the probability that BOTH flips come up tails?",
+      "answer": "1/4",
+      "acceptable": [
+        "1 out of 4",
+        "0.25",
+        "25 percent",
+        "one fourth"
+      ],
+      "explanation": "Each flip independently has P(tails) = 1/2. Since the flips are independent, P(tails and tails) = 1/2 x 1/2 = 1/4."
+    },
+    {
+      "type": "mc",
+      "question": "Why do you subtract P(A and B) when computing P(A or B) for two events that CAN happen at the same time?",
+      "choices": [
+        "Because probabilities must always be subtracted, never added",
+        "Because otherwise the case where both happen at once would be counted twice",
+        "Because OR always means the events are mutually exclusive",
+        "Because subtraction converts probability into a percentage"
+      ],
+      "answerIndex": 1,
+      "explanation": "If A and B can both occur together, simply adding P(A) + P(B) counts that overlapping outcome twice, so it must be subtracted once to correct for the double-count."
+    },
+    {
+      "type": "short",
+      "question": "In one or two sentences, explain how probability's AND rule echoes the AND logic gate from Phase 4, even though one uses True/False and the other uses numbers between 0 and 1.",
+      "answer": "Both are asking whether two things must happen together: an AND gate only outputs True when both inputs are True, and probability's AND rule (multiplying) only gives a nonzero result when both events genuinely need to occur, so the underlying shape — requiring both — is the same even though one uses truth values and the other uses fractions or decimals.",
+      "acceptable": [
+        "both require both conditions to hold, one with true/false and one with numbers",
+        "and gate needs both true, and probability and rule needs both events, just with numbers instead of booleans",
+        "same both-required logic, just multiplying probabilities instead of checking true/false"
+      ],
+      "explanation": "The AND gate and the probability AND rule share the same logical requirement — both conditions must be satisfied simultaneously — the gate expresses this with a truth table, while probability expresses it by multiplying likelihoods between 0 and 1."
+    }
+  ]
+},
+{
+  "id": "5.10",
+  "number": 10,
+  "title": "Expected value: a weighted average of possible outcomes",
+  "objectives": [
+    "Define expected value as a weighted average of every possible outcome, weighted by its probability",
+    "Compute expected value as the sum of each outcome's value multiplied by its probability",
+    "Interpret a positive, negative, or zero expected value in the context of a game or gamble",
+    "Explain how expected value relates to the mean from lesson 5.2, but weights by likelihood instead of observed frequency"
+  ],
+  "explanation": [
+    "Imagine you could play a simple dice game a thousand times in a row. Some rolls you'd win money, others you'd lose it. If you added up every result and divided by a thousand, you'd get the average outcome per play — but you don't actually need to play it a thousand times to predict that average. If you know each possible outcome and how likely it is, you can calculate the average you'd expect ahead of time. That calculated average is called expected value, and it's one of the most useful ideas in this entire phase for making decisions under uncertainty.",
+    "Recall lesson 5.2's mean: you added up every value that actually occurred in your data and divided by how many values there were, so each observed value counted once for each time it actually showed up. Expected value works the same basic way — sum up values weighted by how much each one counts — but instead of weighting by how many times a value ACTUALLY appeared in a fixed batch of data, you weight by how LIKELY each possible outcome is to occur. The formula is: expected value = sum of (each outcome's value x its probability). If you flip a fair coin and win $3 for heads or lose $3 for tails, the expected value is (3 x 1/2) + (−3 x 1/2) = 1.5 − 1.5 = 0 — a perfectly fair game, since on average you'd expect to break even over many plays.",
+    "That zero result matters: a game with expected value of exactly 0 is called a fair game, since neither side has an advantage over the long run. A positive expected value means the game favors you, and a negative expected value means the game favors whoever is running it — which is exactly why casinos, raffles, and lotteries almost always have a small negative expected value for the player, even when a single lucky play feels like a win. Expected value doesn't predict what happens on any ONE play; a game with negative expected value can still pay out on a lucky roll. What it predicts is the average result if you played over and over — the same 'long-run average' idea the mean captures for data you've already collected, just projected forward using probabilities instead of counted occurrences.",
+    "Computing expected value is mechanically simple once you see the pattern: list every possible outcome, find its probability, find its value, multiply each pair, then add all the products together. The hardest part is usually just making sure your list of outcomes and probabilities is complete and that the probabilities actually add up to 1 (or 100%) — if they don't, you've missed an outcome or miscounted, exactly the kind of careful bookkeeping lesson 5.8 asked of you when counting favorable versus total outcomes."
+  ],
+  "example": {
+    "problem": "A game costs $1 to play. You roll a single fair six-sided die. If you roll a 6, you win $4 (a net gain of $3 after paying the $1 to play). If you roll anything else (1 through 5), you win nothing (a net loss of $1, the cost of playing). What is the expected value of playing this game once, in net dollars?",
+    "steps": [
+      "List the possible outcomes and their net dollar values: rolling a 6 nets +$3 (you paid $1, won $4, so you're up $3 overall); rolling 1-5 nets −$1 (you paid $1 and won nothing back).",
+      "Find each outcome's probability using the die's six equally-likely faces (lesson 5.8): P(roll a 6) = 1/6, and P(roll 1, 2, 3, 4, or 5) = 5/6.",
+      "Multiply each net value by its probability: for rolling a 6, 3 x 1/6 = 3/6. For rolling 1-5, −1 x 5/6 = −5/6.",
+      "Add the products together: expected value = 3/6 + (−5/6) = −2/6 = −1/3.",
+      "Interpret the result: the expected value is negative, about −$0.33 per play, meaning if you played this game many times, you'd expect to lose about 33 cents on average per play — this is an unfair game that favors whoever is running it, even though any single roll of a 6 feels like a win."
+    ],
+    "answer": "Expected value = −1/3 dollars, or about −$0.33 per play. On average, the player loses about 33 cents each time they play."
+  },
+  "practice": [
+    {
+      "problem": "A raffle ticket costs $2. There is a 1 in 50 chance of winning a $20 prize, and otherwise you win nothing. What is the expected value of buying one ticket, in net dollars?",
+      "solution": "If you win, your net gain is 20 − 2 = 18 dollars, and this happens with probability 1/50. If you lose, your net is −2 dollars (you just lose the ticket price), with probability 49/50. Expected value = (18 x 1/50) + (−2 x 49/50) = 18/50 − 98/50 = −80/50 = −1.6. The expected value is −$1.60 per ticket, meaning on average a player loses $1.60 each time they play this raffle."
+    },
+    {
+      "problem": "You flip a fair coin. You win $3 if it lands heads and lose $3 if it lands tails. Show that this is a fair game by computing its expected value.",
+      "solution": "P(heads) = 1/2 with value +3, and P(tails) = 1/2 with value −3. Expected value = (3 x 1/2) + (−3 x 1/2) = 1.5 − 1.5 = 0. Since the expected value is exactly 0, this is a fair game — over many plays, wins and losses are expected to balance out perfectly."
+    },
+    {
+      "problem": "A spinner has three equally likely sections worth $6, $3, and $0. What is the expected value of one spin, and how does this expected value compare to the mean of the three prize values?",
+      "solution": "Each section has probability 1/3. Expected value = (6 x 1/3) + (3 x 1/3) + (0 x 1/3) = 6/3 + 3/3 + 0/3 = 9/3 = 3. This equals the ordinary mean of 6, 3, and 0, which is (6+3+0)/3 = 3. That's not a coincidence: when every outcome is equally likely, weighting by probability and weighting by observed frequency produce the exact same calculation."
+    },
+    {
+      "problem": "A game has three possible outcomes: winning $10 with probability 0.5, winning $0 with probability 0.3, and losing $5 with probability 0.2. Find the expected value.",
+      "solution": "Check the probabilities add to 1: 0.5 + 0.3 + 0.2 = 1.0, good. Expected value = (10 x 0.5) + (0 x 0.3) + (−5 x 0.2) = 5 + 0 − 1 = 4. The expected value is $4 per play, meaning this game favors the player on average."
+    },
+    {
+      "problem": "A lottery ticket costs $2. There is a 1 in 1,000,000 chance of winning $1,000,000 (a net gain of $999,998), and otherwise you lose your $2. Without computing an exact decimal, explain whether this game's expected value is likely positive or negative, and why the intuition 'well, you almost always lose, so the game must be terrible' can be misleading on its own.",
+      "solution": "Roughly: expected value ≈ (999,998 x 1/1,000,000) + (−2 x 999,999/1,000,000) ≈ 1.00 − 2.00 = about −$1.00 per ticket, so the expected value is negative — the game favors the lottery, not the player. The intuition about 'almost always losing' isn't wrong, but it's incomplete on its own: expected value depends on both how likely each outcome is AND how large its value is, so you can't judge it from probability alone. A rare but enormous prize contributes only a little to the expected value once you multiply it by its tiny probability, which is exactly why doing the actual multiplication (rather than trusting a gut feeling) matters."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "How is expected value calculated?",
+      "choices": [
+        "Add up all possible values and divide by how many outcomes there are",
+        "Multiply each possible outcome's value by its probability, then add all those products together",
+        "Subtract the smallest possible outcome from the largest",
+        "Multiply the total number of outcomes by the most likely outcome's value"
+      ],
+      "answerIndex": 1,
+      "explanation": "Expected value is a weighted sum: each outcome's value is multiplied by its probability, and those products are added together, weighting each outcome by how likely it is rather than treating every outcome as equally important."
+    },
+    {
+      "type": "short",
+      "question": "A game gives you $5 with probability 1/4 and $0 with probability 3/4. What is the expected value?",
+      "answer": "1.25 dollars",
+      "acceptable": [
+        "$1.25",
+        "5/4 dollars",
+        "1 dollar and 25 cents",
+        "1.25"
+      ],
+      "explanation": "Expected value = (5 x 1/4) + (0 x 3/4) = 5/4 + 0 = 1.25 dollars."
+    },
+    {
+      "type": "mc",
+      "question": "A game is called 'fair' when its expected value is...",
+      "choices": [
+        "always positive",
+        "exactly zero",
+        "always negative",
+        "equal to the highest possible payout"
+      ],
+      "answerIndex": 1,
+      "explanation": "A fair game has an expected value of exactly zero, meaning that over many plays, wins and losses are expected to balance out with neither side gaining an advantage."
+    },
+    {
+      "type": "mc",
+      "question": "How does expected value relate to the mean from lesson 5.2?",
+      "choices": [
+        "They are unrelated ideas from completely different branches of math",
+        "Expected value weights each possible outcome by its probability, while the mean weights each observed value by how many times it actually appeared in the data",
+        "Expected value can only ever be zero, while the mean can be any number",
+        "The mean requires probabilities, but expected value does not"
+      ],
+      "answerIndex": 1,
+      "explanation": "Both are weighted averages. The mean weights by how often values actually occurred in a collected dataset, while expected value weights by how likely each possible outcome is to occur, which is why they produce identical results when every outcome is equally likely."
+    },
+    {
+      "type": "short",
+      "question": "A game has a negative expected value of −$0.50 per play. If you play it once and win a big prize, does that mean the expected value calculation was wrong? Explain briefly.",
+      "answer": "No — expected value describes the average result over many plays, not the outcome of any single play, so winning once doesn't contradict a negative expected value; it just means that particular play happened to fall on a lucky outcome, while the average over many repeated plays would still tend toward a loss.",
+      "acceptable": [
+        "no, ev is a long run average not a guarantee for one play",
+        "no, a single lucky outcome doesn't change the average over many plays",
+        "no, expected value predicts the long-run average, not any individual result"
+      ],
+      "explanation": "Expected value is a long-run average, not a promise about any single outcome. A negative expected value game can absolutely produce a win on any given play; the negative value only describes what tends to happen on average if the game were played repeatedly many times."
+    }
+  ]
+},
+{
+  "id": "5.11",
+  "number": 11,
+  "title": "What data is really for: train/test split intuition",
+  "objectives": [
+    "Explain why finding a pattern in existing data doesn't automatically guarantee that pattern will hold on new data",
+    "Distinguish memorizing specific answers from learning a general pattern, using a non-data study metaphor",
+    "Define a training set and a test set as two separate, non-overlapping parts of the same dataset",
+    "Explain why a test set must be held back and left unused while a pattern is being found"
+  ],
+  "explanation": [
+    "Picture two students preparing for the same test. Student A gets a stack of practice questions and simply memorizes the exact answer to each one — question 7's answer is 42, question 12's answer is 'true,' and so on. Student B works through the same practice questions but focuses on understanding WHY each answer is correct, building a general method they could apply to any similar question. If you only ever quiz both students using those same practice questions, they'll look identical — both score perfectly. The only way to tell them apart is to give them genuinely NEW questions they haven't seen before. Student A, who only memorized, will struggle on the new questions, while Student B, who actually learned the pattern, will do just as well as before.",
+    "This is exactly the problem you run into any time you find a pattern in a dataset. Say you're looking at a table of examples and features (lesson 5.1) and you notice something — maybe an average that seems telling, or a relationship between two columns. How do you know whether that pattern reflects something genuinely true about the world, versus something that just happens to describe this one particular batch of rows you happened to collect, the data equivalent of Student A's memorized answer key? The only honest way to find out is the same one that separates Student A from Student B: check whether the pattern still holds on rows you did NOT use to find it in the first place.",
+    "This is where the train/test split comes in. Before looking for any pattern, you split your dataset's rows into two separate groups: a training set, which you're allowed to study freely while searching for a pattern, and a test set, which you set aside and do not touch at all during that search. Once you've found a pattern using only the training rows, you finally check it against the test rows — data the pattern was never built from. If it holds up on the test set too, you have real evidence the pattern is genuine rather than a coincidence specific to your training rows. If it falls apart on the test set, that's just as valuable to know: it tells you the pattern was closer to memorizing the training data's quirks than to learning something that generalizes. Crucially, the test rows must stay untouched until after the pattern is already decided — peeking at test rows while still searching is like handing Student A the real exam questions ahead of time; it defeats the entire point of testing.",
+    "This is really what data is 'for' in a deeper sense than just describing a pile of past numbers: a well-collected dataset lets you build confidence that what you've noticed will keep being true on cases you haven't seen yet. The habit of splitting off a held-back test portion before trusting any pattern you find is one of the single most important habits in working with data of any kind, and you'll see some version of this same train/test idea show up constantly whenever someone claims to have found a real, useful pattern using data."
+  ],
+  "example": {
+    "problem": "A teacher has a small dataset of 8 students, each row listing that student's homework-completion percentage and their exam score. Looking at 6 of the 8 rows (the training set), the teacher notices this pattern: every student with homework completion above 90% scored above 85 on the exam. The 6 training rows are: (95, 88), (92, 90), (60, 70), (55, 65), (98, 92), (70, 75), listed as (homework%, exam score). The 2 remaining rows, held back as the test set, are: (91, 60) and (40, 50). Using train/test intuition, explain how the teacher should check whether the pattern is real, and what the check reveals.",
+    "steps": [
+      "Identify the training set: the 6 rows the teacher already looked at to notice the pattern — this is the data the pattern was BUILT from, so it doesn't count as independent evidence for or against it.",
+      "Restate the pattern found in training: 'homework completion above 90% predicts an exam score above 85.' Check it against the training rows themselves: (95,88), (92,90), and (98,92) all have homework>90 and exam>85 — consistent so far, but this only shows the pattern fits the data it was found on, which is expected, not impressive.",
+      "Bring in the test set — the 2 rows the teacher has NOT looked at until now: (91, 60) and (40, 50). These were deliberately held back and untouched while the pattern was being searched for.",
+      "Check the pattern against each test row. First test row: homework = 91, which is above 90, so the pattern predicts an exam score above 85 — but the actual exam score is only 60. The pattern FAILS on this row.",
+      "Second test row: homework = 40, which is not above 90, so the pattern makes no claim about this row either way — it's consistent by default, since the rule only predicts something when homework is above 90.",
+      "Conclude: the pattern held up perfectly on every training row (as expected, since it was built to fit them) but broke down on one of the two test rows. That failure is exactly the kind of information a training-only check could never have revealed, and it shows the '90%' rule was closer to a coincidence in the 6 training students than a genuinely reliable pattern."
+    ],
+    "answer": "The pattern (homework>90% predicts exam>85) holds on all 6 training rows but fails on the test row (91, 60), where homework was above 90% yet the exam score was only 60. This test-set failure reveals the pattern doesn't generalize reliably — it looked convincing only because it was checked exclusively against the same rows it was built from."
+  },
+  "practice": [
+    {
+      "problem": "A dataset has 10 rows. A student splits it into the first 8 rows as the training set and the last 2 rows as the test set. While searching for a pattern, the student peeks at all 10 rows, including the last 2, 'just to get a better feel for the data.' Explain why this is a mistake.",
+      "solution": "By looking at the test rows before finishing the pattern search, the student has effectively used those rows to help build or adjust the pattern, even if only informally. This removes the test set's whole purpose: it's supposed to be data the pattern has never seen, held back so it can act as an honest, independent check afterward. Once the test rows have been looked at during the search, any pattern that happens to fit them isn't proof the pattern generalizes — it may just mean the student (consciously or not) shaped the pattern to fit those rows too, the same problem as handing a student the real test questions before they take it."
+    },
+    {
+      "problem": "A coach records the height and 40-yard-dash time of 6 kids in the training set and notices 'taller kids tend to run faster.' Checking this against 2 held-back test-set kids, the coach finds one test kid is quite tall but runs slower than several shorter training-set kids. What should the coach conclude?",
+      "solution": "The pattern found in the training set does not fully hold up on the test set, since a genuinely new case (the tall, slower test kid) contradicts it. This doesn't necessarily mean height and speed are completely unrelated, but it does mean the simple 'taller is always faster' pattern is not as reliable as it looked when only checked against the 6 rows it was built from. The coach should treat the training-set pattern with less confidence and recognize that other factors besides height are clearly influencing speed, since the pattern failed on unseen data exactly the way it's supposed to be tested."
+    },
+    {
+      "problem": "Explain why a rule like 'the student whose homework score was exactly 95 and whose name started with a vowel scored above 85' would be a warning sign of memorizing rather than genuinely learning a pattern, even if it perfectly fit every training row.",
+      "solution": "This rule is suspicious because it references extremely specific details (an exact score of 95, and something as unrelated as the first letter of a name) rather than a general, reasonable relationship. A rule this narrowly tailored to the exact training rows is very likely to be 'memorizing' quirks of those particular 6 or 8 students rather than capturing anything that would hold true for a different group of students — exactly like Student A memorizing that 'question 7's answer is 42' instead of understanding why. A pattern like this would almost certainly fail on a test set, since it wasn't built to generalize, just to fit the rows in front of it."
+    },
+    {
+      "problem": "A researcher finds a pattern using a training set, checks it against a completely separate test set the pattern never saw, and the pattern holds up well on the test set too. Why does this give MORE confidence than only checking the pattern against the training set alone?",
+      "solution": "Checking a pattern only against the training set proves nothing beyond the fact that the pattern fits the exact data it was built from, which is close to guaranteed by construction. Checking it against a test set the pattern never saw is a genuinely independent test — if the pattern still holds there, that's real evidence it's capturing something true in general, rather than something specific to the training rows, the same way Student B doing well on brand-new questions is real evidence they actually learned the method rather than just memorizing answers."
+    },
+    {
+      "problem": "Explain what would go wrong if a researcher used ALL of their rows as the training set, with none held back as a test set, and then confidently reported that their pattern 'works.'",
+      "solution": "With no rows held back, there's no data left that the pattern hasn't already seen, so there's no way to independently check whether the pattern generalizes versus just fitting the specific rows it was built from. The researcher could still be technically correct that the pattern describes their training data well, but that claim would be much weaker than it might sound, since it hasn't been tested against anything new — it's the equivalent of only ever quizzing a student using the exact practice questions they memorized answers to, and never finding out if they actually understood anything."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "In the train/test split, what is the test set used for?",
+      "choices": [
+        "Finding the pattern in the first place",
+        "Checking whether a pattern found on the training set still holds on data it wasn't built from",
+        "Making the dataset larger so the mean is more accurate",
+        "Replacing the training set entirely once a pattern is found"
+      ],
+      "answerIndex": 1,
+      "explanation": "The test set is held back and left untouched while a pattern is being searched for, then used afterward purely to check whether that pattern generalizes to data it has never seen."
+    },
+    {
+      "type": "mc",
+      "question": "Why is it a problem to look at test-set rows while still searching for a pattern?",
+      "choices": [
+        "It isn't a problem, since more data always helps",
+        "It contaminates the test set's purpose, since the pattern may end up shaped to fit the test rows too, defeating the point of an independent check",
+        "It makes the mean of the dataset incorrect",
+        "It is only a problem if the dataset has more than 100 rows"
+      ],
+      "answerIndex": 1,
+      "explanation": "The whole value of a test set comes from it being untouched during pattern-finding. Looking at it early risks shaping the pattern around it, the same way giving a student the real exam questions beforehand defeats the purpose of testing them."
+    },
+    {
+      "type": "short",
+      "question": "In the studying metaphor, what is the key difference between Student A and Student B?",
+      "answer": "Student A memorized the specific answers to the practice questions, while Student B understood the general method behind the answers, so Student A fails on genuinely new questions while Student B can still succeed on them.",
+      "acceptable": [
+        "student a memorized answers, student b learned the underlying pattern",
+        "a memorizes specific answers, b actually understands the method",
+        "one memorized specific answers, the other learned a generalizable pattern"
+      ],
+      "explanation": "Student A's memorized answers only work on the exact questions already seen, while Student B's understanding of the underlying method transfers to new, previously unseen questions — mirroring the difference between a pattern that only fits training data and one that truly generalizes."
+    },
+    {
+      "type": "mc",
+      "question": "A pattern fits the training set perfectly but fails badly on the test set. What does this most likely indicate?",
+      "choices": [
+        "The pattern is definitely correct and the test set must be flawed",
+        "The pattern was probably closer to fitting quirks specific to the training rows than to capturing something generally true",
+        "The training set and test set should be swapped so the pattern passes",
+        "Nothing meaningful can be concluded from this result"
+      ],
+      "answerIndex": 1,
+      "explanation": "A pattern that works only on the exact rows it was built from, but not on new rows, is a strong sign it captured coincidental details of the training data rather than a genuine, generalizable regularity."
+    },
+    {
+      "type": "short",
+      "question": "Why must the training set and test set be non-overlapping (no row appears in both)?",
+      "answer": "If the same rows appeared in both sets, checking the pattern against the test set wouldn't be an independent check at all, since the pattern would already have been built partly from those same rows — the test set only proves anything if it contains rows the pattern-finding process never saw.",
+      "acceptable": [
+        "overlap would mean the test set isn't actually new data, so it can't independently verify the pattern",
+        "if rows overlap, the test isn't a fair or independent check anymore",
+        "shared rows would let the pattern already fit part of the test set, defeating the purpose"
+      ],
+      "explanation": "The entire point of a test set is that it represents data the pattern hasn't been built from. Any overlap with the training set undermines that independence and makes the test no longer a fair check of whether the pattern generalizes."
+    }
+  ]
+},
+{
+  "id": "5.12",
+  "number": 12,
+  "title": "Mini-project: analyze a small dataset end-to-end",
+  "objectives": [
+    "Compute the mean, median, mode, and range for a small real dataset",
+    "Compute the variance and standard deviation for the same dataset and interpret what they reveal about spread",
+    "Answer a probability question and an expected-value question about the dataset by treating each row as an equally likely random pick",
+    "Explain how all of these measures work together to describe one dataset from multiple angles, and reason about which measure best answers a given question"
+  ],
+  "explanation": [
+    "You've now met every tool this phase has to offer: mean, median, and mode for finding a 'typical' value (lessons 5.2-5.4), range, variance, and standard deviation for measuring spread (lessons 5.5-5.7), probability and expected value for reasoning about chance (lessons 5.8-5.10), and the train/test idea for checking whether a pattern actually generalizes (lesson 5.11). This lesson doesn't teach anything new — it's your chance to take one small, real dataset and run it completely through every tool in the phase, the same way lesson 4.12 took every gate you'd learned across Phase 4 and combined them into one working fish-tank alarm circuit.",
+    "Here's the shape worth noticing before you dive in. No single statistic tells you everything about a dataset. Mean, median, and mode all answer some version of 'what's a typical value here?' but they can disagree with each other, especially when a dataset has outliers (lesson 5.3) or ties (lesson 5.4). Range, variance, and standard deviation all answer a completely different question — 'how spread out are the values?' — which the typical-value measures say nothing about at all. And probability and expected value answer yet another kind of question: 'if I picked one row at random, what should I expect?' A single dataset genuinely needs several angles of view to be understood, the same way a single fish-tank sensor wasn't enough on its own to decide whether the alarm should sound.",
+    "You'll work through all of this on one dataset: the number of pull-ups six kids completed during a PE fitness test. You'll compute every statistic from this phase on those same six numbers, one after another, so you can see directly how each one adds something the others didn't tell you — and you'll notice, by the end, a genuinely elegant connection between two ideas that might have felt unrelated: expected value and the mean.",
+    "As you work through the practice problems below, which deliberately vary the dataset and the question being asked, keep applying the same discipline lesson 4.12 asked of you with gates: before reaching for a formula, ask yourself exactly what question you're being asked, since a 'typical value' question, a 'spread' question, and a 'chance' question each call for a completely different tool from this phase, even though all three tools are being applied to the very same handful of numbers."
+  ],
+  "example": {
+    "problem": "During a PE fitness test, 6 kids do as many pull-ups as they can. Their results are: 4, 6, 6, 8, 10, 14. Find the mean, median, mode, range, variance, and standard deviation of this dataset. Then, if you picked one kid at random, find the probability their pull-up count is above the mean, and find the expected number of pull-ups if you picked one kid at random.",
+    "steps": [
+      "Mean (lesson 5.2): sum the values, 4+6+6+8+10+14 = 48, then divide by the count of 6 kids: mean = 48/6 = 8 pull-ups.",
+      "Median (lesson 5.3): sort the values (already sorted: 4, 6, 6, 8, 10, 14). With 6 values (an even count), the median is the average of the 3rd and 4th values: (6+8)/2 = 7 pull-ups.",
+      "Mode (lesson 5.4): find the most frequent value. 6 appears twice; every other value appears once. Mode = 6 pull-ups.",
+      "Range (lesson 5.5): max minus min = 14 − 4 = 10 pull-ups.",
+      "Variance (lesson 5.6): find each value's deviation from the mean of 8: 4−8=−4, 6−8=−2, 6−8=−2, 8−8=0, 10−8=2, 14−8=6. Square each deviation: 16, 4, 4, 0, 4, 36. Sum the squares: 16+4+4+0+4+36 = 64. Divide by N=6: variance = 64/6 ≈ 10.67 (in squared pull-ups).",
+      "Standard deviation (lesson 5.7): take the square root of the variance to get back to original units: sqrt(10.67) ≈ 3.27 pull-ups.",
+      "Probability above the mean (lesson 5.8): out of the 6 kids, count how many did MORE than 8 pull-ups (the mean): 10 and 14 qualify, so 2 out of 6 are favorable outcomes. Probability = 2/6 = 1/3.",
+      "Expected value (lesson 5.10): if you pick one of the 6 kids completely at random, each kid is equally likely, with probability 1/6 each. Expected value = (4+6+6+8+10+14) x (1/6) = 48 x (1/6) = 8 pull-ups. Notice this is exactly the same number as the mean — that's not a coincidence, since computing an expected value over equally-likely rows is mathematically the same operation as computing the mean, just described as 'weighting by probability' instead of 'dividing sum by count.'"
+    ],
+    "answer": "Mean = 8, median = 7, mode = 6, range = 10, variance ≈ 10.67, standard deviation ≈ 3.27 pull-ups. Probability a randomly picked kid did more than 8 pull-ups = 1/3. Expected number of pull-ups for a randomly picked kid = 8, which matches the mean exactly."
+  },
+  "practice": [
+    {
+      "problem": "A small ice cream stand records scoops sold over 5 days: 20, 35, 20, 15, 60. Find the mean, median, mode, and range.",
+      "solution": "Mean: sum = 20+35+20+15+60 = 150, divided by 5 days gives mean = 30 scoops. Median: sorted order is 15, 20, 20, 35, 60; with 5 values (odd count), the median is the middle (3rd) value: 20 scoops. Mode: 20 appears twice, every other value appears once, so mode = 20 scoops. Range: max − min = 60 − 15 = 45 scoops."
+    },
+    {
+      "problem": "Four students score 70, 80, 90, and 100 on a test. Find the variance and standard deviation.",
+      "solution": "Mean = (70+80+90+100)/4 = 340/4 = 85. Deviations from the mean: 70−85=−15, 80−85=−5, 90−85=5, 100−85=15. Squared deviations: 225, 25, 25, 225. Sum = 225+25+25+225 = 500. Variance = 500/4 = 125 (squared points). Standard deviation = sqrt(125) ≈ 11.18 points."
+    },
+    {
+      "problem": "Six kids' dodgeball scores are: 2, 4, 4, 6, 8, 10. If you picked one kid at random, what's the probability their score is BELOW the mean?",
+      "solution": "Mean = (2+4+4+6+8+10)/6 = 34/6 ≈ 5.67. Count the scores strictly below 5.67: 2, 4, and 4 qualify (3 kids); 6, 8, and 10 do not. Probability = 3/6 = 1/2."
+    },
+    {
+      "problem": "A vending machine dispenses a mystery toy. 3 out of every 10 toys are rare and worth $5 to a collector; the other 7 out of 10 are common and worth $1. What is the expected value of one toy from this machine?",
+      "solution": "P(rare) = 3/10 with value $5; P(common) = 7/10 with value $1. Expected value = (5 x 3/10) + (1 x 7/10) = 15/10 + 7/10 = 22/10 = 2.2. Each toy is worth $2.20 on average."
+    },
+    {
+      "problem": "Using the pull-up dataset from the example (4, 6, 6, 8, 10, 14), suppose you also recorded each kid's grip-strength score and noticed that in this training set, every kid with more than 8 pull-ups also had the top 2 grip-strength scores. Using ideas from lesson 5.11, explain how you would check whether this pattern is likely to hold for other kids, rather than just trusting it because it fit these 6 rows.",
+      "solution": "Before trusting the pattern, you'd want to check it against a test set of kids whose pull-up counts and grip-strength scores were held back and never used while noticing the pattern in the first place. If the same relationship (more pull-ups going with higher grip strength) also holds up on those unseen kids, that's real evidence the pattern reflects something generally true rather than just a coincidence among these particular 6 kids. If it breaks down on the held-back kids, that would show the pattern was closer to fitting quirks of this one small group than to capturing something reliable — exactly the lesson of not trusting a pattern until it's been checked on data it wasn't built from."
+    }
+  ],
+  "quiz": [
+    {
+      "type": "mc",
+      "question": "Which measure is generally most resistant to being thrown off by a single extreme outlier value?",
+      "choices": [
+        "Mean",
+        "Median",
+        "Range",
+        "Expected value"
+      ],
+      "answerIndex": 1,
+      "explanation": "The median only depends on the middle value(s) once the data is sorted, so one extremely large or small outlier barely shifts it, whereas the mean, range, and expected value can all be pulled substantially by a single extreme value."
+    },
+    {
+      "type": "short",
+      "question": "For the dataset 3, 5, 5, 7, 10, what is the mean?",
+      "answer": "6",
+      "acceptable": [
+        "6.0",
+        "mean is 6",
+        "six"
+      ],
+      "explanation": "Sum the values: 3+5+5+7+10 = 30. Divide by the count of 5 values: 30/5 = 6."
+    },
+    {
+      "type": "mc",
+      "question": "Which of these questions does variance (and standard deviation) answer, that mean, median, and mode do NOT?",
+      "choices": [
+        "What is a typical value in this dataset?",
+        "How spread out are the values around the mean?",
+        "Which value appears most often?",
+        "What is the probability of picking a specific row at random?"
+      ],
+      "answerIndex": 1,
+      "explanation": "Mean, median, and mode all describe a 'typical' or central value, while variance and standard deviation specifically measure how spread out the values are around that center — a completely different kind of question about the same data."
+    },
+    {
+      "type": "short",
+      "question": "A dataset of 6 kids' pull-up counts has a mean of 8. If you pick one kid completely at random, why is the expected value of their pull-up count also exactly 8?",
+      "answer": "Because when every row is equally likely (probability 1/6 each for 6 kids), calculating an expected value by multiplying each value by its probability and summing is mathematically identical to summing all the values and dividing by the count — the two calculations are just different ways of describing the same weighted average.",
+      "acceptable": [
+        "because equal probabilities make expected value the same calculation as the mean",
+        "expected value with equally likely outcomes equals the mean since both weight every value the same amount",
+        "picking uniformly at random and averaging is the same math as computing the mean"
+      ],
+      "explanation": "Expected value weights each outcome by its probability, and the mean weights each observed value by how often it occurred. When every row is equally likely, those two weightings are identical, so the two calculations produce the exact same number."
+    },
+    {
+      "type": "mc",
+      "question": "A researcher notices a pattern that perfectly fits every row of their dataset, but they never checked it against any held-back rows. What should you conclude about how confident to be in this pattern?",
+      "choices": [
+        "Very confident, since it fits every single row available",
+        "Cautious, since fitting the only data it was built from doesn't show the pattern generalizes to new, unseen rows",
+        "Completely certain, since more rows always means more proof",
+        "There is no way to have any opinion without seeing the data itself"
+      ],
+      "answerIndex": 1,
+      "explanation": "A pattern fitting the exact rows it was found on is close to guaranteed and proves little on its own. Real confidence that a pattern generalizes only comes from checking it against a test set the pattern was never built from, as covered in lesson 5.11."
+    }
+  ]
 }
 ];

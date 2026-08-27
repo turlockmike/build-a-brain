@@ -1,7 +1,8 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-4 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
-Phase 3: 2026-08-25, Phase 4: 2026-08-27) — live on GitHub Pages.
+**Status:** Phases 1-5 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27) — live on
+GitHub Pages.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -25,7 +26,7 @@ Repo: https://github.com/turlockmike/build-a-brain
 - Progress tracking in `localStorage` only (`bab_progress_v1`): started /
   complete / quiz score per lesson, phase progress bar, overall progress bar.
   No account, no login, no backend.
-- Offline support: service worker (`sw.js`, cache `bab-v5` as of the Phase 4
+- Offline support: service worker (`sw.js`, cache `bab-v6` as of the Phase 5
   ship) caches the whole app shell on first load; works with no network after
   that. Cache version gets bumped every time new phase content ships so
   returning users' service workers pick it up.
@@ -81,21 +82,50 @@ Repo: https://github.com/turlockmike/build-a-brain
   programmatically (12/12 lessons: correct id/number sequence, non-empty
   objectives/explanation/practice, exactly 5 quiz questions each) before
   merging into `data/curriculum.js`.
+- **Phase 5 (Statistics & Data) content: 12/12 lessons fully written** —
+  starts at what a dataset is (rows=examples, columns=features, a small
+  worked table plus a Python list-of-dicts callback to Phase 2), through
+  mean (reusing the Phase 2 accumulator pattern), median (with an
+  income-outlier example showing why it resists what the mean doesn't),
+  mode and a three-way mean/median/mode comparison on shared data; then
+  range, variance (deviation -> squared deviation -> average, population
+  variance stated explicitly, divide by N), and standard deviation (sqrt of
+  variance, same worked dataset carried across both lessons for numeric
+  continuity); then probability basics (outcomes/events/favorable-over-total,
+  tied to Phase 1 fractions), combining probabilities with AND/OR (an
+  explicit callback to Phase 4's AND/OR gates — multiply for AND, add-minus-
+  overlap for OR), expected value (weighted average of outcomes, tied back
+  to lesson 5.2's mean), and train/test split intuition (memorizing vs.
+  learning metaphor, fully conceptual, no ML math — that's Phase 8+), ending
+  in a mini-project that runs one small dataset (6 kids' pull-up counts)
+  through every measure from the phase (mean, median, mode, range, variance,
+  std dev, a probability question, an expected-value question) in one
+  coherent walkthrough, mirroring 4.12's synthesis structure. Every lesson
+  assumes only Phase 1-4 + earlier Phase 5 lessons — content was generated
+  in 3 lesson-groups (5.1-5.4, 5.5-5.8, 5.9-5.12) each briefed on the prior
+  groups' coverage plus the actual Phase 1-4 content (grepped from
+  `curriculum.js`, not assumed) to keep callbacks accurate and the
+  progressive-dependency constraint intact, then schema- and arithmetic-
+  validated programmatically (12/12 lessons: correct id/number sequence,
+  non-empty objectives/explanation/practice, exactly 5 quiz questions each,
+  valid mc answerIndex bounds; hand-spot-checked variance/probability/EV
+  worked examples for correct arithmetic) before merging into
+  `data/curriculum.js` (76 lessons total across Phases 1-5).
 - Deployed: pushed to `main` on `turlockmike/build-a-brain`, GitHub Pages
   enabled serving from `main` / root (same setup as kana-cards). Verified
   live with a `curl -sI` 200 check + a content check on `data/curriculum.js`
-  post-deploy, for the Phase 1, Phase 2, Phase 3, and Phase 4 ships.
+  post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 ships.
 
 ## Pending — next session(s)
 
-- **Phases 5-14 have no lesson content yet** — only their phase titles show
+- **Phases 6-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
-- Next up: Phase 5, "Statistics & Data — mean/median/variance/std dev,
-  probability, expected value, what a dataset is, train/test split
-  intuition." Needs its own lesson-title breakdown (like Phase 1-4 got)
-  before full lesson content in the same schema.
+- Next up: Phase 6, "Math Foundations II — functions & graphing, vectors and
+  matrices, matrix multiplication, weighted sums." Needs its own
+  lesson-title breakdown (like Phase 1-5 got) before full lesson content in
+  the same schema.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)
   if plain-text exponents/fractions ever feel cramped, print/export view.
