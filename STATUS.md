@@ -1,8 +1,8 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-7 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** Phases 1-8 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
-2026-08-27, Phase 7: 2026-08-27) — live on GitHub Pages.
+2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27) — live on GitHub Pages.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -185,21 +185,55 @@ Repo: https://github.com/turlockmike/build-a-brain
   reduction/axis-sum computation and its cross-check against the equivalent
   Phase 6 hand-computed result — before merging into `data/curriculum.js`
   (101 lessons total across Phases 1-7).
+- **Phase 8 (The Perceptron) content: 10/10 lessons fully written** — starts
+  at the step function (turning a weighted sum into an all-or-nothing 0/1
+  decision, callback to Phase 3's neuron-firing threshold and Phase 4's
+  voltage-threshold decisions, and directly paying off lesson 6.12's own
+  forward reference: "this is precisely what a...perceptron computes...
+  That's a topic for Phase 8"), then folding an explicit threshold into a
+  single combined bias number (unifying 6.12's "baseline" framing with
+  3.11/4.8's "threshold" framing into one >= 0 rule), then the perceptron
+  named precisely for the first time (z = (x . w) + b, output = step(z)),
+  paying off lesson 3.14's biological-to-artificial mapping by name; then a
+  hand-computation drill, the geometric view of a 2-input perceptron's
+  decision boundary as a straight line (callback to 6.3's slope-intercept
+  form), AND/OR/NOT built as perceptrons by choosing weights and bias
+  (direct payoff of Phase 4's gates), the XOR problem (why a single
+  perceptron provably cannot separate XOR's diagonal truth-table corners —
+  Minsky & Papert 1969 — forward-referencing Phase 10's layered networks as
+  the fix, no new math taught); then coding a perceptron in Python two ways
+  — a loop with the accumulator pattern (callback to 2.14-2.16) and
+  np.dot (callback to 7.10) — ending in a mini-project that rebuilds
+  Phase 4's own fish-tank alarm decision circuit (lesson 4.12) as a single
+  perceptron, hand-verified against all 8 truth-table rows and implemented
+  both ways in code. Every lesson assumes only Phase 1-7 + earlier Phase 8
+  lessons — content was generated in 3 lesson-groups (8.1-8.4, 8.5-8.7,
+  8.8-8.10), each grounded in the ACTUAL prior-phase lesson content (pulled
+  programmatically from `curriculum.js`, not assumed) needed for its
+  callbacks, then schema-validated programmatically (10/10 lessons: correct
+  id/number sequence, no duplicate ids across all 111 lessons, exactly 5
+  quiz questions and 3-5 practice problems per lesson, valid mc answerIndex
+  bounds) plus every worked example/practice/quiz numeric answer
+  cross-checked against an independent Python re-computation of the same
+  arithmetic (dot products, z values, step-function outputs, the
+  slope-intercept boundary line, and all 8 rows of the fish-tank-alarm
+  truth table) before merging into `data/curriculum.js` (111 lessons total
+  across Phases 1-8).
 - Deployed: pushed to `main` on `turlockmike/build-a-brain`, GitHub Pages
   enabled serving from `main` / root (same setup as kana-cards). Verified
   live with a `curl -sI` 200 check + a content check on `data/curriculum.js`
   post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6,
-  and Phase 7 ships.
+  Phase 7, and Phase 8 ships.
 
 ## Pending — next session(s)
 
-- **Phases 8-14 have no lesson content yet** — only their phase titles show
+- **Phases 9-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
-- Next up: Phase 8, "The Perceptron — inputs × weights + threshold =
-  decision, built by hand and in code." Needs its own lesson-title
-  breakdown (like Phase 1-7 got) before full lesson content in the same
+- Next up: Phase 9, "Calculus for Learning — derivatives/slopes, chain
+  rule, 'finding the downhill direction.'" Needs its own lesson-title
+  breakdown (like Phase 1-8 got) before full lesson content in the same
   schema.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)

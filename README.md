@@ -23,11 +23,13 @@ no network afterward (same pattern as the sibling flashcard apps below).
 
 ## Status
 
-**Phases 1-4 are fully written** — Phase 1 (Math Foundations I, 20/20 lessons),
-Phase 2 (Programming Foundations I — Python, 17/17 lessons), Phase 3
-(How Brains Work, 15/15 lessons), and Phase 4 (Logic & Computing Basics,
-12/12 lessons).
-Phases 5-14 are visible in the roadmap as titles only ("coming soon") so the
+**Phases 1-8 are fully written** (111 lessons total) — Phase 1 (Math
+Foundations I, 20/20), Phase 2 (Programming Foundations I — Python, 17/17),
+Phase 3 (How Brains Work, 15/15), Phase 4 (Logic & Computing Basics, 12/12),
+Phase 5 (Statistics & Data, 12/12), Phase 6 (Math Foundations II, 13/13),
+Phase 7 (Programming Foundations II, 12/12), and Phase 8 (The Perceptron,
+10/10).
+Phases 9-14 are visible in the roadmap as titles only ("coming soon") so the
 whole path is motivating to see, but have no lesson content yet. See
 `STATUS.md` for the exact cutoff and what's next.
 
@@ -93,9 +95,9 @@ automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 7:
-   "Programming Foundations II — arrays, multi-input functions, vectorized
-   thinking (NumPy)").
+1. Pick the next phase from `ROADMAP` (currently phase 9:
+   "Calculus for Learning — derivatives/slopes, chain rule, 'finding the
+   downhill direction'").
 2. Write that phase's lesson list (title-only breakdown first, then full content
    per lesson using the exact schema above — same content bar as Phase 1-6: a
    real 300-500 word explanation with analogies, a worked example, 3-5
@@ -103,7 +105,7 @@ automatically.
    assume only earlier-phase content plus earlier lessons in the same phase —
    never anything from a later phase or later lesson.
 3. Append those lesson objects to `LESSONS` in `data/curriculum.js`, ids
-   `"7.1"`, `"7.2"`, ... (id format is always `"<phase>.<lesson>"`).
+   `"9.1"`, `"9.2"`, ... (id format is always `"<phase>.<lesson>"`).
 4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
    any phase with matching `LESSONS` entries automatically.
 5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v6` → `bab-v7`) so

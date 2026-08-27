@@ -1,8 +1,9 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 5-14 — content not written yet).
- * LESSONS: full lesson content for Phase 1 (20 lessons), Phase 2 (17 lessons),
- * Phase 3 (15 lessons), and Phase 4 (12 lessons). Phases 5-14 will each get their
- * own LESSONS entries in a future session — see README.md "Adding a new phase".
+ * ROADMAP: all 14 phases (title only for phases 9-14 — content not written yet).
+ * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
+ * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), and Phase 8 (10) —
+ * 111 lessons total. Phases 9-14 will each get their own LESSONS entries in a
+ * future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -10687,6 +10688,1044 @@ const LESSONS = [
         ],
         "answerIndex": 1,
         "explanation": "From lesson 7.6's concept lesson onward, every NumPy tool in this phase existed to let you express an operation on a whole list or table directly, instead of writing the visit-every-element loop yourself — the core idea of vectorized thinking."
+      }
+    ]
+  },
+  {
+    "id": "8.1",
+    "number": 1,
+    "title": "The step function — turning a weighted sum into a decision",
+    "objectives": [
+      "Explain what a step function does to a weighted sum",
+      "Apply an explicit threshold to a weighted-sum-plus-bias to produce a 0/1 decision",
+      "Connect this rule to the all-or-nothing firing idea from Phase 3 and the threshold-decision idea from Phase 4"
+    ],
+    "explanation": [
+      "Lesson 6.12 taught you to compute a weighted sum — inputs dotted with weights, plus a bias — and said, in its very last line, that this exact shape \"is precisely what a single artificial neuron (called a perceptron) computes before it decides whether to 'fire.' That decision-making part is a topic for Phase 8.\" This lesson is that payoff. A weighted sum by itself is just a number — it doesn't fire, doesn't decide anything, doesn't do anything but sit there. Turning that number into an actual yes/no decision takes one more step, literally: a step function.",
+      "A step function is the simplest possible decision rule: compare a number to a threshold, and output one of exactly two values depending on which side of the threshold it lands on. Written out: output = 1 if weighted_sum >= threshold, else output = 0. That's the entire rule — no in-between values, no partial credit, just a hard line with 1 on one side and 0 on the other. This is the exact same shape lesson 3.3 described for a real neuron (\"below threshold: silence. At or above: fire.\") and lesson 4.8 described for a logic gate's voltage (\"anything at or above roughly 2.5V counts as HIGH\") — three different systems, the identical all-or-nothing rule.",
+      "Bring back lesson 6.12's tutoring app: weighted_sum = (hours_studied x 5) + (practice_tests x 10) + (hours_slept x 1) + 20, where 20 is a fixed baseline bias every student starts with. For a student with 4 study hours, 2 practice tests, and 7 hours of sleep, lesson 6.12 computed weighted_sum = 67. Suppose the app wants to flag whether a student is \"on track\" (1) or \"needs more prep\" (0), using a cutoff score of 70. Applying the step function: is 67 >= 70? No — so this student's decision is 0, \"needs more prep,\" even though their predicted score (67) is only 3 points shy.",
+      "Notice what changed and what didn't: the weighted-sum arithmetic from lesson 6.12 is completely untouched — same inputs, same weights, same bias, same 67. All that's new is one extra comparison tacked on at the very end, exactly the same way lesson 6.12 itself was \"lesson 6.7's dot product with one extra number tacked on.\" Every lesson in this phase builds on that pattern: nothing about the arithmetic you already know changes, one small rule gets added on top."
+    ],
+    "example": {
+      "problem": "Using the tutoring app's weighted sum (weights [5, 10, 1], baseline bias 20) and a cutoff of 70, decide whether a second student — 6 hours studied, 3 practice tests, 8 hours slept — is \"on track\" (1) or \"needs more prep\" (0).",
+      "steps": [
+        "Compute the dot product of inputs and weights: (6 x 5) + (3 x 10) + (8 x 1) = 30 + 30 + 8 = 68.",
+        "Add the baseline bias: 68 + 20 = 88. This is the weighted sum, exactly as in lesson 6.12.",
+        "Apply the step function with threshold 70: is 88 >= 70? Yes.",
+        "Since the weighted sum crosses the threshold, the output is 1."
+      ],
+      "answer": "Output = 1 (\"on track\") — the weighted sum, 88, is at or above the cutoff of 70."
+    },
+    "practice": [
+      {
+        "problem": "A third student studied 2 hours, took 1 practice test, and slept 6 hours. Using weights [5, 10, 1] and baseline bias 20, compute the weighted sum and apply the step function with threshold 70.",
+        "solution": "Dot product: (2x5)+(1x10)+(6x1) = 10+10+6 = 26. Weighted sum: 26+20 = 46. Is 46 >= 70? No. Output = 0 (\"needs more prep\")."
+      },
+      {
+        "problem": "A neuron's combined incoming signal (lesson 3.11's shape) totals +9, and its firing threshold is +9. Using the step function's \"at or above\" rule, does it fire?",
+        "solution": "Is 9 >= 9? Yes — \"at or above\" includes equality, so the neuron fires (output 1), landing exactly on the threshold."
+      },
+      {
+        "problem": "A chip reads a wire's voltage as 2.5V, and HIGH is defined as \"at or above 2.5V\" (lesson 4.8). Using the step function rule, is this wire HIGH or LOW?",
+        "solution": "Is 2.5 >= 2.5? Yes. The wire is read as HIGH (1) — exactly on the threshold still counts, by the same \"at or above\" rule."
+      },
+      {
+        "problem": "Using weights [3, 2] and bias 0 (no baseline adjustment), inputs [4, 1], and threshold 10, compute the weighted sum and the step function output.",
+        "solution": "Dot product: (4x3)+(1x2) = 12+2 = 14. Weighted sum: 14+0 = 14. Is 14 >= 10? Yes. Output = 1."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does a step function do to a weighted sum?",
+        "choices": [
+          "It rounds the weighted sum to the nearest whole number",
+          "It compares the weighted sum to a threshold and outputs exactly one of two values",
+          "It divides the weighted sum by the number of inputs",
+          "It multiplies the weighted sum by the bias"
+        ],
+        "answerIndex": 1,
+        "explanation": "A step function's entire job is a threshold comparison producing an all-or-nothing 0/1 output — no rounding or averaging involved."
+      },
+      {
+        "type": "short",
+        "question": "Using weights [5,10,1], baseline bias 20, threshold 70, and inputs [4,2,7] (lesson 6.12's own student), what is the step function's output?",
+        "answer": "0",
+        "acceptable": [
+          "0",
+          "needs more prep",
+          "zero"
+        ],
+        "explanation": "Weighted sum = 47 (dot product) + 20 (bias) = 67, and 67 is below the threshold of 70, so the output is 0."
+      },
+      {
+        "type": "mc",
+        "question": "Which earlier-phase idea does the step function's \"at or above threshold: 1, below: 0\" rule most directly match?",
+        "choices": [
+          "Phase 2's if/elif/else chains only",
+          "Phase 3's all-or-nothing neuron firing rule and Phase 4's HIGH/LOW voltage threshold",
+          "Phase 5's mean and median",
+          "Phase 1's rounding rules"
+        ],
+        "answerIndex": 1,
+        "explanation": "Lessons 3.3 and 4.8 both described the identical all-or-nothing, cross-a-threshold shape — the step function is that same rule written as one formula."
+      },
+      {
+        "type": "short",
+        "question": "In the rule \"output = 1 if weighted_sum >= threshold, else 0,\" what happens when weighted_sum is exactly equal to threshold?",
+        "answer": "output is 1",
+        "acceptable": [
+          "1",
+          "it fires",
+          "outputs 1",
+          "counts as 1"
+        ],
+        "explanation": "\"At or above\" includes equality, so landing exactly on the threshold still produces an output of 1, not 0."
+      },
+      {
+        "type": "mc",
+        "question": "What is new in this lesson compared to lesson 6.12's weighted sum?",
+        "choices": [
+          "A completely different formula for combining inputs and weights",
+          "One extra comparison against a threshold, tacked onto the end of the same weighted-sum arithmetic",
+          "Removing the bias term entirely",
+          "Using division instead of addition"
+        ],
+        "answerIndex": 1,
+        "explanation": "The weighted-sum arithmetic is unchanged from 6.12; the step function just adds one more comparison at the very end, the same layering pattern 6.12 itself used on top of the dot product."
+      }
+    ]
+  },
+  {
+    "id": "8.2",
+    "number": 2,
+    "title": "Folding the threshold into the bias — one number, one rule",
+    "objectives": [
+      "Rewrite a \"weighted_sum >= threshold\" rule as an equivalent \"weighted_sum + new_bias >= 0\" rule",
+      "Compute a combined bias that absorbs both a baseline adjustment and a decision threshold",
+      "Explain why every perceptron rule can be written as a single comparison against 0"
+    ],
+    "explanation": [
+      "Lesson 8.1 used two separate numbers to make a decision: a baseline bias (20, the tutoring app's built-in starting score) and a threshold (70, the cutoff for \"on track\"). That's an extra number to keep track of for every single decision. This lesson shows a small piece of algebra that collapses both into one number, so every perceptron rule, no matter what its baseline or threshold happen to be, can be written the exact same simple way.",
+      "Start from lesson 8.1's rule: raw_dot + bias >= threshold, where raw_dot is the plain dot product (no bias yet) and bias is the baseline (20). Subtract threshold from both sides of that comparison — a comparison stays true or false if you subtract the same number from both sides, exactly the way an equation stays balanced if you subtract the same number from both sides. That gives: raw_dot + bias - threshold >= 0. Group the two plain numbers, bias - threshold, into one new number, and call it the combined bias. The rule becomes: raw_dot + combined_bias >= 0 — a single number added to the dot product, compared to 0.",
+      "For the tutoring app, combined_bias = bias - threshold = 20 - 70 = -50. Recheck lesson 8.1's first student: raw_dot was 47 (computed in lesson 6.12). Using the combined bias: 47 + (-50) = -3. Is -3 >= 0? No — output 0. That's the identical answer lesson 8.1 got using the two-number version (weighted_sum 67, threshold 70, 67 not >= 70, output 0) — same decision, reached with one number added instead of two numbers compared.",
+      "This matters beyond just tidiness. Every perceptron you'll build for the rest of this phase — and every one used in real neural networks — is defined with exactly one bias number and a fixed comparison against 0. A large negative bias makes a perceptron \"hard to please\" (needs a big dot product to overcome it, like AND needing every input on); a bias near zero, or positive, makes it \"easy to please.\" One number now carries the entire job that a separate baseline and threshold used to split between them."
+    ],
+    "example": {
+      "problem": "Using lesson 8.1's second student (raw dot product 68, baseline bias 20, threshold 70), compute the combined bias and confirm it gives the same decision as the two-number version did.",
+      "steps": [
+        "Compute the combined bias: bias - threshold = 20 - 70 = -50.",
+        "Add the combined bias to the raw dot product: 68 + (-50) = 18.",
+        "Apply the single rule: is 18 >= 0? Yes.",
+        "Compare to lesson 8.1's answer using the two-number version: weighted sum 88, threshold 70, 88 >= 70 -> output 1. Both methods agree."
+      ],
+      "answer": "Output = 1, matching lesson 8.1 exactly — the combined bias of -50 folds the baseline (+20) and the threshold (70) into one number."
+    },
+    "practice": [
+      {
+        "problem": "Lesson 8.1's third student had a raw dot product of 26 (baseline bias 20, threshold 70). Using the combined bias, find the output.",
+        "solution": "Combined bias = 20 - 70 = -50. 26 + (-50) = -24. Is -24 >= 0? No. Output = 0 — matching lesson 8.1's two-number answer."
+      },
+      {
+        "problem": "A perceptron has baseline bias 0 and threshold 15. What is its combined bias, and what does a combined bias of that sign generally mean about how easy the perceptron is to satisfy?",
+        "solution": "Combined bias = 0 - 15 = -15. A negative combined bias means the raw dot product has to climb up and overcome that negative number before crossing 0 — the perceptron is relatively hard to please, needing a dot product of at least 15."
+      },
+      {
+        "problem": "A perceptron has baseline bias 5 and threshold 5. What is its combined bias, and what raw dot product does it take to produce output 1?",
+        "solution": "Combined bias = 5 - 5 = 0. Since raw_dot + 0 >= 0 simplifies to raw_dot >= 0, any raw dot product of 0 or more produces output 1 — this perceptron is satisfied by a raw dot product of exactly 0."
+      },
+      {
+        "problem": "Using the tutoring perceptron's combined bias of -50 and weights [5, 10, 1], find the output for a student with inputs [10, 0, 0] (10 hours studied, no practice tests, no sleep recorded).",
+        "solution": "Dot product: (10x5)+(0x10)+(0x1) = 50. 50 + (-50) = 0. Is 0 >= 0? Yes. Output = 1 — landing exactly on the boundary still counts as 1, same rule as lesson 8.1's practice problem 2."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What algebraic step turns \"raw_dot + bias >= threshold\" into \"raw_dot + combined_bias >= 0\"?",
+        "choices": [
+          "Multiplying both sides by threshold",
+          "Subtracting threshold from both sides and grouping bias - threshold into one number",
+          "Dividing both sides by bias",
+          "Adding threshold to both sides"
+        ],
+        "answerIndex": 1,
+        "explanation": "Subtracting threshold from both sides of the comparison keeps it equivalent, and grouping bias - threshold into a single combined_bias produces the >= 0 form."
+      },
+      {
+        "type": "short",
+        "question": "For the tutoring app (baseline bias 20, threshold 70), what is the combined bias?",
+        "answer": "-50",
+        "acceptable": [
+          "-50",
+          "negative 50",
+          "minus 50"
+        ],
+        "explanation": "combined_bias = bias - threshold = 20 - 70 = -50."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this lesson matter for the rest of the phase?",
+        "choices": [
+          "It introduces a brand-new way to compute dot products",
+          "It shows every perceptron rule can be written the same simple way: one bias number, compared to 0",
+          "It replaces the step function with a different rule",
+          "It removes the need for weights"
+        ],
+        "answerIndex": 1,
+        "explanation": "Collapsing a baseline and a threshold into one combined bias means every perceptron from here on can be described with the identical single-comparison-to-0 form."
+      },
+      {
+        "type": "short",
+        "question": "If a perceptron's combined bias is 0, what is the simplified rule for producing output 1?",
+        "answer": "raw dot product >= 0",
+        "acceptable": [
+          "dot product >= 0",
+          "raw_dot >= 0",
+          "the dot product is 0 or more"
+        ],
+        "explanation": "raw_dot + 0 >= 0 is exactly the same statement as raw_dot >= 0 — a combined bias of 0 leaves the raw dot product's own sign to decide the output."
+      },
+      {
+        "type": "mc",
+        "question": "A perceptron has a large NEGATIVE combined bias. What does that generally mean?",
+        "choices": [
+          "The perceptron always outputs 1 no matter the inputs",
+          "The perceptron is relatively hard to satisfy — the dot product must climb high to overcome the negative bias",
+          "The weights no longer matter",
+          "The step function stops being used"
+        ],
+        "answerIndex": 1,
+        "explanation": "A large negative combined bias must be overcome by a large enough dot product before the sum reaches 0, making that perceptron harder to trigger — exactly the AND-gate behavior lesson 8.6 builds on this idea."
+      }
+    ]
+  },
+  {
+    "id": "8.3",
+    "number": 3,
+    "title": "The perceptron — the complete picture, named precisely",
+    "objectives": [
+      "State the full perceptron formula: z = (inputs dot weights) + bias, output = step(z)",
+      "Name every piece of a perceptron and match it to its Phase 3 biological counterpart",
+      "Explain why a perceptron is called an artificial neuron"
+    ],
+    "explanation": [
+      "Lesson 3.14 promised a direct mapping between biological neurons and their artificial counterparts, by name only, saving the actual math for \"a much later phase.\" This is that phase, and this lesson is where the whole picture finally comes together. A perceptron is an artificial neuron: it takes a list of numeric inputs, x = [x1, x2, ..., xn], multiplies each one by its own weight, w = [w1, w2, ..., wn] (lesson 3.14's artificial counterpart to synaptic strength), adds up all of those products (the dot product, lesson 6.7), adds one bias number (lesson 8.2's combined bias, which already has any threshold folded in), and finally runs the whole result through a step function (lesson 8.1) to produce a single 0 or 1.",
+      "Written as one formula: z = (x . w) + b, output = step(z), where step(z) = 1 if z >= 0, else 0. That's the entire perceptron — four ingredients (inputs, weights, bias, step function) and two lines of math, combining lessons 6.7, 6.12, 8.1, and 8.2 into one named object for the first time. z is sometimes called the perceptron's \"pre-activation\" value — the number computed before the step function decides anything — matching exactly the shape lesson 6.12 called a weighted sum, just with the threshold already folded into b per lesson 8.2.",
+      "The name-by-name mapping lesson 3.14 promised is now a mapping you can compute, not just recognize: synaptic strength (3.5) maps to a weight, one real number per input. The all-or-nothing firing rule (3.3) maps to the step function. \"Weighing many signals at once\" (3.11) maps to the dot product plus bias, z. And the neuron's decision to fire or stay silent maps to the perceptron's output, exactly 1 or exactly 0. Every biological idea this course built up across all of Phase 3 now has one precise, computable, artificial counterpart.",
+      "It's worth being honest about scope here, the same way lesson 3.14 was: a perceptron is a single artificial neuron, computing one decision from a fixed, already-known set of weights and bias. It does not yet learn those weights on its own (that's lessons 9 and 11's job, much later), and a single perceptron alone cannot solve every possible problem (lesson 8.7 will show you exactly where it breaks). For the rest of this phase, the weights and bias are always given to you or reasoned out by hand — building and using a perceptron, not yet training one."
+    ],
+    "example": {
+      "problem": "State the tutoring app's full perceptron in the z = (x . w) + b, output = step(z) form, using weights [5, 10, 1] and combined bias -50 (from lesson 8.2). Then compute its output for a brand-new student with inputs [3, 4, 5].",
+      "steps": [
+        "Write the formula with this perceptron's specific numbers: z = ([hours_studied, practice_tests, hours_slept] . [5, 10, 1]) + (-50).",
+        "Compute the dot product for inputs [3, 4, 5]: (3x5) + (4x10) + (5x1) = 15 + 40 + 5 = 60.",
+        "Add the bias: z = 60 + (-50) = 10.",
+        "Apply the step function: is 10 >= 0? Yes, so output = 1."
+      ],
+      "answer": "z = 10, output = 1 (\"on track\") — computed with the same single perceptron formula that now names every piece: inputs, weights, bias, and the step function."
+    },
+    "practice": [
+      {
+        "problem": "Using the tutoring perceptron (weights [5,10,1], bias -50), compute z and the output for inputs [2, 2, 2].",
+        "solution": "Dot product: (2x5)+(2x10)+(2x1) = 10+20+2 = 32. z = 32 + (-50) = -18. Is -18 >= 0? No. Output = 0."
+      },
+      {
+        "problem": "Match each part of the perceptron formula z = (x . w) + b, output = step(z) to its Phase 3 biological counterpart: (a) w, (b) the step function, (c) z.",
+        "solution": "(a) w matches synaptic strength (lesson 3.5) — one number per connection controlling how much that input counts. (b) the step function matches the all-or-nothing firing rule (lesson 3.3). (c) z matches \"weighing many signals at once\" (lesson 3.11) — the combined, weighted total before the firing decision is made."
+      },
+      {
+        "problem": "A perceptron has weights [2, -1] and bias 3. Compute z and the output for inputs [1, 1].",
+        "solution": "Dot product: (1x2)+(1x-1) = 2-1 = 1. z = 1+3 = 4. Is 4 >= 0? Yes. Output = 1."
+      },
+      {
+        "problem": "Explain in one sentence what a perceptron does NOT yet do, according to this lesson, and which later phases handle it.",
+        "solution": "A perceptron does not learn its own weights and bias — those are given or reasoned out by hand in this phase; Phase 9 (calculus) and Phase 11 (loss and gradient descent) are what teach a perceptron to learn them on its own."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What are the four ingredients of a perceptron, per this lesson's formula?",
+        "choices": [
+          "Inputs, a loop, a list, and a print statement",
+          "Inputs, weights, bias, and the step function",
+          "A dataset, a mean, a median, and a mode",
+          "Rows, columns, a matrix, and a vector"
+        ],
+        "answerIndex": 1,
+        "explanation": "z = (x . w) + b, output = step(z) uses exactly these four ingredients: inputs, weights, bias, and the step function."
+      },
+      {
+        "type": "short",
+        "question": "In Phase 3's terms, what does a perceptron's weight vector w correspond to?",
+        "answer": "synaptic strength",
+        "acceptable": [
+          "synapse strength",
+          "synaptic strength (lesson 3.5)",
+          "connection strength"
+        ],
+        "explanation": "Lesson 3.5's synaptic strength — how much a given connection's signal counts — maps directly to a perceptron's per-input weight."
+      },
+      {
+        "type": "mc",
+        "question": "What is z, in perceptron terminology?",
+        "choices": [
+          "The final 0/1 output after the step function",
+          "The pre-activation value: the dot product plus bias, before the step function runs",
+          "Another name for the bias alone",
+          "The number of inputs the perceptron has"
+        ],
+        "answerIndex": 1,
+        "explanation": "z is the weighted-sum-with-bias-already-included value computed BEFORE the step function turns it into a 0 or 1 output."
+      },
+      {
+        "type": "short",
+        "question": "For weights [2,-1], bias 3, and inputs [1,1] (this lesson's practice problem 3), what is z?",
+        "answer": "4",
+        "acceptable": [
+          "4",
+          "z=4",
+          "z = 4"
+        ],
+        "explanation": "Dot product (1x2)+(1x-1) = 1, plus bias 3, gives z = 4."
+      },
+      {
+        "type": "mc",
+        "question": "What does a single perceptron NOT yet do, according to this lesson?",
+        "choices": [
+          "Compute a dot product",
+          "Learn its own weights and bias from data",
+          "Apply a step function",
+          "Add a bias number"
+        ],
+        "answerIndex": 1,
+        "explanation": "This phase always gives or hand-reasons the weights and bias; learning them automatically is Phase 9/11's job, much later in the course."
+      }
+    ]
+  },
+  {
+    "id": "8.4",
+    "number": 4,
+    "title": "Perceptron drill — computing z and the output by hand",
+    "objectives": [
+      "Compute a perceptron's z value and 0/1 output for several different input sets, quickly and correctly",
+      "Recognize how changing one input, one weight, or the bias changes the output"
+    ],
+    "explanation": [
+      "This lesson introduces no new idea at all — it's pure practice with the full perceptron formula from lesson 8.3, the same way lesson 3.11's worked drill built fluency with weighing many signals before moving on. Speed and accuracy with z = (x . w) + b, output = step(z) matters, because every later lesson in this phase — geometry, logic gates, code — assumes you can compute a perceptron's output without re-deriving the formula each time.",
+      "One habit worth building here: compute the dot product first, in full, before adding the bias — keeping the two steps separate catches arithmetic slips far more reliably than trying to do it all in one pass. A second habit: after computing z, state the comparison explicitly (\"is z >= 0?\") rather than eyeballing the sign — it's an easy place to make a careless mistake with negative numbers specifically.",
+      "It's also worth noticing, across a few different perceptrons, how sensitive the output can be to small changes. Two perceptrons with the exact same weights but different biases can produce completely different outputs for the identical inputs — the bias alone can flip a decision. The same is true of a single input changing: crossing from just below the boundary to just above it flips the entire output from 0 to 1, with nothing gradual in between, exactly the all-or-nothing behavior lesson 8.1 named."
+    ],
+    "example": {
+      "problem": "A perceptron has weights [3, -2, 1] and bias -4. Compute z and the output for three separate input sets: (a) [2, 1, 3], (b) [0, 0, 0], (c) [1, 5, 0].",
+      "steps": [
+        "(a) Dot product: (2x3)+(1x-2)+(3x1) = 6-2+3 = 7. z = 7 + (-4) = 3. Is 3 >= 0? Yes. Output = 1.",
+        "(b) Dot product: (0x3)+(0x-2)+(0x1) = 0. z = 0 + (-4) = -4. Is -4 >= 0? No. Output = 0.",
+        "(c) Dot product: (1x3)+(5x-2)+(0x1) = 3-10+0 = -7. z = -7 + (-4) = -11. Is -11 >= 0? No. Output = 0."
+      ],
+      "answer": "(a) z=3, output=1. (b) z=-4, output=0. (c) z=-11, output=0."
+    },
+    "practice": [
+      {
+        "problem": "Using weights [1, 1, 1] and bias -2, compute z and the output for inputs [1, 1, 0].",
+        "solution": "Dot product: 1+1+0 = 2. z = 2 + (-2) = 0. Is 0 >= 0? Yes. Output = 1."
+      },
+      {
+        "problem": "Using the same perceptron (weights [1,1,1], bias -2), compute the output for inputs [1, 0, 0].",
+        "solution": "Dot product: 1+0+0 = 1. z = 1 + (-2) = -1. Is -1 >= 0? No. Output = 0."
+      },
+      {
+        "problem": "Using weights [4, -1] and bias 0, compute z and the output for inputs [1, 5].",
+        "solution": "Dot product: (1x4)+(5x-1) = 4-5 = -1. z = -1 + 0 = -1. Is -1 >= 0? No. Output = 0."
+      },
+      {
+        "problem": "Two perceptrons share weights [2, 2] but have different biases: Perceptron A has bias -5, Perceptron B has bias -3. For inputs [1, 1], compute each perceptron's output and explain why they differ.",
+        "solution": "Dot product for both: (1x2)+(1x2) = 4. Perceptron A: z = 4-5 = -1, output 0. Perceptron B: z = 4-3 = 1, output 1. Same inputs and weights, but the smaller (less negative) bias in B needs a smaller dot product to cross 0, so B fires while A doesn't — the bias alone flips the decision."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What new idea does this lesson introduce?",
+        "choices": [
+          "A new formula for computing z",
+          "None — it's practice applying lesson 8.3's formula",
+          "A new kind of step function",
+          "Negative weights are introduced for the first time here"
+        ],
+        "answerIndex": 1,
+        "explanation": "This is a drill lesson, matching lesson 3.11's own worked-drill role — building speed and accuracy with the existing perceptron formula, not introducing anything new."
+      },
+      {
+        "type": "short",
+        "question": "Using weights [3,-2,1] and bias -4 (this lesson's worked example), what is z for inputs [2,1,3]?",
+        "answer": "3",
+        "acceptable": [
+          "3",
+          "z=3",
+          "z = 3"
+        ],
+        "explanation": "Dot product (2x3)+(1x-2)+(3x1) = 7, plus bias -4, gives z = 3."
+      },
+      {
+        "type": "mc",
+        "question": "Which habit does this lesson recommend to avoid arithmetic mistakes?",
+        "choices": [
+          "Skip computing the dot product and guess the sign",
+          "Compute the dot product fully first, then add the bias as a separate step",
+          "Always round z to the nearest 10",
+          "Ignore negative weights"
+        ],
+        "answerIndex": 1,
+        "explanation": "Keeping the dot-product step and the bias-addition step separate, rather than combining them in one pass, catches arithmetic slips far more reliably."
+      },
+      {
+        "type": "short",
+        "question": "In the practice problem comparing Perceptron A (bias -5) and Perceptron B (bias -3) with identical weights and inputs, which one fires?",
+        "answer": "Perceptron B",
+        "acceptable": [
+          "B",
+          "perceptron b",
+          "the one with bias -3"
+        ],
+        "explanation": "Both share dot product 4, but A's z = -1 (below 0) while B's z = 1 (at or above 0) — the smaller negative bias alone is enough to flip the decision."
+      },
+      {
+        "type": "mc",
+        "question": "What happens to a perceptron's output as an input crosses from just below the decision boundary to just above it?",
+        "choices": [
+          "It changes gradually from 0 toward 1",
+          "It flips instantly from 0 to 1, with nothing in between",
+          "It stays at 0.5",
+          "Nothing changes"
+        ],
+        "answerIndex": 1,
+        "explanation": "The step function is all-or-nothing (lesson 8.1) — there is no gradual, in-between output, only an instant flip at the boundary."
+      }
+    ]
+  },
+  {
+    "id": "8.5",
+    "number": 5,
+    "title": "Perceptrons as decision boundaries — the geometry of a decision",
+    "objectives": [
+      "Explain why a 2-input perceptron's boundary (z = 0) is a straight line",
+      "Rewrite a perceptron's boundary in slope-intercept form and identify which side outputs 1",
+      "Classify points as inside or outside a perceptron's \"fires\" region using the boundary line"
+    ],
+    "explanation": [
+      "Every perceptron so far has been computed one number at a time, but a 2-input perceptron has a picture hiding inside it. With two inputs x1 and x2, a perceptron's formula is z = (w1 x1 + w2 x2) + b, and the boundary between output 0 and output 1 is exactly where z = 0 — every point that makes z bigger than 0 outputs 1, every point that makes it smaller outputs 0. Set w1 x1 + w2 x2 + b = 0 and solve for x2, and lesson 6.3 already told you what shape that equation traces: a straight line, in slope-intercept form.",
+      "Take a perceptron with weights [2, 3] and bias -12: 2x1 + 3x2 - 12 = 0. Solving for x2 (subtract 2x1, subtract... rather add 12, then divide by 3): x2 = (12 - 2x1) / 3, which is the same as x2 = -⅔x1 + 4 — lesson 6.3's y = mx + b form exactly, with slope -⅔ and y-intercept 4. Every point sitting exactly on that line has z = 0 (the boundary itself, still counted as output 1 by lesson 8.1's \"at or above\" rule). Every point above the line has a bigger x2 than the line predicts for that x1, which pushes z positive — output 1. Every point below the line pushes z negative — output 0.",
+      "Testing this directly: the point (6, 4) — is it above or below the line? At x1 = 6, the line sits at x2 = -⅔(6) + 4 = -4 + 4 = 0, and 4 is above 0, so (6, 4) should output 1. Checking with the actual formula confirms it: z = 2(6) + 3(4) - 12 = 12 + 12 - 12 = 12, and 12 >= 0. The point (1, 1), by contrast: the line at x1 = 1 sits at x2 = -⅔(1) + 4 ≈ 3.33, and 1 is below that, so it should output 0. Checking: z = 2(1) + 3(1) - 12 = 2 + 3 - 12 = -7, and -7 is not >= 0 — confirmed.",
+      "This is the geometric meaning behind everything this phase has been computing by hand: a perceptron with 2 inputs draws exactly one straight line across its input space, and its entire behavior is \"which side of that line is this point on?\" That single idea — one line splitting a plane into a 1-region and a 0-region — is the key to understanding both why perceptrons can build logic gates (lesson 8.6) and exactly where they run into a wall (lesson 8.7)."
+    ],
+    "example": {
+      "problem": "A perceptron has weights [2, 3] and bias -12. Write its boundary in slope-intercept form, then determine whether the point (3, 2) is on the line, above it, or below it, and confirm using z directly.",
+      "steps": [
+        "Set z = 0: 2x1 + 3x2 - 12 = 0.",
+        "Solve for x2: 3x2 = 12 - 2x1, so x2 = (12 - 2x1) / 3 = -⅔x1 + 4. Slope -⅔, intercept 4.",
+        "At x1 = 3, the line sits at x2 = -⅔(3) + 4 = -2 + 4 = 2 — exactly matching the point's own x2 of 2, so (3, 2) is ON the line.",
+        "Confirm with z directly: z = 2(3) + 3(2) - 12 = 6 + 6 - 12 = 0. z = 0 matches \"on the line\" exactly, and outputs 1 by the >= 0 rule."
+      ],
+      "answer": "(3, 2) lies exactly on the boundary line (z = 0), and therefore outputs 1."
+    },
+    "practice": [
+      {
+        "problem": "Using the same perceptron (weights [2,3], bias -12), is the point (0, 0) above, below, or on the boundary line, and what does it output?",
+        "solution": "z = 2(0)+3(0)-12 = -12. Since -12 is not >= 0, it outputs 0 — below the line (the line's intercept alone is at x2=4, well above 0)."
+      },
+      {
+        "problem": "A perceptron has weights [1, 1] and bias -5. Write its boundary in slope-intercept form.",
+        "solution": "x1 + x2 - 5 = 0, so x2 = 5 - x1 = -x1 + 5. Slope -1, intercept 5."
+      },
+      {
+        "problem": "Using that same perceptron (weights [1,1], bias -5), classify the point (10, 10): does it output 0 or 1?",
+        "solution": "z = 1(10)+1(10)-5 = 20-5 = 15. Since 15 >= 0, output = 1."
+      },
+      {
+        "problem": "Explain, using this lesson's line idea, why changing a perceptron's bias (while keeping its weights fixed) shifts the line up or down without changing its slope.",
+        "solution": "The slope of x2 = -(w1/w2)x1 - b/w2 only depends on w1 and w2 (unchanged), while the intercept, -b/w2, depends on the bias — changing b moves only the intercept, sliding the same-slope line up or down, exactly the way lesson 6.3 described changing a linear function's b term."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "For a 2-input perceptron, what shape does the boundary (z = 0) trace in the input space?",
+        "choices": [
+          "A circle",
+          "A straight line",
+          "A parabola",
+          "A single point"
+        ],
+        "answerIndex": 1,
+        "explanation": "z = w1x1 + w2x2 + b = 0 is a linear equation in x1 and x2 — lesson 6.3's straight-line form."
+      },
+      {
+        "type": "short",
+        "question": "For weights [2,3] and bias -12, what is the boundary line's slope, in slope-intercept form?",
+        "answer": "-2/3",
+        "acceptable": [
+          "-2/3",
+          "-0.667",
+          "negative two thirds",
+          "-⅔"
+        ],
+        "explanation": "Solving 2x1+3x2-12=0 for x2 gives x2 = -⅔x1 + 4, so the slope is -⅔."
+      },
+      {
+        "type": "mc",
+        "question": "What determines whether a point outputs 1 or 0, geometrically?",
+        "choices": [
+          "Whether it is above or below the perceptron's boundary line",
+          "Its distance from the origin only",
+          "Whether its coordinates are both positive",
+          "The number of inputs the perceptron has"
+        ],
+        "answerIndex": 0,
+        "explanation": "Points on one side of the boundary line push z positive (output 1); points on the other side push z negative (output 0)."
+      },
+      {
+        "type": "short",
+        "question": "For weights [2,3], bias -12, what is z at the point (6,4), and what does it output?",
+        "answer": "z=12, output 1",
+        "acceptable": [
+          "12, output 1",
+          "z = 12, 1",
+          "12 and 1"
+        ],
+        "explanation": "z = 2(6)+3(4)-12 = 12+12-12 = 12, and 12 >= 0, so output = 1."
+      },
+      {
+        "type": "mc",
+        "question": "Changing only a perceptron's bias (keeping weights the same) does what to its boundary line?",
+        "choices": [
+          "Rotates the line, changing its slope",
+          "Shifts the line up or down (changes the intercept), without changing its slope",
+          "Turns the line into a curve",
+          "Has no effect on the line at all"
+        ],
+        "answerIndex": 1,
+        "explanation": "The slope depends only on the weights; the bias only shifts the intercept, sliding the same-slope line parallel to itself."
+      }
+    ]
+  },
+  {
+    "id": "8.6",
+    "number": 6,
+    "title": "Logic gates as perceptrons — AND, OR, and NOT, built from weights",
+    "objectives": [
+      "Find weights and a bias that make a perceptron compute AND",
+      "Find weights and a bias that make a perceptron compute OR and NOT",
+      "Explain why the same perceptron shape can realize different gates just by changing its weights and bias"
+    ],
+    "explanation": [
+      "Phase 4 built AND, OR, and NOT gates directly from their truth tables, with no arithmetic involved. This lesson shows something remarkable: every one of those gates can also be built as a perceptron — the exact same formula from lesson 8.3, just with the right weights and bias chosen so its 0/1 outputs match the gate's truth table exactly. This is the first real payoff of everything built so far: one general-purpose shape (weights, bias, step function) can stand in for entirely different logical rules, just by changing its numbers.",
+      "Start with AND: inputs x1, x2, each 0 or 1, and AND(x1,x2) should be 1 only when BOTH are 1. Try weights [1, 1] and bias -1.5. Check all four cases: (0,0): z = 0+0-1.5 = -1.5, output 0. (0,1): z = 0+1-1.5 = -0.5, output 0. (1,0): z = 1+0-1.5 = -0.5, output 0. (1,1): z = 1+1-1.5 = 0.5, output 1. All four match AND's truth table exactly. The reasoning behind those particular numbers: with weights of 1 each, only having BOTH inputs on reaches a combined weight of 2, and a bias of -1.5 sits right between 1 (one input on: not enough) and 2 (both on: enough) — matching lesson 8.5's line idea, this bias places the boundary line so it separates (1,1) alone from the other three corners.",
+      "OR needs a lower bar: 1 whenever AT LEAST ONE input is 1. Try the same weights [1, 1] but a smaller-magnitude bias, -0.5, so a single input firing is already enough: (0,0): z=-0.5, output 0. (0,1): z=0.5, output 1. (1,0): z=0.5, output 1. (1,1): z=1.5, output 1. Comparing AND and OR side by side is the real lesson: identical weights, and only the bias changed — a smaller negative bias makes a perceptron easier to satisfy, exactly what lesson 8.2 said a bias controls.",
+      "NOT flips a single input: NOT(0)=1, NOT(1)=0 — the only gate in this lesson using a NEGATIVE weight. Try weight [-1] and bias 0.5: NOT(0): z = -1(0)+0.5 = 0.5, output 1. NOT(1): z = -1(1)+0.5 = -0.5, output 0. Both match. A negative weight means a bigger input PUSHES z DOWN instead of up — the opposite direction from every weight seen so far in this course, and exactly what \"inverting\" a signal means in perceptron terms."
+    ],
+    "example": {
+      "problem": "Verify, for all four input combinations, that weights [1, 1] and bias -1.5 correctly compute AND.",
+      "steps": [
+        "(0,0): z = 1(0) + 1(0) - 1.5 = -1.5. Is -1.5 >= 0? No. Output 0. AND(0,0) = 0. Match.",
+        "(0,1): z = 1(0) + 1(1) - 1.5 = -0.5. Not >= 0. Output 0. AND(0,1) = 0. Match.",
+        "(1,0): z = 1(1) + 1(0) - 1.5 = -0.5. Not >= 0. Output 0. AND(1,0) = 0. Match.",
+        "(1,1): z = 1(1) + 1(1) - 1.5 = 0.5. Is 0.5 >= 0? Yes. Output 1. AND(1,1) = 1. Match."
+      ],
+      "answer": "All four cases match AND's truth table — weights [1,1], bias -1.5 correctly compute AND."
+    },
+    "practice": [
+      {
+        "problem": "Verify weights [1,1], bias -0.5 correctly compute OR for the case (0,1).",
+        "solution": "z = 1(0)+1(1)-0.5 = 0.5. Is 0.5 >= 0? Yes. Output 1. OR(0,1) = 1 — matches."
+      },
+      {
+        "problem": "Verify weight [-1], bias 0.5 correctly compute NOT for input 1.",
+        "solution": "z = -1(1)+0.5 = -0.5. Not >= 0. Output 0. NOT(1) = 0 — matches."
+      },
+      {
+        "problem": "Using AND's perceptron (weights [1,1], bias -1.5) and OR's perceptron (weights [1,1], bias -0.5), what is the ONLY difference between them, and what does that difference control?",
+        "solution": "The weights are identical; only the bias differs (-1.5 vs -0.5). The bias controls how easy the perceptron is to satisfy — AND's more-negative bias needs both inputs on to overcome it, while OR's less-negative bias needs only one."
+      },
+      {
+        "problem": "A perceptron uses weights [1,1] and bias -2.5, one more negative than AND's -1.5. Does it compute AND, OR, or something stricter — always outputting 0? Check (1,1).",
+        "solution": "(1,1): z = 1+1-2.5 = -0.5, not >= 0, output 0. Since even both inputs on can't reach 0, this perceptron always outputs 0, no matter the inputs — too negative a bias to ever fire with weights of only 1 each."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the key idea of this lesson?",
+        "choices": [
+          "Perceptrons cannot compute logic gates at all",
+          "The same perceptron formula can realize different gates just by changing its weights and bias",
+          "AND and OR require completely different formulas",
+          "Logic gates require negative weights"
+        ],
+        "answerIndex": 1,
+        "explanation": "AND and OR both use the exact same z = (x . w) + b, output = step(z) formula — only the numbers (here, just the bias) differ."
+      },
+      {
+        "type": "short",
+        "question": "What weights and bias does this lesson use to compute AND?",
+        "answer": "weights [1,1], bias -1.5",
+        "acceptable": [
+          "[1,1] and -1.5",
+          "1,1,-1.5",
+          "weights 1 and 1, bias -1.5"
+        ],
+        "explanation": "Weights [1,1] and bias -1.5 correctly reproduce AND's truth table for all four input combinations."
+      },
+      {
+        "type": "mc",
+        "question": "Comparing the AND perceptron (bias -1.5) and the OR perceptron (bias -0.5) with identical weights, what does the difference in bias control?",
+        "choices": [
+          "Nothing — both compute the same gate",
+          "How easy the perceptron is to satisfy — OR's less-negative bias needs only one input on",
+          "The number of inputs allowed",
+          "Whether the weights are positive or negative"
+        ],
+        "answerIndex": 1,
+        "explanation": "A less-negative bias (OR's -0.5) is overcome by a smaller dot product (just one input on), while a more-negative bias (AND's -1.5) requires both inputs on."
+      },
+      {
+        "type": "short",
+        "question": "Which gate in this lesson uses a NEGATIVE weight, and why?",
+        "answer": "NOT",
+        "acceptable": [
+          "not",
+          "the NOT gate"
+        ],
+        "explanation": "NOT's weight is -1, because a bigger input needs to PUSH z down (toward outputting 0) instead of up, the opposite direction from every other weight in this lesson."
+      },
+      {
+        "type": "mc",
+        "question": "A perceptron uses weights [1,1] and bias -2.5. What does it output for every possible input?",
+        "choices": [
+          "It always outputs 1",
+          "It always outputs 0, since even both inputs on (dot product 2) can't overcome bias -2.5",
+          "It computes AND correctly",
+          "It computes OR correctly"
+        ],
+        "answerIndex": 1,
+        "explanation": "The largest possible dot product with weights [1,1] and 0/1 inputs is 2 (both inputs on), and 2 + (-2.5) = -0.5, still below 0 — so this perceptron can never fire."
+      }
+    ]
+  },
+  {
+    "id": "8.7",
+    "number": 7,
+    "title": "The XOR problem — where a single perceptron hits a wall",
+    "objectives": [
+      "State the XOR truth table and explain why it differs from AND/OR",
+      "Explain, using lesson 8.5's line idea, why no single perceptron can compute XOR",
+      "Recognize this limitation as the historical reason neural networks moved to multiple layers"
+    ],
+    "explanation": [
+      "Lesson 8.6 built AND, OR, and NOT as perceptrons, and it's tempting to assume every logical rule can be built the same way. XOR (\"exclusive or\") breaks that assumption. XOR(x1,x2) outputs 1 when the inputs DIFFER, and 0 when they MATCH: XOR(0,0)=0, XOR(0,1)=1, XOR(1,0)=1, XOR(1,1)=0. It looks like a small variation on OR — the only difference is the (1,1) case flips from 1 to 0 — but that one flip is enough to make it impossible for a single perceptron to compute, no matter what weights and bias you try.",
+      "Lesson 8.5 showed exactly why: a perceptron's decision boundary is always a single straight line, splitting its input space into one region that outputs 1 and one that outputs 0. Plot XOR's four corners on that same input space: (0,0) and (1,1), which should BOTH output 0, sit on opposite corners of the square. (0,1) and (1,0), which should BOTH output 1, sit on the OTHER two opposite corners. Any single straight line drawn across that square can separate one corner from the other three, or two ADJACENT corners from the other two adjacent corners (exactly what AND and OR's lines did) — but it can never put two DIAGONAL corners on one side and the other two diagonal corners on the other. Try sketching lines through the square any way you like; every single one fails to separate (0,0)/(1,1) from (0,1)/(1,0).",
+      "This is not a matter of not having tried the right weights yet — it's a geometric fact about straight lines. This exact discovery, made precisely about the XOR problem, was published by Marvin Minsky and Seymour Papert in 1969, and it's one of the most famous results in the whole history of AI: it showed a hard limit on what a single perceptron can ever do, no matter how its weights are chosen.",
+      "The limitation isn't the end of the story, though — it's the reason the rest of this course exists. If one straight line can't separate XOR's diagonal corners, what CAN? Two lines can — imagine combining two different perceptrons, each drawing its own line, and feeding both of their outputs into a third perceptron. That's a first glimpse of what Phase 10, \"Networks of Neurons,\" builds: stacking perceptrons into layers so that combined, multiple lines can carve out shapes a single line never could. No new math is needed to see the shape of the idea — just the fact that one perceptron, alone, has a real, provable wall."
+    ],
+    "example": {
+      "problem": "Using XOR's truth table, identify which two corners should output 1 and which two should output 0, and explain in one sentence why a single straight line cannot separate them.",
+      "steps": [
+        "List XOR's truth table: (0,0)->0, (0,1)->1, (1,0)->1, (1,1)->0.",
+        "Group by output: output-1 corners are (0,1) and (1,0). Output-0 corners are (0,0) and (1,1).",
+        "Plot the four corners of the unit square: (0,0) bottom-left, (1,0) bottom-right, (0,1) top-left, (1,1) top-right.",
+        "Notice (0,1) and (1,0) are diagonal from each other (top-left and bottom-right), and so are (0,0) and (1,1) (bottom-left and top-right) — a single straight line can cut off one corner, or split the square into two adjacent-pair halves, but never isolate one diagonal pair from the other."
+      ],
+      "answer": "Output-1 corners (0,1) and (1,0) sit diagonally opposite each other, as do output-0 corners (0,0) and (1,1) — no single straight line can separate a diagonal pair from the other diagonal pair, so no single perceptron can compute XOR."
+    },
+    "practice": [
+      {
+        "problem": "Try the AND perceptron's weights [1,1] and bias -1.5 on XOR's inputs. Does it correctly compute XOR(0,1), which should be 1?",
+        "solution": "z = 1(0)+1(1)-1.5 = -0.5. Not >= 0. Output 0. But XOR(0,1) should be 1 — this perceptron gets this case wrong, confirming it doesn't compute XOR (it's still just computing AND)."
+      },
+      {
+        "problem": "Explain why AND and OR CAN be built as single perceptrons but XOR cannot, referring to their truth tables' corners.",
+        "solution": "AND's single 1-output corner, (1,1), can be cut off from the other three with one line. OR's single 0-output corner, (0,0), can likewise be cut off with one line. XOR needs to separate two DIAGONAL corners from the other two diagonal corners at once — a shape no single straight line can produce."
+      },
+      {
+        "problem": "Who published the discovery of this exact limitation, and in what year?",
+        "solution": "Marvin Minsky and Seymour Papert, in 1969."
+      },
+      {
+        "problem": "According to this lesson, what does stacking multiple perceptrons into layers make possible, that a single perceptron cannot do alone?",
+        "solution": "Multiple perceptrons, each drawing its own straight line, can be combined (their outputs fed into another perceptron) to carve out shapes — like XOR's diagonal-pair split — that no single line can produce alone; this is the idea Phase 10's networks of neurons build on."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does XOR(x1, x2) output?",
+        "choices": [
+          "1 when both inputs match, 0 when they differ",
+          "1 when the inputs differ, 0 when they match",
+          "Always 1",
+          "Always 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "XOR (\"exclusive or\") is 1 exactly when its two inputs are different, and 0 when they're the same."
+      },
+      {
+        "type": "short",
+        "question": "Geometrically, why can't a single perceptron compute XOR?",
+        "answer": "no single line can separate the two diagonal corners from the other two",
+        "acceptable": [
+          "a straight line can't separate diagonal corners",
+          "diagonal pairs can't be separated by one line",
+          "not linearly separable"
+        ],
+        "explanation": "XOR's two output-1 corners sit diagonally opposite each other, as do its two output-0 corners — no single straight line can isolate one diagonal pair from the other."
+      },
+      {
+        "type": "mc",
+        "question": "Who discovered and published this limitation, and when?",
+        "choices": [
+          "Alan Turing, in 1950",
+          "Marvin Minsky and Seymour Papert, in 1969",
+          "Ada Lovelace, in 1843",
+          "Geoffrey Hinton, in 1986"
+        ],
+        "answerIndex": 1,
+        "explanation": "Minsky and Papert's 1969 result on the XOR limitation is one of the most famous findings in AI history."
+      },
+      {
+        "type": "short",
+        "question": "What does this course build in Phase 10 to solve the problem XOR exposes?",
+        "answer": "networks of neurons (layers)",
+        "acceptable": [
+          "layers",
+          "stacking perceptrons",
+          "networks of neurons",
+          "multiple layers"
+        ],
+        "explanation": "Phase 10, \"Networks of Neurons,\" stacks multiple perceptrons into layers, letting combined lines carve out shapes a single perceptron never could."
+      },
+      {
+        "type": "mc",
+        "question": "Is XOR's limitation a matter of choosing better weights for a single perceptron?",
+        "choices": [
+          "Yes, the right weights and bias can always be found with enough trial and error",
+          "No — it's a geometric fact about straight lines that no choice of weights or bias can overcome",
+          "Yes, but only with negative weights",
+          "No perceptron can ever compute AND or OR either"
+        ],
+        "answerIndex": 1,
+        "explanation": "This is a provable geometric limit, not a search problem — no weights or bias for a single perceptron can separate XOR's diagonal corners, while AND and OR remain fully solvable (lesson 8.6)."
+      }
+    ]
+  },
+  {
+    "id": "8.8",
+    "number": 8,
+    "title": "Coding a perceptron in Python — by hand, with a loop",
+    "objectives": [
+      "Write a perceptron(inputs, weights, bias) function using a loop and the accumulator pattern",
+      "Trace the function by hand and match its output to the same computation done on paper"
+    ],
+    "explanation": [
+      "Every perceptron computation in this phase so far has been done on paper. This lesson writes the exact same formula, z = (x . w) + b, output = step(z), as an actual Python function, reusing tools you already have: functions with parameters and return (2.15, 2.16), for loops (2.14), and the accumulator pattern for building up a running total (2.14, extended across the whole course since). Nothing about the MATH changes here — only its form, from paper to code.",
+      "def perceptron(inputs, weights, bias):\n    total = bias\n    for i in range(len(inputs)):\n        total = total + inputs[i] * weights[i]\n    return 1 if total >= 0 else 0\nWalk through what each line does: total starts at bias, not 0 — that's the accumulator's starting point, exactly matching how lesson 8.3's formula adds the bias to the dot product (here, it's added first, but addition doesn't care about order). Then the loop, using range(len(inputs)) exactly the way lesson 2.14 introduced it, visits every input index i, multiplying inputs[i] by its matching weights[i] and adding that product into total — building up the dot product one term at a time, the identical accumulator shape lesson 2.14's total = total + score used, just with a multiplication added first. Finally, return 1 if total >= 0 else 0 is Python's compact way of writing the step function's whole if/else in a single line.",
+      "Tracing this function by hand for the tutoring perceptron (weights [5,10,1], bias -50, inputs [4,2,7]) should feel completely familiar: total starts at -50. i=0: total = -50 + (4x5) = -50+20 = -30. i=1: total = -30 + (2x10) = -30+20 = -10. i=2: total = -10 + (7x1) = -10+7 = -3. The loop ends (all 3 indices visited); return 1 if -3 >= 0 else 0 evaluates to 0. That's the identical answer lesson 8.1 computed for this exact student by hand — the code doesn't produce a NEW number, it produces the SAME number, just by following instructions instead of you doing the arithmetic yourself."
+    ],
+    "example": {
+      "problem": "Trace perceptron([2,1,3], [3,-2,1], -4) step by step (this is lesson 8.4's worked-example perceptron and inputs (a)), using the function definition above.",
+      "steps": [
+        "total starts at bias: total = -4.",
+        "i=0: total = -4 + (2 x 3) = -4 + 6 = 2.",
+        "i=1: total = 2 + (1 x -2) = 2 + (-2) = 0.",
+        "i=2: total = 0 + (3 x 1) = 0 + 3 = 3.",
+        "Loop ends. return 1 if 3 >= 0 else 0 evaluates to 1."
+      ],
+      "answer": "perceptron([2,1,3], [3,-2,1], -4) returns 1 — matching lesson 8.4's hand-computed answer (z=3, output=1) exactly."
+    },
+    "practice": [
+      {
+        "problem": "Trace perceptron([0,0,0], [3,-2,1], -4) (lesson 8.4's input set (b)) using the function.",
+        "solution": "total = -4. i=0: -4+(0x3)=-4. i=1: -4+(0x-2)=-4. i=2: -4+(0x1)=-4. Loop ends. 1 if -4>=0 else 0 -> 0. Matches lesson 8.4's answer of 0."
+      },
+      {
+        "problem": "Trace perceptron([1,1,0], [1,1,1], -2) (this phase's AND-shaped 3-input example from lesson 8.4's practice).",
+        "solution": "total = -2. i=0: -2+(1x1)=-1. i=1: -1+(1x1)=0. i=2: 0+(0x1)=0. Loop ends. 1 if 0>=0 else 0 -> 1. Matches lesson 8.4's practice answer of 1."
+      },
+      {
+        "problem": "What does the accumulator variable total start at in this function, and why not 0 like most accumulator patterns you've seen before?",
+        "solution": "total starts at bias, because the bias needs to be included in the final sum exactly once — starting the accumulator there and then adding each input-times-weight product produces the identical result as computing the dot product separately and adding bias at the end, since addition can happen in any order."
+      },
+      {
+        "problem": "Rewrite the AND perceptron from lesson 8.6 (weights [1,1], bias -1.5) as a call to this function for inputs (1,1), and state what it returns.",
+        "solution": "perceptron([1,1], [1,1], -1.5): total=-1.5. i=0: -1.5+1=-0.5. i=1: -0.5+1=0.5. Loop ends. 1 if 0.5>=0 else 0 -> 1. Returns 1, matching AND(1,1)=1."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does this lesson's perceptron() function change about the underlying math from lesson 8.3?",
+        "choices": [
+          "It uses a completely different formula",
+          "Nothing — it computes the identical z = (x . w) + b, output = step(z) formula, just in code",
+          "It removes the bias",
+          "It replaces the step function with rounding"
+        ],
+        "answerIndex": 1,
+        "explanation": "The function is a direct translation of the same formula into code — same arithmetic, same result, just executed by following instructions instead of by hand."
+      },
+      {
+        "type": "short",
+        "question": "What value does the accumulator variable total start at, before the loop runs?",
+        "answer": "bias",
+        "acceptable": [
+          "the bias",
+          "bias value",
+          "the bias number"
+        ],
+        "explanation": "total starts at bias so the bias is included exactly once in the final sum, matching the formula's + b term."
+      },
+      {
+        "type": "mc",
+        "question": "What does the loop `for i in range(len(inputs)):` do inside the function?",
+        "choices": [
+          "Repeats forever",
+          "Visits every valid index of inputs, letting the function pair each input with its matching weight",
+          "Only runs once",
+          "Sorts the inputs list"
+        ],
+        "answerIndex": 1,
+        "explanation": "range(len(inputs)) produces every valid index for the inputs list, exactly as lesson 2.14 used it, letting inputs[i] be matched with weights[i] each pass."
+      },
+      {
+        "type": "short",
+        "question": "Tracing perceptron([2,1,3],[3,-2,1],-4), what is the final value of total right before the return statement runs?",
+        "answer": "3",
+        "acceptable": [
+          "3",
+          "total=3",
+          "total = 3"
+        ],
+        "explanation": "Starting at -4, then +6, -2, +3 across the three loop passes leaves total at 3."
+      },
+      {
+        "type": "mc",
+        "question": "What Python feature does `return 1 if total >= 0 else 0` use to write the step function in one line?",
+        "choices": [
+          "A for loop",
+          "A conditional (if/else) expression",
+          "A while loop",
+          "A list"
+        ],
+        "answerIndex": 1,
+        "explanation": "This is Python's inline conditional expression form, functionally identical to a full if/else block but written compactly on one line."
+      }
+    ]
+  },
+  {
+    "id": "8.9",
+    "number": 9,
+    "title": "Coding a perceptron with NumPy — one line instead of a loop",
+    "objectives": [
+      "Rewrite the loop-based perceptron function using np.dot",
+      "Explain why the NumPy version and the loop version always agree"
+    ],
+    "explanation": [
+      "Lesson 7.10 introduced np.dot(a, b) as NumPy's single-method-call replacement for a hand-written dot-product loop, using lesson 6.7's own grades-and-weights example to prove the two approaches agree. This lesson applies that exact same replacement to lesson 8.8's perceptron function: import numpy as np\ndef perceptron_np(inputs, weights, bias):\n    z = np.dot(inputs, weights) + bias\n    return 1 if z >= 0 else 0\nThe entire for loop from lesson 8.8 collapses into one line, np.dot(inputs, weights), exactly matching lesson 7.6's larger point that vectorized thinking replaces hand-written loops with direct array operations, one line at a time.",
+      "The tutoring perceptron makes the connection to earlier lessons unmistakable: np.dot([4,2,7], [5,10,1]) computes to 47 — the IDENTICAL number lesson 6.12 first computed by hand, and lesson 8.8's loop also arrived at (as an intermediate value, though 8.8's loop added the bias along the way rather than at the end). perceptron_np([4,2,7], [5,10,1], -50) computes z = 47 + (-50) = -3, and returns 1 if -3>=0 else 0, which is 0 — the exact same output every version of this exact computation has produced across the entire phase.",
+      "Both versions of the perceptron function — lesson 8.8's loop and this lesson's np.dot — will ALWAYS agree, for any inputs, weights, and bias, because np.dot doesn't compute anything different from what the loop computes; it just computes the identical multiply-then-add-them-all-up operation without you writing the loop yourself. Choosing between them is purely a style and readability choice, the same choice lesson 7.10 already framed: the loop version shows every step explicitly (useful for learning and debugging), while the NumPy version reads closer to the math notation itself, z = x . w + b, almost exactly as written."
+    ],
+    "example": {
+      "problem": "Trace perceptron_np([2,1,3], [3,-2,1], -4) using np.dot, and confirm it matches lesson 8.8's loop-based trace of the same inputs.",
+      "steps": [
+        "Compute np.dot([2,1,3], [3,-2,1]): (2x3)+(1x-2)+(3x1) = 6 + (-2) + 3 = 7.",
+        "Add the bias: z = 7 + (-4) = 3.",
+        "Apply the step function: is 3 >= 0? Yes, so return 1.",
+        "Compare to lesson 8.8's loop trace of the same inputs, which also produced total=3 and returned 1 — both versions agree exactly."
+      ],
+      "answer": "perceptron_np([2,1,3],[3,-2,1],-4) returns 1, matching lesson 8.8's loop-based version exactly."
+    },
+    "practice": [
+      {
+        "problem": "Trace perceptron_np([1,1,0], [1,1,1], -2) using np.dot.",
+        "solution": "np.dot([1,1,0],[1,1,1]) = 1+1+0 = 2. z = 2+(-2) = 0. Is 0>=0? Yes. Returns 1 — matching lesson 8.8's loop-based trace of the same inputs."
+      },
+      {
+        "problem": "Using np.dot, rewrite AND's perceptron (weights [1,1], bias -1.5) as perceptron_np and trace it for inputs (0,1).",
+        "solution": "np.dot([0,1],[1,1]) = 0+1 = 1. z = 1+(-1.5) = -0.5. Is -0.5>=0? No. Returns 0 — matching AND(0,1)=0."
+      },
+      {
+        "problem": "Why will perceptron() (lesson 8.8's loop) and perceptron_np() (this lesson) always return the same output for the same inputs, weights, and bias?",
+        "solution": "np.dot computes the exact same multiply-matching-components-then-add-them-all operation that the loop builds by hand, one term at a time — they're two different ways of writing the identical arithmetic, so they can never disagree."
+      },
+      {
+        "problem": "Which version — the loop or np.dot — reads closer to the mathematical formula z = x . w + b, and why?",
+        "solution": "The np.dot version reads closer, because z = np.dot(inputs, weights) + bias is almost a direct transcription of z = x . w + b, while the loop version spells out every individual multiplication and addition step instead."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does np.dot(inputs, weights) replace, compared to lesson 8.8's function?",
+        "choices": [
+          "The bias addition",
+          "The step function",
+          "The entire for loop that computed the dot product one term at a time",
+          "The return statement's if/else"
+        ],
+        "answerIndex": 2,
+        "explanation": "np.dot computes the whole dot product in one call, replacing the loop's index-by-index multiply-and-accumulate work entirely."
+      },
+      {
+        "type": "short",
+        "question": "For the tutoring perceptron, what does np.dot([4,2,7],[5,10,1]) evaluate to?",
+        "answer": "47",
+        "acceptable": [
+          "47",
+          "= 47"
+        ],
+        "explanation": "This is the identical dot product lesson 6.12 first computed by hand: (4x5)+(2x10)+(7x1) = 20+20+7 = 47."
+      },
+      {
+        "type": "mc",
+        "question": "Will the loop-based perceptron() and the np.dot-based perceptron_np() ever disagree for the same inputs?",
+        "choices": [
+          "Yes, np.dot rounds differently",
+          "No — they compute the identical arithmetic, just written two different ways",
+          "Yes, for negative weights only",
+          "Only when the bias is 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "Both versions perform the exact same multiply-then-sum operation; np.dot simply performs it without an explicit loop."
+      },
+      {
+        "type": "short",
+        "question": "According to this lesson, which version is generally more useful for learning and debugging, and which reads closer to the math notation?",
+        "answer": "loop for debugging, np.dot for matching the notation",
+        "acceptable": [
+          "loop for learning, numpy for notation",
+          "the loop version for debugging, the numpy version matches the formula"
+        ],
+        "explanation": "The loop shows every individual step explicitly (useful while learning or debugging); the np.dot version reads almost exactly like the formula z = x . w + b."
+      },
+      {
+        "type": "mc",
+        "question": "Trace perceptron_np([1,1,0],[1,1,1],-2) — what does it return?",
+        "choices": [
+          "0",
+          "1",
+          "2",
+          "-2"
+        ],
+        "answerIndex": 1,
+        "explanation": "np.dot([1,1,0],[1,1,1]) = 2, z = 2+(-2) = 0, and 0 >= 0, so the function returns 1."
+      }
+    ]
+  },
+  {
+    "id": "8.10",
+    "number": 10,
+    "title": "Mini-project: rebuild the fish-tank alarm as a perceptron",
+    "objectives": [
+      "Reason out weights and a bias that reproduce a known decision rule's full truth table",
+      "Verify a perceptron against every case of that truth table by hand",
+      "Implement the verified perceptron in both loop and NumPy code"
+    ],
+    "explanation": [
+      "Lesson 4.12's mini-project built a fish-tank alarm from logic gates: alarm_sounds = armed and (water_low or temp_bad), with three 0/1 inputs (armed, water_low, temp_bad). This mini-project's challenge is to reproduce that EXACT same decision — the identical eight-row truth table 4.12 already worked out — using nothing but a single perceptron: one weight per input, one bias, one step function. No new ideas are needed; this is every tool from this phase, combined, aimed at a circuit you already know the right answers for.",
+      "Start by reasoning about the weights the way lesson 8.6 did for AND and OR. armed acts like a strict requirement — the alarm must NEVER sound if armed is 0, no matter what the sensors say — so armed needs a weight big enough to dominate the decision by itself. water_low and temp_bad act like an OR between themselves — either one alone should be enough to count as \"a problem\" once armed is on. A reasonable starting guess, built on that reasoning: give armed a bigger weight than the two sensors, say w = [2, 1, 1] (armed, water_low, temp_bad), and choose a bias that sits between \"armed alone, no problem\" (dot product 2) and \"armed plus one problem\" (dot product 3): a bias of -2.5 sits exactly between those two values.",
+      "Checking that guess against 4.12's own worked example (armed=1, water_low=1, temp_bad=0, expected True): z = 2(1)+1(1)+1(0)-2.5 = 2+1+0-2.5 = 0.5, and 0.5 >= 0, so output 1 — matches. Checking 4.12's own practice case (armed=1, water_low=0, temp_bad=0, expected False): z = 2(1)+1(0)+1(0)-2.5 = 2-2.5 = -0.5, not >= 0, output 0 — matches too. A real design isn't finished after checking two cases, though — this mini-project's actual work is checking every one of the eight possible input combinations, the same discipline lesson 4.12 itself named as \"the entire job of a circuit designer\": does the wiring actually match the rule, in EVERY case, not just the ones you happened to try first.",
+      "Once every case checks out by hand, the final step folds together lessons 8.8 and 8.9: implement this exact perceptron as both a loop-based function and a np.dot-based function, and confirm both return the identical outputs your hand-check already found. That closes the loop this entire phase opened back in lesson 6.12: a decision-making circuit, first built from separate logic gates in Phase 4, now built as a single artificial neuron — one perceptron, with the right weights and bias, standing in for the very same gate circuit, computed a completely different way and arriving at the exact same answer every time."
+    ],
+    "example": {
+      "problem": "Using weights [2, 1, 1] (armed, water_low, temp_bad) and bias -2.5, verify the fish-tank perceptron against ALL EIGHT rows of 4.12's truth table for alarm_sounds = armed and (water_low or temp_bad).",
+      "steps": [
+        "(armed=0,water_low=0,temp_bad=0): z=0+0+0-2.5=-2.5. Not>=0. Output 0. Expected: 0 and (0 or 0)=False->0. Match.",
+        "(0,0,1): z=0+0+1-2.5=-1.5. Not>=0. Output 0. Expected: False (armed=0)->0. Match.",
+        "(0,1,0): z=0+1+0-2.5=-1.5. Not>=0. Output 0. Expected: False (armed=0)->0. Match.",
+        "(0,1,1): z=0+1+1-2.5=-0.5. Not>=0. Output 0. Expected: False (armed=0)->0. Match.",
+        "(1,0,0): z=2+0+0-2.5=-0.5. Not>=0. Output 0. Expected: True and (False or False)=True and False=False->0. Match.",
+        "(1,0,1): z=2+0+1-2.5=0.5. Yes>=0. Output 1. Expected: True and (False or True)=True and True=True->1. Match.",
+        "(1,1,0): z=2+1+0-2.5=0.5. Yes>=0. Output 1. Expected: True and (True or False)=True->1. Match.",
+        "(1,1,1): z=2+1+1-2.5=1.5. Yes>=0. Output 1. Expected: True and (True or True)=True->1. Match."
+      ],
+      "answer": "All eight rows match — weights [2,1,1] and bias -2.5 exactly reproduce 4.12's fish-tank alarm circuit as a single perceptron."
+    },
+    "practice": [
+      {
+        "problem": "Write both a loop-based (perceptron) and np.dot-based (perceptron_np) call for the fish-tank perceptron, for the case armed=1, water_low=0, temp_bad=1, and confirm they agree with the example's row for that case.",
+        "solution": "perceptron([1,0,1],[2,1,1],-2.5): total=-2.5, +2(armed)=-0.5, +0(water_low)=-0.5, +1(temp_bad)=0.5, returns 1. perceptron_np([1,0,1],[2,1,1],-2.5): np.dot=2+0+1=3, z=3-2.5=0.5, returns 1. Both agree with each other and with the example's matching row (output 1)."
+      },
+      {
+        "problem": "Why does armed need a LARGER weight than water_low or temp_bad in this design, in terms of the alarm's rule?",
+        "solution": "Because the alarm must never sound when armed=0, regardless of the sensors — giving armed a bigger weight (2, versus 1 each for the sensors) ensures that even both sensors firing together (dot product 2) can't match or exceed what armed contributes alone when combined with the bias, keeping armed a true requirement rather than just another vote."
+      },
+      {
+        "problem": "Suppose a design used weights [1, 1, 1] (all equal) and bias -1.5 instead — the exact same numbers as lesson 8.6's AND gate applied to 3 inputs. Check whether this reproduces the fish-tank rule for (armed=0, water_low=1, temp_bad=1) — should be False (armed off).",
+        "solution": "z = 1(0)+1(1)+1(1)-1.5 = 0+1+1-1.5 = 0.5. Is 0.5>=0? Yes — output 1. But the correct answer is False (0), since armed is off. This design is WRONG: equal weights let two sensors alone outvote the missing armed signal, exactly the mistake the actual design (weight 2 for armed) was built to avoid."
+      },
+      {
+        "problem": "Summarize, in one or two sentences, what this mini-project demonstrates about the relationship between Phase 4's logic gates and Phase 8's perceptrons.",
+        "solution": "A decision that Phase 4 built by wiring separate AND/OR gates together can also be computed by a single perceptron with the right weights and bias — two very different-looking mechanisms (a gate circuit vs. one weighted-sum-and-threshold neuron) that, on the exact same inputs, produce the exact same decision every time."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What real-world decision does this mini-project's perceptron reproduce?",
+        "choices": [
+          "A brand-new decision never seen before in this course",
+          "Lesson 4.12's fish-tank alarm circuit: armed and (water_low or temp_bad)",
+          "The XOR truth table",
+          "The AND gate only"
+        ],
+        "answerIndex": 1,
+        "explanation": "This mini-project rebuilds 4.12's exact fish-tank alarm rule, previously built from separate AND/OR gates, as a single perceptron instead."
+      },
+      {
+        "type": "short",
+        "question": "What weights and bias does the worked example use for the fish-tank perceptron (armed, water_low, temp_bad)?",
+        "answer": "weights [2,1,1], bias -2.5",
+        "acceptable": [
+          "[2,1,1] and -2.5",
+          "2,1,1,-2.5",
+          "weights 2,1,1 bias -2.5"
+        ],
+        "explanation": "Weights [2,1,1] and bias -2.5 correctly reproduce all eight rows of the fish-tank alarm's truth table."
+      },
+      {
+        "type": "mc",
+        "question": "Why does armed get a bigger weight (2) than water_low or temp_bad (1 each)?",
+        "choices": [
+          "It doesn't matter, any weights work",
+          "So armed acts as a true requirement — even both sensors firing together can't substitute for armed being on",
+          "Because armed is listed first",
+          "To make the bias unnecessary"
+        ],
+        "answerIndex": 1,
+        "explanation": "A bigger weight on armed, combined with the chosen bias, ensures the alarm never fires when armed is 0, matching the AND-with-armed structure of the original rule."
+      },
+      {
+        "type": "short",
+        "question": "In the practice problem testing weights [1,1,1] and bias -1.5 on (armed=0, water_low=1, temp_bad=1), does that design correctly output 0 (as it should)?",
+        "answer": "no, it incorrectly outputs 1",
+        "acceptable": [
+          "no",
+          "it outputs 1, which is wrong",
+          "incorrect, outputs 1"
+        ],
+        "explanation": "z = 0+1+1-1.5 = 0.5 >= 0, giving output 1 — wrong, since armed=0 should force the alarm off regardless of the sensors; equal weights fail to make armed a true requirement."
+      },
+      {
+        "type": "mc",
+        "question": "What is the overall point this mini-project demonstrates?",
+        "choices": [
+          "Perceptrons can never reproduce a logic-gate circuit",
+          "A gate circuit and a single perceptron, built completely differently, can compute the exact same decision on every possible input",
+          "Logic gates are always better than perceptrons",
+          "The fish-tank alarm requires more than one perceptron to build"
+        ],
+        "answerIndex": 1,
+        "explanation": "The whole phase's closing payoff: Phase 4's gate-built alarm and this phase's perceptron-built alarm are different mechanisms that produce identical decisions across all eight input combinations."
       }
     ]
   }
