@@ -235,6 +235,12 @@ Repo: https://github.com/turlockmike/build-a-brain
   rule, 'finding the downhill direction.'" Needs its own lesson-title
   breakdown (like Phase 1-8 got) before full lesson content in the same
   schema.
+- **Live-deploy verify tool:** use `bab-ship-verify <cache-version>
+  <lesson-id-prefix> [timeout-s]` (e.g. `bab-ship-verify bab-v10 "9."`)
+  instead of a manual curl after pushing a new phase — it polls past
+  GitHub Pages' CDN rebuild lag (bit the Phase 8 ship, a bare curl right
+  after push hit a stale cached copy) and checks the new lesson ids are
+  actually present in the deployed `curriculum.js` in one step.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)
   if plain-text exponents/fractions ever feel cramped, print/export view.
