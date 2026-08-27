@@ -93,20 +93,20 @@ automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 5:
-   "Statistics & Data — mean/median/variance/std dev, probability, expected
-   value, what a dataset is, train/test split intuition").
+1. Pick the next phase from `ROADMAP` (currently phase 7:
+   "Programming Foundations II — arrays, multi-input functions, vectorized
+   thinking (NumPy)").
 2. Write that phase's lesson list (title-only breakdown first, then full content
-   per lesson using the exact schema above — same content bar as Phase 1-4: a
+   per lesson using the exact schema above — same content bar as Phase 1-6: a
    real 300-500 word explanation with analogies, a worked example, 3-5
    practice problems with solutions, a 5-question quiz). Each lesson may
    assume only earlier-phase content plus earlier lessons in the same phase —
    never anything from a later phase or later lesson.
 3. Append those lesson objects to `LESSONS` in `data/curriculum.js`, ids
-   `"5.1"`, `"5.2"`, ... (id format is always `"<phase>.<lesson>"`).
+   `"7.1"`, `"7.2"`, ... (id format is always `"<phase>.<lesson>"`).
 4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
    any phase with matching `LESSONS` entries automatically.
-5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v4` → `bab-v5`) so
+5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v6` → `bab-v7`) so
    returning users actually pick up the new content instead of a stale cache.
 6. Commit, push to `main` — GitHub Pages serves straight from `main` / `/root`,
    no separate deploy step required.

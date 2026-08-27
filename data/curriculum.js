@@ -7985,4 +7985,1404 @@ const LESSONS = [
     }
   ]
 }
+,
+  {
+    "id": "6.1",
+    "number": 1,
+    "title": "What is a function? — input/output machines, function notation",
+    "objectives": [
+      "Explain what a function is: a rule that assigns exactly one output to every input",
+      "Read and write function notation, f(x), correctly",
+      "Evaluate f(x) for a given value of x by substituting and simplifying",
+      "Connect function notation to expression evaluation (Phase 1) and Python functions (Phase 2)"
+    ],
+    "explanation": [
+      "Imagine a machine bolted to a wall: you drop a number in a slot on top, gears whir for a second, and exactly one number drops out the bottom. Feed it a 5, it might give you an 8. Feed it a 5 again tomorrow, it gives you that same 8 every single time. That machine is a perfect picture of a mathematical function: a rule that takes an input, does something consistent to it, and hands back exactly one output. Not two possible outputs, not \"maybe an output\" — exactly one, every time, guaranteed. Once a function's rule is set, feeding it the same input always produces the same output, which is what makes functions so trustworthy and useful throughout math and programming.",
+      "Mathematicians write this input-output machine using function notation: f(x). Say it out loud as \"f of x\" — it does NOT mean f multiplied by x, even though the two letters sit right next to each other. f is just the NAME of the machine (you could call it g, h, or Machine, but f is the traditional choice), and x, inside the parentheses, is the input slot — the placeholder for whatever number gets fed in. This should look familiar: back in lesson 1.13 you evaluated expressions like 3x^2 − 4 by substituting a number in for x. A function is that exact same substitution idea, now given an official name and a home: instead of saying \"evaluate 2x + 3 when x = 5,\" you define f(x) = 2x + 3 once, and can now ask for f(5) any time you like.",
+      "Evaluating f(x) at a particular input works exactly like the substitution process from 1.13: everywhere you see x in the rule, replace it with the given number, ideally inside parentheses to protect negative signs and exponents, then simplify with order of operations. If f(x) = 2x + 3, then f(5) means substitute 5 for x: 2(5) + 3 = 10 + 3 = 13. Change the input and the machine gives you a fresh output: f(0) = 2(0) + 3 = 3. This is the whole game of function evaluation — same rule, different input, and you carefully rerun the substitution every time rather than reusing an old answer.",
+      "You've actually already built one of these machines yourself. In lesson 2.15 you wrote Python functions like def square(x): return x * x — that def line, the parameter x, and the return value ARE a function, in exactly the mathematical sense: one input, one guaranteed output, the same rule every time you call it. Math notation and Python code describe the identical idea with different spelling: f(x) = x^2 and def f(x): return x * x are the same machine. Keeping that \"exactly one output per input\" rule in mind will matter again soon — the next lesson shows you how to literally see it, by plotting a function's inputs and outputs on the coordinate plane."
+    ],
+    "example": {
+      "problem": "A function is defined by f(x) = 4x − 7. Evaluate f(3) and f(−2).",
+      "steps": [
+        "To evaluate f(3), substitute 3 for x, using parentheses: f(3) = 4(3) − 7.",
+        "Multiply first (order of operations): 4 × 3 = 12, so f(3) = 12 − 7.",
+        "Subtract: 12 − 7 = 5, so f(3) = 5.",
+        "To evaluate f(−2), substitute −2 for x with parentheses to protect the sign: f(−2) = 4(−2) − 7.",
+        "Multiply: 4 × (−2) = −8, so f(−2) = −8 − 7.",
+        "Subtract: −8 − 7 = −15, so f(−2) = −15."
+      ],
+      "answer": "f(3) = 5 and f(−2) = −15."
+    },
+    "practice": [
+      {
+        "problem": "A function is defined by g(x) = 3x + 5. Find g(4).",
+        "solution": "Substitute 4 for x: g(4) = 3(4) + 5. Multiply first: 3 × 4 = 12, so g(4) = 12 + 5. Add: 12 + 5 = 17. Answer: g(4) = 17."
+      },
+      {
+        "problem": "A function is defined by h(x) = x^2 − 6. Find h(−3).",
+        "solution": "Substitute −3 for x with parentheses: h(−3) = (−3)^2 − 6. Exponent first: (−3)^2 = 9, so h(−3) = 9 − 6. Subtract: 9 − 6 = 3. Answer: h(−3) = 3."
+      },
+      {
+        "problem": "A function is defined by k(x) = −2x + 9. Find k(6).",
+        "solution": "Substitute 6 for x: k(6) = −2(6) + 9. Multiply first: −2 × 6 = −12, so k(6) = −12 + 9. Add: −12 + 9 = −3. Answer: k(6) = −3."
+      },
+      {
+        "problem": "A function is defined by m(x) = 5x. Find m(0), and explain in one sentence what that tells you about the machine when its input is zero.",
+        "solution": "Substitute 0 for x: m(0) = 5(0) = 0. This tells you that when this particular machine's input is 0, its output is also 0 — the rule 5x always sends 0 to 0, since multiplying anything by 0 gives 0. Answer: m(0) = 0."
+      },
+      {
+        "problem": "A function C(x) = 3x + 4 gives the total cost, in dollars, of buying x notebooks, including a flat $4 shipping fee. Find C(5), the cost of buying 5 notebooks.",
+        "solution": "Substitute 5 for x: C(5) = 3(5) + 4. Multiply first: 3 × 5 = 15, so C(5) = 15 + 4. Add: 15 + 4 = 19. Answer: C(5) = $19."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the notation f(x) mean?",
+        "choices": [
+          "f multiplied by x",
+          "the output value the function f produces when the input is x",
+          "the variable x by itself",
+          "a coordinate pair on a graph"
+        ],
+        "answerIndex": 1,
+        "explanation": "f(x), read \"f of x,\" is not multiplication — it names the output that the function f produces for the input x."
+      },
+      {
+        "type": "mc",
+        "question": "If f(x) = 6x − 1, what is f(3)?",
+        "choices": [
+          "17",
+          "18",
+          "19",
+          "15"
+        ],
+        "answerIndex": 0,
+        "explanation": "Substitute: f(3) = 6(3) − 1 = 18 − 1 = 17."
+      },
+      {
+        "type": "mc",
+        "question": "For a rule to qualify as a function, what must be true?",
+        "choices": [
+          "It must use the letter f",
+          "Every input must produce exactly one output",
+          "Its graph must be a straight line",
+          "It must never include negative numbers"
+        ],
+        "answerIndex": 1,
+        "explanation": "The defining rule of a function is that each input is guaranteed to produce exactly one output, every time the rule is applied."
+      },
+      {
+        "type": "short",
+        "question": "If p(x) = x^2 + 2, what is p(−3)?",
+        "answer": "11",
+        "acceptable": [
+          "p(-3) = 11",
+          "11.0"
+        ],
+        "explanation": "Substitute with parentheses: p(−3) = (−3)^2 + 2 = 9 + 2 = 11."
+      },
+      {
+        "type": "short",
+        "question": "In a Python function like def square(x): return x * x from lesson 2.15, what part plays the same role as the input x in math function notation f(x)?",
+        "answer": "the parameter",
+        "acceptable": [
+          "the parameter x",
+          "the parameter in the function definition",
+          "x, the parameter"
+        ],
+        "explanation": "The parameter x in a Python def line is the same idea as the input slot x in f(x) — a placeholder that receives whatever value is passed in when the function is called."
+      }
+    ]
+  },
+  {
+    "id": "6.2",
+    "number": 2,
+    "title": "Graphing on the coordinate plane — plotting a function",
+    "objectives": [
+      "Build a table of x and f(x) values for a given function",
+      "Convert each table row into an ordered pair (x, f(x)) to plot",
+      "Plot a function's points on the coordinate plane and connect them to see its shape",
+      "Explain why graphing more points gives a more accurate picture of a function"
+    ],
+    "explanation": [
+      "Back in lesson 1.19 you learned to plot an ordered pair (x, y) on the coordinate plane: walk x units left or right from the origin, then y units up or down, and mark the landing spot. Now that lesson 6.1 has given you function notation, those two ideas snap together perfectly. For any function f(x), every input x paired with its output f(x) IS an ordered pair — just relabel y as f(x), and (x, y) becomes (x, f(x)). Graphing a function means plotting every one of these input-output pairs as a point on the coordinate plane.",
+      "In practice, you can't plot \"every\" input at once — there are infinitely many — so you build a table instead: pick a handful of x-values, use the substitution skills from 6.1 to calculate f(x) for each one, and write down the resulting (x, f(x)) pairs. Each row of the table becomes one point you can plot, exactly the way you plotted single points in 1.19 — count over for x, count up or down for f(x), and mark the spot.",
+      "Once you've plotted several points from the table, connect them in order from left to right. A single point tells you almost nothing about a function's overall behavior, but a handful of connected points reveals its shape — whether it climbs steadily, falls, stays flat, or curves. The more x-values you include in your table, the smoother and more trustworthy that picture becomes, since you're filling in more of the gaps between the points you actually calculated.",
+      "This turns a function from an abstract rule into something you can literally look at. A table of numbers can hide a pattern in plain sight, but a graph often reveals it instantly — you can see at a glance whether a value is climbing over time, staying flat, or swinging up and down. The next two lessons will show you that certain families of functions always produce a very recognizable shape once you graph them — starting with the straight lines you'll meet in the very next lesson."
+    ],
+    "example": {
+      "problem": "Build a table of values for f(x) = x + 2 using x = −2, −1, 0, 1, 2. List the resulting ordered pairs, and describe the shape you'd see if you plotted and connected them.",
+      "steps": [
+        "Evaluate f(x) = x + 2 at each x-value: f(−2) = −2 + 2 = 0; f(−1) = −1 + 2 = 1; f(0) = 0 + 2 = 2; f(1) = 1 + 2 = 3; f(2) = 2 + 2 = 4.",
+        "Write each x paired with its f(x) as an ordered pair: (−2, 0), (−1, 1), (0, 2), (1, 3), (2, 4).",
+        "Plot each ordered pair on the coordinate plane the way you did in lesson 1.19, then connect them in order from left to right.",
+        "Notice that each step to the right moves the point up by exactly 1 — the points line up perfectly straight, rising steadily from lower-left to upper-right."
+      ],
+      "answer": "The points are (−2, 0), (−1, 1), (0, 2), (1, 3), (2, 4); connected in order, they form a straight line rising steadily from lower-left to upper-right."
+    },
+    "practice": [
+      {
+        "problem": "Build a table of values for f(x) = 2x − 1 using x = −1, 0, 1, 2, and list the resulting ordered pairs.",
+        "solution": "Evaluate: f(−1) = 2(−1) − 1 = −2 − 1 = −3; f(0) = 2(0) − 1 = −1; f(1) = 2(1) − 1 = 1; f(2) = 2(2) − 1 = 3. Ordered pairs: (−1, −3), (0, −1), (1, 1), (2, 3)."
+      },
+      {
+        "problem": "Build a table of values for g(x) = −x + 4 using x = −1, 0, 1, 2, and list the resulting ordered pairs.",
+        "solution": "Evaluate: g(−1) = −(−1) + 4 = 1 + 4 = 5; g(0) = −(0) + 4 = 4; g(1) = −(1) + 4 = 3; g(2) = −(2) + 4 = 2. Ordered pairs: (−1, 5), (0, 4), (1, 3), (2, 2)."
+      },
+      {
+        "problem": "For h(x) = 2x, evaluate h(−3) to get an ordered pair (x, h(x)). Which quadrant does that point lie in?",
+        "solution": "Evaluate: h(−3) = 2(−3) = −6. The ordered pair is (−3, −6). Since both the x-value and the y-value are negative, this point lies in Quadrant III, the same quadrant rule from lesson 1.19."
+      },
+      {
+        "problem": "For f(x) = x + 5, evaluate f(−5) to get an ordered pair. Which axis does that point lie on, and why?",
+        "solution": "Evaluate: f(−5) = −5 + 5 = 0. The ordered pair is (−5, 0). Since the y-value is 0, the point has no up/down movement from the x-axis, so — following the same logic as lesson 1.19's axis points — it sits directly on the x-axis rather than inside any quadrant."
+      },
+      {
+        "problem": "Explain in your own words why connecting five plotted points gives a more trustworthy picture of a function's shape than connecting only two points.",
+        "solution": "Two points can always be connected with a straight line, no matter what the function actually does in between or beyond them, so two points can hide curves, dips, or bends that are actually part of the function. Five points spread across a wider range of x-values give more chances to catch a change in direction or steepness, so the connected shape more closely matches how the function actually behaves."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "To plot a function on the coordinate plane, each table row (x, f(x)) becomes:",
+        "choices": [
+          "a new function",
+          "an ordered pair (x, y) to plot",
+          "the slope of the graph",
+          "a quadrant"
+        ],
+        "answerIndex": 1,
+        "explanation": "Relabeling y as f(x) turns every table row directly into a plottable ordered pair (x, f(x))."
+      },
+      {
+        "type": "mc",
+        "question": "If f(x) = 3x − 2, what ordered pair corresponds to x = 2?",
+        "choices": [
+          "(2, 4)",
+          "(4, 2)",
+          "(2, 6)",
+          "(3, 4)"
+        ],
+        "answerIndex": 0,
+        "explanation": "f(2) = 3(2) − 2 = 6 − 2 = 4, so the ordered pair is (2, 4)."
+      },
+      {
+        "type": "mc",
+        "question": "The point (0, f(0)) for any function always lies:",
+        "choices": [
+          "on the x-axis",
+          "on the y-axis",
+          "in Quadrant I",
+          "in Quadrant III"
+        ],
+        "answerIndex": 1,
+        "explanation": "When x = 0, the point has no left/right movement, so per lesson 1.19 it sits directly on the y-axis."
+      },
+      {
+        "type": "short",
+        "question": "If g(x) = −2x + 1, what ordered pair corresponds to x = 3?",
+        "answer": "(3, -5)",
+        "acceptable": [
+          "(3,-5)",
+          "(3, −5)",
+          "3, -5"
+        ],
+        "explanation": "g(3) = −2(3) + 1 = −6 + 1 = −5, so the ordered pair is (3, −5)."
+      },
+      {
+        "type": "short",
+        "question": "Why do we connect a function's plotted points in order (left to right) rather than in a random order?",
+        "answer": "to reveal the function's actual shape or pattern",
+        "acceptable": [
+          "to show the shape of the function",
+          "so the connected points show the pattern of the graph",
+          "to see the graph's true shape"
+        ],
+        "explanation": "Connecting the points in x-order traces out the function's actual behavior as x increases, revealing its shape rather than a meaningless zig-zag."
+      }
+    ]
+  },
+  {
+    "id": "6.3",
+    "number": 3,
+    "title": "Linear functions — slope-intercept form, rate of change",
+    "objectives": [
+      "Identify the slope (m) and y-intercept (b) in a linear function written as y = mx + b",
+      "Calculate slope as rise over run from two points on a line",
+      "Interpret slope as a rate of change and y-intercept as a starting value in a real-world context",
+      "Write a real-world rate-plus-fee situation as a linear function"
+    ],
+    "explanation": [
+      "In the last lesson, you graphed a few functions by plugging in x-values and connecting the resulting points — and if you tried a function like f(x) = x + 2, you'd have noticed the points lined up perfectly straight. That's not a coincidence: any function that can be written in the form y = mx + b is called a linear function, and its graph is ALWAYS a straight line, no exceptions. The two letters m and b are not mystery variables to solve for — they're named slots with specific jobs: m is the slope, and b is the y-intercept.",
+      "The slope, m, measures how steeply and in which direction the line moves — mathematicians describe it as \"rise over run,\" meaning how much y changes (rise) for every step x changes (run). You can calculate it from any two points on the line, (x1, y1) and (x2, y2), with the formula m = (y2 − y1) / (x2 − x1). A positive slope climbs left to right; a negative slope falls. Crucially, for a straight line, this rate of change is exactly the same no matter which two points you pick — that constant, unchanging rate is what makes a line a line.",
+      "The y-intercept, b, is simply the value of y when x = 0 — using function notation from 6.1, it's f(0), the point where the line crosses the y-axis. Think of b as the \"starting value\" before anything else has happened. A rideshare app might charge a $2 base fee before you've traveled a single mile — that $2 is the y-intercept. Then each additional mile adds a steady rate on top, say $1.50 per mile — that steady rate is the slope. Put together, the total cost is a linear function: C(x) = 1.5x + 2.",
+      "Real-world rates work this way constantly: a flat membership fee plus a cost per visit, a base salary plus commission per sale, a phone plan's flat fee plus a per-text charge. Whenever something starts at a fixed value and then changes by the exact same amount for every step after that, you're looking at a linear function, and you can describe it completely with just two numbers: its slope and its y-intercept. Not every relationship behaves this predictably, though — the next lesson shows you what happens when the rate of change refuses to stay constant."
+    ],
+    "example": {
+      "problem": "A dog-walking service charges a flat $5 booking fee plus $3 for each walk. The total cost is given by C(x) = 3x + 5, where x is the number of walks. Identify the slope and y-intercept, find the cost of 4 walks, and verify the slope using two points on the line.",
+      "steps": [
+        "Compare C(x) = 3x + 5 to y = mx + b: m = 3 and b = 5.",
+        "Interpret: the slope m = 3 means the cost increases by $3 for every additional walk — that's the rate of change. The y-intercept b = 5 means the cost starts at $5 (the flat booking fee) even before any walks happen, i.e. C(0) = 5.",
+        "Find the cost of 4 walks by evaluating C(4) = 3(4) + 5 = 12 + 5 = 17.",
+        "Verify the slope using two points: C(2) = 3(2) + 5 = 6 + 5 = 11, giving the point (2, 11). C(4) = 17, giving the point (4, 17).",
+        "Compute rise over run between those points: m = (17 − 11) / (4 − 2) = 6 / 2 = 3, which matches the slope identified in the equation."
+      ],
+      "answer": "Slope m = 3 ($3 per walk), y-intercept b = 5 ($5 flat fee), the cost of 4 walks is $17, and the slope calculated from (2, 11) and (4, 17) confirms m = 3."
+    },
+    "practice": [
+      {
+        "problem": "Identify the slope and y-intercept of y = 4x − 7.",
+        "solution": "Compare to y = mx + b: the coefficient of x is 4, so m = 4. The constant term is −7, so b = −7. Answer: slope = 4, y-intercept = −7."
+      },
+      {
+        "problem": "Find the slope of the line passing through the points (1, 2) and (3, 10).",
+        "solution": "Use m = (y2 − y1) / (x2 − x1) with (x1, y1) = (1, 2) and (x2, y2) = (3, 10): m = (10 − 2) / (3 − 1) = 8 / 2 = 4. Answer: slope = 4."
+      },
+      {
+        "problem": "A rideshare ride costs a $2 base fee plus $1.50 per mile. Write this as a linear function C(x), where x is the number of miles, and find the cost of a 6-mile ride.",
+        "solution": "The flat starting cost is the y-intercept, b = 2. The per-mile rate is the slope, m = 1.5. So C(x) = 1.5x + 2. For a 6-mile ride, C(6) = 1.5(6) + 2 = 9 + 2 = 11. Answer: C(x) = 1.5x + 2, and a 6-mile ride costs $11."
+      },
+      {
+        "problem": "For f(x) = −4x + 12, find f(0), and explain what that value represents.",
+        "solution": "Substitute 0 for x: f(0) = −4(0) + 12 = 0 + 12 = 12. Since f(0) is the value of the function when x = 0, it's the y-intercept — the line's starting value, before x has increased or decreased at all. Answer: f(0) = 12, the y-intercept."
+      },
+      {
+        "problem": "Find the slope of the line passing through the points (−2, 5) and (2, −3).",
+        "solution": "Use m = (y2 − y1) / (x2 − x1) with (x1, y1) = (−2, 5) and (x2, y2) = (2, −3): m = (−3 − 5) / (2 − (−2)) = −8 / 4 = −2. Answer: slope = −2."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In the slope-intercept form y = mx + b, what does m represent?",
+        "choices": [
+          "the y-intercept",
+          "the slope, or rate of change",
+          "the x-intercept",
+          "the output value of the function"
+        ],
+        "answerIndex": 1,
+        "explanation": "m is the slope — the constant rate at which y changes for every one-unit change in x."
+      },
+      {
+        "type": "mc",
+        "question": "What is the slope of the line through the points (0, 3) and (4, 11)?",
+        "choices": [
+          "2",
+          "4",
+          "8",
+          "0.5"
+        ],
+        "answerIndex": 0,
+        "explanation": "m = (11 − 3) / (4 − 0) = 8 / 4 = 2."
+      },
+      {
+        "type": "mc",
+        "question": "What does the y-intercept, b, represent in a real-world linear situation?",
+        "choices": [
+          "the value of y when x = 0, i.e. the starting value before any change happens",
+          "the steepness of the line",
+          "the largest possible y-value",
+          "the number of x-values in the table"
+        ],
+        "answerIndex": 0,
+        "explanation": "The y-intercept is the function's output when x = 0 — the fixed starting value before any rate-based change is added."
+      },
+      {
+        "type": "short",
+        "question": "A phone plan costs a $10 flat fee plus $0.05 per text message. Write this as a linear function C(x) in slope-intercept form, where x is the number of texts.",
+        "answer": "C(x) = 0.05x + 10",
+        "acceptable": [
+          "y = 0.05x + 10",
+          "0.05x + 10",
+          "C(x)=0.05x+10"
+        ],
+        "explanation": "The flat fee is the y-intercept (10), and the per-text rate is the slope (0.05), giving C(x) = 0.05x + 10."
+      },
+      {
+        "type": "short",
+        "question": "What is the slope of the line through the points (1, 1) and (5, 13)?",
+        "answer": "3",
+        "acceptable": [
+          "m = 3",
+          "slope is 3"
+        ],
+        "explanation": "m = (13 − 1) / (5 − 1) = 12 / 4 = 3."
+      }
+    ]
+  },
+  {
+    "id": "6.4",
+    "number": 4,
+    "title": "Beyond straight lines — an intro to nonlinear functions",
+    "objectives": [
+      "Contrast a linear function's constant rate of change with a nonlinear function's changing rate",
+      "Build a table of values for f(x) = x^2 and plot its curved shape",
+      "Explain why the graph of x^2 curves instead of forming a straight line",
+      "Recognize real-world relationships, like area, that are nonlinear"
+    ],
+    "explanation": [
+      "Every function you graphed in the last lesson shared one feature: a constant rate of change. Move one step to the right, and y always changes by the exact same amount — that's what \"slope\" means for a line. But most relationships in the real world don't behave that predictably, and functions don't have to either. The simplest example that breaks the straight-line pattern is f(x) = x^2 — take a number and multiply it by itself. It looks almost as simple as a linear function, but its graph behaves completely differently.",
+      "Build a table the same way you did in 6.2: f(−2) = 4, f(−1) = 1, f(0) = 0, f(1) = 1, f(2) = 4. Now look at how y changes between consecutive rows, instead of just what the values are. From x = −2 to −1, y drops by 3 (from 4 to 1). From −1 to 0, y drops by only 1 (from 1 to 0). From 0 to 1, y rises by 1. From 1 to 2, y rises by 3. The amount y changes keeps changing — unlike a line, where that amount, the slope, never budges. That's the entire reason the graph of x^2 curves instead of forming a straight line: a straight line requires a constant rate of change, and x^2 simply doesn't have one.",
+      "Plot those points and connect them, and you'll see a smooth, symmetric, bowl-shaped curve (mathematicians call this particular shape a parabola) that dips down to touch (0, 0) and rises on both sides. Notice that f(−2) and f(2) are both 4 — squaring erases the sign of the input, so opposite x-values always land on the same output, which is exactly why the curve is a mirror image of itself across the y-axis.",
+      "This kind of relationship — where change isn't constant — shows up everywhere once you start looking. The area of a square with side length x is x^2, so doubling the side length doesn't just double the area, it quadruples it (a 10-meter square covers 4 times the area of a 5-meter square, not 2 times). That's a genuinely different kind of behavior than anything a straight line can produce, and it's your first glimpse of a much bigger idea: plenty of the most important functions in math, science, and — eventually — in how a neural network learns, are nonlinear, not straight lines at all."
+    ],
+    "example": {
+      "problem": "Build a table of values for f(x) = x^2 using x = −2, −1, 0, 1, 2, list the ordered pairs, and describe how the shape of the graph compares to the straight lines from the previous lesson.",
+      "steps": [
+        "Evaluate f(x) = x^2 at each x-value: f(−2) = (−2)^2 = 4; f(−1) = (−1)^2 = 1; f(0) = 0^2 = 0; f(1) = 1^2 = 1; f(2) = 2^2 = 4.",
+        "Write the ordered pairs: (−2, 4), (−1, 1), (0, 0), (1, 1), (2, 4).",
+        "Check the change in y between consecutive points: from (−2,4) to (−1,1), y drops 3; from (−1,1) to (0,0), y drops 1; from (0,0) to (1,1), y rises 1; from (1,1) to (2,4), y rises 3 — the rate of change is not the same fixed number each step, unlike 6.3's linear functions.",
+        "Because the rate of change isn't constant, connecting the points does not form a straight line — instead it forms a smooth, symmetric curve that dips to its lowest point at (0, 0) and rises on both sides."
+      ],
+      "answer": "The table gives points (−2, 4), (−1, 1), (0, 0), (1, 1), (2, 4); plotted and connected, they form a symmetric, bowl-shaped curve, not a straight line, because the rate of change between consecutive points isn't constant the way it is for a linear function."
+    },
+    "practice": [
+      {
+        "problem": "Build a table of values for f(x) = x^2 using x = −3, −2, −1, 0, 1, 2, 3, and list the resulting ordered pairs.",
+        "solution": "Evaluate: f(−3) = 9, f(−2) = 4, f(−1) = 1, f(0) = 0, f(1) = 1, f(2) = 4, f(3) = 9. Ordered pairs: (−3, 9), (−2, 4), (−1, 1), (0, 0), (1, 1), (2, 4), (3, 9). Notice the symmetry: each pair of opposite x-values (like −3 and 3) gives the same output."
+      },
+      {
+        "problem": "Build a table of values for g(x) = x^2 + 3 using x = −2, −1, 0, 1, 2, and list the resulting ordered pairs.",
+        "solution": "Evaluate: g(−2) = (−2)^2 + 3 = 4 + 3 = 7; g(−1) = 1 + 3 = 4; g(0) = 0 + 3 = 3; g(1) = 1 + 3 = 4; g(2) = 4 + 3 = 7. Ordered pairs: (−2, 7), (−1, 4), (0, 3), (1, 4), (2, 7). This is still the same bowl-shaped curve as x^2, just moved upward by 3."
+      },
+      {
+        "problem": "A table shows x: 0, 1, 2, 3 paired with y: 2, 5, 8, 11. Is this table more likely linear or nonlinear? Explain using the change in y between rows.",
+        "solution": "Check the change in y for each equal step in x: from 2 to 5 is +3, from 5 to 8 is +3, from 8 to 11 is +3. Since y changes by the exact same amount (+3) every time x increases by 1, this rate of change is constant, so the table represents a linear function (matching y = 3x + 2)."
+      },
+      {
+        "problem": "A table shows x: 0, 1, 2, 3 paired with y: 1, 2, 5, 10. Is this table more likely linear or nonlinear? Explain using the change in y between rows.",
+        "solution": "Check the change in y for each equal step in x: from 1 to 2 is +1, from 2 to 5 is +3, from 5 to 10 is +5. Since the amount y changes keeps growing instead of staying fixed, the rate of change is not constant, so the table represents a nonlinear function (matching y = x^2 + 1)."
+      },
+      {
+        "problem": "A square garden has side length x meters, so its area is given by A(x) = x^2. Find the area when the side length is 5 meters and when it is 10 meters, and explain why doubling the side length doesn't just double the area.",
+        "solution": "A(5) = 5^2 = 25 square meters. A(10) = 10^2 = 100 square meters. Doubling the side length from 5 to 10 doesn't double the area from 25 to 50 — it quadruples it, to 100, because area depends on the side length squared, not on the side length directly: (2x)^2 = 4x^2, four times the original area. This is a direct example of a nonlinear relationship."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "The graph of f(x) = x^2 is best described as:",
+        "choices": [
+          "a straight line",
+          "a symmetric, bowl-shaped curve",
+          "a set of unconnected dots with no pattern",
+          "a horizontal line"
+        ],
+        "answerIndex": 1,
+        "explanation": "Because the rate of change between points isn't constant, f(x) = x^2 forms a smooth, symmetric curve rather than a straight line."
+      },
+      {
+        "type": "mc",
+        "question": "For f(x) = x^2, what is f(−4)?",
+        "choices": [
+          "16",
+          "−16",
+          "8",
+          "−8"
+        ],
+        "answerIndex": 0,
+        "explanation": "f(−4) = (−4)^2 = (−4) × (−4) = 16."
+      },
+      {
+        "type": "mc",
+        "question": "Why does f(x) = x^2 give the same output for x = 3 and x = −3?",
+        "choices": [
+          "Because squaring removes the negative sign, so (3)^2 and (−3)^2 both equal 9",
+          "Because 3 and −3 are actually the same number",
+          "Because the function is defined incorrectly",
+          "Because the y-intercept is always 0"
+        ],
+        "answerIndex": 0,
+        "explanation": "Squaring a negative number produces a positive result (a negative times a negative is positive), so opposite inputs like 3 and −3 always produce the same squared output."
+      },
+      {
+        "type": "short",
+        "question": "A linear function has a constant rate of change (the same slope everywhere). Does f(x) = x^2 have a constant rate of change? Briefly explain.",
+        "answer": "No, the amount y changes between steps keeps changing as x changes, unlike a line's constant slope.",
+        "acceptable": [
+          "no",
+          "no, its rate of change is not constant",
+          "no, it changes as x changes"
+        ],
+        "explanation": "For x^2, the change in y between consecutive x-values keeps growing rather than staying fixed, so the rate of change is not constant the way a line's slope is."
+      },
+      {
+        "type": "short",
+        "question": "For f(x) = x^2, what is f(0), and what point does that give on the graph?",
+        "answer": "(0, 0)",
+        "acceptable": [
+          "0,0",
+          "the origin",
+          "0",
+          "f(0) = 0, the origin"
+        ],
+        "explanation": "f(0) = 0^2 = 0, giving the point (0, 0), the origin — the lowest point of the curve."
+      }
+    ]
+  },
+  {
+    "id": "6.5",
+    "number": 5,
+    "title": "What is a vector? — an ordered list of numbers as one object",
+    "objectives": [
+      "Define a vector as an ordered list of numbers bundled together into a single object",
+      "Read and write vector notation in both bracket form, like [3, 5, 2], and angle-bracket form, like ⟨3, 5, 2⟩",
+      "Explain why each position in a vector, called a component, carries a fixed, specific meaning",
+      "Connect vectors to Python lists from lesson 2.13, identifying what's similar and what's different"
+    ],
+    "explanation": [
+      "Every lesson so far in this chapter has focused on a function of a single number: feed one x in, get one f(x) out. This lesson shifts to a different kind of mathematical object entirely — one built to hold several related numbers together at once. It's called a vector, and once you see the pattern, you'll recognize it everywhere: a weather reading isn't just one number, it's a temperature AND a humidity AND a wind speed, all describing the same moment. A vector is exactly the tool for bundling numbers like that into one single object, rather than juggling three separate, disconnected variables.",
+      "A vector is written as an ordered list of numbers, most often inside square brackets like [3, 5, 2], though you'll also see the same idea written with angle brackets, ⟨3, 5, 2⟩ — both notations mean exactly the same thing, just different handwriting conventions for the same object. Each number inside is called a component (or sometimes an entry), and its position in the list is not just bookkeeping — it's meaning. If a weather station reports a reading as the vector [72, 45, 8], where the first component is always temperature in °F, the second is always humidity in %, and the third is always wind speed in mph, then this particular reading means 72°F, 45% humidity, and 8 mph wind. Swap the order to [45, 72, 8] and you'd be claiming 45°F with 72% humidity — a completely different, and probably wrong, reading. The word 'ordered' in 'ordered list' is doing real work: a vector's components must stay in their assigned positions to mean what they're supposed to mean.",
+      "This should feel familiar, because you already built something with this exact shape back in lesson 2.13: a Python list. scores = [85, 92, 78] and a vector [3, 5, 2] are the same underlying idea — an ordered collection of values, stored under one name, accessed by position. In fact, if you stored a vector in Python, its first component would sit at index 0, its second at index 1, following the same zero-based indexing rule from 2.13. The difference is really about intent rather than mechanics: a Python list like scores could grow with append() or shrink, and every item usually means the 'same kind of thing' (another score). A vector, by contrast, almost always has a fixed number of components, and each position is reserved for a specific, different kind of thing — the way a role-playing game character's stats might be stored as [health, mana, stamina] = [80, 30, 60], where position 1 is always health, position 2 is always mana, and position 3 is always stamina, no matter which character you're looking at.",
+      "This 'fixed meaning per position' idea shows up constantly once you start looking for it: a database row describing a customer might be [age, purchases, zip_code]; a GPS reading might be [latitude, longitude, altitude]; even a single row of a dataset — the kind you worked with all through Phase 5, where every row was one example described by the same set of features — is really just a vector, one component per feature. Getting comfortable reading and writing vectors like [3, 5, 2] now sets up everything else in this chapter: the next lesson shows you how to combine two vectors together, and after that, how to collapse a whole vector down into a single meaningful number."
+    ],
+    "example": {
+      "problem": "A weather station records one hour's reading as the vector v = [72, 45, 8], where the first component is temperature in °F, the second is humidity in %, and the third is wind speed in mph. What is the humidity in this reading, and how would you write this same vector using angle-bracket notation?",
+      "steps": [
+        "Identify which position holds humidity: by the station's fixed rule, the first component is temperature, the second is humidity, and the third is wind speed.",
+        "Read the second component of v = [72, 45, 8], which is 45.",
+        "Since the second component is defined as humidity, this reading's humidity is 45%.",
+        "Angle-bracket notation writes the exact same ordered numbers with ⟨ ⟩ instead of [ ]: ⟨72, 45, 8⟩ — same vector, same meaning, different bracket style."
+      ],
+      "answer": "The humidity is 45%, and the vector can also be written ⟨72, 45, 8⟩."
+    },
+    "practice": [
+      {
+        "problem": "A role-playing game stores a character's stats as the vector [health, mana, stamina] = [80, 30, 60]. What is the character's mana?",
+        "solution": "Mana is defined as the second component of the vector. Reading the second entry of [80, 30, 60] gives 30. Answer: mana = 30."
+      },
+      {
+        "problem": "Write a vector representing a shopping cart containing 3 apples, 2 loaves of bread, and 5 eggs, using the component order [apples, bread, eggs].",
+        "solution": "Following the given order — apples first, bread second, eggs third — the vector is [3, 2, 5]."
+      },
+      {
+        "problem": "Explain, in your own words, why [3, 5, 2] and [5, 3, 2] should generally be considered different vectors, even though they contain the same three numbers.",
+        "solution": "A vector's components aren't just a bag of numbers — each position carries a specific, fixed meaning (like temperature, humidity, wind speed). Swapping the first and second numbers means putting a value into a position where it's now interpreted differently — whatever the first slot represents now holds 5 instead of 3, and whatever the second slot represents now holds 3 instead of 5. Since the meaning of a vector depends on both the values AND their positions, reordering the same numbers generally produces a genuinely different vector."
+      },
+      {
+        "problem": "Back in Phase 5, a dataset's row for one student was [quiz_score, attendance_pct, grade_level] = [18, 95, 9]. Which component tells you this student's attendance percentage, and what is it?",
+        "solution": "Attendance percentage is defined as the second component. Reading the second entry of [18, 95, 9] gives 95. Answer: attendance = 95%."
+      },
+      {
+        "problem": "Name one way a vector like [3, 5, 2] is similar to a Python list like scores = [85, 92, 78] from lesson 2.13, and one way it's typically different.",
+        "solution": "Similarity: both are ordered collections of values stored under a single name, and both are accessed by position (with the first item at index 0, following Python's zero-based indexing). Difference: a Python list like scores usually holds many items that all mean the 'same kind of thing' (repeated scores) and can grow or shrink with append(), while a vector typically has a fixed number of components, each reserved for a different, specific meaning tied to its position (like temperature vs. humidity vs. wind speed)."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Which of these best describes a vector?",
+        "choices": [
+          "Any group of numbers in any order",
+          "An ordered list of numbers bundled into one object, where each position has a specific meaning",
+          "A single number by itself",
+          "A function that graphs as a curve"
+        ],
+        "answerIndex": 1,
+        "explanation": "A vector bundles several related numbers into one object, and because it's ORDERED, each position is reserved for a specific meaning."
+      },
+      {
+        "type": "mc",
+        "question": "A box's dimensions are stored as the vector [width, height, depth] = [10, 4, 7], in centimeters. What is the box's height?",
+        "choices": [
+          "10",
+          "4",
+          "7",
+          "21"
+        ],
+        "answerIndex": 1,
+        "explanation": "Height is the second component. Reading the second entry of [10, 4, 7] gives 4 cm."
+      },
+      {
+        "type": "mc",
+        "question": "Why does swapping the order of a vector's components usually change what the vector means?",
+        "choices": [
+          "It doesn't — order never matters in a vector",
+          "Because each position has a fixed, specific meaning, so a number moved to a new position is now interpreted differently",
+          "Because vectors can only be written with angle brackets",
+          "Because Python lists are always unordered"
+        ],
+        "answerIndex": 1,
+        "explanation": "Since a vector's positions carry fixed meanings (like temperature, humidity, wind speed), moving a number to a different position changes what that number is claimed to represent."
+      },
+      {
+        "type": "short",
+        "question": "Write the vector with components 6, 1, and 9 using angle-bracket notation.",
+        "answer": "⟨6, 1, 9⟩",
+        "acceptable": [
+          "&lt;6,1,9&gt;",
+          "&lt;6, 1, 9&gt;",
+          "⟨6,1,9⟩"
+        ],
+        "explanation": "Angle-bracket notation lists the same ordered components inside ⟨ ⟩ instead of [ ]: ⟨6, 1, 9⟩."
+      },
+      {
+        "type": "short",
+        "question": "Name one thing a vector like [3, 5, 2] has in common with a Python list from lesson 2.13.",
+        "answer": "Both are ordered collections of values stored under one name and accessed by position.",
+        "acceptable": [
+          "both are ordered lists of values accessed by index/position",
+          "they're both ordered collections you can index into",
+          "both store multiple values in order under one variable"
+        ],
+        "explanation": "A vector and a Python list share the same underlying shape: an ordered sequence of values, referenced by their position."
+      }
+    ]
+  },
+  {
+    "id": "6.6",
+    "number": 6,
+    "title": "Vector addition and scalar multiplication",
+    "objectives": [
+      "Add two vectors of the same length by adding their matching (same-position) components",
+      "Multiply a vector by a scalar by multiplying every component by that same number",
+      "Combine addition and scalar multiplication to solve a real-world combining-and-scaling problem",
+      "Explain why two vectors need the same number of components before they can be added"
+    ],
+    "explanation": [
+      "Lesson 6.5 defined a vector as an ordered list of numbers where each position has a fixed meaning — now it's time to actually do math with them. The first operation is vector addition, and the rule is refreshingly simple: to add two vectors, add their matching components, position by position. Given two vectors of the SAME length, [a1, a2, a3] and [b1, b2, b3], their sum is [a1+b1, a2+b2, a3+b3] — the first components add together, the second components add together, and so on. The two vectors must have the same number of components for this to make sense, since addition needs to know which component pairs with which; a 3-component vector and a 4-component vector simply don't have a full set of matching partners.",
+      "Picture two shopping carts, both using the component order [apples, loaves of bread, eggs]: Mia's cart is [4, 1, 6] and Jake's cart is [2, 3, 0]. If they combine their carts into one, the combined cart is found by adding matching components: apples add to apples (4+2=6), bread adds to bread (1+3=4), and eggs add to eggs (6+0=6), giving a combined cart of [6, 4, 6]. Notice this only works because both vectors use the exact same component order — if Jake's vector had listed eggs first, adding position-by-position would mix up eggs with apples, producing nonsense.",
+      "The second operation is scalar multiplication: multiplying an entire vector by a single plain number, called a scalar (as opposed to a vector, a scalar is just one ordinary number, with no positions or components of its own). To scale a vector, multiply EVERY component by that same number. A recipe vector [flour_cups, sugar_cups, eggs] = [2, 1, 3], doubled to feed twice as many people, becomes 2 × [2, 1, 3] = [4, 2, 6] — every ingredient scales up by the same factor of 2, keeping the recipe's proportions intact. Tripling instead of doubling would multiply every component by 3 instead, and so on; the scalar always applies to the whole vector at once, never to just one component.",
+      "These two operations combine naturally: you can add vectors together and then scale the result, or scale vectors first and then add them. Keep this 'match positions, then combine' pattern in mind, because the next lesson builds directly on top of it — the dot product also matches up components position by position, but instead of just adding them, it multiplies each matched pair first. Addition here is really the second half of a two-step move you're about to meet in full."
+    ],
+    "example": {
+      "problem": "Two friends go shopping using the component order [apples, loaves of bread, eggs]. Mia's cart is [4, 1, 6] and Jake's cart is [2, 3, 0]. They combine their carts into one, and then, because a party needs exactly double what they bought, they double the combined cart. Find the final combined-and-doubled cart vector.",
+      "steps": [
+        "Add the two carts component-wise: apples 4+2=6, bread 1+3=4, eggs 6+0=6, giving a combined cart of [6, 4, 6].",
+        "Multiply the combined cart by the scalar 2, scaling every component: 2×6=12, 2×4=8, 2×6=12.",
+        "The final vector is [12, 8, 12]."
+      ],
+      "answer": "The final cart vector is [12, 8, 12]: 12 apples, 8 loaves of bread, and 12 eggs."
+    },
+    "practice": [
+      {
+        "problem": "Add the vectors [3, 5, 2] and [1, 1, 1].",
+        "solution": "Add matching components: 3+1=4, 5+1=6, 2+1=3. Answer: [4, 6, 3]."
+      },
+      {
+        "problem": "Add the vectors [10, 0, −2] and [−4, 6, 2].",
+        "solution": "Add matching components: 10+(−4)=6, 0+6=6, −2+2=0. Answer: [6, 6, 0]."
+      },
+      {
+        "problem": "A recipe vector [flour_cups, sugar_cups, eggs] = [2, 4, 1] is tripled to feed a larger group. Find the tripled recipe vector.",
+        "solution": "Multiply every component by the scalar 3: 3×2=6, 3×4=12, 3×1=3. Answer: [6, 12, 3] — 6 cups flour, 12 cups sugar, 3 eggs."
+      },
+      {
+        "problem": "A vector [8, −2, 5] represents a change in three account balances (in dollars). Multiply it by the scalar −1 and explain what the result represents.",
+        "solution": "Multiply every component by −1: −1×8=−8, −1×(−2)=2, −1×5=−5, giving [−8, 2, −5]. Multiplying by −1 flips the sign of every component, so this represents exactly reversing the original change — an increase of 8 becomes a decrease of 8, and so on."
+      },
+      {
+        "problem": "Add [5, 3] and [2, −1], then multiply the resulting sum by the scalar 4.",
+        "solution": "First add: 5+2=7, 3+(−1)=2, giving [7, 2]. Then scale by 4: 4×7=28, 4×2=8. Answer: [28, 8]."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "To add two vectors of the same length, what do you do?",
+        "choices": [
+          "Multiply all of one vector's components by all of the other's",
+          "Add the components that share the same position in each vector",
+          "Add up all the numbers in both vectors into one total",
+          "Add only the first components and ignore the rest"
+        ],
+        "answerIndex": 1,
+        "explanation": "Vector addition adds matching (same-position) components together, producing a new vector of the same length."
+      },
+      {
+        "type": "mc",
+        "question": "What is [4, 7] + [3, −2]?",
+        "choices": [
+          "[7, 5]",
+          "[1, 9]",
+          "[12, −14]",
+          "[7, −5]"
+        ],
+        "answerIndex": 0,
+        "explanation": "Add matching components: 4+3=7 and 7+(−2)=5, giving [7, 5]."
+      },
+      {
+        "type": "mc",
+        "question": "What does it mean to multiply a vector by a scalar?",
+        "choices": [
+          "Multiply only the vector's first component by that number",
+          "Multiply every component of the vector by that same single number",
+          "Add that number to every component",
+          "Replace the vector's components with that number"
+        ],
+        "answerIndex": 1,
+        "explanation": "Scalar multiplication scales the whole vector by multiplying each and every component by the same single number."
+      },
+      {
+        "type": "short",
+        "question": "Compute 2 × [5, −3, 4].",
+        "answer": "[10, −6, 8]",
+        "acceptable": [
+          "10, -6, 8",
+          "(10,-6,8)",
+          "[10,-6,8]"
+        ],
+        "explanation": "Multiply every component by 2: 2×5=10, 2×(−3)=−6, 2×4=8."
+      },
+      {
+        "type": "short",
+        "question": "Why must two vectors have the same number of components before you can add them?",
+        "answer": "Because addition matches up components by position, and every position in one vector needs a corresponding position in the other to add to.",
+        "acceptable": [
+          "because you add matching positions, and a mismatched length leaves some components without a partner",
+          "since addition pairs up same-position components, both vectors need the same number of components",
+          "each component needs a matching component in the other vector at the same position"
+        ],
+        "explanation": "Vector addition works position by position, so if one vector has an extra component with no matching position in the other, there's nothing to add it to."
+      }
+    ]
+  },
+  {
+    "id": "6.7",
+    "number": 7,
+    "title": "The dot product",
+    "objectives": [
+      "Compute the dot product of two same-length vectors by multiplying corresponding components and summing the products",
+      "Explain why collapsing two vectors into a single number via the dot product is useful, such as producing a weighted score",
+      "Connect the dot product's multiply-then-add structure to lesson 6.6's addition step",
+      "Connect the dot product to lesson 5.2's mean, recognizing the mean as a dot product with equal weights"
+    ],
+    "explanation": [
+      "Lesson 6.6 taught you to add two vectors by matching up their components position by position and adding each matched pair. The dot product uses that exact same 'match positions' idea, but adds one step in front of it: instead of just adding the matched components, you MULTIPLY each matched pair first, and only then add up all of those products into a single number. For two same-length vectors a = [a1, a2, a3] and b = [b1, b2, b3], the dot product, written a · b, is a1×b1 + a2×b2 + a3×b3. Notice the shape: multiply, multiply, multiply, then add — 6.6's addition step is still in there, it's just the second half of a two-step move rather than the whole move.",
+      "Here's why this matters enough to earn its own lesson: the dot product is arguably the single most useful operation you can perform on two vectors, because of what it lets you compute — a weighted score. Suppose a student earns [90, 85, 95] on three assignments, and the teacher weighs them unevenly: the first is worth 50% of the grade, the second 30%, and the third 20%, giving a weights vector [0.5, 0.3, 0.2]. Dotting the grades vector with the weights vector multiplies each grade by its own importance and adds the results: 90×0.5 + 85×0.3 + 95×0.2 = 45 + 25.5 + 19 = 89.5. That single number, 89.5, IS the student's overall weighted grade — the dot product just collapsed three separate numbers, plus three separate importance levels, into the one number that actually matters for a report card.",
+      "This connects directly back to lesson 5.2's mean. There, you computed a mean by adding up every value and dividing by the count — but dividing by the count is exactly the same as multiplying every value by 1/count and then adding those products together. In other words, a plain mean is secretly a dot product: the values vector dotted with a weights vector where every single weight equals 1/count. The dot product just generalizes that idea by letting the weights be different from each other, so some values can count more than others instead of every value counting equally — exactly what happened with the unevenly weighted grades above.",
+      "Collapsing two vectors down into one number this way is powerful precisely because a single number is so easy to work with — you can compare it, rank it, or check it against a threshold, the same reason lesson 5.2's mean was useful as a single summary of a whole column of data. This is also the same shape you met all the way back in Phase 3, when a biological neuron adds up many incoming signals, each one weighted by how strong its connection is, before deciding whether to fire — a weighted sum of exactly this kind. Keep this 'multiply matching components, then add' pattern close at hand; it's about to become one of the most important moves in the rest of this course."
+    ],
+    "example": {
+      "problem": "A student earns scores [90, 85, 95] on three assignments. The teacher weighs them as [0.5, 0.3, 0.2] (50%, 30%, 20%). Compute the student's overall weighted grade using the dot product of the grades vector and the weights vector.",
+      "steps": [
+        "Multiply each grade by its matching weight: 90×0.5=45, 85×0.3=25.5, 95×0.2=19.",
+        "Add the three products together: 45 + 25.5 + 19 = 89.5.",
+        "This single number, 89.5, is the dot product [90, 85, 95] · [0.5, 0.3, 0.2], and it IS the student's overall weighted grade."
+      ],
+      "answer": "The dot product is 89.5, the student's weighted overall grade."
+    },
+    "practice": [
+      {
+        "problem": "Compute the dot product [2, 3] · [4, 1].",
+        "solution": "Multiply matching components: 2×4=8, 3×1=3. Add the products: 8+3=11. Answer: 11."
+      },
+      {
+        "problem": "Compute the dot product [1, 0, 2] · [5, 7, 4].",
+        "solution": "Multiply matching components: 1×5=5, 0×7=0, 2×4=8. Add the products: 5+0+8=13. Answer: 13."
+      },
+      {
+        "problem": "A shopping cart holds quantities [3, 2, 5] (apples, loaves of bread, eggs), and the prices per item are [0.50, 2.50, 0.20] dollars. Use the dot product to find the total cost.",
+        "solution": "Multiply each quantity by its matching price: 3×0.50=1.50, 2×2.50=5.00, 5×0.20=1.00. Add the products: 1.50+5.00+1.00=7.50. Answer: the total cost is $7.50."
+      },
+      {
+        "problem": "A student's exam scores are [80, 90, 70], weighted as [0.2, 0.5, 0.3]. Find the weighted average using the dot product.",
+        "solution": "Multiply each score by its matching weight: 80×0.2=16, 90×0.5=45, 70×0.3=21. Add the products: 16+45+21=82. Answer: the weighted average is 82."
+      },
+      {
+        "problem": "Explain, using lesson 6.6's addition rule, why a dot product requires both vectors to have the same number of components.",
+        "solution": "Just like 6.6's vector addition, the dot product matches components up by position — each component in one vector is multiplied by the component in the SAME position in the other vector. If the vectors had different lengths, some component wouldn't have a matching partner in the same position to multiply with, so there'd be no way to complete either the multiplying step or the adding step."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What are the two steps of computing a dot product?",
+        "choices": [
+          "Add the two vectors, then multiply the sum by a scalar",
+          "Multiply each pair of matching components, then add all the products together",
+          "Divide each component by the number of components",
+          "Multiply only the first components of each vector"
+        ],
+        "answerIndex": 1,
+        "explanation": "The dot product multiplies corresponding (same-position) components together and then sums all of those products into one number."
+      },
+      {
+        "type": "mc",
+        "question": "What is [3, 5] · [2, 4]?",
+        "choices": [
+          "26",
+          "14",
+          "20",
+          "6"
+        ],
+        "answerIndex": 0,
+        "explanation": "Multiply matching components: 3×2=6, 5×4=20. Add: 6+20=26."
+      },
+      {
+        "type": "mc",
+        "question": "What kind of value does a dot product produce?",
+        "choices": [
+          "A vector with the same number of components as the inputs",
+          "A single number (a scalar)",
+          "A vector with twice as many components",
+          "A list of the products, unsummed"
+        ],
+        "answerIndex": 1,
+        "explanation": "Unlike vector addition, which produces another vector, the dot product sums everything down into one single number — a scalar, the term introduced in lesson 6.6."
+      },
+      {
+        "type": "short",
+        "question": "Compute [1, 2, 3] · [4, 0, 2].",
+        "answer": "10",
+        "acceptable": [
+          "10",
+          "= 10",
+          "the answer is 10"
+        ],
+        "explanation": "Multiply matching components: 1×4=4, 2×0=0, 3×2=6. Add: 4+0+6=10."
+      },
+      {
+        "type": "short",
+        "question": "Lesson 5.2 computed a mean by dividing a sum by a count. Explain in one sentence how that connects to a dot product where every weight equals 1/count.",
+        "answer": "Dividing by count is the same as multiplying every value by 1/count and adding the results, so a mean is a dot product of the values with a weights vector where every weight is 1/count.",
+        "acceptable": [
+          "a mean is really a dot product with all weights equal to 1/count",
+          "dividing by n equals multiplying by 1/n and summing, which is exactly a dot product",
+          "the mean equals the values vector dotted with a constant 1/count weights vector"
+        ],
+        "explanation": "Since dividing a sum by count equals multiplying every value by 1/count before adding, a plain mean is exactly a dot product where every weight in the weights vector equals 1/count."
+      }
+    ]
+  },
+  {
+    "id": "6.8",
+    "number": 8,
+    "title": "Vector magnitude — how 'big' is a vector?",
+    "objectives": [
+      "Define the magnitude of a vector as the square root of the sum of its squared components",
+      "Compute the magnitude of 2D and 3D vectors",
+      "Connect magnitude's square-sum-square-root shape to lesson 5.7's standard deviation calculation",
+      "Interpret a 2D vector's magnitude as the hypotenuse of a right triangle via the Pythagorean theorem"
+    ],
+    "explanation": [
+      "You now know how to combine vectors (6.6) and how to collapse two vectors into a single number with the dot product (6.7). This lesson asks a different question about just ONE vector: how 'big' is it? The answer is called the magnitude (sometimes the length or the norm) of a vector, written with vertical bars, |v|. To find it, take every component, square it, add up all those squares, and then take the square root of that total. For a vector v = [a, b], that's |v| = the square root of (a^2 + b^2); for three components, |v| = the square root of (a^2 + b^2 + c^2), and so on for any number of components.",
+      "Try it on v = [3, 4]: square each component, 3^2 = 9 and 4^2 = 16; add the squares, 9 + 16 = 25; take the square root, and the square root of 25 is 5. So |[3, 4]| = 5 — this particular vector's magnitude is exactly 5. Notice that, unlike 6.6's addition or 6.7's dot product, magnitude only needs ONE vector — there's no second vector to match lengths with, since you're just measuring how big this one vector is.",
+      "That 'square each part, add the squares, then take the square root' shape should ring a bell — it's the exact same three-step shape from lesson 5.7's standard deviation: square each deviation from the mean, add up the squared deviations (that gave you variance), then take the square root to bring the result back into the data's original units. Magnitude squares its raw components instead of deviations-from-a-mean, but the reasoning for the square root at the end is identical: squaring makes every contribution positive so nothing cancels out, and then the square root at the end undoes that squaring, so a vector's magnitude ends up measured in the same units as its components — if [3, 4] is measured in kilometers, its magnitude of 5 is also in kilometers, not 'kilometers squared.'",
+      "For a 2-component vector, there's an even more concrete picture: plot v = [3, 4] on the coordinate plane the way you did back in 6.2, as a displacement of 3 units right and 4 units up from the origin. Those two components, 3 and 4, are literally the two legs of a right triangle, and the magnitude is exactly the length of that triangle's hypotenuse — the Pythagorean theorem, a^2 + b^2 = c^2, applied directly: 3^2 + 4^2 = 5^2, so c = 5. Vector magnitude is really the Pythagorean theorem generalized to as many components as you like, which is exactly why it always comes out as a distance — a single, honest number for how far a vector reaches from the origin."
+    ],
+    "example": {
+      "problem": "A delivery drone flies 3 km east and 4 km north from its base, giving a position vector [3, 4] measured in kilometers. Find the drone's straight-line distance from base — the magnitude of its position vector.",
+      "steps": [
+        "Square each component: 3^2 = 9 and 4^2 = 16.",
+        "Add the squares: 9 + 16 = 25.",
+        "Take the square root of the sum: the square root of 25 is 5.",
+        "This matches the classic 3-4-5 right triangle: legs of 3 and 4 give a hypotenuse of 5, exactly the Pythagorean theorem."
+      ],
+      "answer": "The drone's straight-line distance from base is |[3, 4]| = 5 km."
+    },
+    "practice": [
+      {
+        "problem": "Find the magnitude of [6, 8].",
+        "solution": "Square each component: 6^2=36, 8^2=64. Add: 36+64=100. Take the square root: the square root of 100 is 10. Answer: |[6, 8]| = 10."
+      },
+      {
+        "problem": "Find the magnitude of [5, 12].",
+        "solution": "Square each component: 5^2=25, 12^2=144. Add: 25+144=169. Take the square root: the square root of 169 is 13. Answer: |[5, 12]| = 13."
+      },
+      {
+        "problem": "Find the magnitude of the 3-component vector [1, 2, 2].",
+        "solution": "Square each component: 1^2=1, 2^2=4, 2^2=4. Add: 1+4+4=9. Take the square root: the square root of 9 is 3. Answer: |[1, 2, 2]| = 3."
+      },
+      {
+        "problem": "Find the magnitude of [0, 7], and explain in one sentence what it means for a vector to have a 0 as one of its components.",
+        "solution": "Square each component: 0^2=0, 7^2=49. Add: 0+49=49. Take the square root: the square root of 49 is 7. Answer: |[0, 7]| = 7. A 0 component contributes nothing to the sum of squares, so a vector like [0, 7] has no 'reach' at all in the direction that component represents — its entire magnitude comes from the other component."
+      },
+      {
+        "problem": "Which is bigger: the magnitude of [3, 4], or the magnitude of [2, 2, 2]? Show both calculations.",
+        "solution": "|[3, 4]| = the square root of (3^2+4^2) = the square root of (9+16) = the square root of 25 = 5. |[2, 2, 2]| = the square root of (2^2+2^2+2^2) = the square root of (4+4+4) = the square root of 12, which is approximately 3.46. Since 5 is greater than approximately 3.46, [3, 4] has the larger magnitude."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the formula for the magnitude of a vector [a, b]?",
+        "choices": [
+          "a + b",
+          "a^2 + b^2",
+          "the square root of (a^2 + b^2)",
+          "a × b"
+        ],
+        "answerIndex": 2,
+        "explanation": "Magnitude squares each component, sums the squares, and takes the square root of that total: the square root of (a^2 + b^2)."
+      },
+      {
+        "type": "mc",
+        "question": "What is |[9, 12]|?",
+        "choices": [
+          "15",
+          "21",
+          "225",
+          "10.5"
+        ],
+        "answerIndex": 0,
+        "explanation": "9^2+12^2 = 81+144 = 225, and the square root of 225 is 15."
+      },
+      {
+        "type": "mc",
+        "question": "Which earlier lesson's calculation follows the exact same 'square, sum, square root' shape as vector magnitude?",
+        "choices": [
+          "5.2, the mean",
+          "5.7, standard deviation",
+          "2.13, lists",
+          "6.3, linear functions"
+        ],
+        "answerIndex": 1,
+        "explanation": "Standard deviation (5.7) squares each deviation from the mean, sums the squares, then takes the square root — the identical three-step shape magnitude uses on a vector's raw components."
+      },
+      {
+        "type": "short",
+        "question": "Compute |[8, 15]|.",
+        "answer": "17",
+        "acceptable": [
+          "17",
+          "= 17",
+          "the magnitude is 17"
+        ],
+        "explanation": "8^2+15^2 = 64+225 = 289, and the square root of 289 is 17."
+      },
+      {
+        "type": "short",
+        "question": "For a 2-component vector [a, b], explain the connection between its magnitude and the Pythagorean theorem.",
+        "answer": "The components a and b act as the two legs of a right triangle, and the magnitude, the square root of (a^2 + b^2), is exactly the triangle's hypotenuse, matching a^2 + b^2 = c^2.",
+        "acceptable": [
+          "a and b are the legs of a right triangle and the magnitude is the hypotenuse",
+          "magnitude is just the pythagorean theorem's hypotenuse formula applied to the vector's components",
+          "the magnitude formula is literally a^2+b^2=c^2 solved for c"
+        ],
+        "explanation": "Plotting [a, b] as a displacement forms a right triangle with legs a and b; the Pythagorean theorem says the hypotenuse is the square root of (a^2+b^2), which is exactly the magnitude formula."
+      }
+    ]
+  },
+  {
+    "id": "6.9",
+    "number": 9,
+    "title": "What is a matrix? — a grid of numbers",
+    "objectives": [
+      "Define a matrix as a rectangular grid of numbers arranged in rows and columns",
+      "Read and state a matrix's shape using the 'rows x columns' naming convention",
+      "Recognize that each row (or column) of a matrix is itself a vector, connecting back to lesson 6.5's definition of a vector",
+      "Connect a matrix's structure to a whole dataset laid out as rows of examples and columns of features, from Phase 5"
+    ],
+    "explanation": [
+      "Back in lesson 6.5, a vector was just an ordered list of numbers, like [3, 5, 2], where each position meant something specific. A matrix is the next natural step: instead of one list, it's several lists of the same length, stacked together into a rectangular grid. Matrices are written with big brackets around the whole thing, and each row gets its own brackets inside. For example, [[1, 2, 3], [4, 5, 6]] is a matrix made of two rows, [1, 2, 3] and [4, 5, 6], each with three numbers in it. Nothing here is being added or multiplied yet — a matrix, on its own, is just a shape for organizing numbers, the same way a vector was just a shape for organizing numbers before you ever added or dot-producted one.",
+      "Every matrix has a shape, written as 'rows x columns.' To find it, count the outer brackets first (how many rows) and then count how many numbers sit inside any one row (how many columns), since every row in a proper matrix has the same length. The matrix [[1, 2, 3], [4, 5, 6]] has 2 rows and 3 columns, so its shape is 2x3 — always rows first, then columns, in that order. A matrix does not need equal rows and columns; a 2x3 matrix, a 4x1 matrix, and a 5x5 matrix are all perfectly normal, just different shapes for different jobs.",
+      "Here's the connection worth holding onto: each row of a matrix, read on its own, is exactly a vector from lesson 6.5. In [[1, 2, 3], [4, 5, 6]], row 1 is the vector [1, 2, 3] and row 2 is the vector [4, 5, 6] — a matrix is really just several vectors of matching length, stacked on top of each other. You can also read a matrix the other way, taking one number from each row to build a column, and that column is a vector too, just read top-to-bottom instead of left-to-right. For now, focus on rows as vectors — that's the reading the next lesson will build on directly.",
+      "This is exactly the shape a dataset takes, going all the way back to lesson 5.1: rows are examples, columns are features. If a class of 5 students each has a [score, grade] pair recorded, the whole class is one matrix — one row per student, one column per feature — with each row being that student's own little feature vector. A spreadsheet, a table of sensor readings, a whole dataset: any of them can be written as one matrix, because 'rows and columns of numbers' was always the shape data comes in."
+    ],
+    "example": {
+      "problem": "A gym coach records three kids' [height_inches, weight_lbs] as a matrix: M = [[60, 110], [64, 130], [58, 95]]. State the matrix's shape, write row 1 as its own vector, and read column 2 from top to bottom.",
+      "steps": [
+        "Count the rows: M has 3 inner lists, [60, 110], [64, 130], and [58, 95], so M has 3 rows — one per kid.",
+        "Count the columns: each row has 2 numbers in it, so M has 2 columns — height and weight.",
+        "State the shape using rows-then-columns order: M is a 3x2 matrix.",
+        "Row 1 of M, [60, 110], is itself a vector — exactly like the vectors from lesson 6.5 — describing kid 1's height and weight in one ordered list.",
+        "Read column 2 (weight) from top to bottom: 110, 130, 95. This is the weight feature across all three kids, matching lesson 5.1's idea that a column is one feature read down every row."
+      ],
+      "answer": "M is a 3x2 matrix (3 rows, 2 columns). Row 1 is the vector [60, 110]. Column 2, read top to bottom, is 110, 130, 95 — the weight feature for all three kids."
+    },
+    "practice": [
+      {
+        "problem": "State the shape of the matrix [[7, 2], [1, 9], [4, 4], [0, 3]].",
+        "solution": "There are 4 inner lists, so 4 rows. Each inner list has 2 numbers, so 2 columns. The shape is 4x2 (rows first, then columns)."
+      },
+      {
+        "problem": "Given the matrix [[5, 1, 8], [2, 6, 3]], write out row 2 as its own vector and state how many components it has.",
+        "solution": "Row 2 is the second inner list: [2, 6, 3]. This is a vector with 3 components, matching the matrix's shape of 2x3 (2 rows, 3 columns), since every row has to have the same length as the number of columns."
+      },
+      {
+        "problem": "A gym records 4 athletes' [pushups, situps, mile_time_seconds] as one matrix: [[30, 40, 420], [25, 35, 460], [45, 50, 390], [20, 30, 500]]. State the matrix's shape, and explain what column 3, read top to bottom, represents.",
+        "solution": "There are 4 rows (4 athletes) and 3 columns (3 features per athlete), so the shape is 4x3. Column 3, read top to bottom, is 420, 460, 390, 500 — the mile_time_seconds feature for all four athletes, the same 'column = one feature across every row' idea from lesson 5.1."
+      },
+      {
+        "problem": "True or false: a matrix must have the same number of rows as columns. Explain your answer using an example.",
+        "solution": "False. A matrix's rows and columns can be different numbers — for example, [[1, 2, 3], [4, 5, 6]] is a perfectly valid 2x3 matrix, with 2 rows and 3 columns, and no requirement that those two numbers match. A matrix with equal rows and columns (like a 3x3 matrix) is called a 'square' matrix, but that's just one special case, not a rule every matrix must follow."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the shape of the matrix [[3, 8, 1], [6, 2, 9]]?",
+        "choices": [
+          "3x2",
+          "2x3",
+          "6x1",
+          "3x6"
+        ],
+        "answerIndex": 1,
+        "explanation": "The matrix has 2 inner lists (2 rows), and each inner list has 3 numbers (3 columns), so the shape is 2x3, following the rows-then-columns naming convention."
+      },
+      {
+        "type": "mc",
+        "question": "In the 'rows x columns' naming convention for a matrix's shape, which number is stated first?",
+        "choices": [
+          "Columns, then rows",
+          "Rows, then columns",
+          "It depends on the matrix",
+          "Neither — shapes are read alphabetically"
+        ],
+        "answerIndex": 1,
+        "explanation": "The convention always states rows first and columns second, so a matrix with 2 rows and 3 columns is called '2x3,' never '3x2.'"
+      },
+      {
+        "type": "short",
+        "question": "For the matrix [[4, 4], [9, 1], [0, 6]], what vector does row 2 correspond to?",
+        "answer": "[9, 1]",
+        "acceptable": [
+          "9, 1",
+          "[9,1]",
+          "the vector 9 and 1",
+          "row 2 is 9, 1"
+        ],
+        "explanation": "Row 2 is the second inner list of the matrix, [9, 1] — reading any single row of a matrix gives you that row's own vector directly."
+      },
+      {
+        "type": "mc",
+        "question": "A dataset of 10 students, each described by 4 features (height, weight, age, grade), is written as one matrix. What is that matrix's shape?",
+        "choices": [
+          "4x10",
+          "10x4",
+          "14x1",
+          "10x10"
+        ],
+        "answerIndex": 1,
+        "explanation": "Rows are examples and columns are features, so 10 students (examples) and 4 features gives a 10x4 matrix — 10 rows, 4 columns."
+      },
+      {
+        "type": "short",
+        "question": "True or false: every column of a matrix, read top to bottom, is also a vector. Briefly explain why.",
+        "answer": "True — a column read top to bottom is just another ordered list of numbers, which is exactly the definition of a vector from lesson 6.5, the same as each row.",
+        "acceptable": [
+          "true, a column is an ordered list of numbers, so it's a vector too",
+          "true - columns are vectors too, just read vertically instead of horizontally"
+        ],
+        "explanation": "A vector is simply an ordered list of numbers. A matrix's row satisfies that reading left to right, and its column satisfies that reading top to bottom, so both rows and columns are vectors — just read in different directions."
+      }
+    ]
+  },
+  {
+    "id": "6.10",
+    "number": 10,
+    "title": "Matrix-vector multiplication",
+    "objectives": [
+      "Define matrix-vector multiplication: multiplying a matrix by a vector produces a new vector",
+      "Compute matrix-vector multiplication by taking the dot product of each matrix row with the input vector",
+      "State the shape rule: the matrix's number of columns must match the vector's number of components, and the output has as many components as the matrix has rows",
+      "Apply matrix-vector multiplication to a real-world example"
+    ],
+    "explanation": [
+      "Lesson 6.9 established that every row of a matrix is its own vector, and lesson 6.7 taught the dot product: a way of combining two same-length vectors into a single number. Matrix-vector multiplication puts those two ideas together directly. To multiply a matrix by a vector, you take the dot product of the matrix's first row with the vector — that becomes the first number of your output. Then you take the dot product of the second row with the same vector — that's the second output number. You keep going, one row at a time, until every row has produced one output number, and those output numbers together form a brand new vector.",
+      "Because every step is a dot product, the same rule from lesson 6.7 applies at every row: the two things being dot-producted must have matching lengths. That means the matrix's number of COLUMNS must equal the vector's number of components, since each row has as many entries as the matrix has columns, and a row can only be dot-producted with a vector of the same length. If that rule holds, the multiplication is legal, and the output vector ends up with exactly as many components as the matrix has ROWS — one output number per row, no more and no less.",
+      "It helps to say the whole process out loud once: row 1 dot the vector gives output component 1; row 2 dot the vector gives output component 2; and so on, down every row. Nothing about this is a new kind of math — it's the dot product from 6.7, applied once per row of a matrix from 6.9, with the results collected into a new vector.",
+      "This move matters because it lets you score many rows against the same vector in a single operation instead of doing separate dot products by hand each time. If a matrix holds many rows of data — many feature vectors, one per example, exactly like lesson 6.9's dataset framing — matrix-vector multiplication scores every single row against the same vector all at once. That's the exact building block the next two lessons build on."
+    ],
+    "example": {
+      "problem": "Mia's smoothie truck uses two recipes, each measured in cups of 3 ingredients (fruit, yogurt, juice), written as the matrix A = [[2, 1, 1], [3, 0, 2]] (row 1 = Berry Blast, row 2 = Tropical Twist). The price per cup of each ingredient is the vector p = [0.50, 0.30, 0.80]. Use matrix-vector multiplication to find the cost of one batch of each recipe.",
+      "steps": [
+        "Check the shapes: A is 2x3 (2 rows, 3 columns), and p has 3 components. The matrix's columns (3) match the vector's length (3), so the multiplication is legal.",
+        "Compute row 1 dot p: [2, 1, 1] dot [0.50, 0.30, 0.80] = (2 x 0.50) + (1 x 0.30) + (1 x 0.80) = 1.00 + 0.30 + 0.80 = 2.10. This is the first output component: Berry Blast costs $2.10 per batch.",
+        "Compute row 2 dot p: [3, 0, 2] dot [0.50, 0.30, 0.80] = (3 x 0.50) + (0 x 0.30) + (2 x 0.80) = 1.50 + 0 + 1.60 = 3.10. This is the second output component: Tropical Twist costs $3.10 per batch.",
+        "Collect both outputs into the result vector: [2.10, 3.10]. The output has 2 components, matching A's 2 rows."
+      ],
+      "answer": "A times p = [2.10, 3.10]: Berry Blast costs $2.10 per batch, and Tropical Twist costs $3.10 per batch."
+    },
+    "practice": [
+      {
+        "problem": "Multiply the matrix [[1, 2, 3], [4, 5, 6]] by the vector [1, 0, 2].",
+        "solution": "Check shapes: the matrix is 2x3, the vector has 3 components — they match. Row 1 dot the vector: (1 x 1) + (2 x 0) + (3 x 2) = 1 + 0 + 6 = 7. Row 2 dot the vector: (4 x 1) + (5 x 0) + (6 x 2) = 4 + 0 + 12 = 16. Output = [7, 16]."
+      },
+      {
+        "problem": "Multiply the matrix [[2, 0], [1, 3], [4, 1]] (3x2) by the vector [5, 2].",
+        "solution": "Check shapes: the matrix has 2 columns, the vector has 2 components — they match, so the output will have 3 components (one per row). Row 1: (2 x 5) + (0 x 2) = 10 + 0 = 10. Row 2: (1 x 5) + (3 x 2) = 5 + 6 = 11. Row 3: (4 x 5) + (1 x 2) = 20 + 2 = 22. Output = [10, 11, 22]."
+      },
+      {
+        "problem": "Explain why the matrix [[1, 2], [3, 4]] (2x2) cannot be multiplied by the vector [5, 6, 7] (3 components). Which rule is broken?",
+        "solution": "Each row of the matrix has 2 entries (since it's a 2-column matrix), but the vector has 3 components. Dot-producting a row with the vector would require matching lengths, exactly as lesson 6.7 required, and 2 does not equal 3. The broken rule is: the matrix's number of columns must equal the vector's number of components."
+      },
+      {
+        "problem": "A gym's matrix of 4 athletes' [pushups, situps, mile_time_seconds] is G = [[30, 40, 420], [25, 35, 460], [45, 50, 390], [20, 30, 500]]. Multiply G by the scoring vector [1, 1, -0.1] to get a fitness score for each athlete.",
+        "solution": "Check shapes: G is 4x3, the vector has 3 components — they match, so the output has 4 components. Row 1: (30 x 1) + (40 x 1) + (420 x -0.1) = 30 + 40 - 42 = 28. Row 2: (25 x 1) + (35 x 1) + (460 x -0.1) = 25 + 35 - 46 = 14. Row 3: (45 x 1) + (50 x 1) + (390 x -0.1) = 45 + 50 - 39 = 56. Row 4: (20 x 1) + (30 x 1) + (500 x -0.1) = 20 + 30 - 50 = 0. Output = [28, 14, 56, 0]."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In matrix-vector multiplication, how is each component of the output vector computed?",
+        "choices": [
+          "As the sum of all the matrix's entries",
+          "As the dot product of one matrix row with the input vector",
+          "As the magnitude of the input vector",
+          "As the matrix's number of rows times its number of columns"
+        ],
+        "answerIndex": 1,
+        "explanation": "Each output component comes from dot-producting one row of the matrix with the input vector — row 1 gives output 1, row 2 gives output 2, and so on."
+      },
+      {
+        "type": "short",
+        "question": "Multiply the matrix [[2, 1], [0, 3]] by the vector [4, 5]. What is the output vector?",
+        "answer": "[13, 15]",
+        "acceptable": [
+          "13, 15",
+          "[13,15]",
+          "13 and 15"
+        ],
+        "explanation": "Row 1 dot [4, 5] = (2 x 4) + (1 x 5) = 8 + 5 = 13. Row 2 dot [4, 5] = (0 x 4) + (3 x 5) = 0 + 15 = 15. Output = [13, 15]."
+      },
+      {
+        "type": "mc",
+        "question": "A matrix with 5 columns can only be legally multiplied by a vector with how many components?",
+        "choices": [
+          "3",
+          "5",
+          "Any number — it doesn't matter",
+          "The same number of components as the matrix has rows"
+        ],
+        "answerIndex": 1,
+        "explanation": "Each row's dot product with the vector requires matching lengths, and every row has exactly 5 entries (since the matrix has 5 columns), so the vector must also have exactly 5 components."
+      },
+      {
+        "type": "mc",
+        "question": "If a matrix has 4 rows and 3 columns, how many components will the output vector of a matrix-vector multiplication have?",
+        "choices": [
+          "3",
+          "4",
+          "7",
+          "12"
+        ],
+        "answerIndex": 1,
+        "explanation": "The output has one component per row of the matrix, so a 4-row matrix produces an output vector with 4 components, regardless of how many columns it has."
+      },
+      {
+        "type": "short",
+        "question": "Why does the output of a matrix-vector multiplication have as many components as the matrix has rows, rather than as many as it has columns?",
+        "answer": "Because each output component comes from dot-producting exactly one row of the matrix with the vector, so there's one output number per row. The number of columns only matters for checking that each row's length matches the vector's length, not for counting the outputs.",
+        "acceptable": [
+          "one output per row since each row does its own dot product with the vector",
+          "output length equals the number of rows because each row produces exactly one dot product result"
+        ],
+        "explanation": "Every row independently produces one dot product with the vector, and there are as many rows as there are dot products to compute, so the output vector's length always matches the row count, not the column count."
+      }
+    ]
+  },
+  {
+    "id": "6.11",
+    "number": 11,
+    "title": "Matrix-matrix multiplication",
+    "objectives": [
+      "Define matrix-matrix multiplication: each entry of the result is a dot product of a row from the first matrix and a column from the second matrix",
+      "Explain matrix-matrix multiplication as matrix-vector multiplication repeated once per column of the second matrix",
+      "State and apply the shape rule: an (m x n) matrix times an (n x p) matrix gives an (m x p) matrix",
+      "Work a full matrix-matrix multiplication example by hand"
+    ],
+    "explanation": [
+      "Lesson 6.10 multiplied a matrix by a single vector. But lesson 6.9 already pointed out that a matrix's columns, read top to bottom, are vectors too — which means a second matrix is really just several column-vectors sitting side by side. Matrix-matrix multiplication is exactly what it sounds like once you see that: run lesson 6.10's matrix-vector multiplication once for the FIRST column of the second matrix, then run it again for the SECOND column, and so on, placing each result as a new column in the output. Nothing new is being invented here — matrix-matrix multiplication is matrix-vector multiplication, repeated once per column of the second matrix.",
+      "Written entry by entry, the rule is: the number in row i, column j of the result is the dot product of row i of the first matrix and column j of the second matrix. That's the same dot product from lesson 6.7 every time, just applied to a different row-column pairing for every single entry of the output grid.",
+      "The shape rule follows directly from lesson 6.10's requirement. Each column of the second matrix has to be dot-product-legal with every row of the first matrix, which means the first matrix's number of columns must equal the second matrix's number of rows — these are called the 'inner' dimensions, and they must match. If the first matrix is (m x n) and the second is (n x p), the inner dimensions are both n, and they cancel out, leaving a result that is (m x p): as many rows as the first matrix, as many columns as the second.",
+      "This is genuinely powerful: instead of running lesson 6.10 separately for every column you care about, one matrix-matrix multiplication computes all of those matrix-vector results in a single sweep, and stacks them side by side automatically."
+    ],
+    "example": {
+      "problem": "Mia's recipe matrix is A = [[2, 1, 1], [3, 0, 2]] (2x3: row 1 = Berry Blast, row 2 = Tropical Twist, columns = fruit/yogurt/juice cups). She wants both recipes' costs under two pricing plans at once, given by the matrix B = [[0.50, 0.40], [0.30, 0.20], [0.80, 0.60]] (3x2: rows = fruit/yogurt/juice, column 1 = regular prices, column 2 = sale prices). Compute A times B.",
+      "steps": [
+        "Check the shapes: A is 2x3, B is 3x2. The inner dimensions (A's 3 columns, B's 3 rows) match, so the multiplication is legal, and the result will be 2x2 (A's 2 rows, B's 2 columns).",
+        "Read B's columns as vectors, from lesson 6.9: column 1 of B is [0.50, 0.30, 0.80] (regular prices), and column 2 of B is [0.40, 0.20, 0.60] (sale prices).",
+        "Compute the FIRST output column exactly like lesson 6.10: multiply A by B's column 1. Row 1 of A dot column 1: (2 x 0.50) + (1 x 0.30) + (1 x 0.80) = 1.00 + 0.30 + 0.80 = 2.10. Row 2 of A dot column 1: (3 x 0.50) + (0 x 0.30) + (2 x 0.80) = 1.50 + 0 + 1.60 = 3.10. This is exactly lesson 6.10's answer, since it's literally the same matrix-vector multiplication.",
+        "Compute the SECOND output column the same way, using B's column 2. Row 1 of A dot column 2: (2 x 0.40) + (1 x 0.20) + (1 x 0.60) = 0.80 + 0.20 + 0.60 = 1.60. Row 2 of A dot column 2: (3 x 0.40) + (0 x 0.20) + (2 x 0.60) = 1.20 + 0 + 1.20 = 2.40.",
+        "Place both output columns side by side to build the result matrix: [[2.10, 1.60], [3.10, 2.40]]."
+      ],
+      "answer": "A times B = [[2.10, 1.60], [3.10, 2.40]]. Berry Blast costs $2.10 regular / $1.60 sale; Tropical Twist costs $3.10 regular / $2.40 sale."
+    },
+    "practice": [
+      {
+        "problem": "Multiply A = [[1, 2], [3, 4]] by B = [[5, 6], [7, 8]] (both 2x2).",
+        "solution": "Shapes: A is 2x2, B is 2x2, inner dimensions match (2 = 2), result is 2x2. Row 1 of A dot column 1 of B: (1 x 5) + (2 x 7) = 5 + 14 = 19. Row 1 of A dot column 2 of B: (1 x 6) + (2 x 8) = 6 + 16 = 22. Row 2 of A dot column 1 of B: (3 x 5) + (4 x 7) = 15 + 28 = 43. Row 2 of A dot column 2 of B: (3 x 6) + (4 x 8) = 18 + 32 = 50. Result = [[19, 22], [43, 50]]."
+      },
+      {
+        "problem": "Matrix X is 4x3 and matrix Y is 3x5. What is the shape of X times Y? Can Y times X be computed?",
+        "solution": "X is (4x3), Y is (3x5): the inner dimensions are both 3, so they match, and X times Y exists with shape (4x5) — the outer dimensions. For Y times X: Y is (3x5) and X is (4x3), so the inner dimensions would be 5 and 4, which do not match, meaning Y times X cannot be computed."
+      },
+      {
+        "problem": "Using Mia's recipe matrix A = [[2, 1, 1], [3, 0, 2]], multiply it by a new pricing matrix D = [[1.00, 0.20], [0.50, 0.10], [1.20, 0.30]] (rows = fruit/yogurt/juice, column 1 = premium prices, column 2 = discount prices).",
+        "solution": "Shapes: A is 2x3, D is 3x2, inner dimensions match (3 = 3), result is 2x2. Row 1 of A dot column 1 of D (premium): (2 x 1.00) + (1 x 0.50) + (1 x 1.20) = 2.00 + 0.50 + 1.20 = 3.70. Row 1 of A dot column 2 of D (discount): (2 x 0.20) + (1 x 0.10) + (1 x 0.30) = 0.40 + 0.10 + 0.30 = 0.80. Row 2 of A dot column 1 of D: (3 x 1.00) + (0 x 0.50) + (2 x 1.20) = 3.00 + 0 + 2.40 = 5.40. Row 2 of A dot column 2 of D: (3 x 0.20) + (0 x 0.10) + (2 x 0.30) = 0.60 + 0 + 0.60 = 1.20. Result = [[3.70, 0.80], [5.40, 1.20]]."
+      },
+      {
+        "problem": "Explain, in your own words, why matrix-matrix multiplication is described as 'matrix-vector multiplication done once per column of the second matrix,' using the bakery example from this lesson (A times B) as your reference.",
+        "solution": "In the bakery example, B's two columns, [0.50, 0.30, 0.80] and [0.40, 0.20, 0.60], are each their own vector. Multiplying A by just the first column is exactly lesson 6.10's matrix-vector multiplication, and it produces the first output column, [2.10, 3.10]. Multiplying A by the second column is that same operation again, producing [1.60, 2.40]. Matrix-matrix multiplication is just doing this once for every column of the second matrix and lining up all the resulting output columns side by side — no new operation is happening, only lesson 6.10 repeated."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "When multiplying matrix A by matrix B, what is entry (row i, column j) of the result?",
+        "choices": [
+          "The sum of row i of A and column j of B",
+          "The dot product of row i of A and column j of B",
+          "The magnitude of row i of A",
+          "The product of A's row count and B's column count"
+        ],
+        "answerIndex": 1,
+        "explanation": "Every entry of the result matrix is the dot product of one row from the first matrix and one column from the second matrix — the row and column matching the entry's own position."
+      },
+      {
+        "type": "mc",
+        "question": "An (m x n) matrix times an (n x p) matrix produces a matrix of what shape?",
+        "choices": [
+          "(m x p)",
+          "(n x n)",
+          "(m x n)",
+          "(p x m)"
+        ],
+        "answerIndex": 0,
+        "explanation": "The matching inner dimensions (n) are required for the multiplication to be legal, and the outer dimensions (m and p) survive to become the result's shape: (m x p)."
+      },
+      {
+        "type": "short",
+        "question": "Can a 3x4 matrix be multiplied by a 5x2 matrix? Why or why not?",
+        "answer": "No. The inner dimensions must match — the first matrix's columns (4) must equal the second matrix's rows (5) — but 4 does not equal 5, so this multiplication is not defined.",
+        "acceptable": [
+          "no, because 4 columns does not match 5 rows, so the inner dimensions don't line up",
+          "not legal since the first matrix's column count and second matrix's row count must match"
+        ],
+        "explanation": "Matrix-matrix multiplication requires the first matrix's column count to equal the second matrix's row count. Here 4 (columns of the 3x4 matrix) does not equal 5 (rows of the 5x2 matrix), so the multiplication cannot be performed."
+      },
+      {
+        "type": "mc",
+        "question": "Matrix-matrix multiplication is best understood as:",
+        "choices": [
+          "A completely different operation from matrix-vector multiplication",
+          "Matrix-vector multiplication, repeated once for each column of the second matrix, with results placed side by side as new columns",
+          "Adding every entry of both matrices together",
+          "Multiplying the two matrices' shapes together to get a new shape"
+        ],
+        "answerIndex": 1,
+        "explanation": "Each column of the second matrix is itself a vector, so multiplying the first matrix by that column is exactly lesson 6.10's matrix-vector multiplication — matrix-matrix multiplication just does this once per column and lines up the results."
+      },
+      {
+        "type": "short",
+        "question": "Multiply [[2, 0], [1, 1]] by [[3], [4]] (a 2x1 matrix, treating it as a single column). What is the result?",
+        "answer": "[[6], [7]] (equivalently, the vector [6, 7])",
+        "acceptable": [
+          "[[6],[7]]",
+          "6, 7",
+          "[6, 7]"
+        ],
+        "explanation": "Row 1 dot column 1: (2 x 3) + (0 x 4) = 6. Row 2 dot column 1: (1 x 3) + (1 x 4) = 3 + 4 = 7. Result = [[6], [7]] — the same answer you'd get from lesson 6.10's matrix-vector multiplication with the vector [3, 4], since a single-column matrix is really just a vector."
+      }
+    ]
+  },
+  {
+    "id": "6.12",
+    "number": 12,
+    "title": "Weighted sums — inputs x weights + bias",
+    "objectives": [
+      "Define a weighted sum as an inputs vector dot a weights vector, plus one extra plain number called the bias",
+      "Recognize the weighted sum as exactly lesson 6.7's dot product with one extra number tacked on",
+      "Compute several weighted sums at once using matrix-vector multiplication (a weights matrix times an inputs vector) plus a bias vector",
+      "Name, without teaching or defining, the role this shape plays later as a single artificial neuron's computation"
+    ],
+    "explanation": [
+      "Lesson 6.7 taught the dot product: multiply matching components of two vectors, then add up the results. A weighted sum is that exact same calculation with one extra step tacked on at the very end: weighted_sum = (inputs dot weights) + bias, where the bias is a single plain number, not a vector, added once at the finish. Nothing about computing the dot product changes — you still multiply each input by its matching weight and sum the results — you're just adding one more fixed number after that sum is done.",
+      "Picture a simple predictor: a tutoring app estimates a test score from three inputs — hours studied, practice tests taken, and hours slept — using a weight for each input plus one bias number representing a baseline score every student starts with before any of the inputs are considered. The dot product measures how much the inputs themselves push the prediction up or down; the bias is a flat adjustment applied on top, the same for every student, regardless of their inputs.",
+      "Lesson 6.10 showed that multiplying a matrix by a vector produces several dot products at once, one per row. That's exactly how you compute several weighted sums at once: stack each output's own weight vector as one row of a weights matrix, multiply that matrix by the same inputs vector (lesson 6.10's matrix-vector multiplication), and then add a bias vector — one bias number per row — at the very end. weighted_sums = (weights matrix times inputs vector) + bias vector. It's lesson 6.10, plus one final addition step.",
+      "It's worth naming, just by name, why this exact shape — inputs, weights, bias, one number out — matters so much: this is precisely what a single artificial neuron (called a perceptron) computes before it decides whether to 'fire.' That decision-making part is a topic for Phase 8, much later in this course. For now, all you're doing is computing the shape by hand — no firing, no deciding, just the arithmetic."
+    ],
+    "example": {
+      "problem": "A tutoring app predicts a student's test score using a weighted sum of 3 inputs — hours studied, number of practice tests taken, and hours slept the night before — with weights [5, 10, 1] and a fixed bias of 20 points. For a student who studied 4 hours, took 2 practice tests, and slept 7 hours, compute the predicted score.",
+      "steps": [
+        "Identify the inputs vector and the weights vector: x = [4, 2, 7], w = [5, 10, 1].",
+        "Compute the dot product exactly as in lesson 6.7: x dot w = (4 x 5) + (2 x 10) + (7 x 1) = 20 + 20 + 7 = 47.",
+        "Add the bias, one plain number, at the very end: weighted sum = 47 + 20 = 67.",
+        "Notice this is nothing new — it's lesson 6.7's dot product with one extra number tacked on at the end."
+      ],
+      "answer": "Predicted score = 67."
+    },
+    "practice": [
+      {
+        "problem": "Compute the weighted sum for inputs [3, 6], weights [2, -1], and bias 5.",
+        "solution": "Dot product: (3 x 2) + (6 x -1) = 6 - 6 = 0. Add the bias: 0 + 5 = 5. Weighted sum = 5."
+      },
+      {
+        "problem": "Using the tutoring app's weights [5, 10, 1] and bias 20, compute the predicted score for a student who studied 6 hours, took 1 practice test, and slept 5 hours.",
+        "solution": "Inputs vector: [6, 1, 5]. Dot product: (6 x 5) + (1 x 10) + (5 x 1) = 30 + 10 + 5 = 45. Add the bias: 45 + 20 = 65. Predicted score = 65."
+      },
+      {
+        "problem": "The tutoring app now predicts TWO things at once from the same student's inputs x = [4, 2, 7]: a test score (weights [5, 10, 1], bias 20) and a 'readiness score' (weights [1, 3, 4], bias 10). Write this as a matrix-vector multiplication plus a bias vector, and compute both predictions.",
+        "solution": "Weights matrix W = [[5, 10, 1], [1, 3, 4]], inputs x = [4, 2, 7], bias vector = [20, 10]. Row 1 dot x: (5 x 4) + (10 x 2) + (1 x 7) = 20 + 20 + 7 = 47; plus bias 20 = 67. Row 2 dot x: (1 x 4) + (3 x 2) + (4 x 7) = 4 + 6 + 28 = 38; plus bias 10 = 48. Predictions = [67, 48]: test score 67, readiness score 48."
+      },
+      {
+        "problem": "Explain why computing the 'readiness score' in the previous problem is exactly like computing row 2 of a matrix-vector multiplication from lesson 6.10, with one extra step.",
+        "solution": "Row 2's weights, [1, 3, 4], dot-producted with the inputs [4, 2, 7], is precisely what lesson 6.10 does for the second row of a weights matrix — that's where the 38 comes from. The 'one extra step' is adding that row's own bias value, 10, at the end, turning the plain matrix-vector output into a full weighted sum. This matches the lesson's core idea: several weight-rows applied to one input vector, plus a bias vector, computes several weighted sums at once."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "A weighted sum is best described as:",
+        "choices": [
+          "A dot product with one extra plain number (the bias) added at the end",
+          "A matrix multiplied by another matrix",
+          "The magnitude of a vector",
+          "A function graphed on the coordinate plane"
+        ],
+        "answerIndex": 0,
+        "explanation": "A weighted sum is exactly lesson 6.7's dot product (inputs dot weights), with one extra plain number, the bias, added on at the very end."
+      },
+      {
+        "type": "short",
+        "question": "Compute the weighted sum for inputs [2, 5], weights [3, 1], and bias -4.",
+        "answer": "7",
+        "acceptable": [
+          "7",
+          "weighted sum is 7"
+        ],
+        "explanation": "Dot product: (2 x 3) + (5 x 1) = 6 + 5 = 11. Add the bias: 11 + (-4) = 7."
+      },
+      {
+        "type": "mc",
+        "question": "When computing several weighted sums at once from the same input vector using a weights matrix, what does each row of the matrix represent?",
+        "choices": [
+          "One output's own weight vector",
+          "The bias for every output",
+          "The input vector itself",
+          "The magnitude of the output"
+        ],
+        "answerIndex": 0,
+        "explanation": "Each row of the weights matrix is the weight vector for exactly one output, so dot-producting that row with the shared input vector produces that output's own weighted sum (before its bias is added)."
+      },
+      {
+        "type": "mc",
+        "question": "In the tutoring-app example (weights [5, 10, 1], bias 20, inputs [4, 2, 7]), what role does the bias (20) play?",
+        "choices": [
+          "It's multiplied by one of the inputs before summing",
+          "It's one plain number added at the very end, after the dot product is computed",
+          "It replaces the weights vector entirely",
+          "It's the magnitude of the input vector"
+        ],
+        "answerIndex": 1,
+        "explanation": "The bias is not multiplied by anything and is not part of the dot product itself — it's a single fixed number added on at the very end, after the dot product (47) has already been computed."
+      },
+      {
+        "type": "short",
+        "question": "True or false: this lesson's 'weighted sum' shape (inputs, weights, bias, one number out) is exactly what a single artificial neuron computes before deciding whether to fire. Briefly say when you'll learn how that firing decision actually works.",
+        "answer": "True — this exact shape is what a perceptron (artificial neuron) computes. How it uses that number to decide whether to fire is covered later, in Phase 8.",
+        "acceptable": [
+          "true, and the firing decision is taught in phase 8",
+          "true - the perceptron / firing decision comes later in phase 8"
+        ],
+        "explanation": "The weighted sum computed here is exactly the calculation a perceptron performs before any firing decision is made. This lesson only computes that number by hand; the decision-making step is introduced later, in Phase 8."
+      }
+    ]
+  },
+  {
+    "id": "6.13",
+    "number": 13,
+    "title": "Mini-project: Math Foundations II synthesis",
+    "objectives": [
+      "Evaluate a function and identify the coordinate point it produces on a graph",
+      "Compute a vector's dot product and a vector's magnitude for a concrete scenario",
+      "Perform a matrix-vector multiplication and compute a weighted sum with a bias in the same scenario",
+      "Explain how all six tools from this phase work together to describe one coherent real-world situation"
+    ],
+    "explanation": [
+      "You've now met every tool this phase has to offer: evaluating and graphing a function (lessons 6.1-6.4), the vector as an ordered list of numbers with addition and scalar multiplication (6.5-6.6), the dot product (6.7), vector magnitude (6.8), the matrix as a grid built from row vectors (6.9), matrix-vector multiplication (6.10), matrix-matrix multiplication (6.11), and the weighted sum (6.12). This lesson doesn't teach anything new — it's your chance to take one small, concrete scenario and run it through every one of those tools, one after another, the same way lesson 4.12 combined every gate from Phase 4 into a single working circuit, and lesson 5.12 ran one dataset through every statistic from Phase 5.",
+      "Here's the shape worth noticing before you dive in. Every tool in this phase turns some number, or numbers, into other numbers: a function turns one input into one output; a vector bundles several related numbers together; the dot product and magnitude each collapse a vector down into a single number; a matrix bundles many vectors together into a grid; matrix-vector and matrix-matrix multiplication scale the dot product up to many rows or many outputs at once; and the weighted sum ties a dot product to one extra number, the bias. None of these are separate branches of math sitting side by side — each one builds directly on the one before it, and by the end of this lesson you'll watch all six work together on the exact same handful of numbers.",
+      "You'll work through all of this with one running scenario: Mia's smoothie truck. Mia has a daily cost function, recipes written as ingredient vectors, a flavor profile she measures with magnitude, a matrix of several recipes at once, and a plan to predict how much customers will like a brand new recipe using a weighted sum. Every one of this phase's tools shows up naturally, doing the exact job it was built for, on the exact same small business.",
+      "As you work through the practice problems below, which deliberately vary Mia's numbers and ask a new question each time, keep applying the discipline lesson 5.12 asked of you with statistics: before reaching for a formula, ask yourself exactly which tool the question is calling for, since a function-evaluation question, a dot-product question, a magnitude question, a matrix-vector question, and a weighted-sum question all look, and are answered, differently — even while they're all being applied to the very same smoothie truck."
+    ],
+    "example": {
+      "problem": "Mia runs a smoothie truck. (a) Her daily cost function is C(x) = 3x + 40, where x is the number of smoothies made that day. Find C(25) and state the point you'd plot for it on the coordinate plane. (b) Her Berry Blast recipe is the vector r = [2, 1, 1] (cups of fruit, yogurt, juice); using the price-per-cup vector p = [1.50, 2.00, 0.75], find the cost of one batch using the dot product. (c) Mia scores a recipe's flavor profile as a vector; find the magnitude of the flavor vector f = [3, 4] (sweetness, tartness on a 0-10 scale) to get an overall 'flavor intensity' score. (d) Mia's two recipes are recorded as the matrix R = [[2, 1, 1], [1, 2, 1]] (row 1 = Berry Blast, row 2 = Tropical Twist, columns = fruit/yogurt/juice cups); use matrix-vector multiplication with the price vector p to find both recipes' costs at once. (e) Mia wants to predict a customer rating for a new recipe called Sunrise Mix, using its features s = [7, 3, 5] (sweetness, tartness, creaminess), weights w = [0.5, -0.3, 0.4], and bias b = 2; compute the weighted sum to get the predicted rating.",
+      "steps": [
+        "(a) Function evaluation (6.1-6.3): C(25) = 3(25) + 40 = 75 + 40 = 115. The point to plot is (25, 115).",
+        "(b) Dot product (6.7): r dot p = (2 x 1.50) + (1 x 2.00) + (1 x 0.75) = 3.00 + 2.00 + 0.75 = 5.75. Berry Blast costs $5.75 per batch.",
+        "(c) Magnitude (6.8): |f| = sqrt(3^2 + 4^2) = sqrt(9 + 16) = sqrt(25) = 5. This is the same 3-4-5 relationship from lesson 6.8's worked example — flavor intensity = 5.",
+        "(d) Matrix-vector multiplication (6.10): row 1 of R dot p = (2 x 1.50) + (1 x 2.00) + (1 x 0.75) = 5.75 (matches part b exactly, since it's the same calculation). Row 2 of R dot p = (1 x 1.50) + (2 x 2.00) + (1 x 0.75) = 1.50 + 4.00 + 0.75 = 6.25. Output = [5.75, 6.25]: both recipes' costs, computed in one multiplication.",
+        "(e) Weighted sum (6.12): s dot w = (7 x 0.5) + (3 x -0.3) + (5 x 0.4) = 3.5 - 0.9 + 2.0 = 4.6. Add the bias: 4.6 + 2 = 6.6. Predicted rating = 6.6."
+      ],
+      "answer": "C(25) = 115, point (25, 115); Berry Blast batch cost = $5.75; flavor intensity |f| = 5; both recipes' costs via matrix-vector multiplication = [5.75, 6.25]; predicted rating for Sunrise Mix = 6.6."
+    },
+    "practice": [
+      {
+        "problem": "Using Mia's cost function C(x) = 3x + 40, find C(40) and state the point you'd plot for it.",
+        "solution": "C(40) = 3(40) + 40 = 120 + 40 = 160. The point to plot is (40, 160)."
+      },
+      {
+        "problem": "Mia adds a third recipe, Green Glow, with vector r3 = [1, 1, 2] (fruit, yogurt, juice cups). Using the price vector p = [1.50, 2.00, 0.75], find its cost with the dot product.",
+        "solution": "r3 dot p = (1 x 1.50) + (1 x 2.00) + (2 x 0.75) = 1.50 + 2.00 + 1.50 = 5.00. Green Glow costs $5.00 per batch."
+      },
+      {
+        "problem": "A new flavor profile is g = [6, 8] (sweetness, tartness). Find its magnitude to get its flavor intensity score.",
+        "solution": "|g| = sqrt(6^2 + 8^2) = sqrt(36 + 64) = sqrt(100) = 10. Flavor intensity = 10."
+      },
+      {
+        "problem": "Add Green Glow as a third row to Mia's recipe matrix: R' = [[2, 1, 1], [1, 2, 1], [1, 1, 2]]. Multiply R' by the price vector p = [1.50, 2.00, 0.75] to find all three recipes' costs at once.",
+        "solution": "Row 1 dot p = 5.75 (as before). Row 2 dot p = 6.25 (as before). Row 3 dot p = (1 x 1.50) + (1 x 2.00) + (2 x 0.75) = 1.50 + 2.00 + 1.50 = 5.00 (matches the previous problem). Output = [5.75, 6.25, 5.00]."
+      },
+      {
+        "problem": "Mia tries another new recipe, Midnight Mango, with features m = [4, 6, 3] (sweetness, tartness, creaminess). Using the same weights w = [0.5, -0.3, 0.4] and bias b = 2, compute its predicted rating.",
+        "solution": "m dot w = (4 x 0.5) + (6 x -0.3) + (3 x 0.4) = 2.0 - 1.8 + 1.2 = 1.4. Add the bias: 1.4 + 2 = 3.4. Predicted rating = 3.4 — noticeably lower than Sunrise Mix's 6.6, mostly because Midnight Mango's higher tartness (6) is penalized by the negative tartness weight."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In Mia's cost function C(x) = 3x + 40, what does evaluating C(25) tell you?",
+        "choices": [
+          "The number of smoothies made in a day",
+          "The total daily cost when 25 smoothies are made",
+          "The magnitude of the recipe vector",
+          "The weighted sum of ingredient prices"
+        ],
+        "answerIndex": 1,
+        "explanation": "Evaluating C(25) substitutes 25 for x in the cost function, giving the total daily cost when exactly 25 smoothies are made: 3(25) + 40 = 115."
+      },
+      {
+        "type": "short",
+        "question": "For the Berry Blast recipe r = [2, 1, 1] and price vector p = [1.50, 2.00, 0.75], what operation from lesson 6.7 finds the batch cost, and what is that cost?",
+        "answer": "The dot product; cost = (2 x 1.50) + (1 x 2.00) + (1 x 0.75) = 5.75, so $5.75.",
+        "acceptable": [
+          "dot product, $5.75",
+          "dot product; 5.75",
+          "the dot product, giving 5.75 dollars"
+        ],
+        "explanation": "Multiplying each ingredient amount by its matching price and summing the results is exactly the dot product from lesson 6.7, giving a total batch cost of $5.75."
+      },
+      {
+        "type": "mc",
+        "question": "Multiplying the 2x3 recipe matrix R by the price vector p (3 components) is legal because:",
+        "choices": [
+          "R has 2 rows, matching the 2 output values needed",
+          "R's number of columns (3) matches the vector's number of components (3)",
+          "Matrices can always be multiplied by any vector",
+          "The price vector's magnitude is greater than 1"
+        ],
+        "answerIndex": 1,
+        "explanation": "Matrix-vector multiplication requires the matrix's column count to match the vector's length, since every row must be dot-product-legal with the vector. Here both are 3, so the multiplication works."
+      },
+      {
+        "type": "short",
+        "question": "When Mia adds a bias of 2 to the weighted sum s dot w for her rating predictor, what does that bias represent, based on lesson 6.12's definition?",
+        "answer": "A single plain number added at the very end of the dot product, on top of the weighted combination of features — exactly the definition of a weighted sum from lesson 6.12.",
+        "acceptable": [
+          "a flat number added after the dot product, same as 6.12's bias definition",
+          "one extra number tacked on at the end, not part of the dot product itself"
+        ],
+        "explanation": "The bias in a weighted sum is never multiplied by anything — it's one fixed number added on after the dot product between features and weights has already been computed."
+      },
+      {
+        "type": "mc",
+        "question": "Which single idea from this phase connects the magnitude calculation |f| = sqrt(3^2 + 4^2) = 5 back to an earlier lesson?",
+        "choices": [
+          "It's the same 3-4-5 right-triangle relationship first seen in lesson 6.8",
+          "It's a weighted sum with a bias of 5",
+          "It's a matrix-matrix multiplication",
+          "It's a linear function's slope"
+        ],
+        "answerIndex": 0,
+        "explanation": "3-4-5 is the same right-triangle pattern used in lesson 6.8's original magnitude example, |[3, 4]| = 5, since 3 squared plus 4 squared equals 5 squared (9 + 16 = 25)."
+      }
+    ]
+  }
 ];

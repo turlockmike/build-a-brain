@@ -1,8 +1,8 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-5 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
-Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27) — live on
-GitHub Pages.
+**Status:** Phases 1-6 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
+2026-08-27) — live on GitHub Pages.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -26,7 +26,7 @@ Repo: https://github.com/turlockmike/build-a-brain
 - Progress tracking in `localStorage` only (`bab_progress_v1`): started /
   complete / quiz score per lesson, phase progress bar, overall progress bar.
   No account, no login, no backend.
-- Offline support: service worker (`sw.js`, cache `bab-v6` as of the Phase 5
+- Offline support: service worker (`sw.js`, cache `bab-v7` as of the Phase 6
   ship) caches the whole app shell on first load; works with no network after
   that. Cache version gets bumped every time new phase content ships so
   returning users' service workers pick it up.
@@ -111,21 +111,58 @@ Repo: https://github.com/turlockmike/build-a-brain
   valid mc answerIndex bounds; hand-spot-checked variance/probability/EV
   worked examples for correct arithmetic) before merging into
   `data/curriculum.js` (76 lessons total across Phases 1-5).
+- **Phase 6 (Math Foundations II) content: 13/13 lessons fully written** —
+  starts at what a function is (input/output machine, f(x) notation,
+  callback to Phase 1's expression evaluation and Phase 2's Python
+  functions), through graphing (x, f(x)) as ordered pairs on the coordinate
+  plane, linear functions (slope-intercept form, rate of change), and a
+  conceptual intro to nonlinear functions (y=x^2, non-constant rate of
+  change, area-quadrupling); then vectors as ordered lists of numbers
+  (callback to Phase 2 lists and Phase 5 dataset rows), vector addition and
+  scalar multiplication, the dot product (multiply-then-add, tied explicitly
+  to Phase 5's mean as a dot product with equal weights), and vector
+  magnitude (sqrt of sum of squares, tied to Phase 5's standard deviation's
+  square/sum/sqrt shape and the Pythagorean theorem); then matrices as grids
+  built from row vectors (tied to Phase 5 datasets: rows=examples,
+  columns=features), matrix-vector multiplication (one dot product per
+  row), matrix-matrix multiplication (matrix-vector multiplication repeated
+  once per column of the second matrix), and weighted sums (a dot product
+  plus one bias number — named, not taught, as what a perceptron computes,
+  deferring the actual firing/threshold mechanics to Phase 8), ending in a
+  mini-project that runs one small business scenario (Mia's smoothie truck)
+  through every tool from the phase — function evaluation, dot product,
+  magnitude, matrix-vector multiplication, and weighted sum — in one
+  coherent walkthrough, mirroring 4.12/5.12's synthesis structure. Every
+  lesson assumes only Phase 1-5 + earlier Phase 6 lessons — content was
+  generated in 3 lesson-groups (6.1-6.4, 6.5-6.8, 6.9-6.13) each briefed on
+  the prior groups' ACTUAL content (grepped/pasted from the real lesson
+  objects, not assumed) plus the actual Phase 1-5 content needed for
+  callbacks, to keep the progressive-dependency constraint intact, then
+  schema-validated programmatically (13/13 lessons: correct id/number
+  sequence, non-empty objectives/explanation/practice, exactly 5 quiz
+  questions each, valid mc answerIndex bounds, no duplicate ids across all
+  89 lessons) plus hand-checked arithmetic on every worked example, practice
+  problem, and quiz question across all 13 lessons (function evaluations,
+  slopes, x^2 tables, vector addition/scaling, dot products, magnitudes
+  including 3-4-5/6-8-10/5-12-13/8-15-17 triples, and every matrix
+  multiplication entry) before merging into `data/curriculum.js` (89 lessons
+  total across Phases 1-6).
 - Deployed: pushed to `main` on `turlockmike/build-a-brain`, GitHub Pages
   enabled serving from `main` / root (same setup as kana-cards). Verified
   live with a `curl -sI` 200 check + a content check on `data/curriculum.js`
-  post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 ships.
+  post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and
+  Phase 6 ships.
 
 ## Pending — next session(s)
 
-- **Phases 6-14 have no lesson content yet** — only their phase titles show
+- **Phases 7-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
-- Next up: Phase 6, "Math Foundations II — functions & graphing, vectors and
-  matrices, matrix multiplication, weighted sums." Needs its own
-  lesson-title breakdown (like Phase 1-5 got) before full lesson content in
-  the same schema.
+- Next up: Phase 7, "Programming Foundations II — arrays, multi-input
+  functions, vectorized thinking (NumPy)." Needs its own lesson-title
+  breakdown (like Phase 1-6 got) before full lesson content in the same
+  schema.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)
   if plain-text exponents/fractions ever feel cramped, print/export view.
