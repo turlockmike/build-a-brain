@@ -4,7 +4,7 @@
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
 Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
-GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.2/~10
+GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.3/~10
 lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
@@ -798,20 +798,54 @@ far. `bab-schema-check "13."` 2/2 clean, 153/153 file-wide, 0 dup ids; `sw.js` b
 `bab-v22`->`bab-v23`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
 comment refreshed (152->153, 13.1->13.1-13.2).
 
+## Phase 13 (Evaluation & Overfitting) — lesson 13.3 SHIPPED 2026-08-29
+
+**Phase 13 lesson 13.3, "Precision and recall: two scores for the two ways a classifier
+can be wrong," SHIPPED 2026-08-29** (commit `d194e9a`): defines precision=TP/(TP+FP) and
+recall=TP/(TP+FN), built off the same 4 confusion-matrix counts 13.2 introduced. Computes
+both on 13.2's own 6-point matrix (TP=2,TN=2,FP=1,FN=1): precision=recall=2/3 approximately
+66.7%, equal only because FP=FN=1 in that particular matrix. Then reuses 13.2's own
+practice problem 3 (two 80%-accuracy classifiers, A: TP=4/FP=2/FN=0, B: TP=4/FP=0/FN=2) to
+show the scores diverge: A gets perfect recall (100%, never misses a real positive) but
+66.7% precision (2 wrong "yes" calls); B gets perfect precision (100%, never wrong when it
+says yes) but 66.7% recall (misses 2 real positives) — same accuracy, opposite failure
+directions, exactly what 13.2 could only describe in words. A spam-filter worked example
+(TP=18,TN=70,FP=2,FN=10 on 100 emails) grounds both scores in plain language: 90%
+precision, 64.3% recall. Closes with the "predict positive for everything" gaming case
+(recall=1.0 for free, precision collapses) as the reason both scores are always reported
+together. Every number independently computed via Python: the 12.10-trained-network
+forward pass was re-derived from scratch (zh = W_hidden @ x + b_hidden, sigmoid, then
+W_output . h + b_output, sigmoid) and matched 13.1/13.2's stated p-values to 4 decimals
+before reusing their confusion-matrix counts; all precision/recall ratios verified via
+direct Python arithmetic. No training/gradients in this lesson, so no finite-difference
+check applies (same as 13.1/13.2). 154/154 lessons total across Phases 1-13 so far.
+`bab-schema-check "13."` 3/3 clean, 154/154 file-wide, 0 dup ids; `sw.js` bumped
+`bab-v23`->`bab-v24`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
+comment refreshed (153->154, 13.1-13.2->13.1-13.3).
+
+**Next up: Phase 13's remaining lessons** — overfitting vs. underfitting is the natural
+next topic (13.1-13.3 were all purely EVALUATION tools scoring an already-trained, fixed
+network; overfitting/underfitting returns to the TRAINING side, building on 13.1's own
+training-vs-test accuracy gap), then data size/quality and regularization, continuing the
+~10-lesson Phase 13 arc one lesson/session at a time per Mike's phase-by-phase pacing.
+
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.2/~10
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.3/~10
   shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
-  (precision/recall next, per the "Next up" note above, building on 13.2's TP/FP/FN counts),
+  (overfitting vs. underfitting next, per the "Next up" note above — the first Phase 13
+  lesson to look at the TRAINING side again rather than just scoring a fixed trained
+  network, building on 13.1's own training-vs-test accuracy gap as the motivating example),
   following the same verification bar as every prior phase — every worked example/practice/
   quiz numeric claim independently Python/NumPy-verified before being written into the
   lesson (not mental math; if a lesson involves any hand-derived gradient or slope,
   cross-check it against NumPy's finite-difference technique the way every Phase 11-12
-  lesson did — neither 13.1 nor 13.2 needed one, since both only evaluate an already-trained
-  network), `bab-schema-check`, file-wide duplicate-id check, `sw.js` cache version bump,
-  commit + push, `bab-ship-verify` confirming live. Per Mike: build this out phase by phase
-  across future sessions, not all at once ("chained background builds through the day" per
-  his 2026-08-25 ask).
+  lesson did — none of 13.1-13.3 needed one, since all three only evaluate an
+  already-trained network; an overfitting lesson that trains a NEW network to demonstrate
+  the effect may need one again), `bab-schema-check`, file-wide duplicate-id check, `sw.js`
+  cache version bump, commit + push, `bab-ship-verify` confirming live. Per Mike: build
+  this out phase by phase across future sessions, not all at once ("chained background
+  builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
