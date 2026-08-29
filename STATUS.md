@@ -1,10 +1,10 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-9 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** Phases 1-10 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
-2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28) —
-live on GitHub Pages. Phase 9 (Calculus for Learning) is now 10/10 lessons
-written — see "Phase 9" section below.
+2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
+Phase 10: 2026-08-29) — live on GitHub Pages. Phase 10 (Networks of Neurons)
+is now 10/10 lessons written — see "Phase 10" section below.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -225,7 +225,10 @@ Repo: https://github.com/turlockmike/build-a-brain
   enabled serving from `main` / root (same setup as kana-cards). Verified
   live with a `curl -sI` 200 check + a content check on `data/curriculum.js`
   post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6,
-  Phase 7, and Phase 8 ships.
+  Phase 7, and Phase 8 ships; Phase 9 and Phase 10 ships used the same
+  post-deploy verification via the `bab-ship-verify` tool instead of a manual
+  curl (it polls past GitHub Pages' CDN rebuild lag — see "Live-deploy verify
+  tool" below).
 
 ## Phase 9 (Calculus for Learning) — title breakdown + progress
 
@@ -352,39 +355,69 @@ lessons per the README's progressive-dependency rule).
     nonlinearity choice, architecture, NumPy implementation), mirroring
     4.12/5.12/6.13/7.12/8.10/9.10's end-of-phase synthesis structure.
 
-**10.1-10.4 (4 of 10) are written and merged into `data/curriculum.js`**
-(125 lessons total across Phases 1-10 now), schema-validated
-programmatically (`bab-schema-check "10."`: 4/4 lessons checked, plus
-`bab-schema-check` with no argument: 125/125 file-wide, 0 duplicate ids)
-and independently re-verified via actual Python execution for every
-numeric claim: 10.1's layer computations (perceptron-by-perceptron vs.
-matrix-vector multiplication agreeing at every input, including the
-worked example and all practice/quiz cases); 10.2's full forward pass for
-all four XOR inputs (0,0)/(0,1)/(1,0)/(1,1), each traced through the
-hidden layer's z/activation and the output layer's z/activation and
-checked against XOR's truth table exactly; 10.3's linear-collapse claim
-— two purely-linear layers computed sequentially vs. via one combined
-Wcombined/bcombined, at two different inputs, agreeing to the exact
-integer in both cases; 10.4's sigmoid values (sigma(0)=0.5 exactly;
-sigma(1), sigma(-1), sigma(2), sigma(-2), sigma(3), sigma(-3), sigma(10)
-all matching a fresh `math.exp`-based computation to 4+ decimal places,
-plus the sigma(z)+sigma(-z)=1 symmetry check at z=1 and z=2). **Also
-fixed:** an existing typo in this file's own title breakdown (two
-references to a nonexistent lesson "8.13" — Phase 8 only has 10 lessons,
-8.1-8.10; the actual XOR-wall lesson is **8.7** — corrected above).
-Phase 10 is **not yet shipped** — 10.1-10.4 are merged and schema-clean
-locally; 10.5-10.10 remain unwritten. `sw.js` cache bumped to `bab-v13`
-alongside this merge.
+**10.1-10.4 (group 1) were written and merged into `data/curriculum.js`**
+first, schema-validated programmatically (`bab-schema-check "10."`: 4/4
+lessons checked, plus `bab-schema-check` with no argument: 125/125
+file-wide, 0 duplicate ids) and independently re-verified via actual
+Python execution for every numeric claim: 10.1's layer computations
+(perceptron-by-perceptron vs. matrix-vector multiplication agreeing at
+every input, including the worked example and all practice/quiz cases);
+10.2's full forward pass for all four XOR inputs (0,0)/(0,1)/(1,0)/(1,1),
+each traced through the hidden layer's z/activation and the output
+layer's z/activation and checked against XOR's truth table exactly;
+10.3's linear-collapse claim — two purely-linear layers computed
+sequentially vs. via one combined Wcombined/bcombined, at two different
+inputs, agreeing to the exact integer in both cases; 10.4's sigmoid
+values (sigma(0)=0.5 exactly; sigma(1), sigma(-1), sigma(2), sigma(-2),
+sigma(3), sigma(-3), sigma(10) all matching a fresh `math.exp`-based
+computation to 4+ decimal places, plus the sigma(z)+sigma(-z)=1 symmetry
+check at z=1 and z=2). **Also fixed:** an existing typo in this file's
+own title breakdown (two references to a nonexistent lesson "8.13" —
+Phase 8 only has 10 lessons, 8.1-8.10; the actual XOR-wall lesson is
+**8.7** — corrected above). `sw.js` cache bumped to `bab-v13` alongside
+this merge (commit `5cfea14`, 2026-08-28).
+
+**10.5-10.10 (group 2) are now also written and merged**, completing
+Phase 10 at 10/10 lessons: 10.5's ReLU (max(0,z), contrasted with 10.4's
+sigmoid on both compute cost and saturation); 10.6's architecture lesson
+(input size fixed by dataset features per 5.1/6.9, output size fixed by
+the task, hidden depth/width as the tunable choices, using 10.1's shape
+rule); 10.7's fully hand-traced 2-input/2-hidden-ReLU/1-output forward
+pass; 10.8's NumPy recoding of that same network (`np.dot` + `np.maximum`,
+extending 8.9's loop-to-np.dot replacement to a whole layer); 10.9's
+second, structurally different XOR solution — a ReLU "tent function"
+hidden layer with NO output activation, deliberately distinct from 10.2's
+step-based OR/NAND/AND construction (10.2 already solved XOR by hand once,
+so 10.9 leans on a different mechanism entirely rather than re-deriving
+10.2's case); and 10.10's mini-project, which hand-traces the 10.7 network
+per row and then computes an entire 4-example toy dataset's forward pass
+in one batched NumPy matrix multiplication, extending 7.11's 2D-array
+handling. Every worked example/practice/quiz numeric claim was
+independently re-verified via actual Python/NumPy execution (not mental
+math): ReLU-vs-sigma value pairs at z=6,8,10,20; the full 2-layer forward
+pass for x=[3,-1],[1,1],[0,0],[-2,5],[4,0]; the ReLU XOR "tent" network
+traced across all 4 truth-table rows; the batched 4-example matrix
+forward pass cross-checked row-by-row against the individually
+hand-traced results; and a random-matrix shape-rule sanity check for
+10.6's claims. The NumPy code shown in 10.8/10.9/10.10 was actually run,
+not just described. `bab-schema-check "10."` passes 10/10 clean, and
+`bab-schema-check` with no argument passes 131/131 file-wide, 0 duplicate
+ids. `sw.js` cache bumped to `bab-v14`, committed and pushed (commit
+`99ab625`, 2026-08-29), and confirmed live via `bab-ship-verify bab-v14
+"10."` (OK, all 10 lesson ids present in the deployed
+`data/curriculum.js`). **Phase 10 (Networks of Neurons) is now SHIPPED —
+all 10/10 lessons live**, matching Phases 1-9's shipped status.
 
 ## Pending — next session(s)
 
-- **Phase 10 title breakdown is done (above)** — next up is drafting
-  Phase 10 lesson content (10.1 onward), same content bar as every prior
-  phase, each lesson assuming only Phases 1-9 + earlier Phase 10 lessons.
-- **Phases 10-14 have no lesson content yet** — only their phase titles show
-  in the roadmap as locked/coming-soon. Per Mike: build this out phase by
-  phase across future sessions, not all at once ("chained background builds
-  through the day" per his 2026-08-25 ask).
+- **Phases 1-10 are all SHIPPED.** Phases 11-14 have no lesson content
+  yet — only their phase titles show in the roadmap as locked/coming-soon.
+  Next up (whenever a future session picks this project back up) is
+  drafting Phase 11's title breakdown, the same way Phase 9's and Phase
+  10's breakdowns were drafted before their content-writing sessions. Per
+  Mike: build this out phase by phase across future sessions, not all at
+  once ("chained background builds through the day" per his 2026-08-25
+  ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
