@@ -14661,5 +14661,213 @@ const LESSONS = [
         "explanation": "Matching 11.7's independently hand-computed numbers is what confirms the vectorized code is doing the right computation."
       }
     ]
+  },
+  {
+    "id": "11.9",
+    "number": 9,
+    "title": "The training loop: epochs",
+    "objectives": [
+      "Define an EPOCH as one full pass through the training dataset, and recognize that for a one-example dataset, one epoch is exactly one 11.8-style update",
+      "Write a training loop that repeats 11.8's 4-step update (forward pass, loss, gradient, new weights) many times in a row, each iteration reusing the weights the PREVIOUS iteration just produced",
+      "Trace loss across several epochs and recognize the shrink-then-flatten pattern: big drops in early epochs, smaller and smaller drops in later ones, never quite reaching exactly 0"
+    ],
+    "explanation": [
+      "11.8's code performs exactly ONE update: forward pass, loss, gradient, new weights. But one update rarely gets anywhere near the minimum — 11.5's own worked example only dropped loss from approximately 0.1425 to approximately 0.1274 in a single step. TRAINING means running that same 4-step update over and over, with each update's output weights feeding straight into the next update's forward pass.",
+      "An EPOCH is one complete pass through the training dataset. For a dataset with several examples (like 11.2's 4-example dataset), one epoch means the neuron sees every example once. For the single-example neuron this course has used since 11.5 (x1=2, x2=-1, t=0), the 'dataset' has just ONE example, so one epoch collapses to exactly one 11.8-style update — but the definition, 'one full pass through the data,' is the same idea whether the dataset has 1 example or 1000.",
+      "The code pattern wraps 11.8's update in a loop over epochs: for each epoch, compute z, p, L, and grad exactly as in 11.8, then set w = w - eta*grad, and let the NEXT loop iteration start from that new w. Nothing resets between iterations — that reuse is exactly why loss keeps shrinking across epochs instead of recomputing the same first step over and over.",
+      "Worked example, continuing 11.5-11.8's neuron (x1=2, x2=-1, b=0, t=0, eta=0.5) for 5 epochs starting at w=[0.6, 0.2]: loss goes approximately 0.5344, 0.3248, 0.1578, 0.0844, 0.0542 — dropping by more than half across the first two epochs, then by smaller and smaller amounts each epoch after. This shrink-then-flatten shape shows up in essentially every training loop: early epochs make big gains because the weights start far from any minimum; later epochs make small gains because they're already close."
+    ],
+    "example": {
+      "problem": "Continue training 11.8's neuron (x1=2, x2=-1, b=0, t=0, eta=0.5) for 5 epochs starting at w=[0.6, 0.2]. Trace z, p, L, and the updated w after each epoch, then describe the pattern in how L changes.",
+      "steps": [
+        "epoch 1: z=np.dot(w,x)+b=1.0000, p=sigma(1.0)=0.7311, L=(0-0.7311)^2=0.5344, grad=[0.5749,-0.2875], w becomes [0.3125, 0.3437]",
+        "epoch 2: z=0.2813, p=0.5699, L=0.3248, grad=[0.5587,-0.2794], w becomes [0.0332, 0.4834]",
+        "epoch 3: z=-0.4171, p=0.3972, L=0.1578, grad=[0.3804,-0.1902], w becomes [-0.1571, 0.5785]",
+        "epoch 4: z=-0.8926, p=0.2906, L=0.0844, grad=[0.2396,-0.1198], w becomes [-0.2768, 0.6384]",
+        "epoch 5: z=-1.1921, p=0.2329, L=0.0542, grad=[0.1664,-0.0832], w becomes [-0.3601, 0.6800]"
+      ],
+      "answer": "Loss falls approximately 0.5344, 0.3248, 0.1578, 0.0844, 0.0542 across the 5 epochs — more than halving in epoch 1 alone, then shrinking by smaller and smaller amounts each epoch after (the epoch-1-to-2 drop is about 0.21, the epoch-4-to-5 drop is only about 0.03), the shrink-then-flatten pattern this lesson names."
+    },
+    "practice": [
+      {
+        "problem": "Continuing from epoch 5's ending weights w=[-0.3601, 0.6800] (same x, b, t, eta), run one more epoch (epoch 6). What are z, p, L, and the new w?",
+        "solution": "z = w.x = -0.3601(2) + 0.6800(-1) = -0.7202 - 0.6800, approximately -1.4001. p = sigma(-1.4001), approximately 0.1978. L = (0-0.1978)^2, approximately 0.0391. grad = 2(p-0)*p*(1-p)*x, approximately [0.1255, -0.0628]. w_new = w - 0.5*grad, approximately [-0.4228, 0.7114] — loss dropped from 0.0542 to 0.0391, a smaller drop than any earlier epoch, continuing the flattening pattern."
+      },
+      {
+        "problem": "Why does the loss shrink by LESS each epoch, instead of shrinking by the same fixed amount every time?",
+        "solution": "Because the gradient itself shrinks as p gets closer to t: the gradient's shared factor is 2(p-t)*p*(1-p), and as training makes p approach the target t, the (p-t) part gets smaller, making the whole gradient smaller — smaller gradient means a smaller step, even with the same fixed eta. The updates are self-limiting as they approach the target."
+      },
+      {
+        "problem": "For a dataset with 4 examples (like lesson 11.2's), if you update the weights once per individual example (not one shared batched update), how many separate weight updates happen during ONE epoch?",
+        "solution": "4 — one epoch means one full pass through all 4 examples, and updating once per example means each of the 4 examples triggers its own update, for 4 updates total in that one epoch."
+      },
+      {
+        "problem": "True or false: for the single-example neuron used since lesson 11.5, running '10 epochs' and running '10 updates' (11.8's step, repeated 10 times) produce the exact same result.",
+        "solution": "True — with exactly one example in the dataset, one epoch (one full pass through the data) IS one update, so 10 epochs and 10 repeated updates are the same computation, just described with different names."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is an epoch?",
+        "choices": [
+          "One full pass through the training dataset",
+          "One single weight, by itself",
+          "The learning rate eta",
+          "A dataset with exactly one example"
+        ],
+        "answerIndex": 0,
+        "explanation": "An epoch is one complete pass through the training data — for a one-example dataset that's one update; for a larger dataset it's one loop through every example."
+      },
+      {
+        "type": "short",
+        "question": "For the neuron x1=2, x2=-1, b=0, t=0, eta=0.5, starting w=[0.6,0.2], what is the loss (rounded to 4 decimals) after epoch 1?",
+        "answer": "0.5344",
+        "acceptable": [
+          "0.5344",
+          "approximately 0.5344"
+        ],
+        "explanation": "z=1.0, p=sigma(1.0) approximately 0.7311, L=(0-0.7311)^2 approximately 0.5344."
+      },
+      {
+        "type": "mc",
+        "question": "Across several epochs of training the same neuron, what pattern does the loss typically follow?",
+        "choices": [
+          "Big drops in early epochs, then smaller and smaller drops in later epochs",
+          "The exact same-sized drop every single epoch",
+          "Loss increases every epoch",
+          "Loss stays perfectly constant"
+        ],
+        "answerIndex": 0,
+        "explanation": "As the weights approach a minimum, the gradient itself shrinks, so each epoch's update — and its resulting loss drop — gets smaller."
+      },
+      {
+        "type": "short",
+        "question": "In the training-loop code pattern, what does each new epoch's forward pass use as its starting weights?",
+        "answer": "the previous epoch's updated weights",
+        "acceptable": [
+          "the previous epoch's weights",
+          "whatever w the last update produced",
+          "the updated w from the last epoch"
+        ],
+        "explanation": "Nothing resets between epochs — each epoch's forward pass starts from exactly the weights the prior epoch's update just produced, which is why loss keeps shrinking across epochs."
+      },
+      {
+        "type": "mc",
+        "question": "For a dataset with just ONE example, how does 'one epoch' relate to 'one 11.8-style update'?",
+        "choices": [
+          "They are the same thing — one epoch collapses to exactly one update",
+          "One epoch always means exactly 10 updates",
+          "An epoch is unrelated to updates entirely",
+          "One epoch means zero updates, just a forward pass"
+        ],
+        "answerIndex": 0,
+        "explanation": "With only one example in the dataset, a full pass through the data is a single update, so epoch and update mean the same thing in that special case."
+      }
+    ]
+  },
+  {
+    "id": "11.10",
+    "number": 10,
+    "title": "Mini-project: training a single neuron from scratch",
+    "objectives": [
+      "Combine every Phase 11 idea — loss (11.1), MSE over a dataset (11.2), the gradient (11.4), the update rule and learning rate (11.5-11.6), the exact sigmoid gradient (11.7), vectorized NumPy code (11.8), and epochs (11.9) — into one training loop for a 2-input sigmoid neuron on a 3-example toy dataset",
+      "Starting from given, NOT already-tuned weights, run multiple epochs of gradient descent, computing an end-of-epoch MSE (11.2's own formula) after each pass through the dataset",
+      "Read the resulting loss curve and explain, using 11.1-11.9's own ideas, WHY it falls the way it does"
+    ],
+    "explanation": [
+      "Every earlier Phase 11 lesson isolated ONE piece of this picture: 11.1-11.3 defined loss and MSE, 11.4 packaged per-weight slopes into a gradient, 11.5-11.6 turned that into an update rule with a controllable step size, 11.7-11.8 made the update exact and vectorized, and 11.9 named 'run it repeatedly' an epoch. This mini-project runs every piece together, for the first time, on a dataset with more than one example.",
+      "The toy dataset: three 2-input examples for the same single sigmoid neuron shape used since 11.4 (2 weights, b=0 fixed) — (x1=2, x2=-1, t=0), (x1=1, x2=1, t=1), (x1=-1, x2=2, t=1). Starting weights w=[0.1, -0.1] (deliberately NOT already close to a good fit), eta=0.5.",
+      "Each epoch loops through the 3 examples IN ORDER, running 11.8's exact 4-step update after EACH one (forward pass, loss, gradient, update) — so the weights move 3 separate times per epoch, each update starting from whatever the previous example's update just produced. After looping through all three, 11.2's MSE formula scores the CURRENT (just-updated) weights against all three examples at once — one number summarizing that whole epoch's progress, which is what actually gets tracked epoch to epoch, exactly as 11.9 described for multi-example datasets.",
+      "Running 5 epochs (15 individual per-example updates total): the end-of-epoch MSE goes approximately 0.3033 (before any training), 0.1335, 0.0861, 0.0646, 0.0516, 0.0428 — the same shrink-then-flatten shape 11.9 predicted, now shown on a real multi-example dataset instead of the single-example neuron used since 11.5. The loss falls to roughly 1/7th of its starting value in just 5 epochs, without ever reaching exactly 0 — synthesizing every idea Phase 11 built, from 11.1's single-example loss up through 11.9's epochs."
+    ],
+    "example": {
+      "problem": "Train the 2-weight sigmoid neuron on the 3-example dataset (x1=2,x2=-1,t=0), (x1=1,x2=1,t=1), (x1=-1,x2=2,t=1), starting at w=[0.1,-0.1], b=0, eta=0.5, for ONE epoch (all 3 examples, in order, one update each). What are z/p/L/gradient for each example, the weights after each update, and the end-of-epoch MSE?",
+      "steps": [
+        "example 1 (x=[2,-1], t=0): z=np.dot(w,x)+b=0.3000, p=sigma(0.3) approximately 0.5744, L=(0-0.5744)^2 approximately 0.3300, grad approximately [0.5617,-0.2809], w: [0.1,-0.1] -> [-0.1809, 0.0404]",
+        "example 2 (x=[1,1], t=1): z=-0.1404, p approximately 0.4650, L approximately 0.2863, grad approximately [-0.2662,-0.2662], w: [-0.1809,0.0404] -> [-0.0477, 0.1735]",
+        "example 3 (x=[-1,2], t=1): z=0.3948, p approximately 0.5974, L approximately 0.1621, grad approximately [0.1936,-0.3873], w: [-0.0477,0.1735] -> [-0.1446, 0.3672]",
+        "end-of-epoch MSE: recompute L for all 3 examples using the FINAL w=[-0.1446, 0.3672] (not the per-example L's above, which each used a different, older w), then average — this comes out to approximately 0.1335"
+      ],
+      "answer": "After epoch 1, weights are approximately w=[-0.1446, 0.3672] and the end-of-epoch MSE across all 3 examples (evaluated at this one final w) is approximately 0.1335, down from approximately 0.3033 before any training — confirming one full pass of updates improved the fit across the WHOLE dataset, not just the last example seen."
+    },
+    "practice": [
+      {
+        "problem": "Starting from epoch 1's ending weights w=[-0.1446, 0.3672] (same dataset, b=0, eta=0.5), what is z, p, and L for JUST example 1 (x=[2,-1], t=0) at the start of epoch 2, before that example's update is applied?",
+        "solution": "z = -0.1446(2) + 0.3672(-1) = -0.2892 - 0.3672, approximately -0.6563. p = sigma(-0.6563), approximately 0.3416. L = (0-0.3416)^2, approximately 0.1167 — already smaller than example 1's epoch-1 loss of approximately 0.3300, showing the fit improved even for this specific example after one full epoch."
+      },
+      {
+        "problem": "The end-of-epoch MSE goes from approximately 0.3033 (before training) to approximately 0.0428 after 5 epochs. Roughly what factor did the MSE shrink by?",
+        "solution": "About 7x (0.3033 / 0.0428, approximately 7.08) — the loss at epoch 5 is roughly one-seventh of where it started, consistent with 11.9's shrink-then-flatten pattern applied over several epochs."
+      },
+      {
+        "problem": "During one epoch, each example's INDIVIDUAL loss (computed right before its own update) uses a different w than the other examples', because w changes after every single update. Why does the END-OF-EPOCH MSE instead recompute all 3 losses using the SAME, final w?",
+        "solution": "Because 11.2's MSE is defined as how well ONE fixed w fits an ENTIRE dataset at once. Averaging the three during-epoch losses would mix together three different w's (each example saw an older, less-trained w than the next), which isn't a fair snapshot of any single set of weights. Recomputing all three losses with the epoch's final w gives an honest, single-w picture of that epoch's progress."
+      },
+      {
+        "problem": "If this training loop ran 50 more epochs instead of stopping at 5, would you expect the end-of-epoch MSE to reach exactly 0.0000?",
+        "solution": "No — per 11.9's pattern, the gradient (and so the update size) keeps shrinking as predictions approach their targets, so loss keeps getting smaller by smaller and smaller amounts without ever reaching exactly 0; it approaches 0 without landing on it."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In this mini-project's training loop, what happens during ONE epoch?",
+        "choices": [
+          "The loop runs 11.8's update once per example, in order, then 11.2's MSE scores the final weights against all examples",
+          "The weights are reset back to their starting values",
+          "Only the first example in the dataset is used",
+          "The learning rate eta is recomputed from scratch"
+        ],
+        "answerIndex": 0,
+        "explanation": "One epoch means one full pass — an 11.8-style update for each example in turn, then an 11.2-style MSE snapshot of the resulting weights."
+      },
+      {
+        "type": "short",
+        "question": "What is the approximate end-of-epoch-1 MSE for this mini-project's dataset, starting from w=[0.1,-0.1]?",
+        "answer": "0.1335",
+        "acceptable": [
+          "0.1335",
+          "approximately 0.1335"
+        ],
+        "explanation": "Averaging all 3 examples' losses using epoch 1's final weights w=[-0.1446, 0.3672] gives approximately 0.1335."
+      },
+      {
+        "type": "mc",
+        "question": "Which Phase 11 lesson's formula is used to score the WHOLE dataset's fit at the end of each epoch in this mini-project?",
+        "choices": [
+          "11.2's Mean Squared Error (MSE)",
+          "11.6's learning rate definition",
+          "11.9's epoch definition alone, with no formula",
+          "11.7's sigmoid derivative formula only"
+        ],
+        "answerIndex": 0,
+        "explanation": "11.2's MSE — averaging every example's own loss under one shared set of weights — is exactly the formula used to score each epoch's ending weights against the whole dataset."
+      },
+      {
+        "type": "short",
+        "question": "Approximately what factor does the MSE shrink by from before training (approximately 0.3033) to after 5 epochs (approximately 0.0428)?",
+        "answer": "about 7x",
+        "acceptable": [
+          "7x",
+          "about 7",
+          "approximately 7",
+          "7"
+        ],
+        "explanation": "0.3033 / 0.0428 is approximately 7.08, so the MSE shrinks to roughly one-seventh of its starting value."
+      },
+      {
+        "type": "mc",
+        "question": "This mini-project's neuron stays a SINGLE sigmoid neuron with 2 weights, never adding a second layer. Why, per Phase 11's own scope note?",
+        "choices": [
+          "Because multi-layer credit assignment (backpropagation) is deliberately deferred to Phase 12",
+          "Because sigmoid only works with exactly one weight",
+          "Because NumPy cannot handle more than 2 weights",
+          "Because MSE only applies to single-neuron networks"
+        ],
+        "answerIndex": 0,
+        "explanation": "Phase 11's scope note (set in the title-breakdown lesson) keeps every lesson to one neuron, one layer, so the update rule stays simple; stacking layers and their harder credit-assignment problem is Phase 12's job."
+      }
+    ]
   }
 ];
