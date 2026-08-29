@@ -296,31 +296,31 @@ minimum (E(5)=0, dE/dw=0). **Phase 9 is now SHIPPED — all 10/10 lessons
 live.** `sw.js` cache bumped to `bab-v12` alongside the 9.7-9.10 merge so
 returning users pick up the complete Phase 9 content.
 
-## Phase 10 (Networks of Neurons) — title breakdown
+## Phase 10 (Networks of Neurons) — title breakdown + progress
 
 Full 10-lesson title breakdown (matching the granularity of Phases 1-9's
 title lists, each building only on Phase 1-9 content + earlier Phase 10
-lessons per the README's progressive-dependency rule). No lesson content
-written yet — titles only, per this wake's guardrail (breakdown first,
-content in a future session).
+lessons per the README's progressive-dependency rule).
 
 1. **10.1 — From one perceptron to a layer** — running several perceptrons
    side by side on the same inputs, each with its own weights/bias,
    producing several outputs instead of one (a direct generalization of
    6.10-6.11's matrix-vector multiplication: one dot product per row is now
-   one perceptron per row, stacked into a weight matrix).
+   one perceptron per row, stacked into a weight matrix). **WRITTEN.**
 2. **10.2 — Stacking layers: the forward pass** — feeding one layer's
    outputs as the next layer's inputs; naming input layer / hidden layer /
    output layer, and "forward pass" as the name for one full left-to-right
-   pass through the network.
+   pass through the network. **WRITTEN** (worked example hand-solves XOR
+   with a 2-perceptron hidden layer + 1-perceptron output layer, resolving
+   8.7's cliffhanger — see note below on 10.9).
 3. **10.3 — Why nonlinearity matters** — showing algebraically that
    stacking two purely-linear (weighted-sum-only) layers collapses to one
    equivalent linear layer, so depth alone buys nothing without something
-   nonlinear between layers; reconnects to 8.13's XOR wall as the concrete
-   case a stack of linear layers still can't solve.
+   nonlinear between layers; reconnects to 8.7's XOR wall as the concrete
+   case a stack of linear layers still can't solve. **WRITTEN.**
 4. **10.4 — The sigmoid activation function** — squashing any real number
-   into (0, 1), contrasted with 8.2's hard step function (smooth vs.
-   all-or-nothing), as the nonlinearity 10.3 said was missing.
+   into (0, 1), contrasted with 8.1's hard step function (smooth vs.
+   all-or-nothing), as the nonlinearity 10.3 said was missing. **WRITTEN.**
 5. **10.5 — The ReLU activation function** — max(0, x), simpler and
    cheaper than sigmoid, and why it's the default choice in modern deep
    networks (brief compare/contrast with 10.4's sigmoid).
@@ -338,14 +338,43 @@ content in a future session).
    function, reusing Phase 7's NumPy vectorized-operations toolkit instead
    of hand-rolled loops.
 9. **10.9 — Solving XOR with a hidden layer** — the direct payoff of
-   8.13's forward-referenced wall and 10.3's motivating example: a
+   8.7's forward-referenced wall and 10.3's motivating example: a
    worked/coded 2-layer network that correctly classifies all four XOR
-   inputs, something no single perceptron (Phase 8) could do.
+   inputs, something no single perceptron (Phase 8) could do. **Note for
+   whoever writes this lesson:** 10.2 already hand-solves this exact XOR
+   network (OR/NAND-shaped hidden layer + AND-shaped output layer, step
+   activation) as its own worked example, so 10.9 should differentiate —
+   e.g. lean on the NumPy/code angle (10.8) or the ReLU-based network from
+   10.6/10.7 — rather than re-deriving the identical by-hand case.
 10. **10.10 — Mini-project** — build and trace a small 2-hidden-neuron
     network's forward pass on a toy multi-example dataset by hand and in
     code, combining every idea from the phase (layers, forward pass,
     nonlinearity choice, architecture, NumPy implementation), mirroring
     4.12/5.12/6.13/7.12/8.10/9.10's end-of-phase synthesis structure.
+
+**10.1-10.4 (4 of 10) are written and merged into `data/curriculum.js`**
+(125 lessons total across Phases 1-10 now), schema-validated
+programmatically (`bab-schema-check "10."`: 4/4 lessons checked, plus
+`bab-schema-check` with no argument: 125/125 file-wide, 0 duplicate ids)
+and independently re-verified via actual Python execution for every
+numeric claim: 10.1's layer computations (perceptron-by-perceptron vs.
+matrix-vector multiplication agreeing at every input, including the
+worked example and all practice/quiz cases); 10.2's full forward pass for
+all four XOR inputs (0,0)/(0,1)/(1,0)/(1,1), each traced through the
+hidden layer's z/activation and the output layer's z/activation and
+checked against XOR's truth table exactly; 10.3's linear-collapse claim
+— two purely-linear layers computed sequentially vs. via one combined
+Wcombined/bcombined, at two different inputs, agreeing to the exact
+integer in both cases; 10.4's sigmoid values (sigma(0)=0.5 exactly;
+sigma(1), sigma(-1), sigma(2), sigma(-2), sigma(3), sigma(-3), sigma(10)
+all matching a fresh `math.exp`-based computation to 4+ decimal places,
+plus the sigma(z)+sigma(-z)=1 symmetry check at z=1 and z=2). **Also
+fixed:** an existing typo in this file's own title breakdown (two
+references to a nonexistent lesson "8.13" — Phase 8 only has 10 lessons,
+8.1-8.10; the actual XOR-wall lesson is **8.7** — corrected above).
+Phase 10 is **not yet shipped** — 10.1-10.4 are merged and schema-clean
+locally; 10.5-10.10 remain unwritten. `sw.js` cache bumped to `bab-v13`
+alongside this merge.
 
 ## Pending — next session(s)
 

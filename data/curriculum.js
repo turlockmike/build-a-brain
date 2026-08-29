@@ -12745,5 +12745,443 @@ const LESSONS = [
         "explanation": "Repeatedly computing dE/dw and stepping in the direction that shrinks the error, until the slope reaches zero, is exactly what Phase 11's gradient descent formalizes into an algorithm."
       }
     ]
+  },
+  {
+    "id": "10.1",
+    "number": 1,
+    "title": "From one perceptron to a layer",
+    "objectives": [
+      "Define a layer: several perceptrons computed in parallel on the same input vector, each with its own weight row and combined bias",
+      "Stack each perceptron's weight vector as one row of a matrix W, turning 'compute every perceptron's raw dot product' into one matrix-vector multiplication (6.10-6.11)",
+      "Compute a small layer's raw output vector z = Wx + b by hand, both perceptron-by-perceptron and as one matrix-vector multiplication, and confirm the two methods agree",
+      "State the shape rule for a layer: n inputs and m perceptrons means W is (m x n), x has length n, and the raw output z has length m"
+    ],
+    "explanation": [
+      "Lesson 8.3 defined one perceptron: a single weight vector w, a combined bias b (lesson 8.2), and z = x . w + b, followed by the step function. Every gate built in lesson 8.6 (AND, OR, NOT) was exactly one perceptron with its own weight vector. Real networks almost never stop at one perceptron. Instead, many perceptrons look at the SAME input vector x at the same time, each with its own weights and bias, each computing its own separate z. A group of perceptrons computed in parallel like this, all reading the same input, is called a LAYER.",
+      "Computed the naive way, a layer means running lesson 8.3's formula once per perceptron: z1 = w1 . x + b1, z2 = w2 . x + b2, and so on, one dot product per perceptron. But lesson 6.9 already named exactly this pattern: several vectors stacked as rows form a matrix. Stack every perceptron's weight vector as one row of a matrix W (perceptron 1's weights become row 1, perceptron 2's weights become row 2, and so on), and stack their biases into a bias vector b. Computing the WHOLE layer's raw outputs at once is then exactly lesson 6.10's matrix-vector multiplication: z = Wx + b, where row i of W dotted with x, plus b's i-th entry, is precisely perceptron i's own z — every perceptron's answer, produced by one multiplication instead of many separate ones.",
+      "Try it both ways on a small layer of 2 perceptrons reading a 2-component input: Perceptron A uses weights [1, 1] and bias -0.5 (an OR-shaped perceptron, from lesson 8.6's pattern); Perceptron B uses weights [-1, -1] and bias 1.5 (a NAND-shaped perceptron: negate AND's weights and flip its bias's sign). For input x = [1, 0]: perceptron-by-perceptron, z_A = 1(1) + 1(0) - 0.5 = 0.5, and z_B = -1(1) - 1(0) + 1.5 = 0.5. Stacked as a matrix, W = [[1, 1], [-1, -1]] and b = [-0.5, 1.5]; checking shapes per 6.10's rule, W is 2x2 (2 rows = 2 perceptrons, 2 columns = 2 inputs) and x has 2 components, so the multiplication is legal. Row 1 dot x, plus b1: (1)(1) + (1)(0) - 0.5 = 0.5. Row 2 dot x, plus b2: (-1)(1) + (-1)(0) + 1.5 = 0.5. Both methods land on the identical answer, z = [0.5, 0.5], because they are literally the same arithmetic, just organized differently.",
+      "This is 6.10's own shape rule, renamed rather than replaced: with n inputs and m perceptrons in the layer, W must have n columns (so every row can be legally dot-producted with the length-n input x, per 6.7's matching-length rule) and m rows (one row per perceptron), which makes the output z exactly m components long — one raw value per perceptron, the same way 6.10's output had one component per row of the matrix. A layer of perceptrons IS a matrix-vector multiplication; 'layer' is just the name this phase gives to that shape."
+    ],
+    "example": {
+      "problem": "Using Perceptron A (OR-shaped: weights [1,1], bias -0.5) and Perceptron B (NAND-shaped: weights [-1,-1], bias 1.5) as a 2-perceptron layer, compute the layer's raw output z for input x = [1, 0], both perceptron-by-perceptron and as one matrix-vector multiplication.",
+      "steps": [
+        "Perceptron-by-perceptron (lesson 8.3's method): z_A = 1(1) + 1(0) - 0.5 = 0.5. z_B = -1(1) - 1(0) + 1.5 = 0.5.",
+        "Stack the weights as a matrix and the biases as a vector: W = [[1, 1], [-1, -1]], b = [-0.5, 1.5].",
+        "Check shapes (lesson 6.10's rule): W is 2x2 (2 rows = 2 perceptrons, 2 columns = 2 inputs); x = [1, 0] has 2 components, matching W's columns — legal.",
+        "Matrix-vector multiplication: row 1 dot x, plus b1 = (1)(1) + (1)(0) - 0.5 = 0.5. row 2 dot x, plus b2 = (-1)(1) + (-1)(0) + 1.5 = 0.5.",
+        "Both methods produce the same result: z = [0.5, 0.5]."
+      ],
+      "answer": "z = [0.5, 0.5], computed identically whether done perceptron-by-perceptron or as one matrix-vector multiplication Wx + b."
+    },
+    "practice": [
+      {
+        "problem": "Using the same layer (W = [[1,1],[-1,-1]], b = [-0.5,1.5]), compute z for input x = [0, 0].",
+        "solution": "Row 1: 1(0) + 1(0) - 0.5 = -0.5. Row 2: -1(0) - 1(0) + 1.5 = 1.5. z = [-0.5, 1.5]."
+      },
+      {
+        "problem": "Using the same layer, compute z for input x = [1, 1].",
+        "solution": "Row 1: 1(1) + 1(1) - 0.5 = 1.5. Row 2: -1(1) - 1(1) + 1.5 = -0.5. z = [1.5, -0.5]."
+      },
+      {
+        "problem": "A layer has 4 inputs and 3 perceptrons. What is the shape of its weight matrix W, and how many components does its raw output z have?",
+        "solution": "W is 3x4 (3 rows, one per perceptron; 4 columns, one per input). z has 3 components, one per perceptron/row — the number of inputs (4) only affects the column count, not the output length."
+      },
+      {
+        "problem": "Explain, using lesson 6.10's shape rule, why a layer's weight matrix must have exactly as many COLUMNS as there are inputs, no matter how many perceptrons the layer has.",
+        "solution": "Each row of W has to be dot-producted with the input vector x, and lesson 6.7 requires dot-producted vectors to have matching lengths. So every row's length (the number of columns) must equal x's length. The number of ROWS is separate and free to be however many perceptrons the layer has."
+      },
+      {
+        "problem": "A layer has exactly ONE perceptron (m=1). In one sentence, explain why this is exactly lesson 8.3's original single-perceptron formula, just written using a 1-row matrix.",
+        "solution": "With m=1, W has exactly one row (that perceptron's own weight vector) and z has exactly one component, so z = Wx + b becomes literally z = w . x + b — lesson 8.3's formula, unchanged, just described using 'layer' language."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a 'layer' of perceptrons?",
+        "choices": [
+          "A single perceptron with extra weights",
+          "Several perceptrons computed in parallel on the same input vector, each with its own weights and bias",
+          "A matrix with no perceptrons involved",
+          "The step function applied twice"
+        ],
+        "answerIndex": 1,
+        "explanation": "A layer is a group of perceptrons that all read the same input vector at once, each computing its own separate z from its own weight row and bias."
+      },
+      {
+        "type": "short",
+        "question": "For a layer with 3 perceptrons and 5 inputs, what shape (rows x columns) is the weight matrix W?",
+        "answer": "3x5",
+        "acceptable": [
+          "3x5",
+          "3 x 5",
+          "3 by 5"
+        ],
+        "explanation": "3 rows (one per perceptron) and 5 columns (one per input), matching lesson 6.10's shape rule."
+      },
+      {
+        "type": "mc",
+        "question": "How is a layer's raw output z computed from its weight matrix W, input x, and bias vector b?",
+        "choices": [
+          "z = W + x + b, added entrywise",
+          "z = Wx + b, a matrix-vector multiplication plus the bias vector",
+          "z is the average of W's entries",
+          "z has no relationship to W, x, or b"
+        ],
+        "answerIndex": 1,
+        "explanation": "z = Wx + b is lesson 6.10's matrix-vector multiplication, with each row's dot product plus its own bias producing one perceptron's z."
+      },
+      {
+        "type": "short",
+        "question": "Using W = [[2,0],[1,1]], b = [0,-1], and x = [3,2], what is z?",
+        "answer": "[6, 4]",
+        "acceptable": [
+          "6, 4",
+          "[6,4]",
+          "6 and 4"
+        ],
+        "explanation": "Row 1: 2(3)+0(2)+0 = 6. Row 2: 1(3)+1(2)-1 = 4. z = [6, 4]."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the number of ROWS in W equal the number of perceptrons in the layer?",
+        "choices": [
+          "It doesn't — rows relate only to the number of inputs",
+          "Each row is one perceptron's own weight vector, so each row produces exactly one perceptron's output component",
+          "Rows and perceptrons are unrelated ideas",
+          "The number of rows is always fixed at 2"
+        ],
+        "answerIndex": 1,
+        "explanation": "Every row is dot-producted with x to produce one number — one perceptron's z — so the row count and the perceptron count are always the same, per lesson 6.10's own rule."
+      }
+    ]
+  },
+  {
+    "id": "10.2",
+    "number": 2,
+    "title": "Stacking layers: the forward pass",
+    "objectives": [
+      "Apply the step function (8.1) to a layer's raw output z, component by component, to get its activation vector a",
+      "Feed one layer's activation vector as the next layer's input vector, and name input layer / hidden layer / output layer",
+      "Define 'forward pass' as one complete left-to-right pass through every layer of a network",
+      "Trace a full 2-layer forward pass by hand for a small network, resolving lesson 8.7's XOR cliffhanger"
+    ],
+    "explanation": [
+      "Lesson 10.1 computed a layer's raw output z = Wx + b, but never turned it into an actual 0/1 decision. Apply the step function (8.1) to each component of z, exactly the same rule used since lesson 8.1, and the result is the layer's ACTIVATION vector, a = step(z) — one 0-or-1 value per perceptron in the layer, computed component by component.",
+      "A network with more than one layer feeds one layer's activation vector a directly in as the NEXT layer's input vector x. This gives every layer in a multi-layer network a name based on where it sits: the network's actual raw data is the INPUT LAYER (a naming convention only — it has no weights or bias of its own, it's just the numbers you start with). Any layer sitting between the input and the network's final layer is a HIDDEN LAYER (its output is only an intermediate stop, not the network's actual answer). The very last layer, whose activation IS the network's final answer, is the OUTPUT LAYER. Computing every layer's activations in order, left to right — input, then hidden, then output — is called a FORWARD PASS, because information flows in one direction only, layer by layer, never backward (Phase 11's backpropagation will be the first time information flows the other way).",
+      "Lesson 8.7 ended on an open question: no single perceptron can compute XOR, but combining two perceptrons that each draw their own line, then feeding both of their outputs into a third perceptron, was hinted as the fix. This lesson delivers on that hint using tools already built. Use 10.1's 2-perceptron layer as the HIDDEN layer: Perceptron A, OR-shaped (weights [1,1], bias -0.5), and Perceptron B, NAND-shaped (weights [-1,-1], bias 1.5 — the NOT of AND's [1,1]/-1.5 rule from lesson 8.6). Use a single AND-shaped perceptron (weights [1,1], bias -1.5, from 8.6) as the OUTPUT layer, taking the hidden layer's 2 activations as its 2 inputs.",
+      "Trace the full forward pass for x = [1, 1] — the exact case a single AND-only perceptron gets wrong for XOR. Hidden layer: z = [1(1)+1(1)-0.5, -1(1)-1(1)+1.5] = [1.5, -0.5]. Apply step: a = [1, 0] (OR says yes, NAND says no — both inputs are on, so NAND correctly refuses). Output layer, using the hidden activations [1, 0] as its input: z = 1(1) + 1(0) - 1.5 = -0.5. Apply step: output = 0. XOR(1,1) = 0 — the network gets it right. Checking the other three cases the same way confirms it computes XOR correctly for all four input combinations, exactly resolving lesson 8.7's cliffhanger: two perceptrons feeding a third, connected by the step function's nonlinearity between layers, does what one perceptron alone provably cannot."
+    ],
+    "example": {
+      "problem": "Using the hidden layer (Perceptron A: weights [1,1], bias -0.5; Perceptron B: weights [-1,-1], bias 1.5) and output layer (weights [1,1], bias -1.5), trace the full forward pass for input x = [1, 1], and check the result against XOR(1,1).",
+      "steps": [
+        "Hidden layer raw output: z_hidden = [1(1)+1(1)-0.5, -1(1)-1(1)+1.5] = [1.5, -0.5].",
+        "Apply the step function component by component: a_hidden = [step(1.5), step(-0.5)] = [1, 0].",
+        "Feed a_hidden = [1, 0] as the output layer's input: z_out = 1(1) + 1(0) - 1.5 = -0.5.",
+        "Apply the step function: a_out = step(-0.5) = 0.",
+        "Compare to the truth table: XOR(1,1) = 0. The network's output (0) matches."
+      ],
+      "answer": "The forward pass produces output 0 for x=[1,1], correctly matching XOR(1,1) = 0 — a result no single perceptron can produce (lesson 8.7)."
+    },
+    "practice": [
+      {
+        "problem": "Trace the forward pass for x = [0, 0]. What is the hidden layer's z, its activation a, the output layer's z, and the final output? Does it match XOR(0,0)?",
+        "solution": "z_hidden = [1(0)+1(0)-0.5, -1(0)-1(0)+1.5] = [-0.5, 1.5]. a_hidden = [0, 1]. z_out = 1(0)+1(1)-1.5 = -0.5. a_out = 0. XOR(0,0) = 0 — matches."
+      },
+      {
+        "problem": "Trace the forward pass for x = [0, 1]. Does it match XOR(0,1)?",
+        "solution": "z_hidden = [1(0)+1(1)-0.5, -1(0)-1(1)+1.5] = [0.5, 0.5]. a_hidden = [1, 1]. z_out = 1(1)+1(1)-1.5 = 0.5. a_out = 1. XOR(0,1) = 1 — matches."
+      },
+      {
+        "problem": "Trace the forward pass for x = [1, 0]. Does it match XOR(1,0)?",
+        "solution": "z_hidden = [1(1)+1(0)-0.5, -1(1)-1(0)+1.5] = [0.5, 0.5]. a_hidden = [1, 1]. z_out = 1(1)+1(1)-1.5 = 0.5. a_out = 1. XOR(1,0) = 1 — matches."
+      },
+      {
+        "problem": "In this network, name the input layer, the hidden layer, and the output layer.",
+        "solution": "Input layer: the raw 2-component x itself (no weights of its own). Hidden layer: Perceptron A (OR-shaped) and Perceptron B (NAND-shaped), the first layer of actual computation. Output layer: the single AND-shaped perceptron, whose activation is the network's final answer."
+      },
+      {
+        "problem": "Why is this called a 'forward' pass rather than just 'a computation'?",
+        "solution": "Because information flows in exactly one direction — input to hidden to output — with nothing flowing backward; the name distinguishes it from Phase 11's backpropagation, which will be the first time information flows the other way, from output back toward the earlier layers."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How is a layer's activation vector a computed from its raw output z?",
+        "choices": [
+          "a = z, unchanged",
+          "a = step(z), the step function applied component by component",
+          "a is the sum of all of z's components",
+          "a = z multiplied by the bias"
+        ],
+        "answerIndex": 1,
+        "explanation": "Each component of z gets its own step-function decision (lesson 8.1), producing one 0/1 activation per perceptron."
+      },
+      {
+        "type": "short",
+        "question": "In a multi-layer network, what becomes the input to the SECOND layer?",
+        "answer": "the first layer's activation vector",
+        "acceptable": [
+          "first layer's output",
+          "the previous layer's activations",
+          "hidden layer output",
+          "a from the first layer"
+        ],
+        "explanation": "One layer's activation vector a is fed directly in as the next layer's input vector x — this chaining is what makes a multi-layer 'forward pass.'"
+      },
+      {
+        "type": "mc",
+        "question": "What is the OUTPUT layer of a network?",
+        "choices": [
+          "The raw input data",
+          "Any layer between input and output",
+          "The very last layer, whose activation is the network's final answer",
+          "There is no such thing"
+        ],
+        "answerIndex": 2,
+        "explanation": "The output layer is specifically the last layer computed in the forward pass — its activation vector IS the network's answer."
+      },
+      {
+        "type": "short",
+        "question": "For the XOR network in this lesson, what is the hidden layer's activation a for input x=[1,1]?",
+        "answer": "[1, 0]",
+        "acceptable": [
+          "1, 0",
+          "[1,0]",
+          "1 and 0"
+        ],
+        "explanation": "z_hidden = [1.5, -0.5]; applying step gives a_hidden = [1, 0] — OR fires, NAND does not."
+      },
+      {
+        "type": "mc",
+        "question": "What earlier lesson's open question does this lesson's XOR-solving forward pass resolve?",
+        "choices": [
+          "Lesson 6.7's dot product",
+          "Lesson 8.7's XOR problem — no single perceptron can compute XOR",
+          "Lesson 9.9's numerical_derivative",
+          "Lesson 5.7's variance"
+        ],
+        "answerIndex": 1,
+        "explanation": "Lesson 8.7 proved no single perceptron can compute XOR and hinted that combining perceptrons across layers was the fix — this lesson's forward pass carries that hint out completely."
+      }
+    ]
+  },
+  {
+    "id": "10.3",
+    "number": 3,
+    "title": "Why nonlinearity matters",
+    "objectives": [
+      "Show algebraically that stacking two purely linear layers (no activation function) collapses into one equivalent single layer",
+      "Explain why this means depth alone, without a nonlinearity between layers, buys nothing extra",
+      "Reconnect to lesson 8.7's XOR wall: explain why 10.2's XOR-solving network needed the step function between layers, not just two layers of plain arithmetic"
+    ],
+    "explanation": [
+      "Lesson 10.2's forward pass worked because each layer's raw z was passed through the step function (8.1) BEFORE becoming the next layer's input — that step function is an ACTIVATION FUNCTION, this course's first example of one. This lesson asks the opposite question: what if that step were skipped, and one layer's raw z fed straight into the next layer as its input, with no activation in between?",
+      "Take two layers with weight matrices and biases W1, b1 and W2, b2. With no activation between them, the combined output is W2(W1 x + b1) + b2. Distributing: W2 W1 x + W2 b1 + b2. Because matrix multiplication is associative, W2 W1 is itself one legal matrix-matrix multiplication (lesson 6.11), producing a single ordinary matrix — call it Wcombined = W2 W1 — and W2 b1 + b2 is a single ordinary vector — call it bcombined. The whole two-layer computation becomes output = Wcombined x + bcombined: exactly the same SHAPE as ONE layer, lesson 10.1's z = Wx + b, with one combined weight matrix and one combined bias vector standing in for both layers.",
+      "This means: no matter how many purely linear layers get stacked — 2, 10, or 100 — the entire stack always collapses algebraically into one equivalent single-layer computation. Without something nonlinear breaking the chain, all that extra depth buys is nothing extra: whatever a 100-layer purely linear network can compute, one single layer with the right combined weights computes identically.",
+      "This is exactly why lesson 10.2's XOR-solving network needed the step function between its hidden and output layers, not just two layers of plain weighted sums. Lesson 8.7 proved that no single perceptron — no single straight-line boundary — can separate XOR's diagonal corners. If 10.2's hidden and output layers had been purely linear, this lesson's own collapse argument shows they would algebraically reduce to one equivalent single perceptron, which 8.7 already proved cannot compute XOR. The step function's nonlinearity, applied to the hidden layer's output before it reaches the output layer, is precisely what breaks that collapse and makes the two-layer network strictly more powerful than any single perceptron. Nonlinearity between layers isn't a minor detail — it is the entire reason stacking layers works at all."
+    ],
+    "example": {
+      "problem": "Using W1=[[2,0],[1,1]], b1=[1,-1] and W2=[[3,-1]], b2=[2], compute the two-layer output (no activation) for x=[2,1] sequentially, then compute it again using the combined Wcombined = W2 W1 and bcombined = W2 b1 + b2, and confirm they match.",
+      "steps": [
+        "Sequential, layer 1: z1 = W1 x + b1 = [2(2)+0(1)+1, 1(2)+1(1)-1] = [5, 2].",
+        "Sequential, layer 2 (z1 fed straight in, no activation): z2 = W2 z1 + b2 = [3(5) + (-1)(2)] + 2 = [15] + 2 = [15].",
+        "Combined weight matrix (6.11's matrix-matrix multiplication): Wcombined = W2 W1 = [3(2)+(-1)(1), 3(0)+(-1)(1)] = [5, -1].",
+        "Combined bias: bcombined = W2 b1 + b2 = [3(1)+(-1)(-1)] + 2 = [4] + 2 = [6].",
+        "Combined computation: Wcombined x + bcombined = [5(2) + (-1)(1)] + 6 = [9] + 6 = [15]."
+      ],
+      "answer": "Both methods give output 15 for x=[2,1] — the two purely linear layers collapse exactly into one combined layer with Wcombined=[5,-1] and bcombined=6."
+    },
+    "practice": [
+      {
+        "problem": "Using the same W1, b1, W2, b2 as the worked example, compute the two-layer output sequentially for x=[1,0], then check it against Wcombined x + bcombined.",
+        "solution": "Sequential: z1 = [2(1)+0(0)+1, 1(1)+1(0)-1] = [3, 0]. z2 = [3(3)+(-1)(0)]+2 = 9+2 = 11. Combined: Wcombined x + bcombined = [5(1)+(-1)(0)]+6 = 5+6 = 11. Both give 11 — matching."
+      },
+      {
+        "problem": "In your own words, why is stacking two purely linear layers 'no more powerful' than a single layer?",
+        "solution": "Because the two layers' combined effect on any input x can always be rewritten as one matrix (Wcombined) and one bias vector (bcombined) applied once — any function a two-linear-layer stack can compute, a single layer can also compute, using those combined values."
+      },
+      {
+        "problem": "Using lesson 10.2's XOR network, which specific part breaks this lesson's 'linear collapse' argument, letting the network solve something a single perceptron can't?",
+        "solution": "The step function (activation) applied to the hidden layer's z before it becomes the output layer's input. That nonlinear step is exactly what this lesson's collapse argument assumes is absent — with it present, the two layers do NOT reduce to one equivalent single perceptron."
+      },
+      {
+        "problem": "If W1 is (3x4) and W2 is (2x3), what is the shape of Wcombined = W2 W1? Does that match the shape a single layer going straight from 4 inputs to 2 outputs would have?",
+        "solution": "Inner dimensions (3 and 3) match, so Wcombined is (2x4) — per lesson 6.11's shape rule. Yes, that is exactly the shape a single layer taking 4 inputs and producing 2 outputs would have, confirming the two layers collapse into an equivalent single layer."
+      },
+      {
+        "problem": "Explain why bcombined = W2 b1 + b2, rather than simply b1 + b2, when combining two linear layers.",
+        "solution": "b1 is added inside layer 1's output, which then gets multiplied by W2 as part of computing layer 2 — so b1's contribution to the final output is W2 b1, not b1 itself. Only after that does layer 2's own bias, b2, get added directly. So the correct combined bias is W2 b1 + b2."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "If two layers are stacked with NO activation function between them, what happens mathematically?",
+        "choices": [
+          "Nothing changes about their computational power",
+          "The two layers collapse into one equivalent single layer, Wcombined x + bcombined",
+          "They become impossible to compute",
+          "Every output becomes 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "Because matrix multiplication is associative, two purely linear layers always reduce algebraically to one combined layer, Wcombined = W2 W1 and bcombined = W2 b1 + b2."
+      },
+      {
+        "type": "short",
+        "question": "In the worked example, what is the two-layer output (sequential or combined, they agree) for x=[2,1]?",
+        "answer": "15",
+        "acceptable": [
+          "15",
+          "[15]"
+        ],
+        "explanation": "Sequential z2 = [15], and Wcombined x + bcombined = [15] — both methods agree."
+      },
+      {
+        "type": "mc",
+        "question": "Why did lesson 10.2's XOR-solving network need a step function between its hidden and output layers?",
+        "choices": [
+          "It didn't — plain linear layers would have worked just as well",
+          "Without it, the two layers would collapse into one equivalent single perceptron, which lesson 8.7 proved cannot compute XOR",
+          "The step function makes the arithmetic faster to compute",
+          "It has nothing to do with the network's ability to compute XOR"
+        ],
+        "answerIndex": 1,
+        "explanation": "This lesson's collapse argument shows that without the step function's nonlinearity, the hidden and output layers would reduce to a single perceptron — exactly the shape 8.7 proved can never solve XOR."
+      },
+      {
+        "type": "short",
+        "question": "What is the general term for a function like the step function, applied between layers to prevent this linear collapse?",
+        "answer": "activation function",
+        "acceptable": [
+          "activation",
+          "an activation function",
+          "nonlinearity"
+        ],
+        "explanation": "An activation function (like step, or sigmoid in the next lesson) applied between layers is exactly what breaks the linear-collapse argument."
+      },
+      {
+        "type": "mc",
+        "question": "If 10 purely linear layers were stacked with no activation functions between any of them, how many layers' worth of extra computational power would that add over a single layer?",
+        "choices": [
+          "10 times as much",
+          "None — the whole 10-layer stack still collapses into one equivalent single layer",
+          "Exactly 2 layers' worth",
+          "It depends only on the number of inputs"
+        ],
+        "answerIndex": 1,
+        "explanation": "The same associativity argument applies to any number of stacked linear layers — they always collapse into one combined weight matrix and one combined bias vector, no matter how many layers there were."
+      }
+    ]
+  },
+  {
+    "id": "10.4",
+    "number": 4,
+    "title": "The sigmoid activation function",
+    "objectives": [
+      "Define the sigmoid function, sigma(z) = 1 / (1 + e^(-z)), and state its range (0, 1)",
+      "Compute sigmoid by hand at several z values, and confirm the symmetry property sigma(-z) = 1 - sigma(z)",
+      "Contrast sigmoid with the step function (8.1): smooth vs. all-or-nothing, and why smoothness matters for Phase 9's derivative tools and Phase 11's learning"
+    ],
+    "explanation": [
+      "Every activation function used so far in this course is the step function (8.1): output = 1 if z >= 0, else 0. Lesson 10.3 showed why SOME nonlinearity is essential between layers — step supplied that, and let 10.2's network solve XOR. But step has a real cost: it is a hard jump, with no in-between answer, and (foreshadowing Phase 11) a function with a sudden jump has no meaningful slope right at that jump — Phase 9's entire toolkit for measuring how a function changes (9.1-9.9's derivatives) breaks down exactly at the one point where step actually does something interesting. This lesson introduces sigmoid, a smooth alternative built to fix exactly that problem.",
+      "Sigmoid is defined as sigma(z) = 1 / (1 + e^(-z)), where e is Euler's number, a fixed constant approximately equal to 2.71828 that shows up throughout math whenever something grows or shrinks smoothly. As z grows very large and positive, e^(-z) shrinks toward 0, so sigma(z) approaches 1/(1+0) = 1. As z becomes very large and negative, e^(-z) grows huge, so sigma(z) approaches 1/(a huge number), which is essentially 0. At z=0 exactly, e^0 = 1, so sigma(0) = 1/(1+1) = 0.5 — landing exactly in the middle, unlike step's abrupt jump.",
+      "A few computed values build intuition: sigma(1) = 1/(1+e^-1) = 1/(1+0.36788) is about 0.7311, and sigma(-1) = 1/(1+e^1) = 1/(1+2.71828) is about 0.2689. Notice 0.7311 + 0.2689 = 1.0000 exactly — sigmoid is always symmetric around (0, 0.5): sigma(-z) = 1 - sigma(z), for any z, because swapping the sign of z swaps which term dominates the denominator.",
+      "Contrasted directly with step (8.1) at the same z values: step(1) = 1 and step(-1) = 0, all-or-nothing, no middle ground. Sigmoid keeps ALL the in-between information step throws away: sigma(1) is about 0.7311 ('fairly confident it's a 1, but not certain'), not a flat 1. At extreme z values the two functions nearly agree (sigma(10) is about 0.999955, essentially step's 1), but near z=0 they diverge sharply — this is exactly where sigmoid's extra information matters most. And every single sigmoid output remains a smooth, differentiable function of z, exactly what Phase 9's derivative toolkit (numerical_derivative, from 9.9) and Phase 11's gradient descent need to work with — step's flat-then-jump-then-flat shape gives derivative tools nothing useful to measure at the one point that matters, while sigmoid gives a well-defined, useful slope everywhere."
+    ],
+    "example": {
+      "problem": "Compute sigma(2) and sigma(-2) by hand (using e ~ 2.71828), and confirm they sum to 1.",
+      "steps": [
+        "sigma(2) = 1/(1+e^-2) = 1/(1+0.13534) = 1/1.13534.",
+        "1/1.13534 is approximately 0.8808.",
+        "sigma(-2) = 1/(1+e^2) = 1/(1+7.38906) = 1/8.38906.",
+        "1/8.38906 is approximately 0.1192.",
+        "Sum: 0.8808 + 0.1192 = 1.0000, confirming sigma(-z) = 1 - sigma(z)."
+      ],
+      "answer": "sigma(2) is approximately 0.8808, sigma(-2) is approximately 0.1192, and the two sum to 1, confirming sigmoid's symmetry around (0, 0.5)."
+    },
+    "practice": [
+      {
+        "problem": "Compute sigma(0) exactly (no decimal approximation needed).",
+        "solution": "sigma(0) = 1/(1+e^0) = 1/(1+1) = 1/2 = 0.5 exactly."
+      },
+      {
+        "problem": "Compute sigma(3), to 4 decimal places, using e ~ 2.71828.",
+        "solution": "sigma(3) = 1/(1+e^-3) = 1/(1+0.04979) = 1/1.04979, approximately 0.9526."
+      },
+      {
+        "problem": "Using the symmetry property sigma(-z) = 1 - sigma(z) and the previous problem's answer, what is sigma(-3)?",
+        "solution": "sigma(-3) = 1 - sigma(3) = 1 - 0.9526 = 0.0474."
+      },
+      {
+        "problem": "For a large positive raw output, z=10, what would step(z) output, and roughly what would sigma(z) output? Does the difference between them matter much at such an extreme z?",
+        "solution": "step(10) = 1 exactly (10 >= 0). sigma(10) = 1/(1+e^-10), approximately 0.999955 — extremely close to 1 but never landing on it exactly. At extreme z values the two functions behave almost identically; the difference matters most near z=0, not far from it."
+      },
+      {
+        "problem": "Why does sigmoid's smoothness matter for Phase 11's derivative-based learning, referencing Phase 9's numerical_derivative tool (lesson 9.9)?",
+        "solution": "Phase 9's derivative tools, including numerical_derivative, need a function that changes smoothly to produce a meaningful slope. Step's sudden jump has no well-defined derivative right at the threshold (flat everywhere else, undefined exactly at the jump), while sigmoid is smooth everywhere, giving a well-defined, useful slope at every z — exactly what Phase 11's gradient descent will need in order to adjust weights."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the formula for the sigmoid function?",
+        "choices": [
+          "sigma(z) = z / 2",
+          "sigma(z) = 1 / (1 + e^(-z))",
+          "sigma(z) = max(0, z)",
+          "sigma(z) = 1 if z >= 0 else 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "Sigmoid is defined as 1 / (1 + e^(-z)), using Euler's number e (approximately 2.71828)."
+      },
+      {
+        "type": "short",
+        "question": "What is sigma(0), exactly?",
+        "answer": "0.5",
+        "acceptable": [
+          "0.5",
+          "1/2",
+          "one half"
+        ],
+        "explanation": "sigma(0) = 1/(1+e^0) = 1/(1+1) = 0.5, landing exactly in the middle of sigmoid's range."
+      },
+      {
+        "type": "mc",
+        "question": "What is sigmoid's range, i.e. what values can sigma(z) take?",
+        "choices": [
+          "Any real number",
+          "Exactly 0 or exactly 1, never in between",
+          "Strictly between 0 and 1 (never quite reaching either endpoint)",
+          "Between -1 and 1"
+        ],
+        "answerIndex": 2,
+        "explanation": "As z goes to +infinity, sigma(z) approaches but never reaches 1; as z goes to -infinity, it approaches but never reaches 0."
+      },
+      {
+        "type": "short",
+        "question": "What symmetry property does sigmoid satisfy, relating sigma(z) and sigma(-z)?",
+        "answer": "sigma(-z) = 1 - sigma(z)",
+        "acceptable": [
+          "sigma(-z) equals 1 minus sigma(z)",
+          "they sum to 1",
+          "sigma(z) + sigma(-z) = 1"
+        ],
+        "explanation": "sigma(z) and sigma(-z) always sum to exactly 1, e.g. sigma(2) + sigma(-2) = 0.8808 + 0.1192 = 1."
+      },
+      {
+        "type": "mc",
+        "question": "Why does sigmoid's smoothness matter more than step's hard jump, for Phase 9/11's derivative-based tools?",
+        "choices": [
+          "It doesn't matter at all",
+          "Sigmoid is smooth and differentiable everywhere, giving a meaningful slope at every z, while step has no well-defined derivative at its jump",
+          "Step is actually smoother than sigmoid",
+          "Derivatives only work on step functions"
+        ],
+        "answerIndex": 1,
+        "explanation": "Phase 9's derivative tools need a smoothly changing function to produce a meaningful slope; sigmoid provides that everywhere, while step's abrupt jump breaks down exactly where it matters."
+      }
+    ]
   }
 ];
