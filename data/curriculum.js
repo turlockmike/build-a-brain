@@ -15299,5 +15299,415 @@ const LESSONS = [
         "explanation": "This is exactly the phase description quoted back in 12.1's kickoff: chain rule applied layer by layer, error flowing backward through the network — realized concretely as the weighted-sum delta_hidden formula."
       }
     ]
+  },
+  {
+    "id": "12.5",
+    "number": 5,
+    "title": "Computing every gradient from the deltas",
+    "objectives": [
+      "State the general gradient rule once a neuron's delta is known: dL/dw (for any weight feeding that neuron) equals delta times whatever input fed that weight, and dL/db equals delta alone",
+      "Show that this rule is IDENTICAL in shape at the output layer (12.3's delta_output x h_i, already used in 11.7) and the hidden layer (12.4's delta_hidden_j x x_i) — the layer only changes which delta and which input get multiplied",
+      "Complete the full 9-parameter gradient table for the phase's running network by combining the deltas from 12.2-12.4 with each layer's own inputs"
+    ],
+    "explanation": [
+      "12.3 and 12.4 did the hard part: computing delta_output (a property of the output neuron alone) and delta_hidden_j (a property of each hidden neuron alone, built from a weighted sum of every output delta it feeds). Both deltas answer the same question at their own neuron: dL/dz, how much the loss changes per unit change in that neuron's z. Turning a delta into a WEIGHT's gradient is one more short step, and it is the same step at every layer: dL/dw = delta x (the input that weight multiplies in the forward pass), because dz/dw is always just that input (the same dz/dw_i = x_i fact 11.7 established, applied here at whichever layer the weight lives in).",
+      "At the output layer this is not new — it is 11.7's exact formula, now written with the delta_output name: dL/dwo_i = delta_output x h_i, and dL/dbo = delta_output x 1 = delta_output (a bias's own 'input' is always exactly 1, since dzo/dbo = 1). At the hidden layer it is 12.4's own pattern: dL/dw_ji = delta_hidden_j x x_i, and dL/dbh_j = delta_hidden_j. Side by side, the two formulas are the SAME shape — delta times input — with only the delta and the input swapped for the layer's own values. This is what makes backpropagation an algorithm and not a pile of special cases: once every neuron's delta is known (computed backward, layer by layer, in 12.3-12.4), every weight's gradient is a single multiplication that can be done in any order, even all at once.",
+      "This also cleanly separates the two halves of backprop: finding blame (the deltas, which genuinely depend on the layer above and must be computed back-to-front) and converting blame into gradients (a purely local multiplication at each weight, which does NOT depend on other weights once its neuron's delta is known). 12.6 will run both halves together as one continuous pass; 12.7 will show why this local-multiplication shape is exactly what makes it vectorize into a single matrix operation."
+    ],
+    "example": {
+      "problem": "For the phase's running network (x1=1, x2=0.5; hidden neuron 1: w11=0.5/w12=-0.3/bh1=0.1; hidden neuron 2: w21=0.2/w22=0.4/bh2=-0.1; output: wo1=0.6/wo2=-0.5/bo=0.2; t=1), the deltas are already known from 12.2-12.4: delta_output approximately -0.2112, delta_hidden1 approximately -0.0301, delta_hidden2 approximately 0.0258. Complete every gradient the network needs for one training step: the 3 output-layer gradients and the 3 remaining hidden-layer-1 gradients (dL/dw12 and dL/dbh1 have not been computed yet in this phase).",
+      "steps": [
+        "Output layer (delta_output x each output neuron's own input, h1 approximately 0.6106 / h2 approximately 0.5744 / bias input 1): dL/dwo1 = -0.2112 x 0.6106, approximately -0.1290. dL/dwo2 = -0.2112 x 0.5744, approximately -0.1213. dL/dbo = -0.2112 x 1 = approximately -0.2112.",
+        "Hidden neuron 1 (delta_hidden1 x each of ITS inputs, x1=1 / x2=0.5 / bias input 1): dL/dw11 = -0.0301 x 1, approximately -0.0301 (matching 12.2's five-link chain answer exactly). dL/dw12 = -0.0301 x 0.5, approximately -0.0151. dL/dbh1 = -0.0301 x 1, approximately -0.0301.",
+        "Hidden neuron 2 (delta_hidden2 x its inputs — already computed in 12.4's practice, restated here to complete the table): dL/dw21 approximately 0.0258, dL/dw22 = 0.0258 x 0.5, approximately 0.0129, dL/dbh2 approximately 0.0258.",
+        "Finite-difference spot-check on the two newly computed values (perturbing w12 and wo2 by epsilon=0.00001 and recomputing the loss): dL/dw12 comes out to approximately -0.0151 and dL/dwo2 to approximately -0.1213, both matching the delta x input formula to 4 decimal places."
+      ],
+      "answer": "All 9 gradients: dL/dwo1 approximately -0.1290, dL/dwo2 approximately -0.1213, dL/dbo approximately -0.2112, dL/dw11 approximately -0.0301, dL/dw12 approximately -0.0151, dL/dbh1 approximately -0.0301, dL/dw21 approximately 0.0258, dL/dw22 approximately 0.0129, dL/dbh2 approximately 0.0258 — every one of them is just that weight's own delta multiplied by whatever fed it, confirmed against finite differences."
+    },
+    "practice": [
+      {
+        "problem": "A different output neuron has delta_output approximately 0.4 and receives h1=0.2, h2=0.9 from its two hidden neurons. Compute dL/dwo1, dL/dwo2, and dL/dbo.",
+        "solution": "dL/dwo1 = 0.4 x 0.2 = 0.08. dL/dwo2 = 0.4 x 0.9 = 0.36. dL/dbo = 0.4 x 1 = 0.4 — each is delta_output times whatever fed that particular weight, and the bias is always delta_output alone."
+      },
+      {
+        "problem": "Why is dL/db always exactly equal to that neuron's own delta, with no separate multiplication needed?",
+        "solution": "Because z = (weights x inputs) + b, so dz/db = 1 for every neuron at every layer — multiplying delta by 1 leaves it unchanged. It is the same dz/dw_i = x_i fact applied to a weight whose 'input' happens to always be the constant 1."
+      },
+      {
+        "problem": "If this network had a THIRD hidden neuron feeding the same output neuron, would computing that neuron's gradients require redoing any part of the backward pass already done for hidden neurons 1 and 2?",
+        "solution": "No — 12.4's weighted-sum formula already gives delta_hidden3 directly from delta_output and the third neuron's own forward-pass weight, independent of hidden neurons 1 and 2. Once delta_hidden3 is known, its gradients are just delta_hidden3 x its own inputs — a purely local computation that never touches the other hidden neurons' work."
+      },
+      {
+        "problem": "Which of this network's 9 gradients would change if only the TARGET t were changed from 1 to 0, with every weight and input left the same?",
+        "solution": "All 9 — because t only enters the computation through delta_output = 2(p-t) x sigma'(zo), and delta_output is the starting point every other delta and gradient in the network is built from (delta_hidden1 and delta_hidden2 both multiply delta_output, and every weight gradient multiplies one of the three deltas)."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Once a neuron's delta is known, what is the general formula for the gradient of one of its weights?",
+        "choices": [
+          "delta times the input that weight multiplies in the forward pass",
+          "delta alone, regardless of the input",
+          "the input alone, regardless of delta",
+          "delta divided by the number of inputs"
+        ],
+        "answerIndex": 0,
+        "explanation": "dL/dw = delta x input is the same shape at every layer, because dz/dw is always just that weight's own input — the difference between layers is only which delta and which input get used."
+      },
+      {
+        "type": "short",
+        "question": "What is dL/db always equal to, for any neuron at any layer?",
+        "answer": "that neuron's delta",
+        "acceptable": [
+          "delta",
+          "the delta",
+          "delta times 1",
+          "delta alone"
+        ],
+        "explanation": "A bias's 'input' is always the constant 1 (dz/db = 1), so delta x 1 = delta with no further multiplication."
+      },
+      {
+        "type": "mc",
+        "question": "For the running network, with delta_hidden1 approximately -0.0301 and x2=0.5, what is dL/dw12?",
+        "choices": [
+          "approximately -0.0151",
+          "approximately -0.0301",
+          "approximately 0.0151",
+          "approximately -0.0602"
+        ],
+        "answerIndex": 0,
+        "explanation": "dL/dw12 = delta_hidden1 x x2 = -0.0301 x 0.5, approximately -0.0151."
+      },
+      {
+        "type": "short",
+        "question": "Which two prior lessons supplied the delta_output and delta_hidden values this lesson multiplies by each neuron's inputs?",
+        "answer": "12.3 and 12.4",
+        "acceptable": [
+          "lessons 12.3 and 12.4",
+          "12.3, 12.4",
+          "the delta lessons"
+        ],
+        "explanation": "12.3 named and computed delta_output; 12.4 named and computed delta_hidden_j as a weighted sum of output deltas. This lesson only combines those already-computed numbers with each layer's own inputs."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the SAME delta-times-input formula work at both the output layer and the hidden layer, even though the hidden layer's gradient took a longer chain rule (12.2) to derive?",
+        "choices": [
+          "Because once the delta absorbs everything upstream of a neuron's own z, the one remaining step (dz/dw = input) is identical everywhere",
+          "Because hidden layers and output layers secretly use the same weights",
+          "It doesn't actually work the same way — the hidden layer needs one extra multiplication that output layer doesn't",
+          "Because the chain rule only applies to output neurons"
+        ],
+        "answerIndex": 0,
+        "explanation": "The delta already packages every link of the chain UP TO that neuron's own z, regardless of how many layers deep that chain was. What's left after the delta is always the same local fact: dz/dw = input."
+      }
+    ]
+  },
+  {
+    "id": "12.6",
+    "number": 6,
+    "title": "Hand-computing one full backward pass",
+    "objectives": [
+      "Run the complete five-step backpropagation procedure — forward pass, loss, delta_output, delta_hidden for every hidden neuron, every weight's gradient — start to finish on one small network, without stopping to re-derive any step",
+      "Confirm that the procedure is now a fixed, repeatable ALGORITHM rather than something re-derived per network, by applying it to a network with different weights and inputs than 12.1-12.5's running example",
+      "Cross-check at least one hand-computed gradient against a finite-difference check"
+    ],
+    "explanation": [
+      "12.1-12.5 built backpropagation one piece at a time: the problem it solves (12.1), the extended chain rule (12.2), the output delta (12.3), the hidden delta (12.4), and the delta-to-gradient rule (12.5). This lesson runs every piece together, in order, on ONE network, with nothing left as a forward reference — the same kind of consolidation 10.7's hand-traced forward pass and 11.7's hand-traced single-neuron gradient step each did for their own phases.",
+      "The procedure is always the same five steps, in this order: (1) forward pass — compute every zh, h, zo, p, caching each value because later steps reuse them; (2) loss — compare p to the target t; (3) delta_output = 2(p-t) x sigma'(zo); (4) delta_hidden_j, for every hidden neuron j, = [weighted sum of delta_output x its connecting weight] x sigma'(zh_j); (5) every weight's gradient = its neuron's delta x whatever input fed that weight (12.5). Steps 3 and 4 must happen in that order (delta_hidden needs delta_output), and step 1 must fully finish before step 3 (delta_output needs the cached zo, and step 4 needs the cached zh's) — but step 5 can happen in any order, or all at once, once every delta is known.",
+      "This lesson uses a fresh network — different weights, different inputs, different target — specifically so the numbers can't be recognized or half-remembered from 12.1-12.4's running example. Getting the same five-step procedure to produce a correct, finite-difference-verified answer on numbers never seen before is the actual proof that backpropagation is an algorithm, not a memorized answer to one specific network."
+    ],
+    "example": {
+      "problem": "A 2-input/2-hidden/1-output sigmoid network: x1=0.8, x2=-0.5; hidden neuron 1: w11=0.3, w12=0.6, bh1=-0.2; hidden neuron 2: w21=-0.4, w22=0.2, bh2=0.05; output: wo1=0.7, wo2=0.9, bo=-0.1; target t=0. Run the full five-step backward pass by hand and verify one gradient against a finite-difference check.",
+      "steps": [
+        "Step 1, forward pass: zh1 = 0.3(0.8) + 0.6(-0.5) + (-0.2) = -0.26. h1 = sigma(-0.26), approximately 0.4354. zh2 = -0.4(0.8) + 0.2(-0.5) + 0.05 = -0.37. h2 = sigma(-0.37), approximately 0.4085. zo = 0.7(0.4354) + 0.9(0.4085) + (-0.1), approximately 0.5724. p = sigma(0.5724), approximately 0.6393.",
+        "Step 2, loss: L = (p-t)^2 = (0.6393-0)^2, approximately 0.4087.",
+        "Step 3, delta_output = 2(p-t) x sigma'(zo) = 2(0.6393) x [0.6393 x 0.3607], approximately 1.2787 x 0.2306, approximately 0.2948.",
+        "Step 4, delta_hidden for each hidden neuron: delta_hidden1 = (delta_output x wo1) x sigma'(zh1) = (0.2948 x 0.7) x [0.4354 x 0.5646], approximately 0.2064 x 0.2459, approximately 0.0507. delta_hidden2 = (delta_output x wo2) x sigma'(zh2) = (0.2948 x 0.9) x [0.4085 x 0.5915], approximately 0.2653 x 0.2417, approximately 0.0641.",
+        "Step 5, every gradient (delta x input): output layer — dL/dwo1 = 0.2948 x 0.4354, approximately 0.1284; dL/dwo2 = 0.2948 x 0.4085, approximately 0.1205; dL/dbo = 0.2948. Hidden neuron 1 — dL/dw11 = 0.0507 x 0.8, approximately 0.0406; dL/dw12 = 0.0507 x (-0.5), approximately -0.0254; dL/dbh1 = 0.0507. Hidden neuron 2 — dL/dw21 = 0.0641 x 0.8, approximately 0.0513; dL/dw22 = 0.0641 x (-0.5), approximately -0.0321; dL/dbh2 = 0.0641.",
+        "Finite-difference check on dL/dw21 (perturbing w21 by epsilon=0.00001, recomputing L, dividing the difference by 2 x epsilon): comes out to approximately 0.0513, matching step 5's hand-computed value."
+      ],
+      "answer": "All 9 gradients for this fresh network: dL/dwo1 approximately 0.1284, dL/dwo2 approximately 0.1205, dL/dbo approximately 0.2948, dL/dw11 approximately 0.0406, dL/dw12 approximately -0.0254, dL/dbh1 approximately 0.0507, dL/dw21 approximately 0.0513, dL/dw22 approximately -0.0321, dL/dbh2 approximately 0.0641 — produced by the exact same five-step procedure as the running network in 12.1-12.5, on numbers never used before, confirmed against a finite-difference check."
+    },
+    "practice": [
+      {
+        "problem": "Why must step 1 (the forward pass) fully finish, with zh1, zh2, h1, h2, zo, and p all computed and cached, before step 3 (delta_output) can be computed?",
+        "solution": "delta_output = 2(p-t) x sigma'(zo) needs both p and zo directly, and step 4's delta_hidden values need the cached zh1/zh2 (for sigma') — none of those are available until the forward pass has actually run all the way through."
+      },
+      {
+        "problem": "Why must delta_output (step 3) be computed before delta_hidden1 and delta_hidden2 (step 4), but delta_hidden1 and delta_hidden2 can be computed in either order relative to each other?",
+        "solution": "Both delta_hidden1 and delta_hidden2 are built from delta_output (12.4's weighted-sum formula multiplies each hidden neuron's own weight by the SAME delta_output), so delta_output has to exist first. But delta_hidden1 and delta_hidden2 don't depend on each other at all — each is only delta_output combined with that one hidden neuron's own weight and sigma'(zh), so they can be computed in any order, or simultaneously."
+      },
+      {
+        "problem": "Once every delta is known (step 4 complete), does step 5 (converting deltas to gradients) need to happen in any particular order?",
+        "solution": "No — 12.5 established that each weight's gradient is a purely local multiplication, delta x that weight's own input, once its neuron's delta is known. None of the 9 gradients in step 5 depend on any other gradient in step 5, so they can be computed in any order or all at once."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What are the five steps of the backpropagation procedure, in order?",
+        "choices": [
+          "Forward pass, loss, delta_output, delta_hidden (every hidden neuron), every weight's gradient",
+          "Loss, forward pass, every weight's gradient, delta_output, delta_hidden",
+          "Delta_hidden, delta_output, forward pass, loss, gradients",
+          "Forward pass, gradients, loss, delta_output, delta_hidden"
+        ],
+        "answerIndex": 0,
+        "explanation": "The forward pass must run first (its cached values feed everything after it), then loss, then the deltas back-to-front (output before hidden, since hidden depends on output), then the gradients (which only need the deltas)."
+      },
+      {
+        "type": "short",
+        "question": "In this lesson's fresh network, what is p (the output prediction) approximately equal to?",
+        "answer": "0.6393",
+        "acceptable": [
+          "approximately 0.6393",
+          "0.64",
+          "0.639"
+        ],
+        "explanation": "p = sigma(zo) = sigma(0.5724), approximately 0.6393."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this lesson deliberately use a DIFFERENT network than 12.1-12.5's running example, instead of reusing the same numbers?",
+        "choices": [
+          "To prove the five-step procedure is a general algorithm, not a memorized answer tied to one specific set of numbers",
+          "Because the running network's numbers were wrong",
+          "Because hidden layers require different formulas for different networks",
+          "It's not actually different — the numbers are the same, just relabeled"
+        ],
+        "answerIndex": 0,
+        "explanation": "Applying the exact same procedure to unfamiliar numbers and getting a finite-difference-verified correct answer is what demonstrates the procedure works in general, not just on the one network it was derived on."
+      },
+      {
+        "type": "short",
+        "question": "What technique verifies dL/dw21's hand-computed value of approximately 0.0513 without using the delta formulas at all?",
+        "answer": "finite-difference check",
+        "acceptable": [
+          "finite difference",
+          "the finite-difference check",
+          "gradient check",
+          "numerical gradient check"
+        ],
+        "explanation": "Perturbing w21 by a tiny epsilon, recomputing the loss, and dividing the difference by 2 x epsilon gives a numerical estimate of the slope that doesn't rely on the analytic backprop formulas at all — a fully independent check."
+      },
+      {
+        "type": "mc",
+        "question": "Which step in the five-step procedure is where 12.5's delta-times-input rule gets used?",
+        "choices": [
+          "Step 5, every weight's gradient",
+          "Step 1, the forward pass",
+          "Step 2, the loss",
+          "Step 3, delta_output"
+        ],
+        "answerIndex": 0,
+        "explanation": "Step 5 is exactly 12.5's contribution: once every delta from steps 3-4 is known, each weight's gradient is that neuron's delta times whatever input fed the weight."
+      }
+    ]
+  },
+  {
+    "id": "12.7",
+    "number": 7,
+    "title": "Coding backpropagation in NumPy",
+    "objectives": [
+      "Vectorize the five-step hand procedure (12.6) into matrix/vector NumPy operations, reusing 10.8's forward-pass matrix code and 11.8's NumPy gradient-descent pattern",
+      "Write the key vectorized backward-pass line, delta_hidden = (W_output.T @ delta_output) * sigmoid_derivative(z_hidden), and explain why a matrix-transpose-then-multiply replaces 12.4's weighted sum",
+      "Confirm the vectorized code reproduces 12.6's hand-computed numbers exactly"
+    ],
+    "explanation": [
+      "10.8 already vectorized the forward pass: a layer's weights become a matrix W (one row per neuron), its biases a vector b, and z = W @ x + b computes every neuron's z in that layer in one matrix-vector product instead of one line per neuron. The SAME representation now vectorizes the backward pass, because 12.5 showed every gradient is a local multiplication once a delta is known — local multiplications are exactly what NumPy's elementwise and matrix operations are built for.",
+      "Forward pass in matrix form (10.8's pattern, reused): zh = W_hidden @ x + b_hidden, h = sigmoid(zh), zo = W_output @ h + b_output, p = sigmoid(zo) — with W_hidden a (2,2) matrix (row j = hidden neuron j's weights) and W_output a (2,) vector (one output neuron, so it is only a vector, not a full matrix).",
+      "Backward pass in matrix form: delta_output = 2*(p-t) * sigmoid_derivative(zo) is still a single scalar (one output neuron). The key new line is delta_hidden = (W_output.T @ delta_output) * sigmoid_derivative(z_hidden) — this IS 12.4's weighted sum, written as a matrix operation: W_output.T @ delta_output distributes delta_output across every hidden neuron's own connecting weight (with more than one output neuron this becomes a real matrix-vector product that performs the weighted SUM across output neurons automatically; with exactly one output neuron, as in this phase's networks, it reduces to elementwise multiplication by the weight vector). Then grad_W_output = delta_output * h (11.8's gradient-descent pattern, one line), and grad_W_hidden = np.outer(delta_hidden, x) — the outer product, which builds the full (2,2) gradient matrix in one call because dL/dw_ji = delta_hidden_j x x_i for every (j,i) pair simultaneously.",
+      "Every one of these lines is doing exactly the arithmetic 12.6 did by hand, just applied to a whole layer's numbers at once instead of one neuron at a time — vectorizing does not change WHAT is computed, only how many scalar operations get written as one array operation."
+    ],
+    "example": {
+      "problem": "Reusing 12.6's network in matrix form — x = [0.8, -0.5], W_hidden = [[0.3, 0.6], [-0.4, 0.2]], b_hidden = [-0.2, 0.05], W_output = [0.7, 0.9], b_output = -0.1, t = 0 — run the vectorized forward and backward pass and confirm it reproduces 12.6's hand-computed gradients exactly.",
+      "steps": [
+        "Forward: zh = W_hidden @ x + b_hidden = [-0.26, -0.37] (row 0: 0.3(0.8)+0.6(-0.5)-0.2=-0.26; row 1: -0.4(0.8)+0.2(-0.5)+0.05=-0.37). h = sigmoid(zh), approximately [0.4354, 0.4085]. zo = W_output @ h + b_output = 0.7(0.4354)+0.9(0.4085)-0.1, approximately 0.5724. p = sigmoid(zo), approximately 0.6393 — matching 12.6's forward pass exactly.",
+        "Backward: delta_output = 2(p-t) x sigmoid_derivative(zo), approximately 0.2948 — matching 12.6. delta_hidden = (W_output.T @ delta_output) * sigmoid_derivative(zh) = ([0.7, 0.9] x 0.2948) * [0.2459, 0.2417], approximately [0.2064, 0.2653] * [0.2459, 0.2417], approximately [0.0507, 0.0641] — matching 12.6's delta_hidden1/delta_hidden2 exactly.",
+        "grad_W_output = delta_output * h, approximately 0.2948 x [0.4354, 0.4085] = [0.1284, 0.1205]. grad_b_output = delta_output, approximately 0.2948.",
+        "grad_W_hidden = np.outer(delta_hidden, x) = [0.0507, 0.0641] outer [0.8, -0.5], giving [[0.0406, -0.0254], [0.0513, -0.0321]] (row j, column i = delta_hidden_j x x_i). grad_b_hidden = delta_hidden, approximately [0.0507, 0.0641] — every entry matches 12.6's hand-computed table exactly, entry for entry."
+      ],
+      "answer": "The vectorized code reproduces every one of 12.6's 9 gradients exactly: grad_W_output=[0.1284, 0.1205], grad_b_output=0.2948, grad_W_hidden=[[0.0406,-0.0254],[0.0513,-0.0321]], grad_b_hidden=[0.0507, 0.0641] — confirming that np.outer and matrix multiplication compute the same delta-times-input arithmetic 12.5-12.6 did by hand, just packed into 4 array operations instead of 9 separate scalar lines."
+    },
+    "practice": [
+      {
+        "problem": "What shape does grad_W_hidden have, and why does np.outer(delta_hidden, x) — rather than elementwise multiplication — produce that shape?",
+        "solution": "grad_W_hidden has shape (2,2), one entry per hidden weight. np.outer(delta_hidden, x) pairs EVERY entry of delta_hidden (length 2) with EVERY entry of x (length 2), producing all 4 combinations dL/dw_ji = delta_hidden_j x x_i at once — elementwise multiplication would only pair up same-index entries (2 values), not all 4 weight gradients."
+      },
+      {
+        "problem": "If this network had 3 output neurons instead of 1, W_output would become a (3,2) matrix and delta_output a length-3 vector. Why would delta_hidden = (W_output.T @ delta_output) * sigmoid_derivative(z_hidden) then need the matrix multiply W_output.T @ delta_output, instead of the elementwise multiply this lesson's single-output case used?",
+        "solution": "With 3 output neurons, each hidden neuron's delta must SUM its contribution from all 3 outputs (12.4's weighted sum over every output it feeds). W_output.T @ delta_output is a real (2,3) @ (3,) matrix-vector product, which performs exactly that summation automatically; with only 1 output neuron the 'sum' has just one term, so it degenerates to ordinary elementwise multiplication by the weight vector."
+      },
+      {
+        "problem": "Which single line of code is this lesson's version of 12.5's rule 'every weight's gradient is delta times whatever input fed it'?",
+        "solution": "grad_W_hidden = np.outer(delta_hidden, x) (and equivalently grad_W_output = delta_output * h) — both are the delta-times-input rule applied to every weight in a layer simultaneously instead of one at a time."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What NumPy operation builds the full (2,2) grad_W_hidden matrix from delta_hidden (length 2) and x (length 2) in one call?",
+        "choices": [
+          "np.outer(delta_hidden, x)",
+          "delta_hidden * x (elementwise)",
+          "delta_hidden @ x (dot product)",
+          "np.sum(delta_hidden) * x"
+        ],
+        "answerIndex": 0,
+        "explanation": "The outer product pairs every entry of delta_hidden with every entry of x, giving all 4 dL/dw_ji values in one matrix — exactly the shape a (2,2) weight-gradient matrix needs."
+      },
+      {
+        "type": "short",
+        "question": "In the vectorized backward pass, what does W_output.T @ delta_output compute, in words?",
+        "answer": "the weighted sum of output deltas feeding each hidden neuron",
+        "acceptable": [
+          "weighted sum of deltas",
+          "distributes delta_output across each hidden neuron's weight",
+          "12.4's weighted sum",
+          "each hidden neuron's share of every output delta it feeds"
+        ],
+        "explanation": "This is 12.4's weighted-sum formula written as a matrix-vector product — with more than one output neuron it genuinely sums contributions; with one output neuron it reduces to elementwise multiplication."
+      },
+      {
+        "type": "mc",
+        "question": "For 12.6/12.7's fresh network, what does grad_b_hidden equal (approximately)?",
+        "choices": [
+          "[0.0507, 0.0641]",
+          "[0.0406, -0.0254]",
+          "[0.1284, 0.1205]",
+          "[-0.26, -0.37]"
+        ],
+        "answerIndex": 0,
+        "explanation": "grad_b_hidden = delta_hidden exactly (a bias's own gradient is always just its neuron's delta), which was computed as approximately [0.0507, 0.0641]."
+      },
+      {
+        "type": "short",
+        "question": "Does vectorizing the backward pass into NumPy operations change WHAT gets computed, or only how it's written?",
+        "answer": "only how it's written",
+        "acceptable": [
+          "only how it is written",
+          "just the notation",
+          "not what is computed, just how",
+          "no, same arithmetic"
+        ],
+        "explanation": "Every vectorized line computes exactly the same delta-times-input arithmetic 12.5-12.6 did scalar-by-scalar — matrix/vector operations just pack many of those scalar multiplications into one call."
+      },
+      {
+        "type": "mc",
+        "question": "Which two prior lessons does this lesson's vectorized code most directly reuse the pattern from?",
+        "choices": [
+          "10.8 (vectorized forward pass) and 11.8 (NumPy gradient-descent pattern)",
+          "12.1 and 12.2 only",
+          "9.7 and 9.10",
+          "11.9 and 11.10"
+        ],
+        "answerIndex": 0,
+        "explanation": "10.8 established the W @ x + b matrix forward-pass pattern this lesson's forward code reuses unchanged; 11.8 established the NumPy single-neuron gradient-descent code style this lesson's backward code follows."
+      }
+    ]
+  },
+  {
+    "id": "12.8",
+    "number": 8,
+    "title": "Training loop for a multi-layer network",
+    "objectives": [
+      "Extend 11.9's single-neuron epoch loop (forward, loss, backward, update, repeat) to a multi-layer network by updating ALL four parameter tensors — W_hidden, b_hidden, W_output, b_output — every epoch using 12.7's vectorized backward pass",
+      "Explain why the forward pass must be fully redone every epoch rather than reusing a cached h from a previous epoch",
+      "Trace a loss curve across 100 epochs of training on a small network, confirming the loss decreases toward the target"
+    ],
+    "explanation": [
+      "11.9 already wrote the training loop shape that every network in this course uses: repeat for a fixed number of epochs — run the forward pass, compute the loss, compute the gradient (backward pass), update every parameter by subtracting learning_rate x gradient. Nothing about that SHAPE changes for a multi-layer network. What changes is only how many parameters get updated each epoch: a single neuron (11.9) updates one weight vector and one bias; this network updates four parameter tensors — W_hidden, b_hidden, W_output, b_output — using 12.7's vectorized gradients for all four in the same epoch.",
+      "One detail matters more here than it did for 11.9's single neuron: the forward pass CANNOT be skipped or reused between epochs, because every parameter changed at the end of the previous epoch. h1 and h2 (the hidden activations) depend on W_hidden and b_hidden, which the update step just changed — so zh, h, zo, and p all have to be recomputed from scratch at the start of every epoch, exactly as 12.6's step 1 required for a single pass. Caching an old h across epochs would silently train on a stale forward pass and never converge correctly.",
+      "The loop, spelled out: for each epoch — (1) forward: zh = W_hidden @ x + b_hidden, h = sigmoid(zh), zo = W_output @ h + b_output, p = sigmoid(zo); (2) loss: L = (p-t)^2; (3) backward: delta_output, delta_hidden, and all 4 gradient tensors (12.7); (4) update: W_output -= lr*grad_W_output, b_output -= lr*grad_b_output, W_hidden -= lr*grad_W_hidden, b_hidden -= lr*grad_b_hidden. Epoch 1's forward pass is exactly 12.6/12.7's worked example (L approximately 0.4087, p approximately 0.6393) — training just doesn't stop there; it uses that same gradient to nudge every parameter, then repeats the whole four-step loop again on the now-slightly-different network."
+    ],
+    "example": {
+      "problem": "Train 12.6/12.7's network (x=[0.8,-0.5], t=0, starting weights as before) for 100 epochs with learning rate 0.5, using the loop above. Trace the loss at epochs 1, 2, 10, 50, and 100.",
+      "steps": [
+        "Epoch 1: this is exactly 12.6/12.7's single worked pass before any update — L approximately 0.4087, p approximately 0.6393. The epoch-1 gradients (grad_W_output=[0.1284,0.1205], grad_b_output=0.2948, grad_W_hidden=[[0.0406,-0.0254],[0.0513,-0.0321]], grad_b_hidden=[0.0507,0.0641]) get multiplied by lr=0.5 and subtracted from every parameter before epoch 2 begins.",
+        "Epoch 2: with the updated parameters, the forward pass is redone from scratch (new zh, h, zo, p) — L drops to approximately 0.3449, p to approximately 0.5873. Both p and L moved toward the target t=0, as gradient descent should.",
+        "Epoch 10: after 9 more forward-backward-update cycles, L approximately 0.0949, p approximately 0.3080 — continuing to shrink toward 0.",
+        "Epoch 50: L approximately 0.0124, p approximately 0.1111 — the loss has dropped by roughly 97% of its starting value.",
+        "Epoch 100: L approximately 0.0054, p approximately 0.0738 — p is closing in on the target t=0, and the loss keeps shrinking every epoch with no sign of the training stalling."
+      ],
+      "answer": "Loss falls from approximately 0.4087 (epoch 1) to approximately 0.3449 (epoch 2) to approximately 0.0949 (epoch 10) to approximately 0.0124 (epoch 50) to approximately 0.0054 (epoch 100) — a smooth, monotonic decrease produced entirely by repeating the same four-step loop (forward, loss, backward, update) on all four parameter tensors together, exactly as 11.9's single-neuron loop did for one weight vector."
+    },
+    "practice": [
+      {
+        "problem": "Why can't the forward pass computed in epoch 1 (h1 approximately 0.4354, h2 approximately 0.4085) simply be reused in epoch 2, instead of recomputing it?",
+        "solution": "The update step at the end of epoch 1 changed W_hidden and b_hidden, so epoch 1's h1/h2 no longer describe how the network responds to x with the CURRENT weights — they're stale. Epoch 2 must recompute zh, h, zo, and p from the new weights before its own gradients mean anything."
+      },
+      {
+        "problem": "In this network's training loop, which parameters get updated in a single epoch — just the output layer, just the hidden layer, or both?",
+        "solution": "Both — every epoch's backward pass (12.7) produces gradients for all 4 parameter tensors (W_hidden, b_hidden, W_output, b_output) simultaneously, and the update step subtracts lr times each one's own gradient from all 4 in the same epoch."
+      },
+      {
+        "problem": "The loss dropped from approximately 0.0949 (epoch 10) to approximately 0.0124 (epoch 50) but only from approximately 0.0124 (epoch 50) to approximately 0.0054 (epoch 100) — the SAME number of epochs (40 vs 50) produced a much smaller drop the second time. Why might that be, based on what 11.6 said about the learning rate and the size of the gradient?",
+        "solution": "As p gets closer to the target t=0, the loss (p-t)^2 gets smaller, and delta_output = 2(p-t) x sigma'(zo) shrinks along with it — smaller loss means smaller gradients, and smaller gradients mean smaller per-epoch updates (11.6's update rule scales the step by the gradient itself), so progress naturally slows down as training approaches the target rather than overshooting it."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the ONE thing that changes when extending 11.9's single-neuron training loop to a multi-layer network?",
+        "choices": [
+          "How many parameter tensors get updated each epoch (four instead of one weight vector and one bias)",
+          "The loop no longer needs a forward pass",
+          "The loop no longer needs to repeat for multiple epochs",
+          "The update rule becomes addition instead of subtraction"
+        ],
+        "answerIndex": 0,
+        "explanation": "The four-step loop shape (forward, loss, backward, update, repeat) is identical to 11.9's — only the number of parameter tensors being updated each epoch changes, from one weight vector plus one bias to W_hidden, b_hidden, W_output, and b_output together."
+      },
+      {
+        "type": "short",
+        "question": "Why must the forward pass be fully recomputed every single epoch, rather than cached from the previous epoch?",
+        "answer": "because the weights changed at the end of the previous epoch",
+        "acceptable": [
+          "weights changed",
+          "parameters were updated",
+          "the update step changed the weights",
+          "stale weights"
+        ],
+        "explanation": "Every epoch's update step changes W_hidden, b_hidden, W_output, and b_output, so any previously-cached h or p no longer reflects the current network and must be recomputed."
+      },
+      {
+        "type": "mc",
+        "question": "In the example, what is the loss at epoch 1, and why does it match 12.6/12.7's worked example exactly?",
+        "choices": [
+          "Approximately 0.4087 — epoch 1's forward pass is the same computation as 12.6/12.7's single worked pass, before any update has happened yet",
+          "Approximately 0.0054 — training converges instantly",
+          "Approximately 0.2948 — that's delta_output, not the loss",
+          "It cannot match, because epoch 1 already includes one update"
+        ],
+        "answerIndex": 0,
+        "explanation": "Epoch 1 begins with the network's original, un-updated parameters — exactly the state 12.6 hand-computed and 12.7 coded — so its loss is the same approximately 0.4087 both lessons already found."
+      },
+      {
+        "type": "short",
+        "question": "Across epochs 1, 2, 10, 50, and 100, is the loss trend increasing, decreasing, or staying flat?",
+        "answer": "decreasing",
+        "acceptable": [
+          "it decreases",
+          "going down",
+          "shrinking",
+          "falls"
+        ],
+        "explanation": "Loss falls every epoch shown (0.4087 -> 0.3449 -> 0.0949 -> 0.0124 -> 0.0054), confirming gradient descent is steadily moving p toward the target t=0."
+      },
+      {
+        "type": "mc",
+        "question": "What must happen in the SAME epoch, before the update step, for both delta_output and delta_hidden?",
+        "choices": [
+          "delta_output must be computed first, since delta_hidden's weighted-sum formula depends on it",
+          "delta_hidden must be computed first, since delta_output needs it",
+          "They can be computed in either order, with no dependency",
+          "Only one of them is needed per epoch, alternating each time"
+        ],
+        "answerIndex": 0,
+        "explanation": "As established in 12.4 and reaffirmed in 12.6's step ordering, delta_hidden is built FROM delta_output (each hidden neuron's weighted sum uses delta_output), so it can't be computed before delta_output exists — this ordering holds inside every single epoch of the training loop too."
+      }
+    ]
   }
 ];

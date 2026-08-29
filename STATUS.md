@@ -676,15 +676,45 @@ nothing new to correct). `bab-schema-check "12."` 4/4 clean, file-wide 145/145 c
 duplicate ids; `sw.js` cache bumped `bab-v18`->`bab-v19`; committed `5d7a09b`, pushed, live
 confirmed via `bab-ship-verify bab-v19 "12."`.
 
-**Next up: Phase 12 group 2, lessons 12.5-12.8** (computing every gradient from the deltas,
-a fully hand-traced 2-input/2-hidden/1-output backward pass, coding backprop in NumPy, the
-multi-layer training loop) — per Mike's explicit sizing preference, stop at group 1 this
-session and do NOT roll into group 2 even with budget to spare.
+## Phase 12 (Backpropagation) — group 2 (12.5-12.8) SHIPPED 2026-08-29
+
+**Content written, verified, and live:** 12.5 computing every gradient from the deltas
+(completed the full 9-parameter gradient table for the phase's running network — delta_output
+x h_i for the 3 output-layer params, delta_hidden_j x x_i for the 6 hidden-layer params —
+showing the output-layer and hidden-layer formulas are structurally identical; the two values
+not yet computed in 12.1-12.4, dL/dw12 approximately -0.0151 and dL/dwo2 approximately
+-0.1213, cross-checked against finite differences); 12.6 hand-computing one full backward pass
+(a FRESH 2-input/2-hidden/1-output network, deliberately different weights/inputs/target than
+the running example, run through the complete 5-step procedure — forward, loss, delta_output,
+delta_hidden, every gradient — end to end by hand, one gradient finite-difference-checked);
+12.7 coding backpropagation in NumPy (vectorizing 12.6's exact same network into matrix form —
+`zh = W_hidden @ x + b_hidden`, `delta_hidden = (W_output.T @ delta_output) *
+sigmoid_derivative(z_hidden)`, `grad_W_hidden = np.outer(delta_hidden, x)` — confirmed the
+vectorized numbers reproduce 12.6's hand-computed table exactly, entry for entry); 12.8
+training loop for a multi-layer network (wrapping 12.7's forward+backward pass in 11.9's
+epoch loop, now updating all 4 parameter tensors — W_hidden/b_hidden/W_output/b_output — every
+epoch; an ACTUAL 100-epoch training run on 12.6/12.7's network, lr=0.5, was executed in
+Python and its real trajectory used as the lesson's worked example, not fabricated numbers:
+loss 0.4087 -> 0.3449 -> 0.0949 -> 0.0124 -> 0.0054 at epochs 1/2/10/50/100).
+
+149/149 lessons total across Phases 1-12 so far. Every worked example/practice/quiz numeric
+claim independently verified via actual Python/NumPy execution before being written into the
+lesson (not mental math), including finite-difference gradient checks in 12.5 and 12.6 per
+the backprop-specific verification note below, and 12.7's vectorized-vs-hand cross-check
+matching to 4 decimal places. Pre-flight grep for stray "Phase 11's backpropagation"
+misattributions came back clean (both existing hits already correctly say "Phase 12's
+backpropagation"). `bab-schema-check "12."` 8/8 clean, file-wide 149/149 clean, 0 duplicate
+ids; `node --check` and a full LESSONS-array load both clean; `sw.js` cache bumped
+`bab-v19`->`bab-v20`; committed, pushed, live confirmed via `bab-ship-verify`.
+
+**Next up: Phase 12 group 3, lessons 12.9-12.10** (learning XOR from scratch via 12.8's
+training loop starting from random weights, then the phase mini-project training a 2-layer
+network end-to-end) — the payoff group that closes out Phase 12.
 
 ## Pending — next session(s)
 
-- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12 group 1 (12.1-12.4) is now also
-  SHIPPED (above).** Next session: Phase 12 group 2 (12.5-12.8), following the same
+- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12 groups 1-2 (12.1-12.8) are now
+  also SHIPPED (above).** Next session: Phase 12 group 3 (12.9-12.10), following the same
   verification bar as every prior phase (every numeric claim independently Python/NumPy-
   verified — see backprop-specific note below — `bab-schema-check`, file-wide duplicate-id
   check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming live).
@@ -694,11 +724,12 @@ session and do NOT roll into group 2 even with budget to spare.
   several decimal places) — this is the same numerical-derivative technique 11.4 already
   used, and it is the standard "gradient check" sanity test for backprop specifically, worth
   calling out explicitly in the lesson content itself, not just as an authoring-time check
-  (12.1-12.4 already did this for delta_output/delta_hidden — group 2's per-weight gradients
-  and 12.6's full hand-traced backward pass should do the same). Phases 13-14 still have no
-  lesson content yet — only their phase titles show in the roadmap as locked/coming-soon.
-  Per Mike: build this out phase by phase across future sessions, not all at once ("chained
-  background builds through the day" per his 2026-08-25 ask).
+  (12.1-12.8 already did this for delta_output/delta_hidden/every per-weight gradient —
+  12.9's random-weight XOR training and 12.10's mini-project should do the same wherever a
+  new gradient is hand-derived rather than reused). Phases 13-14 still have no lesson content
+  yet — only their phase titles show in the roadmap as locked/coming-soon. Per Mike: build
+  this out phase by phase across future sessions, not all at once ("chained background builds
+  through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
