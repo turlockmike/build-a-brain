@@ -437,6 +437,17 @@ all 10/10 lessons live**, matching Phases 1-9's shipped status.
   GitHub Pages' CDN rebuild lag (bit the Phase 8 ship, a bare curl right
   after push hit a stale cached copy) and checks the new lesson ids are
   actually present in the deployed `curriculum.js` in one step.
+- **Post-ship checklist has 3 doc touches, not 2 — don't stop after
+  dashboard+STATUS.md.** The Phase 9 ship and the Phase 10 group-1 ship
+  BOTH updated `~/dashboard.md`'s Build a Brain row and this STATUS.md, but
+  silently skipped the linked detail file
+  `~/archive/dashboard-done-log/build-a-brain-row-2026-08-27.md` (rotated
+  out of `dashboard.md` for length, with a "Full row →" pointer left behind)
+  — it sat frozen at its Phase-8 snapshot for two full ships before the
+  Phase 10 group-2 session caught and back-filled it (commit `513644b9` in
+  the home repo). Any session that ships a new phase should grep
+  `dashboard.md` for the "Full row →" pointer and update that linked file
+  too, same session, not just the dashboard row + STATUS.md.
 - Not done, optional backlog: multi-learner profiles (kana-cards has this
   pattern if wanted later), a lightweight math-notation renderer (KaTeX-style)
   if plain-text exponents/fractions ever feel cramped, print/export view.
