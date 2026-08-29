@@ -1024,22 +1024,32 @@ baseline run was checked first and reproduced 13.1's own published forward-pass 
 `bab-v28`->`bab-v29`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
 comment refreshed (158->159, 13.1-13.7->13.1-13.8).
 
-**Next up:** Phase 13's ~10-lesson arc is now at 8/~10 (13.1-13.8 shipped); no single
-clearly-named remaining topic is currently identified — next session should re-survey
-whether Phase 13 has 1-2 more natural closing lessons (e.g. a confusion-matrix/precision-recall
-deep dive was gestured at in 13.1's own text but never given its own lesson) or whether it's
-ready to close and Phase 14 should begin. Continuing one lesson/session at a time per Mike's
-phase-by-phase pacing.
+**Next up (corrected 2026-08-29, later still — the line below was stale):** Phase 13
+lesson 13.9 (F1 score) shipped 2026-08-29, closing 13.3's "precision and recall must always
+be reported together" warning with one combined harmonic-mean number. **SURPRISE caught this
+session:** this section had named confusion-matrix/precision-recall as the still-open
+candidate — re-reading `curriculum.js` itself (not trusting this prose) showed BOTH were
+already shipped as 13.2/13.3, before 13.8 even. Every sub-topic named in Phase 13's own
+ROADMAP title (accuracy, confusion matrix, precision/recall, overfitting vs underfitting,
+data size/quality, regularization) is now covered across 13.1-13.9. Next session should
+re-survey against that ROADMAP title directly (not this file's prose, which drifts) whether
+Phase 13 is functionally complete at 9/~10 and ready to close, or Phase 14 (capstone) should
+begin its own scoping/title-breakdown session. Continuing one lesson/session at a time per
+Mike's phase-by-phase pacing.
 
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.8/~10
-  shipped 2026-08-29, see sections above).** Next session: Phase 13 has no single
-  clearly-named remaining topic left (epoch count, data size/quality, L2 weight decay, early
-  stopping, and now cross-validation/LOOCV have each covered a separate knob on the same
-  3-example overfitting picture) — re-survey whether 1-2 more natural closing lessons exist
-  (e.g. confusion-matrix/precision-recall, gestured at in 13.1 but never given its own
-  lesson) or whether Phase 13 is ready to close and Phase 14 should begin. Whichever topic
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.9/~10
+  shipped 2026-08-29, see sections above).** Next session: re-survey Phase 13 against its
+  own ROADMAP title (accuracy, confusion matrix, precision/recall, overfitting vs
+  underfitting, data size/quality, regularization) — every named sub-topic is now covered
+  (13.1-13.9), so the live question is whether Phase 13 is functionally complete at 9/~10
+  and ready to close, or whether Phase 14 (the capstone — a from-scratch handwritten-digit
+  classifier, properly evaluated) should begin, as its own scoping/title-breakdown session
+  first (same pattern Phase 9-12 each used before writing content). **Do not trust this
+  file's own "candidate topic" prose without re-reading `curriculum.js`'s actual LESSONS
+  array first** — this exact prose named an already-shipped topic as still-open going into
+  the 13.9 session (2026-08-29). Whichever topic
   is chosen, follow the same verification bar as every prior phase — every
   worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
