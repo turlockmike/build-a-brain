@@ -13183,5 +13183,650 @@ const LESSONS = [
         "explanation": "Phase 9's derivative tools need a smoothly changing function to produce a meaningful slope; sigmoid provides that everywhere, while step's abrupt jump breaks down exactly where it matters."
       }
     ]
+  },
+  {
+    "id": "10.5",
+    "number": 5,
+    "title": "The ReLU activation function",
+    "objectives": [
+      "Define ReLU (Rectified Linear Unit) as ReLU(z) = max(0, z), and compute it by hand for positive, negative, and zero inputs",
+      "Contrast ReLU with sigmoid (10.4): a comparison-only computation versus one requiring e^(-z), and an unbounded-above range versus sigmoid's bounded (0,1) range",
+      "Explain why ReLU is the default activation function in modern deep networks: cheap to compute at scale, and it avoids the nearly-flat output sigmoid produces for large |z|"
+    ],
+    "explanation": [
+      "Lesson 10.4 introduced sigmoid as a smooth alternative to step (8.1). This lesson introduces a third activation function, and by far the simplest one: ReLU, short for Rectified Linear Unit, defined as ReLU(z) = max(0, z). In words: if z is positive, pass it through completely unchanged; if z is zero or negative, output exactly 0. That single comparison is the entire function — no exponential, no squashing, nothing else to compute.",
+      "A few values build the habit: ReLU(5) = max(0, 5) = 5 (positive input passes through unchanged). ReLU(-5) = max(0, -5) = 0 (negative input gets clamped to 0). ReLU(0) = max(0, 0) = 0. Notice something sigmoid never does: ReLU is NOT bounded above. Sigmoid squeezes every input into (0, 1) no matter how large z gets (10.4: sigma(10) is about 0.999955, always less than 1); ReLU(10) is exactly 10, ReLU(1000) is exactly 1000 — positive inputs keep growing, unclamped, forever. ReLU only ever clamps the negative side.",
+      "Computing ReLU is also genuinely cheaper than computing sigmoid. sigma(z) = 1/(1+e^(-z)) requires computing e^(-z) — an expensive operation to repeat correctly, the kind of thing 10.4's worked example needed several decimal-place steps to approximate by hand. ReLU(z) needs exactly one comparison (is z positive?) and, if so, simply hands z back unchanged — no exponential, no approximation, no rounding. A single comparison versus computing e^(-z) sounds like a small difference for one neuron, but a modern network can have millions or billions of neurons, each needing its activation computed on every single forward pass (10.2) — multiply a small per-neuron savings by that many repetitions, and the difference in total compute becomes enormous.",
+      "There's a second reason ReLU became the default, beyond raw speed. Sigmoid SATURATES for large |z|: sigma(10) is about 0.999955 and sigma(20) is so close to 1 that the two are indistinguishable to 8 decimal places — meaning a big change in z (from 10 to 20) barely changes sigmoid's output at all in that region. ReLU never does this on its positive side: ReLU(10) = 10 and ReLU(20) = 20, a change in z always produces the exact same-size change in output, for any positive z, no matter how large. (Foreshadowing Phase 11: a barely-changing output gives learning very little signal to work with, which is part of why sigmoid's saturation became a real practical problem as networks grew deeper — and part of why ReLU's non-saturating positive side matters, not just its lower compute cost.) The trade-off is honest, not free: ReLU throws away all information about negative z entirely, always returning exactly 0 there, while sigmoid at least preserves a distinguishable (if tiny) value. In practice, that trade has worked out overwhelmingly in ReLU's favor for the hidden layers of modern deep networks."
+    ],
+    "example": {
+      "problem": "Compute ReLU(8), ReLU(-8), and ReLU(0). Then compute sigma(8) using e ~ 2.71828, and compare how much arithmetic each required.",
+      "steps": [
+        "ReLU(8) = max(0, 8) = 8 — positive, so it passes through unchanged.",
+        "ReLU(-8) = max(0, -8) = 0 — negative, so it gets clamped to 0.",
+        "ReLU(0) = max(0, 0) = 0.",
+        "sigma(8) = 1/(1+e^-8). e^-8 is approximately 0.000335, so sigma(8) = 1/1.000335, approximately 0.9997.",
+        "Every ReLU value needed only a comparison and, at most, returning the number unchanged. sigma(8) needed computing e^-8 first, a genuinely harder operation, and even then only produced an approximation."
+      ],
+      "answer": "ReLU(8) = 8, ReLU(-8) = 0, ReLU(0) = 0 (all exact, one comparison each); sigma(8) is approximately 0.9997, but required computing e^-8 to get there."
+    },
+    "practice": [
+      {
+        "problem": "Compute ReLU(12) and ReLU(-0.001).",
+        "solution": "ReLU(12) = max(0, 12) = 12 (positive, unchanged). ReLU(-0.001) = max(0, -0.001) = 0 (negative, clamped)."
+      },
+      {
+        "problem": "Compute ReLU(-100), exactly.",
+        "solution": "ReLU(-100) = max(0, -100) = 0 exactly — any negative input, however large in magnitude, clamps to exactly 0."
+      },
+      {
+        "problem": "For z = 6, compute both ReLU(6) and sigma(6) (using e ~ 2.71828), and state which is larger.",
+        "solution": "ReLU(6) = max(0, 6) = 6. sigma(6) = 1/(1+e^-6) = 1/(1+0.002479), approximately 0.9975. ReLU(6) = 6 is far larger than sigma(6) ~ 0.9975, since ReLU never squashes a positive value the way sigmoid does."
+      },
+      {
+        "problem": "For z = 20, state ReLU(20) exactly, and explain why sigma(20) is hard to distinguish from sigma(10) (about 0.999955, from lesson 10.4) even though 20 is twice as large as 10.",
+        "solution": "ReLU(20) = 20, exactly twice ReLU(10) = 10 — ReLU's output always scales directly with z. sigma(20) is so close to 1 that it agrees with sigma(10) to many decimal places; sigmoid has already saturated near its ceiling of 1 by z=10, so doubling z to 20 has almost no room left to change the output. This is exactly the saturation effect this lesson describes."
+      },
+      {
+        "problem": "In your own words, explain why computing ReLU is cheaper than computing sigmoid, referencing what each formula actually requires.",
+        "solution": "sigma(z) = 1/(1+e^(-z)) requires computing e^(-z), an operation that takes real computational work to evaluate (even approximately, as 10.4's and this lesson's worked examples show). ReLU(z) = max(0, z) requires only one comparison — is z positive or not — and then either returns z unchanged or returns 0. One comparison is cheaper than computing an exponential, and that saving repeats for every single neuron on every forward pass."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the formula for ReLU?",
+        "choices": [
+          "ReLU(z) = 1 / (1 + e^(-z))",
+          "ReLU(z) = max(0, z)",
+          "ReLU(z) = 1 if z >= 0 else 0",
+          "ReLU(z) = z / 2"
+        ],
+        "answerIndex": 1,
+        "explanation": "ReLU (Rectified Linear Unit) is defined as max(0, z): pass positive values through unchanged, clamp negative values to 0."
+      },
+      {
+        "type": "short",
+        "question": "What is ReLU(-15)?",
+        "answer": "0",
+        "acceptable": [
+          "0",
+          "zero"
+        ],
+        "explanation": "Any negative input clamps to exactly 0 under ReLU's max(0, z) rule."
+      },
+      {
+        "type": "mc",
+        "question": "What is ReLU's range, i.e. what values can ReLU(z) take?",
+        "choices": [
+          "Strictly between 0 and 1",
+          "Any real number",
+          "0 or any positive number, unbounded above",
+          "Exactly 0 or exactly 1"
+        ],
+        "answerIndex": 2,
+        "explanation": "ReLU outputs exactly 0 for any z <= 0, and outputs z unchanged (which can be arbitrarily large) for any z > 0 — unlike sigmoid, it is never bounded above."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why is ReLU cheaper to compute than sigmoid?",
+        "answer": "ReLU only needs one comparison, while sigmoid needs to compute an exponential, e^(-z)",
+        "acceptable": [
+          "relu is just a comparison, sigmoid requires computing e^-z",
+          "relu needs max(0,z), no exponential, sigmoid does",
+          "one comparison vs computing an exponential"
+        ],
+        "explanation": "ReLU(z) = max(0, z) needs only a comparison; sigma(z) = 1/(1+e^(-z)) needs an exponential computed first, a genuinely more expensive operation, repeated across every neuron on every forward pass."
+      },
+      {
+        "type": "mc",
+        "question": "Why does sigmoid's 'saturation' for large |z| matter, compared to ReLU's behavior for large positive z?",
+        "choices": [
+          "It doesn't matter at all",
+          "Sigmoid's output barely changes for large |z| (it's nearly flat near 0 or 1), while ReLU's output keeps changing directly with z for any positive z, never saturating on that side",
+          "ReLU also saturates, identically to sigmoid",
+          "Saturation only affects the step function, not sigmoid"
+        ],
+        "answerIndex": 1,
+        "explanation": "Sigmoid squeezes large |z| into an output that barely moves (e.g. sigma(10) and sigma(20) are nearly indistinguishable), while ReLU(z) for positive z always changes by exactly as much as z does, with no ceiling."
+      }
+    ]
+  },
+  {
+    "id": "10.6",
+    "number": 6,
+    "title": "Network architecture: width and depth",
+    "objectives": [
+      "Explain that the input layer's size is fixed by the number of features in the dataset (5.1's columns, 6.9's matrix shape), not a design choice",
+      "Explain that the output layer's size is fixed by the task the network solves, using 10.2's single-output XOR network as an example",
+      "Define 'architecture' as the tunable choices — hidden layer count (depth) and width — and apply 10.1's shape rule to state the resulting weight matrix shapes"
+    ],
+    "explanation": [
+      "Every network built so far had a specific shape chosen for it: 10.2's XOR network had 2 inputs, a hidden layer of 2 neurons, and 1 output. This lesson names exactly which of those numbers were forced by the problem and which were genuinely free choices — because they are not the same kind of number, even though they all show up in the same weight-matrix shapes (10.1).",
+      "The input layer's size is fixed entirely by the dataset. Lesson 5.1 defined a dataset as rows (examples) and columns (features), and lesson 6.9 showed a whole dataset can be written as one matrix, with any single example row being that example's own feature vector. A single example has exactly as many numbers in it as the dataset has columns, and every one of those numbers has to enter the network somewhere as an input — so the input layer's size always equals the dataset's feature count. A dataset shaped like 6.9's 3-column gym example ([pushups, situps, mile_time_seconds]) demands exactly 3 input numbers; a dataset with 20 features demands 20. This is never a design choice — it is read directly off the data.",
+      "The output layer's size is fixed the same way, but by the TASK rather than the dataset. Lesson 10.2's XOR network needed exactly 1 output, because XOR's answer is a single yes/no bit; a network sorting an example into one of 5 categories would need exactly 5 outputs, one per category — again, the task decides this number, not the network designer.",
+      "Everything else — how many hidden layers sit between input and output (called DEPTH) and how many neurons each hidden layer has (called WIDTH) — is a genuine design choice, not forced by anything. This whole bundle of choices is what 'architecture' means. Lesson 10.1's shape rule (n inputs, m perceptrons in a layer means W is m x n) applies at every layer boundary in a multi-layer network, so picking a hidden layer's width immediately determines the weight matrix shapes on both sides of it: a hidden layer of width h, reading n inputs, needs a weight matrix of shape (h x n); if that hidden layer feeds directly into an output layer of size 1, the output layer's weight matrix has shape (1 x h). Change the chosen width, and both of those shapes shift to match — but the very first input count and the very last output count never do, no matter what depth or width gets chosen in between."
+    ],
+    "example": {
+      "problem": "A dataset like lesson 6.9's gym example has 3 features per athlete ([pushups, situps, mile_time_seconds]), and the task is a single yes/no decision ('is this athlete ready for the team?'). Using a hidden layer of width 4, state the input layer size, the output layer size, and the shapes of W1 and W2.",
+      "steps": [
+        "Input layer size = number of features = 3 (fixed by the dataset, per 5.1/6.9 — not a design choice).",
+        "Output layer size = 1 (fixed by the task: a single yes/no decision).",
+        "Hidden layer width chosen: 4 (a genuine design choice, unlike the two sizes above).",
+        "W1 connects the input layer (3) to the hidden layer (4): using 10.1's shape rule (n inputs, m perceptrons -> W is m x n), W1 has shape (4 x 3).",
+        "W2 connects the hidden layer (4) to the output layer (1): W2 has shape (1 x 4)."
+      ],
+      "answer": "Input layer size 3 and output layer size 1 (both fixed); hidden layer width 4 (a design choice); W1 is 4x3; W2 is 1x4."
+    },
+    "practice": [
+      {
+        "problem": "A dataset has 6 features (6 columns, per 5.1), the task needs 2 outputs, and a single hidden layer is chosen at width 5. State all 3 layer sizes and the shapes of W1 and W2.",
+        "solution": "Input layer size = 6 (fixed by the dataset). Output layer size = 2 (fixed by the task). Hidden layer width = 5 (chosen). W1 connects input(6) to hidden(5): shape 5x6. W2 connects hidden(5) to output(2): shape 2x5."
+      },
+      {
+        "problem": "Lesson 10.2's XOR network used 2 inputs, a hidden layer of width 2, and 1 output. If a redesign used hidden width 3 instead, what would W1 and W2's shapes become?",
+        "solution": "The input size (2, fixed by XOR's 2-bit input) and output size (1, fixed by XOR's single yes/no answer) don't change. Only the hidden width changes, from 2 to 3: W1 becomes 3x2 (3 neurons, 2 inputs) and W2 becomes 1x3 (1 output neuron, 3 hidden activations to read)."
+      },
+      {
+        "problem": "A network needs to sort a data example into one of 4 categories. What must its output layer's size be, and is that a design choice?",
+        "solution": "The output layer must have exactly 4 neurons, one per category. This is not a design choice — it is fixed by the task, the same way 10.2's XOR network was forced to have exactly 1 output for its single yes/no answer."
+      },
+      {
+        "problem": "Explain why adding a SECOND hidden layer (going from depth 1 to depth 2) doesn't change the network's input layer size or output layer size.",
+        "solution": "The input and output sizes are fixed by the dataset's feature count and the task, respectively — neither of which changes when more hidden layers are added. Only the internal structure between the fixed input and fixed output changes (now two hidden layers instead of one, each with its own chosen width)."
+      },
+      {
+        "problem": "A dataset's feature count stays at 3, but a hidden layer's width is doubled from 4 to 8, and that hidden layer feeds directly into a 1-neuron output layer. Using 10.1's shape rule, state exactly which weight matrix shapes change and which don't.",
+        "solution": "W1 (connecting the fixed 3-feature input to the hidden layer) changes from 4x3 to 8x3 — its row count grows to match the new width, its column count (3) stays fixed to the unchanged input size. W2 (connecting the hidden layer to the output) changes from 1x4 to 1x8 — its column count grows to match the new hidden width, while its row count (1) stays fixed to the unchanged output size. The input size (3) and output size (1) themselves never change."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What determines a network's input layer size?",
+        "choices": [
+          "It's always chosen by the network designer",
+          "The number of features (columns) in the dataset",
+          "The number of hidden layers",
+          "The task the network solves"
+        ],
+        "answerIndex": 1,
+        "explanation": "Every example row has as many numbers as the dataset has columns/features (5.1, 6.9), and every one of those numbers must enter the network as an input — so the input layer size always equals the feature count, never a free choice."
+      },
+      {
+        "type": "short",
+        "question": "A dataset has 8 features. What must the input layer's size be?",
+        "answer": "8",
+        "acceptable": [
+          "8",
+          "eight"
+        ],
+        "explanation": "The input layer's size always equals the dataset's feature (column) count."
+      },
+      {
+        "type": "mc",
+        "question": "What determines a network's output layer size?",
+        "choices": [
+          "The number of features in the dataset",
+          "The task the network is solving (e.g. 1 output for a yes/no decision, 5 for a 5-category sort)",
+          "It's always exactly 1",
+          "The hidden layer's width"
+        ],
+        "answerIndex": 1,
+        "explanation": "The output layer size is fixed by what the network needs to produce as its answer — one number per category, per decision, or per quantity the task requires — not by the dataset or by choice."
+      },
+      {
+        "type": "short",
+        "question": "A hidden layer has width 6 and reads an input layer of size 4. What is the shape of the weight matrix connecting them?",
+        "answer": "6x4",
+        "acceptable": [
+          "6x4",
+          "6 x 4",
+          "6 by 4"
+        ],
+        "explanation": "Using 10.1's shape rule (n inputs, m perceptrons -> W is m x n): 4 inputs, 6 perceptrons (the hidden layer's width), so W is 6x4."
+      },
+      {
+        "type": "mc",
+        "question": "Which of the following is a genuine architecture design choice, rather than something fixed by the dataset or the task?",
+        "choices": [
+          "The input layer's size",
+          "The output layer's size",
+          "The number of hidden layers and how wide each one is",
+          "None of the above are design choices"
+        ],
+        "answerIndex": 2,
+        "explanation": "Depth (how many hidden layers) and width (how many neurons per hidden layer) are the tunable choices that make up a network's architecture; input size and output size are both fixed by the dataset and task respectively."
+      }
+    ]
+  },
+  {
+    "id": "10.7",
+    "number": 7,
+    "title": "Hand-computing a forward pass",
+    "objectives": [
+      "Trace a full 2-layer forward pass by hand for a small network (2 inputs, one 2-neuron ReLU hidden layer, one output neuron), computing every raw z and every activation",
+      "Apply ReLU (10.5) component by component to a layer's raw output, extending 10.2's step-based forward-pass procedure to a different activation function and to numeric (non-binary) inputs",
+      "Extend 8.5's single-perceptron hand-computation drill to a full multi-layer network, tracing 2 full layers of weighted sums instead of 1"
+    ],
+    "explanation": [
+      "Lesson 8.5 hand-traced a single perceptron's z; lesson 10.2 traced a full 2-layer forward pass, but only for step's 0/1 outputs and only across XOR's 4 binary input combinations. This lesson runs the same forward-pass procedure 10.2 named — compute z, apply an activation, feed the result into the next layer, repeat left to right — on a network with ordinary numeric (not just 0/1) inputs, using ReLU (10.5) as the activation instead of step, with no XOR-specific shortcuts to lean on.",
+      "The network: 2 inputs, x1 and x2. A hidden layer of 2 ReLU neurons, using 10.1's z = Wx + b framing, with W1 = [[2, 1], [-1, 3]] and b1 = [-1, 2]. An output layer of 1 ReLU neuron, with W2 = [[2, -3]] and b2 = [1]. The shapes match 10.6's rule exactly: W1 is (2x2) because the hidden layer has 2 neurons each reading 2 inputs, and W2 is (1x2) because the single output neuron reads the hidden layer's 2 activations.",
+      "Trace it for x = [3, -1]. Hidden layer's raw output (10.1's z = Wx + b, row by row): row 1 dot x plus b1's first entry: 2(3) + 1(-1) - 1 = 6 - 1 - 1 = 4. Row 2 dot x plus b1's second entry: -1(3) + 3(-1) + 2 = -3 - 3 + 2 = -4. So z1 = [4, -4]. Apply ReLU component by component (10.5): a1 = [ReLU(4), ReLU(-4)] = [4, 0] — the second hidden neuron's raw output was negative, so ReLU zeroes it out completely, exactly the clamp-to-0 behavior 10.5 described. Feed a1 = [4, 0] as the output layer's input, the same layer-chaining rule 10.2 introduced: z2 = 2(4) + (-3)(0) + 1 = 8 + 0 + 1 = 9. Apply ReLU: a2 = ReLU(9) = 9 — the network's final output.",
+      "Notice how differently this behaves from 10.2's XOR network: nothing here lands on a confident 0 or 1 — the final output, 9, is just a raw number, because ReLU doesn't squash or threshold the way step (8.1) or sigmoid (10.4) do; it only clamps the negative side and leaves everything positive completely untouched. That is exactly the trade-off 10.5 named: ReLU is cheap and doesn't saturate for positive z, but a network built entirely from it produces unbounded numeric outputs rather than a 0/1 decision or a 0-to-1 confidence — which is exactly right for predicting a raw quantity, and needs an extra step (not covered in this course) for tasks that specifically need a bounded or 0/1 answer."
+    ],
+    "example": {
+      "problem": "Using W1 = [[2, 1], [-1, 3]], b1 = [-1, 2], W2 = [[2, -3]], b2 = [1], all with ReLU activations, trace the full forward pass for x = [3, -1].",
+      "steps": [
+        "Hidden layer raw output, row 1: 2(3) + 1(-1) - 1 = 6 - 1 - 1 = 4.",
+        "Hidden layer raw output, row 2: -1(3) + 3(-1) + 2 = -3 - 3 + 2 = -4. So z1 = [4, -4].",
+        "Apply ReLU to each component: a1 = [ReLU(4), ReLU(-4)] = [4, 0].",
+        "Feed a1 = [4, 0] into the output layer: z2 = 2(4) + (-3)(0) + 1 = 8 + 0 + 1 = 9.",
+        "Apply ReLU: a2 = ReLU(9) = 9."
+      ],
+      "answer": "z1 = [4, -4], a1 = [4, 0], z2 = 9, a2 = 9 — the network's final output for x = [3, -1] is 9."
+    },
+    "practice": [
+      {
+        "problem": "Trace the forward pass for x = [1, 1]: find z1, a1, z2, and a2.",
+        "solution": "z1: row 1 = 2(1)+1(1)-1 = 2; row 2 = -1(1)+3(1)+2 = 4. z1 = [2, 4]. a1 = [ReLU(2), ReLU(4)] = [2, 4]. z2 = 2(2) + (-3)(4) + 1 = 4 - 12 + 1 = -7. a2 = ReLU(-7) = 0."
+      },
+      {
+        "problem": "Trace the forward pass for x = [0, 0]: find z1, a1, z2, and a2.",
+        "solution": "z1: row 1 = 2(0)+1(0)-1 = -1; row 2 = -1(0)+3(0)+2 = 2. z1 = [-1, 2]. a1 = [ReLU(-1), ReLU(2)] = [0, 2]. z2 = 2(0) + (-3)(2) + 1 = 0 - 6 + 1 = -5. a2 = ReLU(-5) = 0."
+      },
+      {
+        "problem": "Trace the forward pass for x = [4, 0]: find z1, a1, z2, and a2.",
+        "solution": "z1: row 1 = 2(4)+1(0)-1 = 7; row 2 = -1(4)+3(0)+2 = -2. z1 = [7, -2]. a1 = [ReLU(7), ReLU(-2)] = [7, 0]. z2 = 2(7) + (-3)(0) + 1 = 14 + 0 + 1 = 15. a2 = ReLU(15) = 15."
+      },
+      {
+        "problem": "For x = [3, -1] (the worked example), the second hidden neuron's raw z was -4, but its activation was 0. Explain why, and what happened to the -4.",
+        "solution": "ReLU clamps any negative raw output to exactly 0 (10.5's max(0,z) rule), so a raw z of -4 becomes an activation of 0 — the -4 itself is discarded entirely, not rounded or scaled, just replaced with 0. That neuron contributes nothing to the next layer's computation for this particular input."
+      },
+      {
+        "problem": "Would a hidden layer using sigmoid (10.4) instead of ReLU ever produce an activation of EXACTLY 0 the way this ReLU network did for z1's second component? Explain using sigmoid's range.",
+        "solution": "No. Sigmoid's range is strictly between 0 and 1 (10.4) — it approaches but never reaches exactly 0, even for very negative z (e.g. sigma(-10) is about 0.000045, not 0). ReLU, by contrast, produces exactly 0 for any z <= 0, a hard clamp sigmoid never performs."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In this lesson's network, what activation function is used at both the hidden layer and the output layer?",
+        "choices": [
+          "Step (8.1)",
+          "Sigmoid (10.4)",
+          "ReLU (10.5)",
+          "No activation at all"
+        ],
+        "answerIndex": 2,
+        "explanation": "Both layers apply ReLU component by component to their raw z, extending 10.2's forward-pass procedure to a new activation function."
+      },
+      {
+        "type": "short",
+        "question": "For x = [3, -1], what is the hidden layer's raw output z1?",
+        "answer": "[4, -4]",
+        "acceptable": [
+          "4, -4",
+          "[4,-4]",
+          "4 and -4"
+        ],
+        "explanation": "Row 1: 2(3)+1(-1)-1 = 4. Row 2: -1(3)+3(-1)+2 = -4. z1 = [4, -4]."
+      },
+      {
+        "type": "mc",
+        "question": "For x = [3, -1], what is the hidden layer's activation a1 after applying ReLU to z1 = [4, -4]?",
+        "choices": [
+          "[4, -4]",
+          "[4, 0]",
+          "[0, 0]",
+          "[0, -4]"
+        ],
+        "answerIndex": 1,
+        "explanation": "ReLU keeps positive values unchanged and clamps negative ones to 0: ReLU(4) = 4, ReLU(-4) = 0, giving a1 = [4, 0]."
+      },
+      {
+        "type": "short",
+        "question": "For x = [4, 0], what is the network's final output, a2?",
+        "answer": "15",
+        "acceptable": [
+          "15",
+          "a2 = 15"
+        ],
+        "explanation": "z1 = [7, -2], a1 = [7, 0], z2 = 2(7)+(-3)(0)+1 = 15, a2 = ReLU(15) = 15."
+      },
+      {
+        "type": "mc",
+        "question": "Why is this network's final output for x=[1,1] (which is 0) different in kind from 10.2's XOR network's outputs?",
+        "choices": [
+          "It isn't different at all",
+          "10.2's outputs are always exactly 0 or 1 by design (step activation); this network's outputs are raw, unbounded numbers that can happen to land on 0 for some inputs, not a thresholded decision",
+          "This network cannot produce 0 as an output",
+          "10.2's network also used ReLU"
+        ],
+        "answerIndex": 1,
+        "explanation": "10.2 used the step function, which only ever outputs 0 or 1 by design. This lesson's ReLU-based network produces raw numeric outputs; landing on exactly 0 for a given input is a property of that input's arithmetic, not a built-in threshold decision."
+      }
+    ]
+  },
+  {
+    "id": "10.8",
+    "number": 8,
+    "title": "Coding a forward pass in NumPy",
+    "objectives": [
+      "Implement lesson 10.7's 2-layer forward pass as NumPy matrix multiplication (np.dot) plus an elementwise ReLU function, reusing Phase 7's vectorized toolkit instead of hand-rolled loops",
+      "Define relu(z) using np.maximum(0, z) as NumPy's elementwise, no-loop version of 10.5's max(0, z)",
+      "Run the coded forward pass for several inputs and confirm every result matches 10.7's hand-computed answers exactly"
+    ],
+    "explanation": [
+      "Lesson 8.9 replaced lesson 8.8's loop-based single perceptron with one line, np.dot(inputs, weights) + bias, and lesson 7.10 established np.dot as NumPy's direct replacement for a hand-written dot-product loop. Lesson 10.7 traced 2 full layers of exactly that same weighted-sum arithmetic entirely by hand — precisely the repetitive, bookkeeping-heavy work lesson 7.6 argued NumPy exists to remove. Every weighted sum in 10.7 was a matrix-vector multiplication (10.1's z = Wx + b), so the same np.dot replacement applies again here, once per layer.",
+      "ReLU needs its own vectorized version too. NumPy's np.maximum(a, b) compares two arrays (or an array and a scalar) elementwise and keeps the larger value at each position — calling np.maximum(0, z) applies max(0, *) to every entry of z at once, with no loop, extending 10.5's single-number max(0, z) the same way lesson 7.8's elementwise operators extended lesson 6.6's single-number arithmetic to a whole array: def relu(z): return np.maximum(0, z)",
+      "Putting both pieces together reproduces 10.7's entire hand-traced computation as four short lines: import numpy as np\ndef relu(z):\n    return np.maximum(0, z)\ndef forward_pass(x, W1, b1, W2, b2):\n    z1 = np.dot(W1, x) + b1\n    a1 = relu(z1)\n    z2 = np.dot(W2, a1) + b2\n    a2 = relu(z2)\n    return a2\nWith W1 = np.array([[2, 1], [-1, 3]]), b1 = np.array([-1, 2]), W2 = np.array([[2, -3]]), b2 = np.array([1]), calling forward_pass(np.array([3, -1]), W1, b1, W2, b2) computes z1 = [4, -4], a1 = [4, 0], z2 = [9], and returns a2 = [9] — exactly 10.7's hand-traced answer.",
+      "Nothing about the arithmetic changed — np.dot(W1, x) replaces 10.1's row-by-row dot-product bookkeeping the same way it replaced 8.8's loop in 8.9's rewrite, and np.maximum(0, z) replaces writing a per-element if/else the same way 7.8's operators replaced a hand-written elementwise loop. The code computes the identical numbers 10.7 traced by hand, just executed by NumPy instead of by a human working through row-by-row arithmetic with a pencil."
+    ],
+    "example": {
+      "problem": "Using the forward_pass function and relu function above, with W1 = np.array([[2, 1], [-1, 3]]), b1 = np.array([-1, 2]), W2 = np.array([[2, -3]]), b2 = np.array([1]), trace what forward_pass(np.array([3, -1]), W1, b1, W2, b2) computes internally, and confirm it matches lesson 10.7's hand-traced result.",
+      "steps": [
+        "z1 = np.dot(W1, x) + b1 computes [2(3)+1(-1), -1(3)+3(-1)] + [-1, 2] = [5, -6] + [-1, 2] = [4, -4].",
+        "a1 = relu(z1) = np.maximum(0, [4, -4]) = [4, 0].",
+        "z2 = np.dot(W2, a1) + b2 computes [2(4)+(-3)(0)] + [1] = [8] + [1] = [9].",
+        "a2 = relu(z2) = np.maximum(0, [9]) = [9].",
+        "Compare to lesson 10.7's hand trace for the same x: z1=[4,-4], a1=[4,0], z2=9, a2=9 — every value matches exactly."
+      ],
+      "answer": "forward_pass(np.array([3, -1]), W1, b1, W2, b2) returns [9], matching lesson 10.7's hand-computed answer of 9 exactly."
+    },
+    "practice": [
+      {
+        "problem": "What does forward_pass(np.array([1, 1]), W1, b1, W2, b2) return? Confirm it matches lesson 10.7's hand trace for x=[1,1].",
+        "solution": "z1 = np.dot(W1,[1,1])+b1 = [2+1, -1+3]+[-1,2] = [3,2]+[-1,2] = [2,4]. a1 = relu([2,4]) = [2,4]. z2 = np.dot(W2,[2,4])+b2 = [4-12]+[1] = [-8]+[1] = [-7]. a2 = relu([-7]) = [0]. Returns [0], matching 10.7's hand trace exactly."
+      },
+      {
+        "problem": "What does forward_pass(np.array([0, 0]), W1, b1, W2, b2) return?",
+        "solution": "z1 = np.dot(W1,[0,0])+b1 = [0,0]+[-1,2] = [-1,2]. a1 = relu([-1,2]) = [0,2]. z2 = np.dot(W2,[0,2])+b2 = [0-6]+[1] = [-5]. a2 = relu([-5]) = [0]. Returns [0], matching 10.7's hand trace for x=[0,0]."
+      },
+      {
+        "problem": "What does forward_pass(np.array([4, 0]), W1, b1, W2, b2) return?",
+        "solution": "z1 = np.dot(W1,[4,0])+b1 = [8,-4]+[-1,2] = [7,-2]. a1 = relu([7,-2]) = [7,0]. z2 = np.dot(W2,[7,0])+b2 = [14+0]+[1] = [15]. a2 = relu([15]) = [15]. Returns [15], matching 10.7's hand trace for x=[4,0]."
+      },
+      {
+        "problem": "What does np.maximum(0, z) replace, compared to writing ReLU with a per-element loop or if/else?",
+        "solution": "It replaces a hand-written loop that would visit every element of z, check whether it's positive, and build a new array of the results (the same 7.6-style bookkeeping — a container, a loop, a collect step). np.maximum(0, z) applies max(0, *) to the whole array in one call, with no loop, no container, no manual comparison per element."
+      },
+      {
+        "problem": "In forward_pass, why is np.dot(W1, x) used instead of np.dot(x, W1)?",
+        "solution": "np.dot(W1, x) matches lesson 10.1's z = Wx + b, where each ROW of W1 gets dot-producted with x to produce one perceptron's raw output — W1's shape (2x2, 2 neurons by 2 inputs) is set up so that multiplying it by x (length 2) on the right produces the correct length-2 result. Reversing the order would not match the shapes or the intended row-by-row computation."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Which NumPy function applies ReLU to every element of an array at once, with no loop?",
+        "choices": [
+          "np.dot(0, z)",
+          "np.maximum(0, z)",
+          "np.sum(z)",
+          "np.mean(z)"
+        ],
+        "answerIndex": 1,
+        "explanation": "np.maximum(0, z) compares 0 against every element of z and keeps the larger value at each position, applying max(0, *) elementwise with no explicit loop."
+      },
+      {
+        "type": "short",
+        "question": "Using forward_pass with this lesson's W1, b1, W2, b2, what does forward_pass(np.array([3,-1]), W1, b1, W2, b2) return?",
+        "answer": "[9]",
+        "acceptable": [
+          "9",
+          "[9]",
+          "array([9])"
+        ],
+        "explanation": "This reproduces 10.7's hand-traced result exactly: z1=[4,-4], a1=[4,0], z2=[9], a2=[9]."
+      },
+      {
+        "type": "mc",
+        "question": "In forward_pass, what does np.dot(W1, x) compute?",
+        "choices": [
+          "The elementwise product of W1's first row and x",
+          "The hidden layer's raw output z1, one row-of-W1-dot-x per hidden neuron, matching lesson 10.1's z = Wx + b",
+          "The final network output",
+          "A single scalar summarizing the whole network"
+        ],
+        "answerIndex": 1,
+        "explanation": "np.dot(W1, x) performs 10.1's matrix-vector multiplication: each row of W1 dotted with x produces one hidden neuron's raw z, collected into the vector z1."
+      },
+      {
+        "type": "short",
+        "question": "Which earlier lesson's loop-to-np.dot replacement (for a single perceptron) does this lesson's forward_pass function directly extend to a whole 2-layer network?",
+        "answer": "lesson 8.9",
+        "acceptable": [
+          "8.9",
+          "lesson 8.9, coding a perceptron with numpy"
+        ],
+        "explanation": "Lesson 8.9 rewrote lesson 8.8's single loop-based perceptron using np.dot; this lesson applies that same replacement to every layer of a full network."
+      },
+      {
+        "type": "mc",
+        "question": "Does forward_pass ever compute a different number than lesson 10.7's hand trace for the same input?",
+        "choices": [
+          "Yes, NumPy rounds differently",
+          "No — np.dot and np.maximum compute the identical arithmetic 10.7 traced by hand, just without a human doing it row by row",
+          "Yes, but only for negative inputs",
+          "Only when b1 or b2 is 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "The code performs the exact same matrix-vector multiplications and elementwise max(0,*) operations traced by hand in 10.7 — same arithmetic, different execution method."
+      }
+    ]
+  },
+  {
+    "id": "10.9",
+    "number": 9,
+    "title": "Solving XOR with a hidden layer",
+    "objectives": [
+      "Build a ReLU-based 2-layer network — different weights and a different mechanism than 10.2's step-based OR/NAND/AND construction — that computes XOR",
+      "Hand-trace the network's forward pass for all 4 XOR input combinations and confirm every output matches XOR's truth table exactly",
+      "Implement the same network in NumPy code, reusing 10.8's forward_pass pattern, and confirm the coded version agrees with the by-hand trace"
+    ],
+    "explanation": [
+      "Lesson 10.2 already solved XOR once, using step (8.1) and a hidden layer built from named logic-gate shapes — an OR-shaped perceptron and a NAND-shaped perceptron, feeding an AND-shaped output perceptron, following lesson 8.6's gate-building recipe directly. This lesson solves the exact same problem a second, genuinely different way: ReLU (10.5) instead of step, and hidden neurons that don't correspond to any named logic gate at all — showing that XOR isn't tied to one particular network design. Any network with a nonlinearity (10.3) between two layers can, in principle, solve it.",
+      "The network: a hidden layer with W1 = [[1, 1], [1, 1]] and b1 = [0, -1], both neurons using ReLU; an output layer with W2 = [[1, -2]] and b2 = [0], using NO activation function at all — the raw z2 IS the final output, a deliberate contrast with 10.2's three chained step decisions. Call the two hidden neurons h1 and h2. h1 = ReLU(x1 + x2 + 0) fires (produces a positive number) whenever AT LEAST ONE input is 1, since x1+x2 is 0 only when both inputs are 0. h2 = ReLU(x1 + x2 - 1) stays at 0 unless x1+x2 is at least 2 — that is, only when BOTH inputs are 1. The output, h1 - 2h2, subtracts twice h2's value exactly when both inputs are on, cancelling out the one case h1 alone would get wrong.",
+      "Trace all 4 inputs. x=[0,0]: h1 = ReLU(0) = 0, h2 = ReLU(-1) = 0, output = 0 - 2(0) = 0. x=[1,0]: h1 = ReLU(1) = 1, h2 = ReLU(0) = 0, output = 1 - 0 = 1. x=[0,1]: by the same symmetric arithmetic (x1+x2 is still 1), output = 1. x=[1,1]: h1 = ReLU(2) = 2, h2 = ReLU(1) = 1, output = 2 - 2(1) = 0. All four outputs, 0, 1, 1, 0, match XOR's truth table exactly — and notice the output layer never needed an activation function at all, since the arithmetic itself always lands exactly on 0 or 1 for these four inputs, a genuinely different mechanism from 10.2's three separate step decisions. Without h2's correction, h1 ALONE would give 2 for x=[1,1] — the wrong answer — which is exactly why h2's job is to detect and cancel out that one over-counted case.",
+      "Implement this in NumPy, reusing 10.8's forward_pass pattern but without a final ReLU (since this network's output layer has none): def forward_pass_xor(x, W1, b1, W2, b2):\n    z1 = np.dot(W1, x) + b1\n    a1 = relu(z1)\n    z2 = np.dot(W2, a1) + b2\n    return z2\nRunning it for all 4 (x1, x2) pairs reproduces the identical 0, 1, 1, 0 sequence the hand trace found — the same coded-versus-hand cross-check lesson 10.8 ran for its network, now applied to a second, structurally different network that happens to solve the same XOR problem 10.2 already solved a different way."
+    ],
+    "example": {
+      "problem": "Using W1 = [[1,1],[1,1]], b1 = [0,-1], W2 = [[1,-2]], b2 = [0] (hidden layer ReLU, output layer no activation), trace the forward pass for x = [1, 1], and confirm the result matches XOR(1,1).",
+      "steps": [
+        "h1's raw z: 1(1) + 1(1) + 0 = 2. h1 = ReLU(2) = 2.",
+        "h2's raw z: 1(1) + 1(1) - 1 = 1. h2 = ReLU(1) = 1.",
+        "Output layer (no activation): z2 = 1(2) + (-2)(1) + 0 = 2 - 2 = 0.",
+        "Compare to the truth table: XOR(1,1) = 0. The network's output (0) matches."
+      ],
+      "answer": "output = 0, matching XOR(1,1) = 0 exactly."
+    },
+    "practice": [
+      {
+        "problem": "Trace the forward pass for x = [0, 0]. Does the output match XOR(0,0)?",
+        "solution": "h1 = ReLU(1(0)+1(0)+0) = ReLU(0) = 0. h2 = ReLU(1(0)+1(0)-1) = ReLU(-1) = 0. output = 1(0) + (-2)(0) + 0 = 0. XOR(0,0) = 0 — matches."
+      },
+      {
+        "problem": "Trace the forward pass for x = [1, 0]. Does the output match XOR(1,0)?",
+        "solution": "h1 = ReLU(1(1)+1(0)+0) = ReLU(1) = 1. h2 = ReLU(1(1)+1(0)-1) = ReLU(0) = 0. output = 1(1) + (-2)(0) + 0 = 1. XOR(1,0) = 1 — matches."
+      },
+      {
+        "problem": "Trace the forward pass for x = [0, 1]. Does the output match XOR(0,1)?",
+        "solution": "h1 = ReLU(1(0)+1(1)+0) = ReLU(1) = 1. h2 = ReLU(1(0)+1(1)-1) = ReLU(0) = 0. output = 1(1) + (-2)(0) + 0 = 1. XOR(0,1) = 1 — matches."
+      },
+      {
+        "problem": "If the output layer used h1 alone (output = h1, ignoring h2 entirely) instead of h1 - 2h2, what would it compute for x=[1,1], and why would that be wrong?",
+        "solution": "h1 alone for x=[1,1] is ReLU(2) = 2, so the output would be 2, not 0 — wrong, since XOR(1,1) = 0. h2's whole purpose is to detect the both-inputs-on case (where h1 over-counts) and subtract twice its value to cancel that error out; without h2, the network has no way to correct for it."
+      },
+      {
+        "problem": "Name two concrete ways this lesson's XOR network differs from lesson 10.2's XOR network, beyond both computing the same final answer.",
+        "solution": "(1) This network uses ReLU at the hidden layer instead of step, and no activation at all at the output layer, while 10.2 used step at every layer. (2) This network's hidden neurons aren't shaped like any named logic gate (unlike 10.2's OR-shaped and NAND-shaped hidden perceptrons) — they implement a 'tent function' (h1 detects 'at least one input on,' h2 detects and cancels the 'both on' case) rather than gate logic."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How does this lesson's XOR network differ from lesson 10.2's XOR network?",
+        "choices": [
+          "It doesn't differ — they use identical weights and activations",
+          "It uses ReLU at the hidden layer and no activation at the output layer, with hidden neurons that aren't shaped like named logic gates, instead of 10.2's step-based OR/NAND/AND construction",
+          "It only works for 3 of the 4 XOR input combinations",
+          "It uses a single perceptron instead of two layers"
+        ],
+        "answerIndex": 1,
+        "explanation": "This network swaps step for ReLU (and drops the output activation entirely) and uses a 'tent function' construction rather than 10.2's OR/NAND/AND gate-shaped hidden neurons — a genuinely different mechanism reaching the same correct answer."
+      },
+      {
+        "type": "short",
+        "question": "For x = [0, 1], what are h1 and h2 in this lesson's network?",
+        "answer": "h1 = 1, h2 = 0",
+        "acceptable": [
+          "1 and 0",
+          "h1=1, h2=0",
+          "[1, 0]"
+        ],
+        "explanation": "h1 = ReLU(0+1+0) = 1. h2 = ReLU(0+1-1) = ReLU(0) = 0."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this network's output layer need no activation function at all?",
+        "choices": [
+          "Activation functions are never needed on output layers",
+          "For these 4 specific inputs, the raw arithmetic h1 - 2h2 always lands exactly on 0 or 1 already, so no thresholding step is required",
+          "The output layer secretly uses step anyway",
+          "ReLU was applied twice instead"
+        ],
+        "answerIndex": 1,
+        "explanation": "Unlike 10.2's network, which needed step to force a 0/1 decision at every layer, this network's h1-2h2 arithmetic happens to produce exactly 0 or 1 on its own for all four XOR inputs, so no activation is needed at the output."
+      },
+      {
+        "type": "short",
+        "question": "What is h1 - 2h2 for x = [1, 1]?",
+        "answer": "0",
+        "acceptable": [
+          "0",
+          "zero"
+        ],
+        "explanation": "h1 = ReLU(2) = 2, h2 = ReLU(1) = 1, so h1 - 2h2 = 2 - 2(1) = 0, matching XOR(1,1) = 0."
+      },
+      {
+        "type": "mc",
+        "question": "What role does h2 play in this network's ability to compute XOR correctly?",
+        "choices": [
+          "It has no effect on the output",
+          "It detects the case where both inputs are 1 (where h1 alone over-counts) and, multiplied by -2, cancels out that error",
+          "It duplicates h1's computation exactly",
+          "It only matters when both inputs are 0"
+        ],
+        "answerIndex": 1,
+        "explanation": "h1 alone would give 2 (wrong) for x=[1,1]; h2 fires exactly in that both-inputs-on case, and subtracting 2h2 corrects the output back down to 0, the right XOR answer."
+      }
+    ]
+  },
+  {
+    "id": "10.10",
+    "number": 10,
+    "title": "Mini-project: forward pass on a toy dataset",
+    "objectives": [
+      "Choose an architecture (input/hidden/output sizes, 10.6) for a small dataset of numeric examples, and justify each size",
+      "Hand-trace and NumPy-code the same 2-hidden-neuron ReLU forward pass (10.7/10.8) across every example (row) of a small toy dataset, treating the dataset the way Phase 5/6/7 treat a dataset — a matrix of examples",
+      "Compute the whole dataset's forward pass in one batched NumPy matrix multiplication, extending 7.11's 2D-array handling and 10.8's single-example code, and confirm it matches every individually hand-traced result"
+    ],
+    "explanation": [
+      "This mini-project runs one small toy dataset through every idea from this phase: architecture (10.6), the forward pass (10.2/10.7), ReLU as the nonlinearity (10.5), and NumPy implementation (10.8/10.9) — first one example at a time by hand, and then all at once with NumPy, the way a real network processes many examples together, mirroring 4.12/5.12/6.13/7.12/8.10/9.10's end-of-phase synthesis structure.",
+      "The dataset: 4 tiny examples, each a 2-feature row [x1, x2] — reusing lesson 5.1's rows-are-examples, columns-are-features framing. Row 1 = [3, -1], row 2 = [1, 1], row 3 = [0, 0], row 4 = [4, 0]. Written as a matrix, the way lesson 6.9 showed any dataset can be: X = [[3, -1], [1, 1], [0, 0], [4, 0]], shape 4x2 — 4 examples, 2 features. Choosing the architecture (10.6): the input layer size is 2, fixed by the dataset's 2 features; a hidden layer of width 2 is chosen (a design choice, reusing 10.7's exact weights: W1 = [[2, 1], [-1, 3]], b1 = [-1, 2]); the output layer size is 1, fixed by the task of producing a single number per example, using W2 = [[2, -3]], b2 = [1].",
+      "Hand-tracing each row reuses 10.7's already-verified arithmetic exactly: row 1 = [3,-1] gives z1=[4,-4], a1=[4,0], z2=9, output 9. Row 2 = [1,1] gives z1=[2,4], a1=[2,4], z2=-7, output 0. Row 3 = [0,0] gives z1=[-1,2], a1=[0,2], z2=-5, output 0. Row 4 = [4,0] gives z1=[7,-2], a1=[7,0], z2=15, output 15.",
+      "Rather than calling 10.8's forward_pass once per row, NumPy can process the WHOLE dataset in one sweep, extending 7.11's 2D-array handling: Z1 = X.dot(W1.T) + b1 multiplies the (4x2) example matrix by W1's transpose (2x2), producing a (4x2) result — one row per example, one column per hidden neuron, with b1 broadcasting (7.9) across every row. A1 = relu(Z1) applies ReLU elementwise to the whole (4x2) matrix at once — all 4 examples' hidden activations in a single call. Z2 = A1.dot(W2.T) + b2 gives a (4x1) result, one output per example, and A2 = relu(Z2) is the network's final answer for the entire dataset: [[9], [0], [0], [15]] — matching every individually hand-traced row exactly, computed in exactly two matrix multiplications instead of four separate calls to forward_pass."
+    ],
+    "example": {
+      "problem": "For row 1 of the dataset, x = [3, -1], hand-trace the full forward pass, then confirm the batched NumPy computation's first row produces the identical answer.",
+      "steps": [
+        "Hand trace (reusing 10.7): z1 = [2(3)+1(-1)-1, -1(3)+3(-1)+2] = [4, -4]. a1 = [ReLU(4), ReLU(-4)] = [4, 0]. z2 = 2(4)+(-3)(0)+1 = 9. a2 = ReLU(9) = 9.",
+        "Batched version: X's row 1 is [3, -1]. Z1's row 1 = [3,-1] dot W1's row 1 [2,1] plus b1[0], and [3,-1] dot W1's row 2 [-1,3] plus b1[1] = [4, -4] — matching the hand trace.",
+        "A1's row 1 = ReLU([4,-4]) = [4, 0]. Z2's row 1 = [4,0] dot W2's row [2,-3] plus b2 = 9. A2's row 1 = ReLU(9) = 9 — identical to the hand-traced answer."
+      ],
+      "answer": "Row 1's output is 9, whether computed by hand one example at a time or read off the first row of the batched NumPy result."
+    },
+    "practice": [
+      {
+        "problem": "Hand-trace row 2, x = [1, 1]: find z1, a1, z2, and the output.",
+        "solution": "z1 = [2(1)+1(1)-1, -1(1)+3(1)+2] = [2, 4]. a1 = [ReLU(2), ReLU(4)] = [2, 4]. z2 = 2(2)+(-3)(4)+1 = 4-12+1 = -7. output = ReLU(-7) = 0."
+      },
+      {
+        "problem": "Hand-trace row 3, x = [0, 0]: find z1, a1, z2, and the output.",
+        "solution": "z1 = [2(0)+1(0)-1, -1(0)+3(0)+2] = [-1, 2]. a1 = [ReLU(-1), ReLU(2)] = [0, 2]. z2 = 2(0)+(-3)(2)+1 = -6+1 = -5. output = ReLU(-5) = 0."
+      },
+      {
+        "problem": "Hand-trace row 4, x = [4, 0]: find z1, a1, z2, and the output.",
+        "solution": "z1 = [2(4)+1(0)-1, -1(4)+3(0)+2] = [7, -2]. a1 = [ReLU(7), ReLU(-2)] = [7, 0]. z2 = 2(7)+(-3)(0)+1 = 14+1 = 15. output = ReLU(15) = 15."
+      },
+      {
+        "problem": "In this mini-project's architecture, explain why the input layer size (2) and output layer size (1) were not design choices, but the hidden layer width (2) was, using lesson 10.6's distinction.",
+        "solution": "The input layer size is fixed at 2 because the dataset has exactly 2 features per example (5.1/6.9) — every example row has 2 numbers that must enter the network. The output layer size is fixed at 1 because the task is to produce a single number per example. The hidden layer width, by contrast, is not forced by the dataset or the task at all — 2 was chosen freely, and any other width could have been chosen instead, per 10.6's architecture distinction."
+      },
+      {
+        "problem": "In the batched computation, X has shape (4, 2) and W1 has shape (2, 2). Explain why Z1 = X.dot(W1.T) has shape (4, 2), using lesson 6.10/6.11's shape rules.",
+        "solution": "X.dot(W1.T) multiplies a (4x2) matrix by a (2x2) matrix (W1's transpose): the inner dimensions (2 and 2) match, so the multiplication is legal, and the result takes the outer dimensions — 4 rows (from X, one per example) and 2 columns (from W1.T, one per hidden neuron) — giving shape (4, 2), exactly lesson 6.11's (m x n) times (n x p) gives (m x p) rule applied to a whole dataset at once."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In this mini-project, what determines the input layer's size (2) and the output layer's size (1)?",
+        "choices": [
+          "Both were freely chosen design decisions",
+          "The input size is fixed by the dataset's 2 features; the output size is fixed by the task producing 1 number per example — neither is a free choice",
+          "Both are always fixed at 1",
+          "The hidden layer's width determines both"
+        ],
+        "answerIndex": 1,
+        "explanation": "Per lesson 10.6: input size is fixed by feature count, output size is fixed by the task; only the hidden layer's width (2, in this case) was a genuine design choice."
+      },
+      {
+        "type": "short",
+        "question": "What is row 4's ([4, 0]) final output in this network?",
+        "answer": "15",
+        "acceptable": [
+          "15",
+          "output = 15"
+        ],
+        "explanation": "z1=[7,-2], a1=[7,0], z2=2(7)+(-3)(0)+1=15, output=ReLU(15)=15."
+      },
+      {
+        "type": "mc",
+        "question": "In the batched NumPy version, what shape is Z1 = X.dot(W1.T) + b1, given X is (4,2) and W1 is (2,2)?",
+        "choices": [
+          "(2, 4)",
+          "(4, 2)",
+          "(2, 2)",
+          "(4, 4)"
+        ],
+        "answerIndex": 1,
+        "explanation": "The inner dimensions (2 and 2) match, leaving the outer dimensions: 4 rows (one per example) and 2 columns (one per hidden neuron), shape (4, 2)."
+      },
+      {
+        "type": "short",
+        "question": "Across all 4 rows of this dataset, what is the batched output A2, as a list of 4 numbers?",
+        "answer": "[9, 0, 0, 15]",
+        "acceptable": [
+          "9, 0, 0, 15",
+          "[9,0,0,15]",
+          "9, 0, 0, and 15"
+        ],
+        "explanation": "Row 1 -> 9, row 2 -> 0, row 3 -> 0, row 4 -> 15, exactly matching each row's individually hand-traced output."
+      },
+      {
+        "type": "mc",
+        "question": "What does processing all 4 examples in one batched matrix multiplication (rather than calling forward_pass 4 separate times) directly extend?",
+        "choices": [
+          "Lesson 5.1's dataset-as-rows-and-columns idea combined with 7.11's 2D-array/matrix operations",
+          "Nothing from earlier phases — it's an entirely new idea",
+          "Only lesson 8.1's step function",
+          "Only lesson 9.9's numerical derivative"
+        ],
+        "answerIndex": 0,
+        "explanation": "Treating the whole dataset as one matrix (rows=examples, columns=features, from 5.1/6.9) and running one matrix multiplication over all rows at once (7.11's 2D-array handling) is exactly what lets the batched version replace 4 separate forward_pass calls with 2 matrix multiplications."
+      }
+    ]
   }
 ];
