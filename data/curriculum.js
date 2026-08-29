@@ -15709,5 +15709,214 @@ const LESSONS = [
         "explanation": "As established in 12.4 and reaffirmed in 12.6's step ordering, delta_hidden is built FROM delta_output (each hidden neuron's weighted sum uses delta_output), so it can't be computed before delta_output exists — this ordering holds inside every single epoch of the training loop too."
       }
     ]
+  },
+  {
+    "id": "12.9",
+    "number": 9,
+    "title": "Learning XOR from scratch",
+    "objectives": [
+      "Train 12.1-12.8's 2-input/2-hidden/1-output sigmoid network on the FULL XOR dataset using 12.8's training loop, starting from RANDOM initial weights instead of the hand-picked weights 10.2 and 10.9 used",
+      "Read a loss curve that stays nearly flat for hundreds of epochs before dropping sharply, and explain the plateau using 12.3/12.4's delta formulas (small deltas make small updates, regardless of how many epochs have passed)",
+      "Confirm gradient descent discovers, on its own, a working XOR-solving hidden layer — the exact capability 8.9 proved a single perceptron structurally cannot reach, which 10.2/10.9 could only reach by a human hand-picking the weights"
+    ],
+    "explanation": [
+      "Two earlier phases already visited XOR without ever training on it. Phase 8 (8.9) proved no single perceptron — no one straight decision line — can separate XOR's four points, because they are not linearly separable. Phase 10 (10.2, 10.9) then built a 2-hidden-unit network that DOES solve XOR, but its weights were chosen BY HAND: a human worked out what each hidden unit should detect and wrote the numbers in directly. This lesson asks the question every earlier XOR lesson deliberately left open: starting from weights that know nothing about the answer, can 12.8's own training loop — forward, loss, backward, update, repeat — discover a working set of weights by itself?",
+      "The dataset is the full XOR truth table, all 4 rows: (x1=0,x2=0, t=0), (x1=0,x2=1, t=1), (x1=1,x2=0, t=1), (x1=1,x2=1, t=0). The network is exactly 12.1-12.8's shape — 2 inputs, 2 hidden sigmoid units, 1 output sigmoid unit — with the SAME 4-parameter-tensor structure (W_hidden, b_hidden, W_output, b_output) 12.8 trained. The only thing that changes is where the starting numbers come from: instead of hand-picking them to already work, they are drawn at random: W_hidden=[[-0.2509,0.9014],[0.4640,0.1973]], b_hidden=[-0.688,-0.688], W_output=[-0.8838,0.7324], b_output=0.2022 (b_hidden's two entries matching is a coincidence of this particular random draw, not a rule).",
+      "Training follows 11.10's multi-example convention layered onto 12.8's loop: each epoch runs 12.8's forward-loss-backward-update cycle once per XOR row, in order, so the weights move 4 separate times per epoch; after all 4 rows, an end-of-epoch MSE (11.2's formula) scores the CURRENT weights against all 4 rows at once, exactly as 11.10 did for its 3-example dataset. Learning rate is 0.5, same as every training-loop lesson since 11.5.",
+      "A finite-difference check (11.4's technique, called for explicitly by this phase's verification note) on the very first update of example 1 (x=[0,0], t=0, initial weights) confirms the implementation: analytic dL/dW_output[0] = 0.089432, numerical slope = 0.089432; analytic dL/db_hidden[0] (=delta_hidden[0]) = -0.052604, numerical slope = -0.052604. Worth noticing: BOTH entries of grad_W_hidden come out to exactly 0.0 for this specific example, because 12.5's formula multiplies delta_hidden by x_i, and x=[0,0] makes every x_i zero — the bias gradients (delta_hidden itself) stay nonzero, but the weight gradients vanish for this one all-zero input. That is 12.5's formula behaving exactly as derived, not a bug.",
+      "The loss curve holds a surprise. Before any training, MSE is approximately 0.2526. After epoch 1 it is approximately 0.2518 — barely moved. By epoch 100 it is STILL approximately 0.2499, and by epoch 500 only approximately 0.2481: nearly flat for hundreds of epochs, even though every weight IS changing every single epoch. Then, between epoch 500 and epoch 1000, the loss falls off a cliff to approximately 0.0134, and keeps falling smoothly afterward: approximately 0.0013 by epoch 2000, approximately 0.0003 by epoch 5000. The flat stretch is not the network doing nothing — it is 12.3/12.4's delta_output and delta_hidden staying small while the weights slowly rearrange the hidden layer's geometry; once that rearrangement crosses a threshold where the two hidden units start actually separating the XOR cases, the same small-delta-times-learning-rate update (11.6) suddenly produces much bigger drops in loss, because the deltas themselves grow once the network is no longer near a locally flat region of the error surface.",
+      "By epoch 5000: p approximately 0.0177 for (0,0) (target 0), approximately 0.9794 for (0,1) (target 1), approximately 0.9834 for (1,0) (target 1), approximately 0.0162 for (1,1) (target 0) — every prediction rounds to the correct XOR output. No human specified what either hidden unit should detect; 12.8's own training loop, run long enough on the full dataset, found a hidden-layer split that solves the same problem 10.2/10.9 solved by hand and 8.9 proved a single perceptron never could — this time by learning it."
+    ],
+    "example": {
+      "problem": "Train the 2-input/2-hidden/1-output network on the full XOR dataset, starting from W_hidden=[[-0.2509,0.9014],[0.4640,0.1973]], b_hidden=[-0.688,-0.688], W_output=[-0.8838,0.7324], b_output=0.2022, lr=0.5, using 12.8's loop once per XOR row per epoch. What is the end-of-epoch MSE at epochs 1, 100, 500, 1000, 2000, and 5000, and what are the final predictions?",
+      "steps": [
+        "Before training: MSE across all 4 rows with the initial weights is approximately 0.2526 (roughly what a network outputting near 0.5 everywhere would score, since it has not yet learned anything about XOR).",
+        "Epoch 1: after one full pass (4 updates, one per row), MSE is approximately 0.2518 — a tiny improvement. Epoch 100: approximately 0.2499. Epoch 500: approximately 0.2481. The loss has moved by less than 0.005 total across 500 epochs of continuous weight changes.",
+        "Epoch 1000: MSE drops sharply to approximately 0.0134 — nearly a 20x improvement in the 500 epochs between checkpoint 500 and checkpoint 1000, compared to almost no visible progress in the first 500.",
+        "Epoch 2000: approximately 0.0013. Epoch 5000: approximately 0.0003 — the loss keeps shrinking smoothly now, the same shrink-and-flatten shape 11.9 and 12.8 already showed on easier problems, just delayed behind the initial plateau.",
+        "Final predictions (epoch 5000 weights): (0,0)->p approximately 0.0177 (target 0, correct), (0,1)->p approximately 0.9794 (target 1, correct), (1,0)->p approximately 0.9834 (target 1, correct), (1,1)->p approximately 0.0162 (target 0, correct) — all four XOR cases classified correctly."
+      ],
+      "answer": "MSE goes approximately 0.2526 (before training) -> 0.2518 (epoch 1) -> 0.2499 (epoch 100) -> 0.2481 (epoch 500) -> 0.0134 (epoch 1000) -> 0.0013 (epoch 2000) -> 0.0003 (epoch 5000): a long near-flat plateau through epoch 500, then a sharp drop, then smooth convergence. By epoch 5000 every one of the 4 XOR predictions rounds to its correct target, discovered entirely by 12.8's training loop starting from random weights."
+    },
+    "practice": [
+      {
+        "problem": "For roughly the first 500 epochs, the loss barely moves even though W_hidden, b_hidden, W_output, and b_output are all being updated every single epoch. Using 12.3/12.4's delta formulas, explain how the weights can be changing while the loss stays almost flat.",
+        "solution": "The SIZE of each update is lr times the gradient, and the gradient is built from delta_output and delta_hidden (12.3/12.4). If those deltas happen to be small during this stretch, every update is small too — the weights genuinely move every epoch, just by tiny amounts, so the network's predictions (and therefore the loss) change very little per epoch even while accumulating small changes across hundreds of epochs."
+      },
+      {
+        "problem": "At epoch 5000, the prediction for (0,1) is approximately 0.9794, not exactly 1.0000. Will enough additional epochs eventually make it exactly 1.0000?",
+        "solution": "No. Sigmoid's output range is the OPEN interval (0,1) — it can get arbitrarily close to 1 but never actually reach it, since sigma(z) = 1/(1+e^-z) only equals 1 in the limit as z approaches infinity. This is the same asymptotic-approach idea 11.9 already described for loss: it shrinks toward a bound without ever landing on it exactly."
+      },
+      {
+        "problem": "10.2/10.9's hand-built network solved XOR using a human-chosen decomposition (for example, one hidden unit behaving like OR and another like NAND). Does THIS trained network's hidden layer have to reproduce that exact same decomposition to solve XOR correctly?",
+        "solution": "No. Gradient descent only has to find SOME pair of hidden-unit behaviors whose combination separates the 4 XOR points correctly — nothing in 12.8's loop tells it to reproduce OR/NAND specifically. The trained network's two hidden units may split the problem a different way than 10.2/10.9's hand-picked ones did, and it would still count as correctly solving XOR as long as all 4 predictions round to the right targets."
+      },
+      {
+        "problem": "Example 1 in this lesson's finite-difference check uses x=[0,0], and BOTH entries of grad_W_hidden come out to exactly 0.0 for that example, even though delta_hidden itself is nonzero. Using 12.5's gradient formula, explain why.",
+        "solution": "12.5 defines each hidden-layer weight gradient as delta_hidden_j times x_i (the input feeding that weight). With x=[0,0], every x_i is 0, so delta_hidden_j x_i is 0 for every weight regardless of what delta_hidden_j itself equals. The bias gradient has no x_i factor (it is just delta_hidden_j itself), so it stays nonzero even when every weight gradient vanishes for this input."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the ONE thing that changes between 10.2/10.9's XOR-solving network and this lesson's XOR-solving network?",
+        "choices": [
+          "Where the starting weights come from — hand-picked by a human (10.2/10.9) versus drawn at random and then learned by 12.8's training loop (this lesson)",
+          "The number of hidden units, which doubles in this lesson",
+          "The activation function, which switches from sigmoid to ReLU",
+          "The dataset, which no longer includes all 4 XOR rows"
+        ],
+        "answerIndex": 0,
+        "explanation": "The network shape (2 inputs, 2 hidden sigmoid units, 1 output sigmoid unit) and the full 4-row XOR dataset are unchanged from 10.2/10.9; only the SOURCE of the weights changes, from hand-picked to randomly initialized and then trained."
+      },
+      {
+        "type": "short",
+        "question": "For roughly the first several hundred epochs, is the MSE curve flat, rising, or falling sharply?",
+        "answer": "flat",
+        "acceptable": [
+          "nearly flat",
+          "plateau",
+          "barely moving",
+          "almost unchanged"
+        ],
+        "explanation": "MSE moves from approximately 0.2526 to only approximately 0.2481 across the first 500 epochs — a long, nearly flat plateau — before falling sharply afterward."
+      },
+      {
+        "type": "mc",
+        "question": "What causes the loss curve's long flat stretch before it suddenly drops?",
+        "choices": [
+          "delta_output and delta_hidden (12.3/12.4) are small during that stretch, so every update is small even though weights change every epoch",
+          "The training loop skips several hundred epochs without updating anything",
+          "The learning rate is automatically set to 0 during the plateau",
+          "MSE is computed incorrectly until epoch 500"
+        ],
+        "answerIndex": 0,
+        "explanation": "Every epoch runs the full forward-backward-update cycle, but when the deltas that drive the gradients are small, the resulting updates are small too, so the loss barely moves even while genuine (small) weight changes accumulate."
+      },
+      {
+        "type": "short",
+        "question": "By epoch 5000, do all 4 XOR predictions round to their correct target (0 or 1)?",
+        "answer": "yes",
+        "acceptable": [
+          "yes",
+          "all 4 correct",
+          "all four are correct"
+        ],
+        "explanation": "(0,0)->approximately 0.0177 rounds to 0, (0,1)->approximately 0.9794 rounds to 1, (1,0)->approximately 0.9834 rounds to 1, (1,1)->approximately 0.0162 rounds to 0 — all 4 match XOR's true targets."
+      },
+      {
+        "type": "mc",
+        "question": "Why does 8.9's proof that a single perceptron cannot solve XOR NOT apply to this lesson's trained network?",
+        "choices": [
+          "8.9's proof is specifically about ONE straight decision line (a single perceptron); this network has a hidden layer, giving it multiple decision lines combined into a nonlinear boundary, which is exactly the capability Phase 10 introduced to get past that limit",
+          "8.9's proof was never actually correct",
+          "This network avoids the proof by not using gradient descent",
+          "XOR is not linearly separable only when trained, not when hand-built"
+        ],
+        "answerIndex": 0,
+        "explanation": "8.9 proved a single straight line cannot separate XOR's 4 points. Adding a hidden layer (Phase 10's whole contribution) lets the network combine multiple lines nonlinearly, escaping that specific limit — whether the hidden layer's weights are hand-picked (10.2/10.9) or learned (this lesson) is irrelevant to why the proof no longer applies."
+      }
+    ]
+  },
+  {
+    "id": "12.10",
+    "number": 10,
+    "title": "Mini-project: training a 2-layer network end-to-end",
+    "objectives": [
+      "Combine every Phase 12 idea — the credit-assignment problem (12.1), the extended chain rule (12.2), delta_output and delta_hidden (12.3-12.4), the full gradient table (12.5), hand and NumPy backprop (12.6-12.7), the multi-layer training loop (12.8), and learning from random weights (12.9) — with Phase 10's forward pass and Phase 11's loss/update-rule/learning-rate machinery into ONE complete pipeline",
+      "Starting from given, NOT hand-tuned, small random weights, train a 2-input/2-hidden/1-output network on a fresh 3-example toy dataset for multiple epochs, tracking an end-of-epoch MSE the same way 11.10 did for a single neuron",
+      "Read the resulting loss curve and explain it using ideas spanning the whole course, from Phase 10's forward pass through Phase 11's update rule to Phase 12's backpropagation"
+    ],
+    "explanation": [
+      "11.10 closed Phase 11 by running every one of that phase's ideas together, for the first time, on a multi-example dataset. This lesson does the same job for the whole course so far: it runs Phase 10's forward pass, Phase 11's loss/gradient/update-rule/learning-rate machinery, AND Phase 12's backpropagation (credit assignment through a hidden layer) together, end to end, on a dataset this exact network has never seen before.",
+      "The toy dataset: three 2-input examples, deliberately different from 12.9's XOR rows so this mini-project is not just a repeat of the previous lesson — (x1=1,x2=-1, t=1), (x1=-1,x2=1, t=0), (x1=2,x2=2, t=1). The network is the same 2-input/2-hidden/1-output sigmoid shape used throughout Phase 12. Starting weights (deliberately small and NOT already close to a good fit): W_hidden=[[-0.4237,0.2799],[-0.0616,0.2235]], b_hidden=[0,0], W_output=[0.4780,0.0385], b_output=0, lr=0.5.",
+      "Each epoch loops through the 3 examples in order, running 12.8's full forward-loss-backward-update cycle after EACH one (so the weights move 3 separate times per epoch), then 11.2's MSE formula scores the epoch's FINAL weights against all 3 examples at once — the exact multi-example convention 11.10 established and 12.9 reused for XOR.",
+      "Epoch 1, worked in full: example 1 (x=[1,-1], t=1) starts from zh=[-0.7036,-0.2851], h=[0.3310,0.4292], zo=0.1747, p=0.5436, L=0.2083, delta_output=-0.2265, delta_hidden=[-0.0240,-0.0021], updating every weight. Example 2 (x=[-1,1], t=0) then runs on THOSE updated weights: zh=[0.6916,0.2840], h=[0.6663,0.5705], zo=0.5064, p=0.6240, L=0.3893, delta_output=0.2928, delta_hidden=[0.0336,0.0062]. Example 3 (x=[2,2], t=1) runs on the weights AFTER example 2's update: zh=[-0.2923,0.3217], h=[0.4274,0.5797], zo=0.1475, p=0.5368, L=0.2145, delta_output=-0.2303, delta_hidden=[-0.0236,-0.0002]. The end-of-epoch MSE, recomputed for all 3 examples using the FINAL post-example-3 weights (not the 3 different in-progress losses above, exactly the distinction 11.10 made), comes out to approximately 0.2425 — down only slightly from approximately 0.2489 before training.",
+      "Tracing further: MSE is approximately 0.2379 at epoch 2, approximately 0.2227 at epoch 10, approximately 0.0691 at epoch 50, approximately 0.0139 at epoch 100, and approximately 0.0025 at epoch 300 — a slow start (much like 12.9's plateau, though shorter-lived here) followed by the same accelerating shrink-then-flatten pattern 11.9 and 12.8 already showed. Final predictions at epoch 300: (1,-1)->p approximately 0.9634 (target 1), (-1,1)->p approximately 0.0710 (target 0), (2,2)->p approximately 0.9654 (target 1) — all 3 correctly separated.",
+      "A finite-difference check on example 1's very first update (11.4's technique) confirms the pipeline end to end: analytic dL/dW_output[0] = -0.074967 versus a numerical slope of -0.074967; analytic dL/dW_hidden[0][1] = 0.023972 versus a numerical slope of 0.023972; analytic dL/db_hidden[1] (=delta_hidden[1]) = -0.002136 versus a numerical slope of -0.002136 — every hand-derived quantity this mini-project used, from the forward pass through delta_output and delta_hidden to the final weight gradients, checks out against the same brute-force numerical derivative 11.4 introduced, on a dataset and a set of starting weights this network has never trained on before."
+    ],
+    "example": {
+      "problem": "Using the 2-input/2-hidden/1-output network, W_hidden=[[-0.4237,0.2799],[-0.0616,0.2235]], b_hidden=[0,0], W_output=[0.4780,0.0385], b_output=0, lr=0.5, train on the 3-example dataset (x=[1,-1],t=1), (x=[-1,1],t=0), (x=[2,2],t=1) for ONE epoch (all 3 examples, in order, one update each). What are zh/h/zo/p/L/delta_output/delta_hidden for each example, and the end-of-epoch MSE?",
+      "steps": [
+        "Example 1 (x=[1,-1], t=1): zh=[-0.7036,-0.2851], h=[0.3310,0.4292], zo=0.1747, p=0.5436, L=(1-0.5436)^2 approximately 0.2083. delta_output=2(p-t)sigma'(zo) approximately -0.2265. delta_hidden=[-0.0240,-0.0021]. Every weight updates using these values times lr=0.5.",
+        "Example 2 (x=[-1,1], t=0), computed on example 1's UPDATED weights: zh=[0.6916,0.2840], h=[0.6663,0.5705], zo=0.5064, p=0.6240, L approximately 0.3893. delta_output approximately 0.2928, delta_hidden=[0.0336,0.0062]. Weights update again.",
+        "Example 3 (x=[2,2], t=1), computed on example 2's UPDATED weights: zh=[-0.2923,0.3217], h=[0.4274,0.5797], zo=0.1475, p=0.5368, L approximately 0.2145. delta_output approximately -0.2303, delta_hidden=[-0.0236,-0.0002]. Weights update a third time.",
+        "End-of-epoch MSE: recompute L for all 3 examples using the FINAL weights (after example 3's update), then average — approximately 0.2425, down from approximately 0.2489 before any training."
+      ],
+      "answer": "After epoch 1, the end-of-epoch MSE across all 3 examples (evaluated at the one final set of weights) is approximately 0.2425, down from approximately 0.2489 before training — a small first-epoch improvement that, per the traced loss curve, accelerates over the next few hundred epochs to approximately 0.0025 by epoch 300, with all 3 examples correctly classified by then."
+    },
+    "practice": [
+      {
+        "problem": "Example 2's forward pass (x=[-1,1], t=0) is computed using the weights AFTER example 1's update, not the original starting weights. Why?",
+        "solution": "Each example's update (12.8's loop) changes every weight before the next example is processed, so by the time example 2 runs, W_hidden/b_hidden/W_output/b_output already reflect example 1's correction. Using the original starting weights for example 2 would ignore that correction and understate how much the network has already learned within this single epoch."
+      },
+      {
+        "problem": "MSE only improves from approximately 0.2489 to approximately 0.2425 in epoch 1, but drops to approximately 0.0691 by epoch 50 — more than 20 times as much improvement in far fewer additional epochs (49) than would be predicted by a straight-line extrapolation of epoch 1's progress. What does this say about assuming a CONSTANT rate of improvement per epoch?",
+        "solution": "It would be wrong. Per 12.9's plateau-then-breakthrough pattern and 11.6's own description of how gradient size drives step size, the rate of improvement is not constant across training — it can start slow while the network's internal weights rearrange, then accelerate once the geometry crosses a point where gradients grow, then slow again as the loss approaches its floor (as 12.8 already showed for its own single-example training run)."
+      },
+      {
+        "problem": "This mini-project's dataset has 3 examples and 2 inputs, same as 11.10's mini-project. What is the ONE structural difference between the network 11.10 trained and the network this lesson trains?",
+        "solution": "11.10 trained a single sigmoid neuron (2 weights, no hidden layer, direct input-to-output). This lesson's network has a hidden layer (2 sigmoid units) between the input and the output, requiring 12.1-12.8's backpropagation (delta_output feeding delta_hidden) to compute gradients for the extra layer of weights — 11.10's neuron never needed credit assignment across layers because it only had one layer of weights."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "This mini-project's end-of-epoch MSE is scored against which set of weights?",
+        "choices": [
+          "The FINAL weights after all 3 examples in that epoch have each triggered their own update, evaluated on all 3 examples at once",
+          "Only example 3's weights, ignoring examples 1 and 2",
+          "The ORIGINAL weights from before the epoch started",
+          "An average of the weights after each of the 3 examples"
+        ],
+        "answerIndex": 0,
+        "explanation": "Exactly as 11.10 established: during-epoch losses use 3 different, progressively-updated weight sets, which cannot be fairly averaged, so the end-of-epoch MSE recomputes all 3 examples' losses using ONE fixed set of weights — the final one after the whole epoch's updates."
+      },
+      {
+        "type": "short",
+        "question": "What is the approximate end-of-epoch-1 MSE for this mini-project, starting from the given weights?",
+        "answer": "0.2425",
+        "acceptable": [
+          "0.2425",
+          "approximately 0.2425"
+        ],
+        "explanation": "Averaging all 3 examples' losses using epoch 1's final weights gives approximately 0.2425, down from approximately 0.2489 before training."
+      },
+      {
+        "type": "mc",
+        "question": "Which Phase of this course contributed the delta_hidden calculation this mini-project's backward pass depends on?",
+        "choices": [
+          "Phase 12 (12.4's backpropagation-to-the-hidden-layer formula)",
+          "Phase 10 (the forward pass alone)",
+          "Phase 11 (the single-neuron update rule alone)",
+          "Phase 9 (activation functions alone)"
+        ],
+        "answerIndex": 0,
+        "explanation": "delta_hidden — each hidden neuron's weighted-sum share of the output error, times its own sigma'(z) — is 12.4's contribution; Phase 10 supplies the forward pass and Phase 11 supplies the loss/update-rule/learning-rate machinery this mini-project also depends on, but the hidden-layer credit assignment itself is Phase 12's idea."
+      },
+      {
+        "type": "short",
+        "question": "By epoch 300, do all 3 of this mini-project's examples get correctly classified (predictions rounding to their targets)?",
+        "answer": "yes",
+        "acceptable": [
+          "yes",
+          "all 3 correct",
+          "all three are correct"
+        ],
+        "explanation": "(1,-1)->approximately 0.9634 rounds to 1 (correct), (-1,1)->approximately 0.0710 rounds to 0 (correct), (2,2)->approximately 0.9654 rounds to 1 (correct) — all 3 match their targets by epoch 300."
+      },
+      {
+        "type": "mc",
+        "question": "What does this mini-project's finite-difference check, run on example 1's very first update, ultimately verify?",
+        "choices": [
+          "That the ENTIRE hand-derived pipeline — forward pass through delta_output, delta_hidden, and every weight gradient — matches a brute-force numerical derivative, on a dataset and starting weights the network has never trained on before",
+          "That the learning rate is set correctly",
+          "That the dataset has exactly 3 examples",
+          "That sigmoid is the correct activation function to use"
+        ],
+        "answerIndex": 0,
+        "explanation": "The finite-difference check compares every hand-derived analytic gradient this lesson computed — not just one isolated formula — against 11.4's numerical-derivative technique, on data the pipeline has never seen, confirming the whole chain from forward pass to backward pass is implemented correctly rather than merely reproducing a previously-checked example."
+      }
+    ]
   }
 ];

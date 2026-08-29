@@ -707,29 +707,49 @@ backpropagation"). `bab-schema-check "12."` 8/8 clean, file-wide 149/149 clean, 
 ids; `node --check` and a full LESSONS-array load both clean; `sw.js` cache bumped
 `bab-v19`->`bab-v20`; committed, pushed, live confirmed via `bab-ship-verify`.
 
-**Next up: Phase 12 group 3, lessons 12.9-12.10** (learning XOR from scratch via 12.8's
-training loop starting from random weights, then the phase mini-project training a 2-layer
-network end-to-end) — the payoff group that closes out Phase 12.
+## Phase 12 (Backpropagation) — group 3 (12.9-12.10) SHIPPED 2026-08-29 — PHASE 12 COMPLETE
+
+**Content written, verified, and live:** 12.9 learning XOR from scratch (the full 4-row XOR
+truth table trained on the 2-input/2-hidden/1-output network using 12.8's training loop,
+starting from RANDOM weights — seed 42 — instead of 10.2/10.9's hand-picked ones; an ACTUAL
+5000-epoch training run was executed in Python and its real trajectory used as the lesson's
+worked example: MSE 0.2526 (untrained) -> 0.2518 (epoch 1) -> 0.2499 (epoch 100) -> 0.2481
+(epoch 500) -> 0.0134 (epoch 1000) -> 0.0013 (epoch 2000) -> 0.0003 (epoch 5000), a long
+near-flat plateau through epoch 500 followed by a sharp drop, ending with all 4 XOR
+predictions correctly classified; one gradient finite-difference-checked, including the
+zero-weight-gradient-on-a-zero-input edge case 12.5's formula predicts); 12.10 mini-project
+training a 2-layer network end-to-end (a FRESH 3-example toy dataset, deliberately different
+from 12.9's XOR rows, run through the complete pipeline — Phase 10's forward pass, Phase 11's
+loss/update-rule/learning-rate machinery, Phase 12's backpropagation — starting from small
+random weights, seed 7; an ACTUAL 300-epoch training run executed in Python: MSE 0.2489
+(untrained) -> 0.2425 (epoch 1) -> 0.2379 (epoch 2) -> 0.2227 (epoch 10) -> 0.0691 (epoch 50)
+-> 0.0139 (epoch 100) -> 0.0025 (epoch 300), ending with all 3 examples correctly classified;
+one gradient finite-difference-checked). Both lessons mirror 11.10's multi-example
+end-of-epoch-MSE convention (per-example update, then one MSE snapshot per epoch against the
+final weights) layered onto 12.8's forward-loss-backward-update loop.
+
+151/151 lessons total across Phases 1-12 — **Phase 12 (Backpropagation) is now fully
+SHIPPED, 10/10 lessons.** Every worked example/practice/quiz numeric claim independently
+verified via actual Python/NumPy execution before being written into the lesson (not mental
+math), including finite-difference gradient checks in both 12.9 and 12.10 per the
+backprop-specific verification note below. Pre-flight grep for stray "Phase 11's
+backpropagation" misattributions came back clean (0 hits); "Phase 12's backpropagation"
+correctly appears 4 times. `bab-schema-check "12."` 10/10 clean, file-wide 151/151 clean, 0
+duplicate ids; `node --check` and a full LESSONS-array load both clean; `sw.js` cache bumped
+`bab-v20`->`bab-v21`; committed, pushed, live confirmed via `bab-ship-verify`.
 
 ## Pending — next session(s)
 
-- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12 groups 1-2 (12.1-12.8) are now
-  also SHIPPED (above).** Next session: Phase 12 group 3 (12.9-12.10), following the same
-  verification bar as every prior phase (every numeric claim independently Python/NumPy-
-  verified — see backprop-specific note below — `bab-schema-check`, file-wide duplicate-id
-  check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming live).
-  **Backprop-specific verification note:** cross-check every hand-derived gradient against
-  NumPy's autodiff-free finite-difference check (perturb one weight by a small epsilon,
-  recompute loss, confirm the numerical slope matches the analytic backprop gradient to
-  several decimal places) — this is the same numerical-derivative technique 11.4 already
-  used, and it is the standard "gradient check" sanity test for backprop specifically, worth
-  calling out explicitly in the lesson content itself, not just as an authoring-time check
-  (12.1-12.8 already did this for delta_output/delta_hidden/every per-weight gradient —
-  12.9's random-weight XOR training and 12.10's mini-project should do the same wherever a
-  new gradient is hand-derived rather than reused). Phases 13-14 still have no lesson content
-  yet — only their phase titles show in the roadmap as locked/coming-soon. Per Mike: build
-  this out phase by phase across future sessions, not all at once ("chained background builds
-  through the day" per his 2026-08-25 ask).
+- **Phases 1-12 are all SHIPPED (151/151 lessons, Phase 12/Backpropagation now complete).**
+  Phases 13-14 still have no lesson content yet — only their phase titles show in the roadmap
+  as locked/coming-soon. Next session: scope and begin Phase 13, following the same
+  verification bar as every prior phase — every worked example/practice/quiz numeric claim
+  independently Python/NumPy-verified before being written into the lesson (not mental math;
+  if Phase 13 involves any hand-derived gradient or slope, cross-check it against NumPy's
+  finite-difference technique the way every Phase 11-12 lesson did), `bab-schema-check`,
+  file-wide duplicate-id check, `sw.js` cache version bump, commit + push, `bab-ship-verify`
+  confirming live. Per Mike: build this out phase by phase across future sessions, not all at
+  once ("chained background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
