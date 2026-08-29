@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (5 of ~10 so far — 13.1-13.5; remaining lessons pending, see
- * STATUS.md) — 156 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (6 of ~10 so far — 13.1-13.6; remaining lessons pending, see
+ * STATUS.md) — 157 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16445,6 +16445,113 @@ const LESSONS = [
           "training accuracy says nothing about whether the labels themselves are true"
         ],
         "explanation": "Gradient descent minimizes loss against whatever targets a training example carries; it has no way to detect that a label is wrong, so a mislabeled example is fit just as confidently as a correct one — 13.1's point that training accuracy proves fit, not correctness, extended to labels themselves."
+      }
+    ]
+  },
+  {
+    "id": "13.6",
+    "number": 6,
+    "title": "L2 regularization: penalizing large weights to cap overfitting",
+    "objectives": [
+      "Learn L2 regularization (weight decay): adding (lambda/2) times the sum of squared WEIGHTS (not biases) to the loss, which adds lambda*W to each weight's gradient, so every update shrinks each weight by an extra factor of (1 - lr*lambda) before the ordinary data-gradient step is applied",
+      "Reuse 13.4's exact setup unchanged (12.10's starting weights, the same 3-example training set, lr=0.5, 13.1's 4-point test set) and show a moderate regularization strength (lambda=0.01) caps the runaway test-MSE rise 13.4 found — the curve stabilizes near its floor instead of climbing to approximately 0.1982 by epoch 20000 — while training accuracy still reaches 100%",
+      "Show that too much regularization (lambda=0.1) is not a stronger version of the same fix but a NEW failure mode: the weights get pushed so hard toward zero that the network stops responding to its input entirely, collapsing to one constant prediction for every point, training and test alike — an explicit underfitting-by-regularization mirror of 13.4's epoch-count underfitting"
+    ],
+    "explanation": [
+      "13.4 and 13.5 both showed overfitting is a real cost of training 12.10's exact 3-example baseline for a long time or on too little/bad data, but neither lesson changed how the network is TRAINED — only how long, or on what. This lesson introduces the first change to the training rule itself: L2 regularization, also called weight decay. The idea is to penalize large weights directly, on the theory that a network relying on a few huge weights to fit 3 tiny points exactly is more likely to have found a spurious, overfit boundary than one that explains the same points with smaller weights (a small-weight function tends to vary more smoothly between the training points, closer to the true rule that also explains the held-out test set).",
+      "Mechanically: instead of training to minimize just the data loss L = (p-t)^2, this lesson minimizes L_reg = (p-t)^2 + (lambda/2) * (sum of every entry of W_hidden squared + sum of every entry of W_output squared), where lambda >= 0 is a new hyperparameter controlling how strongly large weights are punished. Biases are deliberately left OUT of the penalty (standard practice, and true here) — a large bias just shifts where the decision boundary sits, it does not make the network more sensitive to any particular input direction the way a large weight does. Differentiating the penalty term with respect to any single weight W gives exactly lambda*W, so the only change to 12.8's backprop rule is: grad_W_output = delta_output*h + lambda*W_output, and grad_W_hidden = outer(delta_hidden, x) + lambda*W_hidden — every weight gradient gets lambda*W added to it; grad_b_hidden and grad_b_output are UNCHANGED from 12.8.",
+      "Worked at epoch 1, training example 1 (x=[1,-1], t=1), from 12.10's exact starting weights: the unregularized gradient (12.8's rule alone) is grad_W_output = [-0.0750, -0.0972] (delta_output=-0.2265 times h=[0.3310,0.4292]). With lambda=0.01, the penalty adds lambda*W_output0 = [0.0048, 0.0004] (0.01 times the starting W_output=[0.4780,0.0385]), giving grad_W_output = [-0.0702, -0.0968] — barely different at this lambda, on purpose, so the network can still learn. After the lr=0.5 update, W_output goes from [0.4780,0.0385] to [0.5155,0.0871] unregularized versus [0.5131,0.0869] with lambda=0.01 — every weight update is very slightly smaller in magnitude than 12.8's plain rule alone would give. Equivalently, W_output <- (1 - lr*lambda)*W_output - lr*(delta_output*h): with lr=0.5 and lambda=0.01, every weight is first multiplied by 0.995, THEN the ordinary gradient step is subtracted — the 'decay' in weight decay is literally that per-update multiplicative shrink, compounding every one of the thousands of updates in a full run.",
+      "Comparing three full 20000-epoch runs — lambda=0 (13.4's own published baseline, unchanged), lambda=0.01, and lambda=0.1 — at the same checkpoints 13.4/13.5 already used shows regularization strength behaves like a dial with a good middle setting, not a fix that is better the more of it is applied. lambda=0: test MSE floors at approximately 0.1450 (epoch 200) then climbs to approximately 0.1982 by epoch 20000, a approximately 37% rise past its floor (13.4's own overfitting curve, unchanged). lambda=0.01: test MSE floors at approximately 0.1462 (epoch 200) and then stays almost flat — approximately 0.1493 by epoch 1000 and unchanged (to 4 decimals) all the way to epoch 20000 — a rise of only approximately 0.0031 past its own floor, versus lambda=0's approximately 0.0532; training accuracy still reaches 100% by epoch 50 and stays there, same as the unregularized run.",
+      "lambda=0.1 tells a completely different story: training MSE never gets much below approximately 0.2223 and training accuracy is stuck at 66.7% (2 of 3) for the ENTIRE run, from epoch 20 through epoch 20000 — the network never fits its own training set. Test MSE sits around 0.37, WORSE than lambda=0's final epoch-20000 value (approximately 0.1982) despite lambda=0.1 being the 'more regularized' run, and test accuracy is stuck at 25% (1 of 4), worse than either other run. Inspecting the actual epoch-20000 weights explains why: W_hidden and W_output have all been pushed to magnitudes around 1e-4 to 1e-5 — effectively zero — so zh and zo are dominated entirely by the (unpenalized) biases; every one of the 3 training points AND all 4 test points gets the exact same prediction, p approximately 0.6761, regardless of x. The network has stopped looking at its input altogether and is just outputting the bias-driven constant closest to the majority training label (2 of the 3 training examples are t=1) — too much regularization does not just slow overfitting further, it erases the network's ability to use its input at all, a new and different failure from both underfitting-by-undertraining (13.4's epoch-20 case) and overfitting.",
+      "This gives Phase 13 a genuinely three-way spectrum on the SAME training set, holding data and epoch count fixed and turning only lambda: too little regularization (lambda=0) reproduces 13.4's overfitting exactly; a well-chosen amount (lambda=0.01 here) caps the test-MSE rise close to its own floor while still fitting the training data completely; too much regularization (lambda=0.1) creates an underfitting failure that looks nothing like 13.4's early-epoch underfitting internally (weights near zero instead of weights not yet moved far from a small random start) but produces the same symptom — bad performance on training AND test data together — because the network has been prevented from using its input either way.",
+      "Verification note: every number above comes from re-running 12.10's exact training loop in NumPy with lambda*W added to the weight gradients (biases untouched), for lambda in {0, 0.01, 0.1}. The lambda=0 run was first diffed against 13.4's OWN published checkpoint numbers (epoch 20/50/200/300/500/1000/2000/5000/10000/20000, train and test MSE and accuracy) and matched to 4 decimal places before any regularized run was trusted, and epoch 1's forward pass for training example 1 independently matched 12.10's own published zh/h/zo/p/L/delta_output/delta_hidden — the reimplementation check 13.3 first made mandatory. A finite-difference check (11.4's technique, extended to the new regularized loss L_reg = (p-t)^2 + (lambda/2)*sum(W^2)) at the lambda=0.01 run's epoch-5 weights (a state no prior lesson published), on training example 1, matched analytic gradients including the new lambda*W term to within 1e-6 for grad_W_output, grad_W_hidden, grad_b_output, and grad_b_hidden (measured agreement on the order of 1e-11)."
+    ],
+    "example": {
+      "problem": "At epoch 20000, three runs from 12.10's identical starting weights and the identical 3-example training set give: lambda=0 (no regularization) test MSE approximately 0.1982, test accuracy 75%, training accuracy 100%. lambda=0.01 test MSE approximately 0.1493, test accuracy 75%, training accuracy 100%. lambda=0.1 test MSE approximately 0.3691, test accuracy 25%, training accuracy 66.7%. Which run generalizes best, and why does the MOST heavily regularized run (lambda=0.1) generalize WORST of the three, not best?",
+      "steps": [
+        "lambda=0.01 has the lowest test MSE of the three (approximately 0.1493, versus 0.1982 for lambda=0) while matching lambda=0's 100% training and 75% test accuracy — it keeps everything lambda=0 gets right while capping the extra loss overfitting adds past the shared floor near epoch 200.",
+        "lambda=0.1's training accuracy (66.7%) is LOWER than the other two runs' (100%) — the network never fits its own training set, the signature of underfitting, not of a stronger fix for overfitting.",
+        "Checking the actual epoch-20000 weights for lambda=0.1 shows W_hidden and W_output near zero (order 1e-4 to 1e-5) — the regularization penalty dominated the ordinary data gradient so completely that the network's predictions (p approximately 0.6761 for every one of the 7 training and test points) come only from the bias terms, ignoring x altogether.",
+        "So lambda=0.1 generalizes worst not because 'more regularization is always safer' but because it prevented the network from learning ANYTHING input-dependent — regularization strength has a middle value that helps and extremes on both sides (too little: overfitting; too much: this collapse) that hurt."
+      ],
+      "answer": "lambda=0.01 generalizes best: it matches lambda=0's perfect training fit and 75% test accuracy while cutting the test-MSE rise past the shared floor from approximately 0.0532 (lambda=0) to approximately 0.0031 (lambda=0.01). lambda=0.1 generalizes worst because the penalty term overwhelms the data gradient, shrinking every weight toward zero until the network predicts the same constant (driven only by bias) for every input, training or test — a new underfitting failure caused BY the regularization, not prevented by more of it."
+    },
+    "practice": [
+      {
+        "problem": "L2 regularization adds (lambda/2)*(sum of squared weights) to the loss, but this lesson deliberately leaves biases OUT of that sum. If biases were penalized the same way as weights, what would happen to grad_b_hidden and grad_b_output, and why does this lesson (and standard practice) avoid that?",
+        "solution": "If biases were penalized, differentiating (lambda/2)*b^2 with respect to b would add lambda*b to grad_b_hidden and grad_b_output, exactly the same way lambda*W is added to the weight gradients. Standard practice avoids this because a bias only shifts WHERE a decision boundary sits along one direction — it does not make the network more sensitive to any particular input feature, which is the specific failure (over-reliance on some input direction) weight regularization is meant to discourage. Penalizing biases would just make it harder for the network to place its decision boundary anywhere except near zero, for no corresponding benefit against overfitting."
+      },
+      {
+        "problem": "This lesson describes the weight update under regularization as W <- (1 - lr*lambda)*W - lr*(ordinary data gradient). With lr=0.5 and lambda=0.01, what is the per-update shrink multiplier, and roughly how many updates does a full 20000-epoch run apply to each weight (3 examples per epoch, one update per example)?",
+        "solution": "The shrink multiplier is 1 - lr*lambda = 1 - 0.5*0.01 = 0.995 applied on every single update, before that update's ordinary gradient step is subtracted. A 20000-epoch run with 3 training examples per epoch applies 3*20000 = 60000 updates total, so the 0.995 shrink compounds 60000 times over the run — far more than any one update's effect alone, which is exactly why even a small lambda (0.01) measurably changes the epoch-20000 outcome despite barely changing the epoch-1 gradient (the lesson's own worked example showed grad_W_output changing only from [-0.0750,-0.0972] to [-0.0702,-0.0968] at epoch 1)."
+      },
+      {
+        "problem": "lambda=0.01's test MSE floors at approximately 0.1462 (epoch 200) — HIGHER than lambda=0's own floor of approximately 0.1450 at the same epoch — yet lambda=0.01 is still the better run by epoch 20000. Explain why a regularized run can start out slightly WORSE at its own floor and still end up ahead.",
+        "solution": "lambda=0 and lambda=0.01 are nearly identical near epoch 200 (0.1450 vs 0.1462, a difference of only about 0.0012) because regularization has barely had time to act yet and the two runs have followed nearly the same path from the same starting weights. Past epoch 200, lambda=0's test MSE keeps rising because nothing opposes the weights drifting toward an overfit, spurious boundary, while lambda=0.01's small constant pull toward zero every update keeps the weights from drifting that far, so its test MSE stays close to its floor instead of climbing. A small, temporary disadvantage right at the shared floor is worth avoiding the much larger, permanent disadvantage (approximately 0.0532 of extra test MSE by epoch 20000) that comes from having nothing to check the drift."
+      },
+      {
+        "problem": "At epoch 20000, lambda=0.1 predicts p approximately 0.6761 for every one of the 3 training AND 4 test points, right or wrong. Why is that number close to 2/3 rather than close to 0 or 1, and what does it reveal about what the network is actually computing once its weights are pushed to nearly 0?",
+        "solution": "2 of the 3 training examples have target t=1 and 1 has t=0, so the majority training label is 1 (2/3 approximately 0.667, close to the observed p approximately 0.6761). Once W_hidden and W_output are pushed to nearly zero by the regularization penalty, zh and zo no longer depend meaningfully on x (the weight terms vanish, leaving only the bias terms), so the network's output stops being a function of its input and instead settles near whatever constant best fits the TRAINING labels it was shown on average — effectively predicting the majority training class regardless of x, the same blind spot 13.1 first showed accuracy alone cannot detect, now caused by an entirely different mechanism (weight collapse instead of insufficient training)."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does L2 regularization add to the loss function, and which parameters does it penalize?",
+        "choices": [
+          "(lambda/2) times the sum of squared WEIGHTS only — biases are left unpenalized",
+          "lambda times the sum of ALL parameters (weights and biases) directly, unsquared",
+          "(lambda/2) times the sum of squared biases only — weights are left unpenalized",
+          "lambda times the training accuracy, added directly to the loss"
+        ],
+        "answerIndex": 0,
+        "explanation": "L2 regularization adds (lambda/2)*(sum of every weight squared) to the loss, covering W_hidden and W_output but deliberately excluding b_hidden and b_output — differentiating that penalty with respect to any weight gives exactly lambda*W, which is what gets added to each weight's gradient."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does this lesson leave the bias terms OUT of the L2 penalty?",
+        "answer": "a large bias only shifts where the decision boundary sits, it doesn't make the network over-rely on any input direction the way a large weight does",
+        "acceptable": [
+          "biases don't cause the same overfitting-by-input-sensitivity problem that large weights do",
+          "penalizing biases wouldn't discourage over-reliance on specific input features",
+          "biases just shift the boundary; only weights make the network sensitive to particular inputs"
+        ],
+        "explanation": "L2 regularization targets the specific failure mode of a network relying too heavily on some input direction to fit a tiny training set exactly; a bias shifts the decision boundary but does not create that kind of input-sensitivity, so standard practice — followed here — penalizes only the weights."
+      },
+      {
+        "type": "mc",
+        "question": "Compared to 13.4's unregularized baseline (test MSE approximately 0.1982 by epoch 20000), what happens with lambda=0.01?",
+        "choices": [
+          "Test MSE stabilizes near approximately 0.1493 by epoch 20000 (a much smaller rise past its own floor), while training accuracy still reaches 100%, same as lambda=0",
+          "Test MSE becomes exactly 0, since regularization eliminates overfitting completely",
+          "Training accuracy drops below 100%, trading fit for generalization",
+          "Test MSE ends up higher than the unregularized run's 0.1982, because any regularization always hurts test performance"
+        ],
+        "answerIndex": 0,
+        "explanation": "lambda=0.01 floors at approximately 0.1462 (epoch 200) and stays close to that floor (approximately 0.1493 by epoch 20000, essentially flat from epoch 1000 onward) instead of climbing to approximately 0.1982 the way lambda=0 does — and it still reaches 100% training accuracy by epoch 50, same as the unregularized run."
+        },
+      {
+        "type": "mc",
+        "question": "At epoch 20000, lambda=0.1's test MSE (approximately 0.3691) is WORSE than lambda=0's (approximately 0.1982), even though lambda=0.1 applies MORE regularization. What does this show about choosing a regularization strength?",
+        "choices": [
+          "Regularization strength has a useful middle range; too little reproduces overfitting (lambda=0) and too much creates a different failure — the weights collapse toward zero and the network stops using its input at all — so more regularization is not always better",
+          "This result is a bug — more regularization should always produce lower test MSE, so lambda=0.1's numbers must be wrong",
+          "It shows regularization only affects training accuracy, never test performance",
+          "It shows lambda=0.1 is actually the better choice, since a higher lambda always favors generalization in the long run"
+        ],
+        "answerIndex": 0,
+        "explanation": "lambda=0.1 pushes every weight toward magnitudes around 1e-4 to 1e-5 by epoch 20000, so the network's output no longer depends meaningfully on its input and it predicts the same p approximately 0.6761 for all 7 training and test points regardless of x — a new underfitting failure caused by too much regularization, not a stronger version of the overfitting fix lambda=0.01 provided."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does lambda=0.1 predict approximately the same probability (approximately 0.6761) for every training AND test point, instead of different probabilities per point the way lambda=0 and lambda=0.01 do?",
+        "answer": "the weights have been shrunk to nearly zero, so the output no longer depends on the input, only on the (unpenalized) bias",
+        "acceptable": [
+          "weights near zero mean the network ignores x and just outputs a bias-driven constant",
+          "with W approximately 0, zh and zo depend only on the biases, not on x, so every input gets the same prediction",
+          "regularization shrank the weights so much the network stopped using its input"
+        ],
+        "explanation": "By epoch 20000, lambda=0.1's W_hidden and W_output are near zero (order 1e-4 to 1e-5), so zh and zo are dominated entirely by the unpenalized bias terms — the network's prediction becomes a constant close to the majority training label (2 of 3 training points are t=1) regardless of what x actually is."
       }
     ]
   }

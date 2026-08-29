@@ -4,7 +4,7 @@
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
 Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
-GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.4/~10
+GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.6/~10
 lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
@@ -910,13 +910,61 @@ partially mitigates — the 12-example run still overfits somewhat, just from a 
 floor), continuing the ~10-lesson Phase 13 arc one lesson/session at a time per Mike's
 phase-by-phase pacing.
 
+## Phase 13 (Evaluation & Overfitting) — lesson 13.6 SHIPPED 2026-08-29
+
+Lesson 13.6 (`data/curriculum.js`, id "13.6") introduces the first change to the TRAINING
+RULE itself, not just to how long/what data 12.10's exact 3-example baseline trains on: L2
+regularization (weight decay). Loss becomes L_reg = (p-t)^2 + (lambda/2)*(sum of squared
+weights in W_hidden and W_output; biases deliberately excluded), which adds lambda*W to
+each weight's gradient only — grad_b_hidden/grad_b_output are unchanged from 12.8.
+Equivalently each update first shrinks every weight by (1 - lr*lambda) before subtracting
+the ordinary data gradient. Three full 20000-epoch runs from 12.10's identical starting
+weights, the identical 3-example training set, lr=0.5, and 13.1's identical 4-point test
+set, varying only lambda: lambda=0 (13.4's own published baseline, unchanged) floors at
+test MSE approximately 0.1450 (epoch 200) then rises to approximately 0.1982 by epoch
+20000 (+37% past floor). lambda=0.01 floors at approximately 0.1462 (epoch 200) and stays
+essentially flat — approximately 0.1493 by epoch 1000, unchanged to 4 decimals through
+epoch 20000 (+~0.0031 past floor, versus lambda=0's +0.0532) — while still reaching 100%
+training accuracy by epoch 50, same as lambda=0. lambda=0.1 is NOT a stronger version of
+the same fix: training accuracy stays stuck at 66.7% the entire run (the network never
+fits its own training set), test MSE sits around 0.37 (worse than lambda=0's final value),
+and the epoch-20000 weights collapse to magnitudes around 1e-4 to 1e-5 — the network
+predicts the same p approximately 0.6761 (the majority training label) for all 3 training
+AND all 4 test points regardless of x, having stopped using its input entirely. Every
+number independently computed via NumPy: the lambda=0 run was first diffed against 13.4's
+own published checkpoint numbers (epoch 20/50/200/300/500/1000/2000/5000/10000/20000,
+train+test MSE+accuracy) to 4 decimal places, and epoch 1's forward pass for training
+example 1 matched 12.10's own published zh/h/zo/p/L/delta_output/delta_hidden, before any
+regularized run was trusted. A finite-difference check (11.4's technique, extended to the
+new L_reg = (p-t)^2 + (lambda/2)*sum(W^2)) at the lambda=0.01 run's epoch-5 weights (a
+state no prior lesson published), on training example 1, matched analytic gradients
+including the new lambda*W term to within 1e-6 for grad_W_output, grad_W_hidden,
+grad_b_output, and grad_b_hidden (measured agreement on the order of 1e-11). 157/157
+lessons total across Phases 1-13 so far. `bab-schema-check "13."` 6/6 clean, 157/157
+file-wide, 0 dup ids; `sw.js` bumped `bab-v26`->`bab-v27`, confirmed live via
+`bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc comment refreshed (156->157,
+13.1-13.5->13.1-13.6).
+
+**Next up: Phase 13's remaining lessons** — with epoch count (13.4), data size/quality
+(13.5), and L2 regularization (13.6) each covered as separate knobs on the same 3-example
+overfitting picture, a natural next topic is cross-validation / a proper train-vs-validation
+split (this course has used a single fixed 4-point test set throughout Phase 13 — worth
+surfacing explicitly that hyperparameters like lambda itself were chosen by eyeballing
+performance ON that same test set, which is its own subtle form of fitting to the "held
+out" data), or could instead cover another regularization technique (e.g. early stopping,
+which 13.4's own epoch-200 floor already demonstrates the SHAPE of without naming it as a
+technique). Continuing the ~10-lesson Phase 13 arc one lesson/session at a time per Mike's
+phase-by-phase pacing.
+
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.5/~10
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.6/~10
   shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
-  (regularization next, per the "Next up" note above — a direct fix for the overfitting 13.4
-  demonstrated and 13.5 showed data size/quality alone only partially mitigates), following
-  the same verification bar as every prior phase — every worked example/practice/quiz numeric
+  (cross-validation / train-vs-validation split, or another regularization technique like
+  early stopping, per the "Next up" note above — 13.4/13.5/13.6 have now each covered a
+  separate knob on the same 3-example overfitting picture: epoch count, data size/quality,
+  and L2 weight decay), following the same verification bar as every prior phase — every
+  worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
   math; cross-check any hand-derived gradient or slope against NumPy's finite-difference
   technique the way every Phase 11-12 lesson and now 13.4/13.5 did). **Extra caveat learned
