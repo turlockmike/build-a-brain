@@ -107,12 +107,19 @@ automatically.
    never anything from a later phase or later lesson.
 3. Append those lesson objects to `LESSONS` in `data/curriculum.js`, ids
    `"9.1"`, `"9.2"`, ... (id format is always `"<phase>.<lesson>"`).
+3a. Run `bab-schema-check "<phase>."` (e.g. `bab-schema-check "9."`) to
+   validate the schema shape — do NOT hand-roll a Node `vm` sandbox to load
+   `curriculum.js` yourself, that workaround is already saved in the tool.
+   Separately re-verify every arithmetic/prose claim via actual Python
+   execution (schema-check does not and cannot check correctness, only shape).
 4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
    any phase with matching `LESSONS` entries automatically.
 5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v6` → `bab-v7`) so
    returning users actually pick up the new content instead of a stale cache.
 6. Commit, push to `main` — GitHub Pages serves straight from `main` / `/root`,
-   no separate deploy step required.
+   no separate deploy step required. Then run `bab-ship-verify
+   <cache-version> "<phase>."` to confirm the new content is actually live
+   before calling the phase shipped (see below).
 
 ## Progress data format (localStorage)
 

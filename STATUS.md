@@ -297,6 +297,19 @@ users pick up the expanded Phase 9 content.
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
+- **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
+  `bab-schema-check "9."`, or no argument to check every lesson in the
+  file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
+  the 9.1-9.2 and 9.3-9.6 ACT sessions each independently re-derived that
+  same workaround (top-level `const LESSONS` doesn't attach to a vm
+  sandbox's globals; needs `vm.runInContext('LESSONS', sandbox)`), so it's
+  now a saved, self-tested tool instead of a few re-paid minutes every
+  phase. Checks id/number sequence per phase, no duplicate ids file-wide,
+  non-empty objectives/explanation/example, 3-5 practice items each with
+  problem+solution, exactly 5 quiz questions with in-bounds mc answerIndex
+  / present short answers. Does NOT check arithmetic/prose correctness —
+  keep doing that via actual Python execution per lesson topic, as 9.1-9.6
+  did.
 - **Live-deploy verify tool:** use `bab-ship-verify <cache-version>
   <lesson-id-prefix> [timeout-s]` (e.g. `bab-ship-verify bab-v10 "9."`)
   instead of a manual curl after pushing a new phase — it polls past
