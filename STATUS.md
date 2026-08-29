@@ -408,16 +408,80 @@ ids. `sw.js` cache bumped to `bab-v14`, committed and pushed (commit
 `data/curriculum.js`). **Phase 10 (Networks of Neurons) is now SHIPPED —
 all 10/10 lessons live**, matching Phases 1-9's shipped status.
 
+## Phase 11 (Learning: Loss & Gradient Descent) — title breakdown
+
+Full 10-lesson title breakdown (matching the granularity of Phases 8-10's
+title lists, each building only on Phase 1-10 content + earlier Phase 11
+lessons per the README's progressive-dependency rule). No lesson content
+written yet — titles only, per this wake's guardrail (breakdown first,
+content in a future session).
+
+**Scope note:** Phase 11 teaches a SINGLE neuron (perceptron-shaped, but
+with 10.4's sigmoid instead of 8.1's step, since step has no useful slope
+— see 10.4's own foreshadowing) to learn its own weights via loss +
+gradient descent — the exact promise lesson 8.3 made ("it does not yet
+learn those weights on its own — that's lessons 9 and 11's job"). The
+multi-layer chain-rule machinery needed to train a whole STACKED network
+(Phase 10's multi-layer forward pass) is deliberately saved for Phase 12
+(backpropagation, "error flowing backward through the network" per the
+roadmap) — Phase 11 stays to one neuron, one layer, so the update rule
+itself can be learned clean before the chain-rule complexity of
+multi-layer credit assignment is added on top.
+
+1. **11.1 — What a loss function measures** — turning "how wrong was this
+   prediction" into one number, generalizing 9.10's mini-project
+   E(w) = (target - prediction)^2 from a one-off worked example into a
+   named, reusable idea: the loss function.
+2. **11.2 — Mean Squared Error over a dataset** — averaging squared error
+   (5.x's mean, applied across many examples' individual losses) into ONE
+   number describing how well a model fits a whole dataset, not just one
+   example.
+3. **11.3 — Loss as a function of the weights** — reading loss the same
+   way 9.10 read E(w): as a curve that changes as a weight is tweaked,
+   with a lowest point representing the best-fitting weight for that
+   dataset.
+4. **11.4 — The gradient** — packaging 9.6's partial derivatives (one per
+   weight) into a single vector that says, for every weight at once,
+   which direction is uphill for the loss.
+5. **11.5 — Gradient descent: the update rule** — formalizing 9.10's
+   "downhill direction" into a repeatable algorithm:
+   w_new = w_old - (learning rate) x (dLoss/dw), applied to every weight.
+6. **11.6 — The learning rate** — what the step-size number in 11.5's
+   update rule controls, and why too large a value overshoots/diverges
+   while too small a value crawls, shown with a small worked comparison.
+7. **11.7 — Hand-computing one gradient descent step** — a fully worked
+   tiny example (one sigmoid neuron, 10.4's activation, a couple of
+   weights) tracing forward pass -> loss -> gradient -> updated weight,
+   entirely by hand, extending 10.7's hand-traced forward pass one step
+   further.
+8. **11.8 — Coding gradient descent in NumPy** — the same 4-step
+   computation (forward pass, loss, gradient, update) as vectorized code,
+   reusing 10.8's NumPy forward-pass pattern and 7.x's vectorized-thinking
+   toolkit.
+9. **11.9 — Training loop: epochs** — repeating 11.8's one-step update
+   many times in a loop and watching the loss number get smaller pass
+   after pass, until it levels off; naming one full pass through this loop
+   an "epoch."
+10. **11.10 — Mini-project: training a single neuron from scratch** —
+    starting from random/given weights, running 11.9's training loop until
+    a single sigmoid neuron correctly fits a small toy dataset, tracing
+    the loss curve dropping across iterations, combining every idea from
+    the phase (loss, gradient, update rule, learning rate, epochs) into
+    one end-to-end trained model — mirroring
+    4.12/5.12/6.13/7.12/8.10/9.10/10.10's end-of-phase synthesis
+    structure.
+
 ## Pending — next session(s)
 
-- **Phases 1-10 are all SHIPPED.** Phases 11-14 have no lesson content
-  yet — only their phase titles show in the roadmap as locked/coming-soon.
-  Next up (whenever a future session picks this project back up) is
-  drafting Phase 11's title breakdown, the same way Phase 9's and Phase
-  10's breakdowns were drafted before their content-writing sessions. Per
-  Mike: build this out phase by phase across future sessions, not all at
-  once ("chained background builds through the day" per his 2026-08-25
-  ask).
+- **Phases 1-10 are all SHIPPED. Phase 11's title breakdown is done
+  (above)** — next up is drafting Phase 11 lesson content (11.1 onward),
+  same content bar as every prior phase, each lesson assuming only
+  Phases 1-10 + earlier Phase 11 lessons (and staying to a SINGLE neuron
+  per the scope note above — no multi-layer chain rule until Phase 12's
+  backpropagation). Phases 12-14 still have no lesson content yet — only
+  their phase titles show in the roadmap as locked/coming-soon. Per Mike:
+  build this out phase by phase across future sessions, not all at once
+  ("chained background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
