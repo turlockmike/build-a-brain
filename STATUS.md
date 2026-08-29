@@ -3,9 +3,10 @@
 **Status:** Phases 1-12 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
-Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
-GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.7/~10
-lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
+Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29, Phase 13:
+2026-08-29) — live on GitHub Pages. Phase 13 (Evaluation & Overfitting) CLOSED
+at 9 lessons (13.1-13.9) 2026-08-29 — see "Phase 13" sections below and the
+closure survey note in Pending. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
 
@@ -1039,18 +1040,24 @@ Mike's phase-by-phase pacing.
 
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.9/~10
-  shipped 2026-08-29, see sections above).** Next session: re-survey Phase 13 against its
-  own ROADMAP title (accuracy, confusion matrix, precision/recall, overfitting vs
-  underfitting, data size/quality, regularization) — every named sub-topic is now covered
-  (13.1-13.9), so the live question is whether Phase 13 is functionally complete at 9/~10
-  and ready to close, or whether Phase 14 (the capstone — a from-scratch handwritten-digit
-  classifier, properly evaluated) should begin, as its own scoping/title-breakdown session
-  first (same pattern Phase 9-12 each used before writing content). **Do not trust this
-  file's own "candidate topic" prose without re-reading `curriculum.js`'s actual LESSONS
-  array first** — this exact prose named an already-shipped topic as still-open going into
-  the 13.9 session (2026-08-29). Whichever topic
-  is chosen, follow the same verification bar as every prior phase — every
+- **Phase 13 closure survey (done 2026-08-29, ACT stage):** Phase 13 is CLOSED at 9
+  lessons (13.1-13.9, 160/160 lessons total across Phases 1-13). Ran the re-survey this
+  section itself called for — grepped `curriculum.js`'s actual `LESSONS` array (ids
+  "13.1".."13.9") against Phase 13's own ROADMAP title (`accuracy, confusion matrix,
+  precision/recall, overfitting vs underfitting, why data size/quality and regularization
+  matter`), not this file's prose (which had drifted stale twice already this phase — see
+  13.8/13.9 sections above). Every named sub-topic is covered 1:1 — accuracy=13.1,
+  confusion matrix=13.2, precision/recall=13.3, overfitting vs underfitting=13.4, data
+  size/quality=13.5, regularization=13.6 — with 13.7 (early stopping), 13.8
+  (cross-validation), 13.9 (F1) as natural evaluation-topic extensions beyond the title's
+  minimum, not gaps. No 10th lesson is missing; ~10 in the phase-open estimate was always
+  approximate. **Next session: Phase 14 (the capstone — a from-scratch handwritten-digit
+  classifier, properly evaluated) needs its own scoping/title-breakdown session before any
+  content lesson** (same pattern Phase 9-12 each used: a scoping pass that breaks the
+  ROADMAP title into a lesson-by-lesson list before 14.1 gets written) — do not write 14.1
+  content directly from the one-line ROADMAP title without that breakdown first.
+  Once Phase 14's lesson list exists and content lessons begin, follow the same
+  verification bar as every prior phase — every
   worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
   math; cross-check any hand-derived gradient or slope against NumPy's finite-difference
