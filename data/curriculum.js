@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (4 of ~10 so far — 13.1-13.4; remaining lessons pending, see
- * STATUS.md) — 155 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (5 of ~10 so far — 13.1-13.5; remaining lessons pending, see
+ * STATUS.md) — 156 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16339,6 +16339,112 @@ const LESSONS = [
           "use test loss, not training loss, to decide when to stop"
         ],
         "explanation": "Training loss always keeps improving (or at worst plateaus) the longer training runs, so it cannot signal when to stop; test loss's own minimum (here, around epoch 200) is the point past which further training only helps memorize the training set at test performance's expense."
+      }
+    ]
+  },
+  {
+    "id": "13.5",
+    "number": 5,
+    "title": "Data size and quality: two more knobs on the same overfitting picture",
+    "objectives": [
+      "Distinguish DATA SIZE and DATA QUALITY as two more levers on generalization, separate from 13.4's epoch-count lever, by holding the network architecture, 12.10's starting weights, lr=0.5, and 13.1's 4-point test set fixed throughout and varying only what the network trains on",
+      "Train the same network on a larger, 12-example training set that extends 13.4's original 3 examples while following the SAME underlying labeling rule, and compare its train/test MSE and accuracy curve against 13.4's own 3-example curve at matching epoch checkpoints out to epoch 20000",
+      "Train the same network on a training set the SAME SIZE as 13.4's (3 examples) but with ONE label deliberately wrong, and show bad-quality data can drive test performance below what either the original 3-example or the 12-example set ever reached, even though training accuracy still reaches 100% — extending 13.1's warning that training accuracy alone proves nothing about whether a network has learned something true"
+    ],
+    "explanation": [
+      "13.4 varied only HOW LONG training ran, keeping 13.1's original 3 training examples fixed the whole time, and found overfitting: training MSE kept falling while test MSE bottomed out around epoch 200 (approximately 0.1450) then rose to approximately 0.1982 by epoch 20000. That leaves a question 13.4's own 'Next up' note raised directly: 13.1's training set was tiny to begin with (3 points) — would MORE training data, or DIFFERENT (better or worse) training data, change that same picture? This lesson holds epoch count secondary and varies the DATA itself, reusing 12.10's identical starting weights, lr=0.5, and 13.1's identical 4-point test set throughout, so the network and the evaluation stay constant and only the training set changes.",
+      "Look across every input/label pair this course has published so far: training (x=[1,-1],t=1), (x=[-1,1],t=0), (x=[2,2],t=1) and test (x=[1,1],t=1), (x=[-1,-1],t=0), (x=[0,-1],t=0), (x=[-2,2],t=0) — all 7 agree with one simple rule: the label is 1 exactly when the FIRST input, x1, is positive; x2 never matters. But nothing about a 3-point training set forces a network to discover that. With only 3 points in 2 dimensions, many different decision boundaries pass between them consistent with all 3 labels — a boundary that also depends on x2 fits (1,-1), (-1,1), (2,2) exactly as well as 'only x1's sign matters' does, because none of those 3 points contradicts an x2-dependent boundary. 13.4's overfitting past epoch 200 is exactly the network drifting toward one of those spurious, x2-dependent boundaries, because nothing in 3 points ever told it not to.",
+      "SIZE experiment: extend 13.4's same 3 examples with 9 more, all following the identical x1-sign rule, deliberately spanning BOTH signs of x2 for BOTH classes so x2's irrelevance becomes visible in the data itself — (x=[3,-2],t=1), (x=[0.5,3],t=1), (x=[2,-3],t=1), (x=[1,0.5],t=1) (positive x1, x2 mixed both signs) and (x=[-2,-2],t=0), (x=[-0.5,3],t=0), (x=[-3,-1],t=0), (x=[-1,0],t=0), (x=[-2,-0.5],t=0) (negative x1, x2 mixed both signs) — 12 examples total, none overlapping the 4-point test set. Training from 12.10's identical starting weights, lr=0.5, gives a MUCH faster and lower-floored curve: epoch 20 train MSE approximately 0.0196 (100% train accuracy already), test MSE approximately 0.0785 (75%); epoch 50 train MSE approximately 0.0040, test MSE approximately 0.0725 (75%) — this run's lowest test MSE anywhere in the 1-to-20000 sweep, well under half of the 3-example baseline's own floor (approximately 0.1450 at epoch 200).",
+      "Past its own floor, the 12-example run keeps overfitting too — nothing eliminates the effect entirely — but far more gently: test MSE at epoch 300 is approximately 0.0743, at epoch 5000 approximately 0.0789, at epoch 20000 approximately 0.0812. From floor to epoch 20000 the 12-example test MSE rises by only approximately 0.0087 (0.0725 to 0.0812, about 12%), versus the 3-example baseline's rise of approximately 0.0532 (0.1450 to 0.1982, about 37%) over the same kind of stretch. Test ACCURACY, though, is identical in both runs the whole time: a flat 75%, because the same single point, (x=[0,-1], t=0), sits exactly ON the true rule's decision boundary (x1=0) and is the one case more data about a clean x1-sign rule cannot resolve — reinforcing 13.2/13.3/13.4's throughline that accuracy alone would show NO difference between these two very different training sets; only the loss curve does.",
+      "QUALITY experiment: keep the training set the SAME SIZE as 13.4's baseline (3 examples) but flip ONE label — (x=[2,2], t=0) instead of its true target of 1, an intentionally wrong label, everything else (x=[1,-1],t=1) and (x=[-1,1],t=0) unchanged. Training from the same starting weights and lr=0.5: epoch 20 train MSE approximately 0.1743 (66.7%), test MSE approximately 0.2052 (75%, not yet badly broken) — but from epoch 50 onward, once training accuracy reaches 100% (train MSE approximately 0.0552), test MSE does not bottom out and recover the way either clean dataset's did; it climbs continuously and test accuracy collapses to 25% and stays there: test MSE approximately 0.3446 (epoch 50) -> 0.6062 (epoch 300) -> 0.7156 (epoch 5000) -> 0.7329 (epoch 20000), roughly 3.7 times worse than the 3-example clean baseline's own epoch-20000 test MSE (approximately 0.1982), and with only 1 of the 4 test points classified correctly instead of 3 — worse than guessing on a binary task.",
+      "All three training sets reach essentially the SAME training outcome — MSE near 0, 100% training accuracy — because gradient descent will always drive training loss down toward whatever labels it is given, right or wrong; 13.1's original point, that training accuracy measures fit to the labels shown and nothing about whether those labels are true, applies even when one of those labels is a straightforward error. What differs enormously is what happens on data the network never saw: 12 clean examples (floor approximately 0.0725, rising to approximately 0.0812) generalize far better than 3 clean examples (floor approximately 0.1450, rising to approximately 0.1982), which in turn generalize far better than 3 examples containing one WRONG label (no real floor, climbing straight to approximately 0.7329, accuracy stuck at 25%). More clean data narrowed the range overfitting could do damage in; the exact same AMOUNT of data with one bad label did far more damage than simply not having enough of it — quality is not a weaker version of quantity, because a single wrong label is a very large fraction of the information in a 3-example set.",
+      "Verification note: every number above comes from actually re-running 12.8's training loop in NumPy on each of the three training sets (12-example clean, 3-example clean, 3-example one-mislabeled), using the same forward/backward implementation this course has reused since 12.10 — that implementation was re-confirmed before any new numbers were trusted, by reproducing 13.4's own already-published checkpoint numbers (epoch 20/200/300/500/1000/2000/5000/10000/20000 train and test MSE and accuracy) to 4 decimal places using the identical 3-example training set. Two fresh finite-difference checks (11.4's technique, extended here to states no prior lesson published): one at the 12-example run's epoch-5 weights, checking the gradients for a training example never used before this lesson, (x=[3,-2], t=1) — analytic and numerical grad_W_output[0], grad_W_hidden[1][0], grad_b_hidden[0], and grad_b_output all agreed to within 1e-6 (measured agreement was far tighter, on the order of 1e-12). A second check at the mislabeled run's epoch-5 weights, on the mislabeled example itself, (x=[2,2], t=0), showed the same agreement — confirming the training loop is implemented correctly on both new datasets, not just reproducing a previously-checked case."
+    ],
+    "example": {
+      "problem": "At epoch 5000, three training runs from the same starting weights give: 3-example clean (13.4's baseline) test MSE approximately 0.1825, test accuracy 75%. 12-example clean (same x1-sign rule, more coverage of x2) test MSE approximately 0.0789, test accuracy 75%. 3-example with one mislabeled point ((x=[2,2],t=0) instead of the true t=1) test MSE approximately 0.7156, test accuracy 25%. All three reach 100% TRAINING accuracy by epoch 5000. Rank the three runs by how well they generalize, and explain why training accuracy alone cannot tell them apart.",
+      "steps": [
+        "Training accuracy is 100% in all three cases by epoch 5000 — gradient descent always drives training loss toward whatever labels it is given, so training accuracy only confirms the network memorized ITS OWN training set, telling nothing about the labels' correctness or about unseen data.",
+        "Test MSE ranks the three clearly: 12-example clean (approximately 0.0789) is lowest (best generalization), 3-example clean (approximately 0.1825) is roughly 2.3x higher, and 3-example one-mislabeled (approximately 0.7156) is roughly 9x higher than the 12-example run and about 3.9x higher than the 3-example clean run.",
+        "Test accuracy tells a coarser but consistent story: 75% for both clean training sets (same single boundary-case point, (x=[0,-1],t=0), wrong in both), but only 25% for the mislabeled set — worse than guessing on a binary task, because the wrong label pulled the learned decision boundary toward the OPPOSITE of the true rule for most of the test set."
+      ],
+      "answer": "Best to worst: 12-example clean data generalizes best (lowest test MSE), 3-example clean data is next (13.4's own overfitting story, better than nothing but far from the 12-example floor), and 3-example data with one mislabeled point generalizes worst by a wide margin (test MSE nearly 4x the 3-example clean run's, test accuracy below chance). Training accuracy (100% in all three) cannot distinguish any of this, because it never looks at data outside its own training set nor questions whether the labels it was given are correct."
+    },
+    "practice": [
+      {
+        "problem": "The 12-example run's lowest test MSE (approximately 0.0725, epoch 50) is well under half the 3-example baseline's lowest test MSE (approximately 0.1450, epoch 200). Both training sets contain the exact same 3 original points. What is different about the 12-example set that explains the lower floor?",
+        "solution": "The 9 additional examples all follow the SAME true rule (label = 1 iff x1 > 0) but deliberately span both signs of x2 for both classes, so nothing in the data is consistent with an x2-dependent decision boundary anymore — only a boundary that ignores x2 fits all 12 points. With just the original 3 points, an x2-dependent boundary fit equally well, leaving the network free to drift toward one of those spurious fits; the extra 9 points close off that possibility, so the network's best fit to the training data is already much closer to the TRUE rule, which is also what the test set was generated from."
+      },
+      {
+        "problem": "Test accuracy is exactly 75% in BOTH the 3-example clean run and the 12-example clean run, at every checkpoint from at least epoch 50 onward. Does this mean the two training sets generalize equally well? Why or why not?",
+        "solution": "No — test MSE shows they do not generalize equally well (approximately 0.0725-0.0812 for the 12-example run versus approximately 0.1450-0.1982 for the 3-example run, roughly half). Both runs happen to misclassify the exact same single test point, (x=[0,-1], t=0), which sits exactly on the true rule's decision boundary (x1=0) — a genuinely hard case no amount of clean data about this same rule can resolve — so accuracy (a threshold check) cannot see any of the difference in HOW WRONG or how confidently correct the two runs are elsewhere, the same blind spot 13.4 found in a single training run's own accuracy curve."
+      },
+      {
+        "problem": "In the quality experiment, training MSE reaches approximately 0.0552 by epoch 50 (100% training accuracy) at almost the same epoch the 3-example CLEAN baseline does. But test MSE for the mislabeled run keeps climbing forever afterward (0.3446 at epoch 50 to 0.7329 at epoch 20000) instead of ever turning around. What does that persistent, one-directional climb — rather than a floor-then-rise curve like the two clean datasets show — tell you about what the network is fitting?",
+        "solution": "A floor-then-rise curve (like both clean datasets) means the network passes through a state close to the TRUE pattern before drifting away from it into overfitting. A curve with no floor, that only gets worse, means the network is being trained AWAY from the true pattern from the start — every epoch of further training pulls it more confidently toward the WRONG boundary implied by the mislabeled point, so there is no point in training where it is close to correct; more training epochs make a bad-quality fit worse, not better-then-worse."
+      },
+      {
+        "problem": "All three training sets in this lesson reach 100% training accuracy. Based on 13.1's original distinction between training and test accuracy, is 100% training accuracy ever, by itself, evidence that a network's LABELS were correct?",
+        "solution": "No. 13.1 established that training accuracy measures how well weights fit the exact examples used to adjust them — nothing more. This lesson's mislabeled run reaches the same 100% training accuracy as the two clean runs despite training on a demonstrably wrong label, because gradient descent has no way to know a label is wrong; it just minimizes loss against whatever target it is given. 100% training accuracy proves fit to the training labels, never that those labels reflect reality."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Compared to 13.4's original 3-example training set, what happens to the network's BEST achievable test MSE when 9 more clean examples (following the same true labeling rule, spanning both signs of x2) are added?",
+        "choices": [
+          "It drops to roughly half (approximately 0.0725 versus approximately 0.1450) because the extra examples rule out decision boundaries that depend on the irrelevant input, x2, leaving less room to overfit",
+          "It stays exactly the same, because the original 3 examples are still included",
+          "It gets worse, because more data always increases overfitting",
+          "It becomes exactly 0, because the network is now given enough data to fit perfectly"
+        ],
+        "answerIndex": 0,
+        "explanation": "The 12-example run's lowest test MSE (approximately 0.0725 at epoch 50) is well under half the 3-example baseline's lowest test MSE (approximately 0.1450 at epoch 200), because spanning both signs of x2 for both classes rules out the spurious x2-dependent boundaries the tiny 3-point set could not rule out."
+      },
+      {
+        "type": "short",
+        "question": "In this lesson's quality experiment, which single training label is changed from 13.4's original 3-example set, and to what wrong value?",
+        "answer": "(x=[2,2], t=1) is relabeled to t=0",
+        "acceptable": [
+          "the (2,2) example's label is flipped from 1 to 0",
+          "x=[2,2] mislabeled as 0",
+          "(2,2)'s target changed from 1 to 0"
+        ],
+        "explanation": "13.4's baseline has (x=[2,2], t=1); the quality experiment keeps everything else identical but changes that one example's target to t=0, an intentionally wrong label."
+      },
+      {
+        "type": "mc",
+        "question": "Why does test accuracy stay flat at exactly 75% for BOTH the 3-example clean run and the 12-example clean run, even though their test MSE values differ by roughly a factor of 2?",
+        "choices": [
+          "Both runs misclassify the exact same single test point, (x=[0,-1], t=0), which sits exactly on the true rule's own decision boundary (x1=0) — a threshold-based score cannot show how much better or worse a run does elsewhere",
+          "Test accuracy and test MSE always move together, so this could not actually happen",
+          "The 12-example run uses a different test set than the 3-example run",
+          "Accuracy is computed only on the training set, not the test set, in this lesson"
+        ],
+        "answerIndex": 0,
+        "explanation": "Both runs get every test point right except (x=[0,-1], t=0), which lies exactly on the x1=0 boundary the true rule uses to split classes — a case more clean data about this same rule cannot resolve — so accuracy cannot register the large difference in test LOSS the two runs otherwise show."
+      },
+      {
+        "type": "mc",
+        "question": "By epoch 20000, roughly how does the mislabeled 3-example run's test MSE (approximately 0.7329) compare to the CLEAN 3-example baseline's own epoch-20000 test MSE (approximately 0.1982), even though both training sets have exactly 3 examples?",
+        "choices": [
+          "The mislabeled run's test MSE is roughly 3.7 times higher, and its test accuracy (25%) is below what guessing would give on a binary task, versus the clean run's 75%",
+          "The mislabeled run's test MSE is lower, because one flipped label barely matters with only 3 examples",
+          "They are approximately equal, since both sets are the same size",
+          "The mislabeled run's test accuracy is also 75%, matching the clean run"
+        ],
+        "answerIndex": 0,
+        "explanation": "Same size (3 examples) does not mean same outcome: one wrong label drives test MSE to approximately 0.7329 (versus approximately 0.1982 clean) and test accuracy down to 25% (versus 75% clean) — quality, not just quantity, determines how a tiny training set generalizes."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why can 100% training accuracy be reached by all three training sets in this lesson (12-example clean, 3-example clean, 3-example mislabeled) despite generalizing so differently?",
+        "answer": "training accuracy only measures fit to whatever labels were given, never whether those labels are correct",
+        "acceptable": [
+          "training accuracy just measures memorization of the training labels, right or wrong",
+          "gradient descent fits whatever labels it's given, correct or not",
+          "training accuracy says nothing about whether the labels themselves are true"
+        ],
+        "explanation": "Gradient descent minimizes loss against whatever targets a training example carries; it has no way to detect that a label is wrong, so a mislabeled example is fit just as confidently as a correct one — 13.1's point that training accuracy proves fit, not correctness, extended to labels themselves."
       }
     ]
   }
