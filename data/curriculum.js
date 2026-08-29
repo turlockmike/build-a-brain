@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (8 of ~10 so far — 13.1-13.8; remaining lessons pending, see
- * STATUS.md) — 159 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (9 of ~10 so far — 13.1-13.9; remaining lessons pending, see
+ * STATUS.md) — 160 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16773,6 +16773,114 @@ const LESSONS = [
           "contaminates the one dataset kept aside purely for unbiased evaluation"
         ],
         "explanation": "13.1 introduced the 4-point external set specifically as data the network never trains on, so its score reflects true generalization. Training on even one of those points for an LOOCV fold would erase that guarantee, leaving no dataset left that was never seen during training."
+      }
+    ]
+  },
+  {
+    "id": "13.9",
+    "number": 9,
+    "title": "F1 score: combining precision and recall into one number",
+    "objectives": [
+      "Define F1 = 2*(precision*recall)/(precision+recall), the harmonic mean of precision and recall, built directly from 13.3's own P and R",
+      "Compute F1 on 13.3's own classifier A/B example, the 13.2 6-point matrix, and the spam-filter example, and confirm the harmonic mean matches the shared value exactly when precision=recall but pulls below the arithmetic mean whenever they differ",
+      "Explain why the harmonic mean, not a plain average, is used — it punishes a lopsided precision/recall pair far harder than an arithmetic mean would, so F1 can't be inflated by one score alone",
+      "Recognize F1 as the fix for 13.3's own closing warning that precision and recall must always be reported together, never alone — F1 folds that pair into a single, ungameable ranking number"
+    ],
+    "explanation": [
+      "13.3 ended on a warning: a classifier that predicts positive for every example reaches recall = 1.0 for free, which is exactly why precision and recall always have to be read together, never alone. That is correct but awkward in practice — comparing two classifiers on two separate numbers at once makes them hard to rank. F1 score solves this by combining precision and recall into a single number: F1 = 2*(P*R)/(P+R). This is the harmonic mean of P and R, not the plain arithmetic mean (P+R)/2 — a distinction this lesson makes concrete below, because it is the entire reason F1 is used instead of just averaging.",
+      "Start with 13.2's own 6-point confusion matrix (TP=2, TN=2, FP=1, FN=1), where 13.3 computed precision = recall = 2/3 approximately 0.6667. Plugging into the formula: F1 = 2*(0.6667*0.6667)/(0.6667+0.6667) = 2*0.4444/1.3333 approximately 0.6667 — F1 comes out exactly equal to P and R themselves. This is not a coincidence specific to this dataset but a general property of the harmonic mean: whenever two numbers are equal, their harmonic mean equals that same shared value (the same way an average of two equal numbers is just that number). It is a useful sanity check, not evidence about F1 in general — the next two examples show what happens once P and R actually diverge.",
+      "13.3's classifier A (P=2/3 approximately 0.667, R=1.0) and classifier B (P=1.0, R=2/3 approximately 0.667) were mirror images of each other, both scoring 80% accuracy. F1 for classifier A: 2*(0.6667*1.0)/(0.6667+1.0) = 1.3333/1.6667 = 0.8 (80%). F1 for classifier B: 2*(1.0*0.6667)/(1.0+0.6667) = 0.8 (80%) as well — identical to A's. This equality is the harmonic mean's symmetry (swapping which of P or R is 1.0 and which is 2/3 doesn't change the result), not a sign that F1 always matches accuracy — the spam-filter example next breaks that link.",
+      "13.3's spam filter (TP=18, FP=2, FN=10) had precision = 0.9 (90%) and recall = 18/28 approximately 0.6429 (64.3%). F1 = 2*(0.9*0.6429)/(0.9+0.6429) = 1.1571/1.5429 = 0.75 (75%). Compare that with the PLAIN arithmetic mean of the same two numbers: (0.9+0.6429)/2 approximately 0.7714 (77.1%). The harmonic mean (0.75) sits noticeably below the arithmetic mean (0.771) — this is a general property, not specific to these numbers: the harmonic mean of two unequal positive numbers is always less than or equal to their arithmetic mean, and it leans toward whichever of the two is SMALLER. Here recall (0.643) is the weaker score, and F1 (0.75) sits closer to recall than a plain average would.",
+      "That lean toward the weaker score is precisely what closes 13.3's loophole from the other direction. 13.3 showed predicting positive for everything gives free recall = 1.0 while precision can be terrible. Take a mirror-image classifier that predicts positive only once, and gets it right: precision = 1.0 (100%, never wrong when it does say positive) but recall = 0.05 (5%, it misses nearly every real positive). The arithmetic mean of those two numbers is (1.0+0.05)/2 = 0.525 — a deceptively decent-looking 52.5%. F1, by contrast, is 2*(1.0*0.05)/(1.0+0.05) approximately 0.0952 (9.5%) — correctly branding this classifier as nearly useless. An arithmetic mean can be gamed by maxing out one score while ignoring the other; the harmonic mean cannot, because it collapses toward zero whenever either input does.",
+      "Verification note: every number in this lesson is a direct algebraic evaluation of F1 = 2*P*R/(P+R) using P and R values 13.2 and 13.3 already published (reused here, not re-derived from raw weights), cross-checked in Python to the same precision reported. This lesson makes no new gradient or trained-weight claim, so 11.4's finite-difference check does not apply here — the applicable check for a static formula like this one is exact re-computation, which is what was run."
+    ],
+    "example": {
+      "problem": "Using 13.3's spam-filter confusion matrix (TP=18, FP=2, FN=10, so precision=0.9 and recall approximately 0.6429), compute the F1 score and compare it with the plain arithmetic mean of precision and recall.",
+      "steps": [
+        "F1 = 2*(precision*recall)/(precision+recall) = 2*(0.9*0.6429)/(0.9+0.6429).",
+        "Numerator: 2*0.9*0.6429 approximately 1.1571. Denominator: 0.9+0.6429 = 1.5429.",
+        "F1 = 1.1571/1.5429 = 0.75 (75%).",
+        "Arithmetic mean for comparison: (0.9+0.6429)/2 approximately 0.7714 (77.1%).",
+        "F1 (75%) sits below the arithmetic mean (77.1%), pulled toward recall, the weaker of the two scores."
+      ],
+      "answer": "F1 approximately 75%, versus an arithmetic mean of approximately 77.1% for the same precision/recall pair — F1 is pulled down toward the weaker score (recall) rather than splitting the difference evenly, which is exactly why it is used instead of a plain average."
+    },
+    "practice": [
+      {
+        "problem": "13.3's classifier A has precision = 2/3 approximately 0.667 and recall = 1.0. Compute its F1 score.",
+        "solution": "F1 = 2*(0.667*1.0)/(0.667+1.0) = 1.333/1.667 = 0.8 (80%)."
+      },
+      {
+        "problem": "13.3's classifier B has precision = 1.0 and recall = 2/3 approximately 0.667 — the mirror image of classifier A. Compute its F1 score, and explain why it comes out equal to classifier A's even though precision and recall are swapped.",
+        "solution": "F1 = 2*(1.0*0.667)/(1.0+0.667) = 1.333/1.667 = 0.8 (80%), the same as classifier A. This is the harmonic mean's symmetry: swapping which of the two inputs is precision and which is recall doesn't change the result, since the formula treats them identically. It is not because F1 always equals accuracy (both happened to score 80% accuracy too here, but that is a separate coincidence of this particular matched pair, not a general rule)."
+      },
+      {
+        "problem": "A new classifier's confusion matrix is TP=6, FP=4, FN=1. Compute its precision, recall, and F1 score.",
+        "solution": "Precision = 6/(6+4) = 0.6 (60%). Recall = 6/(6+1) approximately 0.857 (85.7%). F1 = 2*(0.6*0.857)/(0.6+0.857) = 1.0286/1.4571 approximately 0.706 (70.6%) — pulled toward precision, the weaker of the two scores here."
+      },
+      {
+        "problem": "Another classifier's confusion matrix is TP=9, FP=1, FN=6. Compute its precision, recall, and F1 score, and compare with the plain arithmetic mean of precision and recall.",
+        "solution": "Precision = 9/(9+1) = 0.9 (90%). Recall = 9/(9+6) = 0.6 (60%). F1 = 2*(0.9*0.6)/(0.9+0.6) = 1.08/1.5 = 0.72 (72%). Arithmetic mean = (0.9+0.6)/2 = 0.75 (75%). F1 (72%) sits below the arithmetic mean (75%), pulled toward recall, the weaker score."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the F1 score, as defined in this lesson?",
+        "choices": [
+          "The harmonic mean of precision and recall: F1 = 2*(precision*recall)/(precision+recall)",
+          "The plain arithmetic mean of precision and recall: (precision+recall)/2",
+          "TP divided by the sum of TP, FP, and FN",
+          "Precision multiplied by recall, with no further adjustment"
+        ],
+        "answerIndex": 0,
+        "explanation": "F1 is specifically the harmonic mean of precision and recall, not their arithmetic mean — that distinction is why F1 pulls toward the weaker of the two scores instead of splitting the difference evenly."
+      },
+      {
+        "type": "mc",
+        "question": "13.3's spam filter has precision = 0.9 and recall approximately 0.643. What is its F1 score, and how does it compare with the plain arithmetic mean of the same two numbers (approximately 0.771)?",
+        "choices": [
+          "F1 is 0.75, below the arithmetic mean of 0.771",
+          "F1 is 0.771, identical to the arithmetic mean",
+          "F1 is 0.9, equal to the higher of the two scores",
+          "F1 is 0.643, equal to the lower of the two scores exactly"
+        ],
+        "answerIndex": 0,
+        "explanation": "F1 = 2*(0.9*0.643)/(0.9+0.643) = 0.75, which is below the arithmetic mean (0.771) but not all the way down to the lower input (0.643) — the harmonic mean leans toward the smaller value without collapsing to it."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does this lesson use the harmonic mean instead of a plain arithmetic mean to combine precision and recall?",
+        "answer": "the harmonic mean punishes a lopsided precision/recall pair much harder than an arithmetic mean, so a classifier can't get a good combined score by maxing out only one of the two",
+        "acceptable": [
+          "arithmetic mean can be gamed by a high score in one metric alone; harmonic mean collapses toward the lower score instead",
+          "harmonic mean pulls toward the weaker of precision and recall, preventing one high score from hiding a bad other score",
+          "it stops a classifier with great precision and terrible recall (or vice versa) from looking good on average"
+        ],
+        "explanation": "An arithmetic mean treats a 1.0/0.05 pair as a mediocre-looking 0.525. The harmonic mean gives that same pair an F1 of approximately 0.095, correctly flagging the classifier as nearly useless — exactly the gaming loophole 13.3 first raised, closed from the other direction."
+      },
+      {
+        "type": "mc",
+        "question": "A classifier predicts positive only once and gets it right, giving precision = 1.0 and recall = 0.05. What does this reveal about the difference between F1 and the plain arithmetic mean?",
+        "choices": [
+          "Arithmetic mean gives a deceptively decent 0.525, while F1 correctly collapses to approximately 0.095, showing F1 cannot be inflated by one perfect score alone",
+          "F1 and the arithmetic mean give the same result whenever one of the two inputs is 1.0",
+          "F1 is undefined whenever recall is very small",
+          "Arithmetic mean and F1 both equal 1.0 in this case, since precision is perfect"
+        ],
+        "answerIndex": 0,
+        "explanation": "F1 = 2*(1.0*0.05)/(1.0+0.05) approximately 0.095 — near zero, correctly flagging this classifier as nearly useless despite its perfect precision. The arithmetic mean (0.525) hides that near-uselessness behind an average-looking number."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, what problem from 13.3 does the F1 score solve?",
+        "answer": "it replaces the need to always report precision and recall as two separate numbers with a single combined score that can't be gamed by maxing out just one of them",
+        "acceptable": [
+          "13.3 said precision and recall must always be read together, never alone; F1 combines them into one number so there's a single score to rank by",
+          "it turns the precision-and-recall pair into one ungameable ranking number",
+          "solves the awkwardness of comparing classifiers on two numbers at once by folding them into one"
+        ],
+        "explanation": "13.3 closed by warning that precision and recall must be reported together, since either alone can be gamed (e.g. predict-everything-positive for free recall). F1 folds both into one number that inherits that same protection, making classifiers directly rankable on a single score."
       }
     ]
   }
