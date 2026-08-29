@@ -1,10 +1,10 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-8 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** Phases 1-9 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
-2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27) — live on GitHub Pages.
-Phase 9 (Calculus for Learning) is IN PROGRESS: 6/10 lessons written (9.1-
-9.6), title breakdown for all 10 done — see "Phase 9" section below.
+2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28) —
+live on GitHub Pages. Phase 9 (Calculus for Learning) is now 10/10 lessons
+written — see "Phase 9" section below.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -266,15 +266,14 @@ lessons per the README's progressive-dependency rule):
     "downhill direction" idea Phase 11's gradient descent will formalize;
     mirrors 4.12/5.12/6.13/7.12/8.10's end-of-phase synthesis structure.
 
-**9.1-9.6 are fully written and merged into `data/curriculum.js`**
-(117 lessons total across Phases 1-9 now), schema-validated
-programmatically (correct id/number sequence, no duplicate ids across all
-117, 3-5 practice problems, exactly 5 quiz questions, valid mc answerIndex
-bounds) and independently re-verified via actual Python execution for
-every numeric claim in all six lessons: 9.1's four practice intervals plus
-the x^2-vs-line contrast; 9.2's four h-shrinking sequences at x=1,2,3,5
-converging to 2x; 9.3's power-rule predictions checked against fresh
-shrinking-h computations for x^3 and x^4 (h=0.1/0.01/0.001 sequences
+**9.1-9.10 (all 10) are fully written and merged into `data/curriculum.js`**
+(121 lessons total across Phases 1-9 now), schema-validated
+programmatically (`bab-schema-check` with no argument: 121/121 lessons
+checked file-wide, 0 duplicate ids) and independently re-verified via
+actual Python execution for every numeric claim: 9.1's four practice
+intervals plus the x^2-vs-line contrast; 9.2's four h-shrinking sequences
+at x=1,2,3,5 converging to 2x; 9.3's power-rule predictions checked against
+fresh shrinking-h computations for x^3 and x^4 (h=0.1/0.01/0.001 sequences
 converging to the predicted value) plus every practice/quiz power-rule
 evaluation; 9.4's sum/constant-multiple predictions checked against
 shrinking-h for 3x^2+x plus every practice/quiz evaluation; 9.5's sign
@@ -282,17 +281,27 @@ claims (f'(x)=2x-4 and g'(x)=-2x+6 evaluated at each x used, including the
 flat point x=3) all recomputed independently; 9.6's partial-derivative
 claims (linear z=2x1+5x2+1, and nonlinear z=x1^2+3x2, z3=5x1+x2^2,
 z4=3x1^2+4x2) checked against finite-difference partials in both x1 and
-x2. 9.7-9.10 are titled but not yet drafted — same title-then-content
-order Phases 1-8 followed, this is intentionally a multi-session build
-(Mike, 2026-08-25: "even if it takes 200 lessons it's okay").
-`sw.js` cache bumped to `bab-v11` alongside the 9.3-9.6 merge so returning
-users pick up the expanded Phase 9 content.
+x2; 9.7's gear/chain-rate compositions (all linear, e.g. 3x2, 5x4, 2x1)
+recomputed directly; 9.8's chain-rule results for (3x+1)^2, (x+5)^2,
+(2x)^2, (x-4)^2, (4x+3)^2, and (x+2)^3 each cross-checked against SymPy's
+symbolic expansion+differentiation of the same expression (independent
+method, exact agreement at every evaluated point); 9.9's
+`numerical_derivative(f, x, h)` implementation actually run in Python
+against x^2, x^3, and 9.8's (3x+1)^2, matching the power-rule/chain-rule
+exact answers to 4 decimal places; 9.10's mini-project error function
+E(w)=(10-2w)^2 (chain rule: outer u^2, inner 10-2w) evaluated at w=1,3,4,
+5,5.5,6,8 with both the closed-form dE/dw=-40+8w and `numerical_derivative`
+agreeing at every point, confirming the sign-flip either side of the w=5
+minimum (E(5)=0, dE/dw=0). **Phase 9 is now SHIPPED — all 10/10 lessons
+live.** `sw.js` cache bumped to `bab-v12` alongside the 9.7-9.10 merge so
+returning users pick up the complete Phase 9 content.
 
 ## Pending — next session(s)
 
-- **Phase 9 is 6/10** — pick up at lesson 9.7 (the chain rule, part 1)
-  using the title breakdown above; each remaining lesson may assume
-  Phases 1-8 + earlier Phase 9 lessons (9.1-9.6) only.
+- **Phase 9 is SHIPPED (10/10)** — next up is Phase 10 ("Networks of
+  Neurons"): write its title breakdown first (same pattern as Phase 9's
+  own breakdown above), then draft lesson content, each lesson assuming
+  only Phases 1-9 + earlier Phase 10 lessons.
 - **Phases 10-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds

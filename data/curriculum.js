@@ -12325,5 +12325,425 @@ const LESSONS = [
         "explanation": "Lesson 8.3 defined the perceptron's z = x·w + b weighted sum; this lesson's z(x1,x2) = 2x1 + 5x2 + 1 is that same shape with concrete weights and a bias."
       }
     ]
+  },
+  {
+    "id": "9.7",
+    "number": 7,
+    "title": "The chain rule, part 1 — how a change ripples through a function of a function",
+    "objectives": [
+      "Recognize a \"function of a function\" (a composed function) — one function's output feeding straight into another as input",
+      "Build intuition for how a change ripples through a chain of functions, before any formula or computation",
+      "See that rates of change through a chain MULTIPLY rather than add"
+    ],
+    "explanation": [
+      "So far in this phase, every function has taken x straight to its output: x^2, 3x^2+x, and so on. But lots of real functions are built by feeding one function's output into another — a \"function of a function.\" Lesson 8.3's perceptron already did this without naming it: z = x·w + b is one function, and if you then asked \"how confident is the network,\" a second function would take z as ITS input. A composed function is written f(g(x)): first compute g(x), then feed that number into f. This lesson builds the intuition for how a change ripples through that chain, using gears and dominoes before any computation — the actual computing comes in lesson 9.8.",
+      "Picture two gears meshed together. Gear B is connected to gear A such that every full turn of gear B makes gear A turn 3 times (A spins 3x faster). Now connect a third gear, C, to gear B, such that every turn of C makes gear B turn 2 times. Turn gear C once. How many times does gear A turn? Gear B turns 2 times (from C's rate), and each of those 2 turns of B makes A turn 3 times — so A turns 2 x 3 = 6 times for every 1 turn of C. The rates did not ADD (3 + 2 = 5); they MULTIPLIED (3 x 2 = 6). That multiplying-through-the-chain is the entire intuition behind the chain rule.",
+      "The same idea works with a row of dominoes standing at different spacings. If domino A falls twice as fast as domino B for every fall of B, and domino B falls 4 times as fast as domino C for every fall of C, then domino A falls 2 x 4 = 8 times as fast as domino C, per fall of C. Whenever one rate of change feeds directly into another — a change in C causes a change in B, which causes a change in A — the OVERALL rate from C all the way to A is the product of each link's own rate, not the sum.",
+      "Translate the gears into functions: let u = g(x) be the \"middle\" quantity (like gear B), and y = f(u) be the final output (like gear A), with x playing the role of gear C. If y changes 3 units for every 1-unit change in u (that's f's own rate, dy/du = 3), and u changes 2 units for every 1-unit change in x (that's g's own rate, du/dx = 2), then y changes 3 x 2 = 6 units for every 1-unit change in x. Written as a formula: dy/dx = (dy/du) x (du/dx). This is the chain rule — multiply the rates of each link in the chain. Check it directly: if u = 2x and y = 3u, then y = 3(2x) = 6x, and 6x's own rate of change (using lesson 9.4's constant-multiple rule) is exactly 6 — matching 3 x 2. Lesson 9.8 will apply this same multiply-the-rates idea to functions that aren't just straight lines, like (2x+1)^2."
+    ],
+    "example": {
+      "problem": "u depends on x by u = 4x (every 1-unit change in x changes u by 4). y depends on u by y = 5u (every 1-unit change in u changes y by 5). How much does y change for every 1-unit change in x?",
+      "steps": [
+        "Identify each link's own rate: du/dx = 4 (from u = 4x), dy/du = 5 (from y = 5u).",
+        "Chain rule intuition: multiply the rates through the chain, dy/dx = (dy/du) x (du/dx) = 5 x 4 = 20.",
+        "Check directly: substitute u = 4x into y = 5u to get y = 5(4x) = 20x, whose own rate of change is 20 — matching the multiplied rates."
+      ],
+      "answer": "y changes by 20 units for every 1-unit change in x."
+    },
+    "practice": [
+      {
+        "problem": "Gear A turns 4 times for every turn of gear B, and gear B turns 3 times for every turn of gear C. How many times does gear A turn for every turn of gear C?",
+        "solution": "Multiply the rates through the chain: 4 x 3 = 12. Gear A turns 12 times for every turn of gear C."
+      },
+      {
+        "problem": "u = x + 3 (every 1-unit change in x changes u by 1), and y = 2u (every 1-unit change in u changes y by 2). What is dy/dx?",
+        "solution": "dy/dx = (dy/du) x (du/dx) = 2 x 1 = 2. Check: y = 2(x+3) = 2x+6, whose rate of change is 2 — matches."
+      },
+      {
+        "problem": "u = 2x (rate 2), y = 3u (rate 3). What is dy/dx, and what is y as a function of x directly?",
+        "solution": "dy/dx = 3 x 2 = 6. Directly, y = 3(2x) = 6x, whose own rate of change is 6 — matches."
+      },
+      {
+        "problem": "If a change in one quantity causes a change in a second, which causes a change in a third, do the three rates of change ADD together or MULTIPLY together to get the overall rate?",
+        "solution": "They MULTIPLY — each link's own rate gets multiplied by the next link's rate, the way the gear and domino examples showed."
+      },
+      {
+        "problem": "u = 5x (rate 5), y = 4u (rate 4). Find dy/dx two ways: by multiplying the rates, and by substituting u = 5x into y = 4u first.",
+        "solution": "Multiplying rates: dy/dx = 4 x 5 = 20. Substituting: y = 4(5x) = 20x, whose rate of change is 20. Both methods agree."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is a \"composed function\" (a function of a function)?",
+        "choices": [
+          "A function with more than one input variable",
+          "One function's output fed directly in as another function's input",
+          "A function with more than 5 terms",
+          "Two unrelated functions graphed on the same axes"
+        ],
+        "answerIndex": 1,
+        "explanation": "A composed function f(g(x)) computes g(x) first, then feeds that result into f as its input."
+      },
+      {
+        "type": "short",
+        "question": "Gear A turns 3 times for every turn of gear B, and gear B turns 5 times for every turn of gear C. How many times does gear A turn per turn of gear C?",
+        "answer": "15",
+        "acceptable": [
+          "15"
+        ],
+        "explanation": "Multiply the rates through the chain: 3 x 5 = 15."
+      },
+      {
+        "type": "mc",
+        "question": "When one rate of change feeds into another through a chain (like gear C into gear B into gear A), how do you find the overall rate?",
+        "choices": [
+          "Add the individual rates together",
+          "Multiply the individual rates together",
+          "Subtract the smaller rate from the larger",
+          "Average the individual rates"
+        ],
+        "answerIndex": 1,
+        "explanation": "Rates through a chain multiply, not add — that's the core intuition behind the chain rule."
+      },
+      {
+        "type": "short",
+        "question": "u = 3x (rate 3) and y = 2u (rate 2). What is dy/dx?",
+        "answer": "6",
+        "acceptable": [
+          "6"
+        ],
+        "explanation": "dy/dx = (dy/du) x (du/dx) = 2 x 3 = 6."
+      },
+      {
+        "type": "mc",
+        "question": "Which formula correctly states the chain rule for y = f(u) where u = g(x)?",
+        "choices": [
+          "dy/dx = (dy/du) + (du/dx)",
+          "dy/dx = (dy/du) x (du/dx)",
+          "dy/dx = (dy/du) / (du/dx)",
+          "dy/dx = dy/du only, du/dx is not needed"
+        ],
+        "answerIndex": 1,
+        "explanation": "The chain rule multiplies each link's own rate of change: dy/dx = (dy/du) x (du/dx)."
+      }
+    ]
+  },
+  {
+    "id": "9.8",
+    "number": 8,
+    "title": "The chain rule, part 2 — computing it step by step on a worked composed function",
+    "objectives": [
+      "Apply the formal chain rule h'(x) = f'(g(x)) x g'(x) to a worked composed function",
+      "Identify the \"outer\" function f and \"inner\" function g inside a composed expression like (3x+1)^2",
+      "Check a chain-rule result by fully expanding the composed function and differentiating the expanded form directly"
+    ],
+    "explanation": [
+      "Lesson 9.7 built the intuition: rates of change through a chain multiply. Now turn that into a repeatable procedure. If h(x) = f(g(x)) — an outer function f wrapped around an inner function g — then the chain rule states: h'(x) = f'(g(x)) x g'(x). In words: take the derivative of the OUTER function, but evaluate it at the INNER function's value (not at plain x), then multiply by the derivative of the INNER function. This is exactly lesson 9.7's \"multiply the rates\" idea, written as a formula you can apply to any composed function, not just simple linear chains.",
+      "Work it on h(x) = (3x+1)^2. Spot the two layers: the inner function is g(x) = 3x+1 (what's INSIDE the parentheses), and the outer function is f(u) = u^2 (squaring whatever comes in). First differentiate each layer on its own, using tools already in hand: g'(x) = 3 (lesson 9.4's constant-multiple and sum rules — the derivative of 3x+1 is 3). f'(u) = 2u (lesson 9.3's power rule applied to u^2). Now apply the chain rule: h'(x) = f'(g(x)) x g'(x) = 2(3x+1) x 3 = 6(3x+1) = 18x+6. Notice f' was evaluated at g(x) = 3x+1, NOT at plain x — that substitution is the step every new chain-rule user has to watch for.",
+      "Check the answer without the chain rule, as a sanity check: expand (3x+1)^2 = 9x^2 + 6x + 1 first, then differentiate the expanded polynomial directly with 9.3's power rule and 9.4's sum rule: derivative of 9x^2 is 18x, derivative of 6x is 6, derivative of 1 is 0. Total: 18x + 6 — exactly matching the chain-rule answer. The chain rule isn't a different answer, it's a shortcut that skips the expansion step, which matters enormously once expanding by hand gets unwieldy (imagine a composed function raised to the 10th power, or nested three functions deep).",
+      "Evaluate h'(x) = 18x+6 at a specific point, say x=2: h'(2) = 18(2)+6 = 42. Using the chain-rule form directly instead: f'(g(2)) x g'(2) = 2(3(2)+1) x 3 = 2(7) x 3 = 14 x 3 = 42 — same number, computed straight from the layered form without ever expanding. That's the payoff: for complicated composed functions, the chain rule lets you evaluate the derivative at a point directly, layer by layer, without ever writing out the fully expanded polynomial."
+    ],
+    "example": {
+      "problem": "Find h'(x) for h(x) = (x+5)^2 using the chain rule, then check it against the fully expanded polynomial's derivative, and evaluate h'(3).",
+      "steps": [
+        "Identify the layers: inner g(x) = x+5, outer f(u) = u^2.",
+        "Differentiate each layer: g'(x) = 1 (sum rule, derivative of x+5). f'(u) = 2u (power rule).",
+        "Chain rule: h'(x) = f'(g(x)) x g'(x) = 2(x+5) x 1 = 2x+10.",
+        "Check by expanding: (x+5)^2 = x^2+10x+25, whose derivative is 2x+10 — matches.",
+        "Evaluate at x=3: h'(3) = 2(3)+10 = 16."
+      ],
+      "answer": "h'(x) = 2x+10, and h'(3) = 16."
+    },
+    "practice": [
+      {
+        "problem": "Find h'(x) for h(x) = (2x)^2 using the chain rule (inner g(x)=2x, outer f(u)=u^2), then check against the expanded form.",
+        "solution": "g'(x) = 2, f'(u) = 2u. h'(x) = 2(2x) x 2 = 8x. Check: (2x)^2 = 4x^2, derivative = 8x — matches."
+      },
+      {
+        "problem": "Find h'(x) for h(x) = (x-4)^2, then evaluate h'(6).",
+        "solution": "g(x)=x-4, g'(x)=1; f(u)=u^2, f'(u)=2u. h'(x) = 2(x-4) x 1 = 2x-8. At x=6: 2(6)-8 = 4. Check: (x-4)^2 = x^2-8x+16, derivative 2x-8, at x=6 also 4."
+      },
+      {
+        "problem": "Find h'(x) for h(x) = (4x+3)^2, then evaluate h'(1).",
+        "solution": "g(x)=4x+3, g'(x)=4; f(u)=u^2, f'(u)=2u. h'(x) = 2(4x+3) x 4 = 8(4x+3) = 32x+24. At x=1: 32(1)+24 = 56. Check: (4x+3)^2 = 16x^2+24x+9, derivative 32x+24, at x=1 also 56."
+      },
+      {
+        "problem": "Find h'(x) for h(x) = (x+2)^3 using the chain rule (outer f(u)=u^3, so f'(u)=3u^2 by the power rule), then evaluate h'(1).",
+        "solution": "g(x)=x+2, g'(x)=1; f'(u)=3u^2. h'(x) = 3(x+2)^2 x 1 = 3(x+2)^2. At x=1: 3(3)^2 = 27. Check: (x+2)^3 = x^3+6x^2+12x+8, derivative 3x^2+12x+12, at x=1: 3+12+12 = 27 — matches."
+      },
+      {
+        "problem": "In h(x) = f(g(x)), what mistake would it be to compute f'(x) instead of f'(g(x)) when applying the chain rule?",
+        "solution": "The outer function's derivative must be evaluated at the INNER function's value g(x), not at plain x — using f'(x) instead of f'(g(x)) is the single most common chain-rule mistake and gives the wrong slope everywhere except where g(x) happens to equal x."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "For h(x) = f(g(x)), what does the chain rule say h'(x) equals?",
+        "choices": [
+          "f'(x) x g'(x)",
+          "f'(g(x)) x g'(x)",
+          "f(g'(x))",
+          "f'(g(x)) + g'(x)"
+        ],
+        "answerIndex": 1,
+        "explanation": "The outer function's derivative must be evaluated at g(x) (the inner function's value), then multiplied by the inner function's own derivative."
+      },
+      {
+        "type": "short",
+        "question": "For h(x) = (x+5)^2, what is h'(x)?",
+        "answer": "2x+10",
+        "acceptable": [
+          "2x+10",
+          "2x + 10"
+        ],
+        "explanation": "Inner g'(x)=1, outer f'(u)=2u; chain rule gives 2(x+5) x 1 = 2x+10."
+      },
+      {
+        "type": "mc",
+        "question": "For h(x) = (3x+1)^2, why is h'(x) = 6(3x+1) rather than just 2(3x+1)?",
+        "choices": [
+          "Because the inner function's own derivative (g'(x)=3) must be multiplied in, per the chain rule",
+          "Because the outer function needs cubing instead of squaring",
+          "It's a typo, 2(3x+1) is correct",
+          "Because 3x+1 must be squared twice"
+        ],
+        "answerIndex": 0,
+        "explanation": "The chain rule multiplies the outer derivative 2(3x+1) by the inner derivative g'(x)=3, giving 6(3x+1)."
+      },
+      {
+        "type": "short",
+        "question": "For h(x) = (2x)^2, what is h'(x)?",
+        "answer": "8x",
+        "acceptable": [
+          "8x"
+        ],
+        "explanation": "Inner g'(x)=2, outer f'(u)=2u; chain rule gives 2(2x) x 2 = 8x."
+      },
+      {
+        "type": "mc",
+        "question": "Why is checking a chain-rule answer by fully expanding the polynomial and differentiating directly a good habit?",
+        "choices": [
+          "It isn't useful, the chain rule is always exact and never needs checking",
+          "It confirms the chain-rule shortcut against a method already trusted from 9.3-9.4, catching mistakes like forgetting the inner derivative",
+          "Expanding is always faster than the chain rule",
+          "It changes the actual value of the derivative"
+        ],
+        "answerIndex": 1,
+        "explanation": "Expanding and differentiating directly uses only the already-verified power/sum/constant-multiple rules, so agreement between the two methods confirms the chain-rule computation was done correctly."
+      }
+    ]
+  },
+  {
+    "id": "9.9",
+    "number": 9,
+    "title": "Coding a derivative — the tiny-step numerical approximation, as a reusable function",
+    "objectives": [
+      "Translate the shrinking-interval derivative estimate from lessons 9.1-9.2 into a reusable Python function",
+      "Write numerical_derivative(f, x, h) using Phase 2/7 function-writing skills, taking another function as an argument",
+      "Test the numerical approximation against known exact derivatives (power rule, chain rule) to confirm it works"
+    ],
+    "explanation": [
+      "Lessons 9.1 and 9.2 estimated a derivative by hand: pick a tiny interval h, compute (f(x+h) - f(x)) / h, and watch the result settle down as h shrinks toward zero. That is a completely mechanical recipe — the same three steps every time, for ANY function f. Phase 2 and Phase 7 already covered writing functions that take other functions as building blocks (Phase 2's functions with parameters, Phase 7's zip() and NumPy calls); this lesson writes that shrinking-interval recipe as one reusable Python function that works for any f, not just the one function being estimated by hand that day.",
+      "In Python, a function itself can be passed as an argument to another function — so numerical_derivative can take f (the function to differentiate), x (the point to evaluate at), and h (the tiny step size) as its three inputs: `def numerical_derivative(f, x, h=0.0001): return (f(x + h) - f(x)) / h`. Calling `numerical_derivative(lambda x: x**2, 3, 0.0001)` computes ((3.0001)^2 - 3^2) / 0.0001 — exactly lesson 9.2's shrinking-interval calculation for f(x)=x^2 at x=3, done by the computer instead of by hand, using whatever h is passed in (0.0001 as a sensible small default).",
+      "Testing this against a KNOWN exact derivative is how you confirm the function actually works. Lesson 9.3's power rule says x^2's exact derivative at x=3 is 2(3) = 6. Running numerical_derivative on f(x)=x^2 at x=3 gives 6.000100000012054 — matching 6 to four decimal places, with the tiny leftover being the same kind of approximation error lesson 9.2 already saw (h is small but not exactly zero). The same check works for x^3 at x=2: the power rule predicts 3x^2 = 3(4) = 12 exactly, and numerical_derivative returns approximately 12.0006 — again matching to four decimal places.",
+      "This same tool can check a chain-rule answer from lesson 9.8, without redoing any algebra by hand. Lesson 9.8 found that for h(x) = (3x+1)^2, h'(2) = 42 exactly (both the chain-rule method and the expanded-polynomial method agreed on this). Running numerical_derivative on that same function at x=2 gives approximately 42.0009 — matching the hand-worked answer. Having one small, reusable, tested tool like this means every future lesson (and every future function in Phase 10+) can be checked numerically in one line, instead of re-deriving the shrinking-interval calculation by hand each time — the same idea as this project's own bab-schema-check tool: build the recipe once, reuse it forever."
+    ],
+    "example": {
+      "problem": "Write numerical_derivative(f, x, h=0.0001) in Python, then use it to check f(x) = x**3 at x = 2 against the power rule's exact prediction.",
+      "steps": [
+        "Define the function: def numerical_derivative(f, x, h=0.0001): return (f(x + h) - f(x)) / h",
+        "Define f as a lambda: f = lambda x: x**3",
+        "Call it: numerical_derivative(f, 2) computes ((2.0001)**3 - 2**3) / 0.0001",
+        "Compare to the power rule's exact prediction: derivative of x^3 is 3x^2 (lesson 9.3), so at x=2 the exact value is 3(4) = 12",
+        "The numerical result (~12.0006) matches the exact value (12) to four decimal places, confirming the function works"
+      ],
+      "answer": "numerical_derivative(lambda x: x**3, 2) ≈ 12.0006, matching the power rule's exact answer of 12."
+    },
+    "practice": [
+      {
+        "problem": "What are the three inputs to numerical_derivative(f, x, h), and what does each one represent?",
+        "solution": "f is the function being differentiated, x is the point to estimate the derivative at, and h is the tiny step size used in the shrinking-interval formula (f(x+h) - f(x)) / h."
+      },
+      {
+        "problem": "Using the power rule (lesson 9.3), what is the EXACT derivative of f(x) = x**2 at x = 3? What would you expect numerical_derivative(lambda x: x**2, 3) to return, approximately?",
+        "solution": "Exact: 2x at x=3 is 6. numerical_derivative should return a value very close to 6 (approximately 6.0001), since it's a tiny-step approximation, not an exact symbolic computation."
+      },
+      {
+        "problem": "Why does numerical_derivative take f as a PARAMETER instead of hard-coding a specific function like x**2 inside it?",
+        "solution": "Taking f as a parameter makes the function reusable for ANY function, not just one — the same recipe (shrink h, compute (f(x+h)-f(x))/h) applies no matter what f is, so hard-coding one function would throw away that reusability."
+      },
+      {
+        "problem": "Using lesson 9.8's chain-rule result for h(x) = (3x+1)^2 (h'(2) = 42 exactly), what would you expect numerical_derivative(lambda x: (3*x+1)**2, 2) to return, approximately?",
+        "solution": "Approximately 42 (in practice about 42.0009) — the numerical approximation should closely match the exact chain-rule answer from lesson 9.8."
+      },
+      {
+        "problem": "If h were made LARGER (say h=1 instead of h=0.0001), would you expect numerical_derivative's result to be closer to or farther from the exact derivative, based on lessons 9.1-9.2?",
+        "solution": "Farther from exact — lessons 9.1-9.2 showed the estimate only gets accurate as h SHRINKS toward zero; a large h like 1 measures more of an average rate of change over a wide interval, not the instantaneous rate."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What formula does numerical_derivative(f, x, h) compute?",
+        "choices": [
+          "f(x) * h",
+          "(f(x + h) - f(x)) / h",
+          "f(x + h) + f(x)",
+          "f(x) / h"
+        ],
+        "answerIndex": 1,
+        "explanation": "This is exactly the shrinking-interval estimate from lessons 9.1-9.2, written as a reusable function."
+      },
+      {
+        "type": "short",
+        "question": "What is the exact derivative of x**2 at x=3, using the power rule?",
+        "answer": "6",
+        "acceptable": [
+          "6"
+        ],
+        "explanation": "The power rule gives derivative 2x for x^2, so at x=3: 2(3)=6."
+      },
+      {
+        "type": "mc",
+        "question": "Why is being able to pass a function f as a PARAMETER to numerical_derivative useful?",
+        "choices": [
+          "It makes the code shorter to type only",
+          "It lets the same recipe work for any function, without rewriting the shrinking-interval logic each time",
+          "Python requires all functions to take other functions as arguments",
+          "It has no real benefit over hard-coding one specific function"
+        ],
+        "answerIndex": 1,
+        "explanation": "Taking f as a parameter is what makes numerical_derivative reusable across every function it might ever need to check, rather than being locked to one."
+      },
+      {
+        "type": "short",
+        "question": "As h shrinks toward zero, does the numerical approximation get closer to or farther from the true instantaneous derivative?",
+        "answer": "closer",
+        "acceptable": [
+          "closer",
+          "closer to"
+        ],
+        "explanation": "Lessons 9.1-9.2 established that shrinking h toward zero is exactly what turns an average rate of change into the instantaneous derivative."
+      },
+      {
+        "type": "mc",
+        "question": "What is the best way to confirm a numerical_derivative implementation is correct?",
+        "choices": [
+          "Assume it's correct since the formula looks right",
+          "Test it against a function whose EXACT derivative is already known (like from the power rule or chain rule) and check the results are close",
+          "Only ever use it on functions with unknown derivatives",
+          "Run it once and never check it again"
+        ],
+        "answerIndex": 1,
+        "explanation": "Testing against a known exact answer (power rule or chain rule) is how lesson 9.9 itself validates the tool, matching the project's established habit of independently checking numeric claims."
+      }
+    ]
+  },
+  {
+    "id": "9.10",
+    "number": 10,
+    "title": "Mini-project — using a derivative to find which direction shrinks an error",
+    "objectives": [
+      "Build an error function E(w) that measures how wrong a single-weight prediction is, using Phase 8's weighted-sum idea",
+      "Use the chain rule (9.7-9.8) to find dE/dw, the derivative of the error with respect to the weight",
+      "Use the SIGN of the derivative (lesson 9.5) to decide which direction to adjust w to shrink the error — a hand-worked preview of the \"downhill direction\" idea"
+    ],
+    "explanation": [
+      "This mini-project combines every tool from Phase 9: average and instantaneous rate of change (9.1-9.2), the power rule (9.3), sum and constant-multiple rules (9.4), the sign of a derivative (9.5), partial derivatives (9.6), the chain rule (9.7-9.8), and coding a derivative (9.9) — into one worked scenario that previews exactly what Phase 11's gradient descent will formalize: using a derivative to find the \"downhill direction\" that shrinks an error.",
+      "Set up a tiny one-weight prediction, echoing lesson 8.3's z = x·w + b (here with no bias, for simplicity): a single input x = 2 is multiplied by a weight w to make a prediction, p(w) = w x 2. The TARGET value we want the prediction to hit is t = 10. Define an error function that measures how far off the prediction is, squared so being off in either direction always counts as positive error (the same squaring idea lesson 5.7's variance used for deviations): E(w) = (t - p(w))^2 = (10 - 2w)^2.",
+      "E(w) = (10-2w)^2 is a composed function exactly like lesson 9.8's worked examples: the inner function is g(w) = 10 - 2w (so g'(w) = -2, by 9.4's sum and constant-multiple rules), and the outer function is f(u) = u^2 (so f'(u) = 2u, by 9.3's power rule). Apply the chain rule from lesson 9.8: dE/dw = f'(g(w)) x g'(w) = 2(10-2w) x (-2) = -4(10-2w) = -40 + 8w.",
+      "Now use lesson 9.5's sign-of-derivative idea to find the \"downhill direction\" — the direction that SHRINKS the error. At w=1: p(1)=2, E(1)=(10-2)^2=64, and dE/dw = -40+8(1) = -32 (negative). A negative slope means E is DECREASING as w increases (9.5: negative slope = downhill in the direction of increasing w) — so increasing w from 1 shrinks the error. At w=6: p(6)=12, E(6)=(10-12)^2=4, and dE/dw = -40+8(6) = 8 (positive) — now increasing w would INCREASE the error, so the downhill direction has flipped to DECREASING w. At w=5: p(5)=10 exactly matches the target, E(5)=0, and dE/dw = -40+8(5) = 0 (lesson 9.5's flat point) — the error is at its lowest and there is no downhill direction left to go, because it's already at the bottom. This is precisely the idea Phase 11's gradient descent will formalize into a repeatable algorithm: at any w, compute dE/dw, and step in the direction that makes the error smaller — away from a positive slope, toward a negative slope's downhill side — repeating until the slope reaches zero."
+    ],
+    "example": {
+      "problem": "Using p(w) = 2w and t = 10 (so E(w) = (10-2w)^2), find dE/dw at w=3, and state which direction (increase or decrease w) shrinks the error from there.",
+      "steps": [
+        "Compute the prediction and error at w=3: p(3) = 2(3) = 6. E(3) = (10-6)^2 = 16.",
+        "Apply the chain rule: inner g(w)=10-2w, g'(w)=-2; outer f(u)=u^2, f'(u)=2u. dE/dw = 2(10-2w) x (-2) = -4(10-2w).",
+        "Evaluate at w=3: dE/dw = -4(10-6) = -4(4) = -16.",
+        "The slope is negative, so (per lesson 9.5) the error DECREASES as w increases — increasing w shrinks the error."
+      ],
+      "answer": "dE/dw = -16 at w=3 (negative), so increasing w shrinks the error."
+    },
+    "practice": [
+      {
+        "problem": "At w=8 (using p(w)=2w, t=10), compute p(8), E(8), and dE/dw using dE/dw = -40+8w. Which direction shrinks the error?",
+        "solution": "p(8)=16, E(8)=(10-16)^2=36. dE/dw = -40+8(8) = 24 (positive). A positive slope means the error is increasing as w increases, so DECREASING w shrinks the error."
+      },
+      {
+        "problem": "At w=4, compute E(4) and dE/dw. Which direction shrinks the error?",
+        "solution": "p(4)=8, E(4)=(10-8)^2=4. dE/dw = -40+8(4) = -8 (negative). Increasing w shrinks the error."
+      },
+      {
+        "problem": "At w=5.5, compute E(5.5) and dE/dw. Has the downhill direction flipped compared to w=4?",
+        "solution": "p(5.5)=11, E(5.5)=(10-11)^2=1. dE/dw = -40+8(5.5) = 4 (positive). Yes — at w=4 the slope was negative (increase w), but at w=5.5 it's positive (decrease w); the true minimum (w=5, E=0) sits between them, matching lesson 9.5's flat-point idea."
+      },
+      {
+        "problem": "Without recomputing E(w) directly, use numerical_derivative from lesson 9.9 to check dE/dw at w=3 (expected -16 from the chain rule). What Python call would you make, using E(w) = (10-2*w)**2?",
+        "solution": "numerical_derivative(lambda w: (10-2*w)**2, 3) — this should return a value very close to -16, confirming the chain-rule result numerically, the same cross-check method lesson 9.9 established."
+      },
+      {
+        "problem": "At w=5 exactly, dE/dw = 0. What does this tell you about the error at that point, and why is w=5 special for this prediction problem (p(w)=2w, t=10)?",
+        "solution": "A zero slope (lesson 9.5) means the error is neither increasing nor decreasing at that point — flat. w=5 is special because p(5) = 2(5) = 10 exactly equals the target t=10, so the error E(5) = 0 is as small as it can possibly get; there's no downhill direction left because it's already at the bottom."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "In this mini-project's error function E(w) = (10-2w)^2, what are the outer and inner functions for applying the chain rule?",
+        "choices": [
+          "Outer: u^2, Inner: 10-2w",
+          "Outer: 10-2w, Inner: u^2",
+          "There is only one function, no chain rule needed",
+          "Outer: 2w, Inner: 10-u"
+        ],
+        "answerIndex": 0,
+        "explanation": "The squaring happens LAST (outer, f(u)=u^2), applied to the result of 10-2w (inner, g(w)=10-2w) computed first."
+      },
+      {
+        "type": "short",
+        "question": "Using dE/dw = -40+8w, what is dE/dw at w=1?",
+        "answer": "-32",
+        "acceptable": [
+          "-32"
+        ],
+        "explanation": "dE/dw = -40+8(1) = -32."
+      },
+      {
+        "type": "mc",
+        "question": "At w=1, dE/dw = -32 (negative). Which direction shrinks the error?",
+        "choices": [
+          "Increasing w",
+          "Decreasing w",
+          "Neither direction changes the error",
+          "Cannot be determined from the sign alone"
+        ],
+        "answerIndex": 0,
+        "explanation": "A negative slope means the error decreases as w increases — so increasing w is the downhill direction, per lesson 9.5."
+      },
+      {
+        "type": "short",
+        "question": "At what value of w does this prediction problem's error E(w) = (10-2w)^2 reach exactly 0?",
+        "answer": "5",
+        "acceptable": [
+          "5",
+          "w=5"
+        ],
+        "explanation": "p(5) = 2(5) = 10 exactly matches the target t=10, making the error 0 — and dE/dw = 0 there too, matching the flat-point idea from lesson 9.5."
+      },
+      {
+        "type": "mc",
+        "question": "What idea from Phase 11 does this mini-project directly preview?",
+        "choices": [
+          "Matrix multiplication",
+          "Gradient descent — using a derivative's sign to repeatedly step toward the error minimum",
+          "The XOR problem",
+          "Binary search"
+        ],
+        "answerIndex": 1,
+        "explanation": "Repeatedly computing dE/dw and stepping in the direction that shrinks the error, until the slope reaches zero, is exactly what Phase 11's gradient descent formalizes into an algorithm."
+      }
+    ]
   }
 ];

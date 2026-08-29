@@ -23,13 +23,13 @@ no network afterward (same pattern as the sibling flashcard apps below).
 
 ## Status
 
-**Phases 1-8 are fully written** (111 lessons total) — Phase 1 (Math
+**Phases 1-9 are fully written** (121 lessons total) — Phase 1 (Math
 Foundations I, 20/20), Phase 2 (Programming Foundations I — Python, 17/17),
 Phase 3 (How Brains Work, 15/15), Phase 4 (Logic & Computing Basics, 12/12),
 Phase 5 (Statistics & Data, 12/12), Phase 6 (Math Foundations II, 13/13),
-Phase 7 (Programming Foundations II, 12/12), and Phase 8 (The Perceptron,
-10/10). **Phase 9 (Calculus for Learning) is in progress: 2/10 lessons
-written** (9.1, 9.2), with the remaining 8 titled but not yet drafted.
+Phase 7 (Programming Foundations II, 12/12), Phase 8 (The Perceptron,
+10/10), and Phase 9 (Calculus for Learning, 10/10). Phases 10-14 have no
+lesson content yet, next up is Phase 10 ("Networks of Neurons").
 Phases 10-14 are visible in the roadmap as titles only ("coming soon") so the
 whole path is motivating to see, but have no lesson content yet. See
 `STATUS.md` for the exact cutoff and what's next.
@@ -96,9 +96,9 @@ automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 9, in progress —
-   6/10 lessons written; continue at 9.7 using the title breakdown in
-   `STATUS.md`. Once 9.10 ships, move to phase 10: "Networks of Neurons").
+1. Pick the next phase from `ROADMAP` (Phase 9 shipped 2026-08-28, 10/10
+   lessons; next is phase 10: "Networks of Neurons" — write its title
+   breakdown first, same pattern as Phase 9's in `STATUS.md`).
 2. Write that phase's lesson list (title-only breakdown first, then full content
    per lesson using the exact schema above — same content bar as Phase 1-6: a
    real 300-500 word explanation with analogies, a worked example, 3-5
