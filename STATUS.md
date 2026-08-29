@@ -523,27 +523,48 @@ decimal places) and 11.8's NumPy output matching 11.7's hand trace
 exactly. `sw.js` cache bumped to `bab-v16` alongside this merge, confirmed
 live via `bab-ship-verify`.
 
+**11.9-11.10 (group 3, final group) were written and merged into
+`data/curriculum.js`**, closing out Phase 11: 11.9 defines an EPOCH as
+one full pass through the training dataset, wraps 11.8's 4-step update
+(forward pass, loss, gradient, new weights) in a loop, and traces the
+shrink-then-flatten loss pattern on the single-example neuron used since
+11.5 (x1=2, x2=-1, b=0, t=0, eta=0.5, start w=[0.6,0.2]) across 5+
+epochs: loss ~0.5344 -> 0.3248 -> 0.1578 -> 0.0844 -> 0.0542 ->
+(epoch 6) 0.0391. 11.10 is the Phase 11 mini-project: trains a 2-weight
+sigmoid neuron from scratch on a NEW 3-example toy dataset
+((x1=2,x2=-1,t=0), (x1=1,x2=1,t=1), (x1=-1,x2=2,t=1), start
+w=[0.1,-0.1]), looping 11.8's per-example update through all 3 examples
+each epoch and scoring the epoch's final weights with 11.2's MSE
+formula — end-of-epoch MSE falls ~0.3033 (pre-training) -> 0.1335 ->
+0.0861 -> 0.0646 -> 0.0516 -> 0.0428 over 5 epochs (~7x shrink, never
+reaching exactly 0), synthesizing loss (11.1), MSE (11.2), the gradient
+(11.4), the update rule/learning rate (11.5-11.6), the exact sigmoid
+gradient (11.7), vectorized NumPy (11.8), and epochs (11.9) into one
+end-to-end training loop. Stayed to ONE sigmoid neuron throughout (scope
+note above) — no multi-layer chain rule. 141/141 lessons total across
+Phases 1-11. Every numeric claim (every z/p/L/gradient/weight-update/MSE
+across both lessons, all epochs) independently re-verified via actual
+Python/NumPy execution, not mental math. `bab-schema-check "11."` 10/10
+clean, file-wide 141/141 clean, 0 duplicate ids; `sw.js` cache bumped to
+`bab-v17` alongside this merge, confirmed live via `bab-ship-verify`.
+**Phase 11 (Learning: Loss & Gradient Descent) is now COMPLETE, 10/10.**
+
 ## Pending — next session(s)
 
-- **Phases 1-10 are all SHIPPED. Phase 11's title breakdown is done and
-  11.1-11.4 (group 1) and 11.5-11.8 (group 2) are written and merged
-  (above)** — next up is drafting Phase 11's final group, lessons
-  11.9-11.10: 11.9 the training loop / epochs (repeating 11.8's one-step
-  update many times, watching the loss get smaller pass after pass, and
-  naming one full pass an "epoch"); 11.10 the mini-project, training a
-  single sigmoid neuron from scratch on a small toy dataset using 11.9's
-  loop, tracing the loss curve dropping across iterations and combining
-  every Phase 11 idea (loss, gradient, update rule, learning rate,
-  epochs) end-to-end, mirroring every prior phase's end-of-phase
-  synthesis lesson. Each lesson should assume only Phases 1-10 + earlier
-  Phase 11 lessons, staying to the SAME single neuron per the scope note
-  above (no multi-layer chain rule until Phase 12's backpropagation).
-  Landing 11.9-11.10 completes Phase 11 (10/10) and clears the way for
-  Phase 12 (backpropagation) to begin. Phases 12-14 still have no lesson
-  content yet — only their phase titles show in the roadmap as
-  locked/coming-soon. Per Mike: build this out phase by phase across
-  future sessions, not all at once ("chained background builds through
-  the day" per his 2026-08-25 ask).
+- **Phases 1-11 are all SHIPPED (141/141 lessons).** Phase 11 (Learning:
+  Loss & Gradient Descent) closed out with group 3 (11.9-11.10) above —
+  next up is **Phase 12 (backpropagation)**: re-derive its own scope note
+  and lesson-title breakdown first (the same way Phase 9's, Phase 10's,
+  and Phase 11's title-breakdown sessions each preceded their own
+  content-writing sessions), THEN write content group by group. Phase 12
+  is where the single-neuron restriction Phase 11 held throughout finally
+  lifts — multi-layer credit assignment (the chain rule across stacked
+  layers, building on Phase 10's stacked networks and Phase 11's
+  single-neuron gradient/update-rule machinery) is the whole point of
+  this phase. Phases 13-14 still have no lesson content yet — only their
+  phase titles show in the roadmap as locked/coming-soon. Per Mike: build
+  this out phase by phase across future sessions, not all at once
+  ("chained background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
