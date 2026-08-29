@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (2 of ~10 so far — 13.1-13.2; remaining lessons pending, see
- * STATUS.md) — 153 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (3 of ~10 so far — 13.1-13.3; remaining lessons pending, see
+ * STATUS.md) — 154 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16127,6 +16127,111 @@ const LESSONS = [
           "true positives plus true negatives"
         ],
         "explanation": "TP and TN are exactly the correct predictions (predicted value matches target), so (TP+TN)/total is the same correct-over-total ratio 13.1 defined as accuracy — the confusion matrix just breaks both the correct and incorrect counts into finer categories."
+      }
+    ]
+  },
+  {
+    "id": "13.3",
+    "number": 3,
+    "title": "Precision and recall: two scores for the two ways a classifier can be wrong",
+    "objectives": [
+      "Define precision = TP/(TP+FP) and recall = TP/(TP+FN), each built directly from the same 4 confusion-matrix counts 13.2 introduced",
+      "Compute both scores on 13.2's own 6-point confusion matrix and on 13.2's own two-classifier practice example, and see precision and recall diverge when FP and FN counts differ",
+      "Explain, in plain language, what each score penalizes (precision punishes false positives, recall punishes false negatives) and why a classifier can be perfect on one while being weak on the other"
+    ],
+    "explanation": [
+      "13.2 ended by promising that precision and recall would 'turn TP/FP/FN into scores that tell failure patterns apart' — this lesson delivers exactly that. Both formulas reuse the same 4 confusion-matrix counts, just in two different ratios. Precision = TP / (TP + FP): of everything the classifier PREDICTED positive, what fraction actually WAS positive. It only looks at the predicted-positive column of the matrix, so it is entirely about false positives — crying wolf. Recall = TP / (TP + FN): of everything that actually WAS positive, what fraction did the classifier CATCH. It only looks at the actual-positive row, so it is entirely about false negatives — missing a real case.",
+      "Applying both formulas to 13.2's own 6-point confusion matrix (TP=2, TN=2, FP=1, FN=1): precision = 2/(2+1) = 2/3 approximately 0.667 (66.7%), and recall = 2/(2+1) = 2/3 approximately 0.667 (66.7%) — the two scores come out EQUAL here, but only because this particular matrix happens to have FP=FN=1. That equality is a coincidence of this dataset, not a general rule, which the next example makes clear.",
+      "13.2's own practice problem 3 described two classifiers, both scoring 80% accuracy on the same 10-point set: classifier A has TP=4, TN=4, FP=2, FN=0; classifier B has TP=4, TN=4, FP=0, FN=2. Precision and recall expose exactly the difference 13.2 could only describe in words. Classifier A: precision = 4/(4+2) = 4/6 approximately 0.667 (66.7%), recall = 4/(4+0) = 4/4 = 1.0 (100%) — it catches every single real positive (perfect recall) but 2 of its 6 'yes' predictions were wrong (imperfect precision). Classifier B: precision = 4/(4+0) = 4/4 = 1.0 (100%), recall = 4/(4+2) = 4/6 approximately 0.667 (66.7%) — every 'yes' it gives is correct (perfect precision) but it misses 2 of the 6 real positives (imperfect recall). Same accuracy, same TP and TN counts, opposite perfect score.",
+      "A concrete real-world reading: a spam filter tested on 100 emails scores TP=18, TN=70, FP=2, FN=10 (18+70+2+10=100, matching the total). Precision = 18/(18+2) = 18/20 = 0.9 (90%): of the emails the filter flagged as spam, 90% really were spam, so only 2 legitimate emails got wrongly buried in the spam folder. Recall = 18/(18+10) = 18/28 approximately 0.643 (64.3%): of all 28 actual spam emails, the filter only caught 18, letting 10 slip into the inbox undetected. High precision, mediocre recall — this filter is cautious about calling something spam (rarely wrong when it does) but still misses over a third of the real spam.",
+      "A classifier that predicts positive for EVERY example automatically reaches recall = 1.0 (100%): since it never predicts negative, FN is always 0, so TP/(TP+0) = 1 no matter what. That is precision and recall's warning label — recall alone can be gamed for free by always saying 'yes', which is exactly why a real evaluation always reports both scores together, never recall (or precision) alone, the same way 13.2's confusion matrix argued a single accuracy number alone can't be trusted either."
+    ],
+    "example": {
+      "problem": "Using 13.2's 6-point extended test set, whose confusion matrix is TP=2, TN=2, FP=1, FN=1, compute precision and recall.",
+      "steps": [
+        "Precision = TP / (TP + FP) = 2 / (2 + 1) = 2/3.",
+        "2/3 approximately 0.6667, or 66.7%.",
+        "Recall = TP / (TP + FN) = 2 / (2 + 1) = 2/3.",
+        "2/3 approximately 0.6667, or 66.7% — the same value as precision here, because FP and FN happen to both equal 1 in this particular matrix."
+      ],
+      "answer": "Precision approximately 66.7% and recall approximately 66.7% — equal in this case only because FP=FN=1; changing either count on its own would move one score without moving the other."
+    },
+    "practice": [
+      {
+        "problem": "13.2's practice problem 3 gave classifier A's matrix as TP=4, TN=4, FP=2, FN=0. Compute its precision and recall.",
+        "solution": "Precision = TP/(TP+FP) = 4/(4+2) = 4/6 approximately 0.667 = 66.7%. Recall = TP/(TP+FN) = 4/(4+0) = 4/4 = 1.0 = 100%. Classifier A never misses a real positive (perfect recall) but 2 of its positive predictions were wrong (imperfect precision)."
+      },
+      {
+        "problem": "The same practice problem gave classifier B's matrix as TP=4, TN=4, FP=0, FN=2. Compute its precision and recall.",
+        "solution": "Precision = TP/(TP+FP) = 4/(4+0) = 4/4 = 1.0 = 100%. Recall = TP/(TP+FN) = 4/(4+2) = 4/6 approximately 0.667 = 66.7%. Classifier B is never wrong when it predicts positive (perfect precision) but misses 2 of the real positives (imperfect recall) — the mirror image of classifier A, despite both scoring 80% accuracy."
+      },
+      {
+        "problem": "A medical test's confusion matrix on 100 patients is TP=18, TN=70, FP=2, FN=10 (the same numbers as the spam-filter example, relabeled). Compute precision and recall, and explain in one sentence what the 10 false negatives mean for the patients involved.",
+        "solution": "Precision = 18/(18+2) = 0.9 = 90%. Recall = 18/(18+10) = 18/28 approximately 0.643 = 64.3%. The 10 false negatives are 10 patients who actually have the condition but were told the test came back negative — the real-world cost of recall being well below 100%."
+      },
+      {
+        "problem": "Why can a classifier that predicts 'positive' for every single example reach recall = 1.0 without being a good classifier?",
+        "solution": "Recall = TP/(TP+FN) only counts what happens to the ACTUAL positives; a classifier that always predicts positive never produces a false negative (FN=0 always), so recall is automatically 1.0. But that same classifier also predicts positive on every actual negative, making FP as large as the number of actual negatives, which drives precision down — recall alone can be gamed for free, so it is never reported without precision alongside it."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "short",
+        "question": "What is the formula for precision, in terms of TP, FP, and FN?",
+        "answer": "TP/(TP+FP)",
+        "acceptable": [
+          "TP / (TP + FP)",
+          "TP over TP plus FP",
+          "true positives divided by true positives plus false positives"
+        ],
+        "explanation": "Precision only looks at the predicted-positive column of the confusion matrix: of everything predicted positive, what fraction was actually positive."
+      },
+      {
+        "type": "short",
+        "question": "What is the formula for recall, in terms of TP, FP, and FN?",
+        "answer": "TP/(TP+FN)",
+        "acceptable": [
+          "TP / (TP + FN)",
+          "TP over TP plus FN",
+          "true positives divided by true positives plus false negatives"
+        ],
+        "explanation": "Recall only looks at the actual-positive row of the confusion matrix: of everything that was actually positive, what fraction the classifier caught."
+      },
+      {
+        "type": "mc",
+        "question": "13.2's classifier A (TP=4, TN=4, FP=2, FN=0) and classifier B (TP=4, TN=4, FP=0, FN=2) both score 80% accuracy. What are their precision and recall?",
+        "choices": [
+          "A: precision 66.7%, recall 100%. B: precision 100%, recall 66.7%",
+          "A: precision 100%, recall 66.7%. B: precision 66.7%, recall 100%",
+          "Both have precision 80% and recall 80%",
+          "A and B have identical precision and recall because their accuracy is identical"
+        ],
+        "answerIndex": 0,
+        "explanation": "A's 2 false positives (and 0 false negatives) give it precision 4/6=66.7% but perfect recall 4/4=100%. B's 2 false negatives (and 0 false positives) give it perfect precision 4/4=100% but recall 4/6=66.7%."
+      },
+      {
+        "type": "mc",
+        "question": "A spam filter's confusion matrix on 100 emails is TP=18, TN=70, FP=2, FN=10. What is its precision?",
+        "choices": [
+          "90% (18/20)",
+          "64.3% (18/28)",
+          "18% (18/100)",
+          "88% (18+70)/100"
+        ],
+        "answerIndex": 0,
+        "explanation": "Precision = TP/(TP+FP) = 18/(18+2) = 18/20 = 0.9 = 90%. (18/28 approximately 64.3% is that same matrix's RECALL, not precision — a common mix-up.)"
+      },
+      {
+        "type": "short",
+        "question": "A classifier predicts 'positive' for every single example it is given, with no exceptions. What recall does it necessarily achieve, and why?",
+        "answer": "1.0 (100%), because it never produces a false negative",
+        "acceptable": [
+          "100%",
+          "1.0",
+          "perfect recall",
+          "always 1.0 since FN is always 0"
+        ],
+        "explanation": "Since the classifier never predicts negative, FN=0 always, making recall = TP/(TP+0) = 1.0 regardless of how many actual negatives it wrongly calls positive — which is exactly why recall must always be read alongside precision."
       }
     ]
   }
