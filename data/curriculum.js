@@ -13828,5 +13828,419 @@ const LESSONS = [
         "explanation": "Treating the whole dataset as one matrix (rows=examples, columns=features, from 5.1/6.9) and running one matrix multiplication over all rows at once (7.11's 2D-array handling) is exactly what lets the batched version replace 4 separate forward_pass calls with 2 matrix multiplications."
       }
     ]
+  },
+  {
+    "id": "11.1",
+    "number": 1,
+    "title": "What a loss function measures",
+    "objectives": [
+      "Define a loss function as any function that turns 'how wrong was this one prediction' into a single number, generalizing lesson 9.10's E(w)",
+      "Compute squared-error loss L = (t - p)^2 for a single sigmoid neuron's prediction p = sigma(x.w + b), combining lessons 8.3 and 10.4",
+      "Explain why loss is built so that L=0 means a perfect prediction and larger L means a worse one, and why the difference is squared rather than left as-is"
+    ],
+    "explanation": [
+      "Lesson 9.10 built a one-off tool for a specific problem: E(w) = (10 - 2w)^2 measured how wrong a prediction p(w) = 2w was compared to a target t = 10, and the SIGN of dE/dw said which direction shrank that error. Phase 11 takes that same shape and gives it a name and a permanent job: a LOSS FUNCTION is any function that takes one prediction and its target and returns a single number describing how wrong that one prediction was — smaller is always better, and 0 means the prediction matched the target exactly.",
+      "Lessons 8.3 and 10.4 already built the prediction half of this: a single sigmoid neuron takes an input x, a weight w, and a bias b, computes a raw value z = x.w + b (8.3), then squashes it through sigma(z) = 1/(1+e^-z) (10.4) to produce a prediction p between 0 and 1. Define SQUARED-ERROR LOSS for one example as L = (t - p)^2 — the exact same shape as 9.10's E(w), just written with p = sigma(z) standing in for a raw linear prediction, and t for whatever target this particular example is supposed to hit.",
+      "Walk through a concrete example: x=2, w=0.5, b=-1, t=1. First the raw value: z = x.w + b = 2(0.5) + (-1) = 0. Then the prediction: p = sigma(0) = 0.5 (lesson 10.4's clean midpoint value). Then the loss: L = (1 - 0.5)^2 = 0.25. This one number, 0.25, says exactly how far off this neuron's current guess (0.5) is from what it should have said (1) — not just the direction, a single magnitude.",
+      "Squaring the difference (rather than just using t - p directly) does two things at once, both familiar from lesson 5.7's variance and 9.10's E(w): it makes every loss non-negative, so a prediction that's too high by 0.3 counts exactly the same as one that's too low by 0.3 (there's no cancellation), and it penalizes big misses much more than small ones — a miss of 0.5 squares to 0.25, but a miss of 1.0 (only twice as large) squares to 1.0, four times worse for twice the error."
+    ],
+    "example": {
+      "problem": "For a neuron with x=3, w=0.25, b=-1, t=1, compute z, p, and the squared-error loss L.",
+      "steps": [
+        "Compute the raw value: z = x.w + b = 3(0.25) + (-1) = 0.75 - 1 = -0.25.",
+        "Compute the prediction: p = sigma(-0.25) = 1/(1+e^0.25). e^0.25 is about 1.2840, so p = 1/2.2840, approximately 0.4378.",
+        "Compute the loss: L = (t - p)^2 = (1 - 0.4378)^2 = (0.5622)^2, approximately 0.3160."
+      ],
+      "answer": "z = -0.25, p is approximately 0.4378, and L is approximately 0.3160 — a bigger loss than the x=2 example, because this prediction is farther from the target t=1."
+    },
+    "practice": [
+      {
+        "problem": "For x=4, w=0.5, b=-1, t=1, compute z, p, and L.",
+        "solution": "z = 4(0.5) - 1 = 1. p = sigma(1), approximately 0.7311. L = (1 - 0.7311)^2, approximately 0.0723."
+      },
+      {
+        "problem": "For x=2, w=1, b=-1, t=0, compute z, p, and L.",
+        "solution": "z = 2(1) - 1 = 1. p = sigma(1), approximately 0.7311. L = (0 - 0.7311)^2, approximately 0.5344 — a large loss, because the target is 0 but the prediction leans strongly toward 1."
+      },
+      {
+        "problem": "For x=2, w=1.5, b=-1, t=1, compute z, p, and L.",
+        "solution": "z = 2(1.5) - 1 = 2. p = sigma(2), approximately 0.8808. L = (1 - 0.8808)^2, approximately 0.0142 — a small loss, because the prediction is close to the target."
+      },
+      {
+        "problem": "Two predictions have the same size of miss, |t - p| = 0.2, but one overshoots (t - p = -0.2) and the other undershoots (t - p = +0.2). Are their squared-error losses equal? Why does this matter compared to using (t - p) directly, without squaring?",
+        "solution": "Yes — both square to 0.04, since (-0.2)^2 = (0.2)^2 = 0.04. This matters because squaring erases the sign, so overshooting and undershooting count as equally bad; using (t-p) directly (unsquared) would let a positive miss and a negative miss partially cancel out if ever combined, hiding the true size of the error."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does a loss function measure?",
+        "choices": [
+          "How many training examples a dataset contains",
+          "How wrong ONE prediction was compared to its target, as a single number",
+          "The weight and bias values of a neuron",
+          "The number of layers in a network"
+        ],
+        "answerIndex": 1,
+        "explanation": "A loss function turns one prediction's wrongness, relative to its target, into a single number — smaller is always better, and 0 means a perfect match."
+      },
+      {
+        "type": "short",
+        "question": "Using L = (t-p)^2, if t=1 and p=0.5, what is L?",
+        "answer": "0.25",
+        "acceptable": [
+          "0.25",
+          ".25",
+          "1/4"
+        ],
+        "explanation": "L = (1 - 0.5)^2 = (0.5)^2 = 0.25."
+      },
+      {
+        "type": "mc",
+        "question": "Why is the difference (t - p) squared, rather than used as-is, in squared-error loss?",
+        "choices": [
+          "Squaring makes the loss always non-negative and penalizes larger misses more heavily than smaller ones",
+          "Squaring makes the computation run faster",
+          "Squaring is only needed when using a sigmoid activation",
+          "There is no real reason — either form works identically"
+        ],
+        "answerIndex": 0,
+        "explanation": "Squaring removes the sign (so over- and under-shooting count equally) and grows faster than linearly, so bigger misses are punished disproportionately more."
+      },
+      {
+        "type": "short",
+        "question": "If t=1 and p=0.7311 (rounded to 4 decimals), what is L, rounded to 4 decimals?",
+        "answer": "0.0723",
+        "acceptable": [
+          "0.0723",
+          ".0723"
+        ],
+        "explanation": "L = (1 - 0.7311)^2 = (0.2689)^2, approximately 0.0723."
+      },
+      {
+        "type": "mc",
+        "question": "What is the key difference between lesson 9.10's E(w) = (10-2w)^2 and Phase 11's L = (t-p)^2?",
+        "choices": [
+          "9.10 used a raw linear prediction p(w)=2w, while Phase 11 uses a sigmoid-squashed prediction p=sigma(z) — but both use the exact same squared-error shape",
+          "They measure completely unrelated things",
+          "9.10's formula cannot be squared, only Phase 11's can",
+          "Phase 11 no longer uses a target value t"
+        ],
+        "answerIndex": 0,
+        "explanation": "9.10's E(w) is squared-error loss applied to a raw linear prediction; Phase 11's L is the same squared-error shape, just applied to a sigmoid-neuron's prediction p=sigma(z) instead."
+      }
+    ]
+  },
+  {
+    "id": "11.2",
+    "number": 2,
+    "title": "Mean Squared Error over a dataset",
+    "objectives": [
+      "Extend lesson 11.1's single-example loss to a whole dataset by computing each example's own squared error and averaging them, using lesson 5.x's mean applied to a list of losses",
+      "Compute Mean Squared Error (MSE) by hand for a small multi-example dataset, using one fixed weight and bias shared across every example",
+      "Explain why MSE describes how well ONE set of weights fits an ENTIRE dataset at once, not just a single example"
+    ],
+    "explanation": [
+      "Lesson 11.1's L = (t-p)^2 measures wrongness for exactly ONE example. A real dataset has many examples, and any particular choice of w and b makes a prediction for every single one of them at once, so we need a way to summarize wrongness across the WHOLE dataset with one number. The natural tool is lesson 5.x's MEAN: compute each example's own loss individually using 11.1's formula, then average all of those losses together.",
+      "This is called MEAN SQUARED ERROR, or MSE: MSE = (1/n) times the sum of (t_i - p_i)^2 for every example i in the dataset, where n is the number of examples and p_i = sigma(x_i.w + b) is the prediction that the SAME, fixed w and b produce for example i's own input. Every example uses the same weight and bias — only the input x_i and target t_i change from row to row.",
+      "Worked example, holding w=0.5 and b=-1 fixed across three examples: for (x=2, t=1), z=0, p=0.5, L=(1-0.5)^2=0.25. For (x=4, t=1), z=1, p is about 0.7311, L is about 0.0723. For (x=-2, t=0), z=-2, p is about 0.1192, L is about 0.0142. Summing these three losses gives 0.25 + 0.0723 + 0.0142 = 0.3365, and dividing by n=3 gives MSE = 0.3365 / 3, approximately 0.1122.",
+      "This one number, 0.1122, is the 'report card' for the SAME w=0.5, b=-1 tested against every example at once — a different choice of w or b would produce a different MSE. This is exactly the idea that lessons 11.3 onward build on: 'learning' means searching for the w and b that make THIS one number, MSE, as small as possible across the entire dataset — not fitting one example perfectly while ignoring the rest, which is why the mean is taken over ALL examples together rather than looking at any single one in isolation."
+    ],
+    "example": {
+      "problem": "Add a fourth example, x=0, t=0, to the three-example dataset above (still using w=0.5, b=-1), and recompute the MSE over all four examples.",
+      "steps": [
+        "Compute the new example's loss: z = 0(0.5) + (-1) = -1. p = sigma(-1), approximately 0.2689. L = (0 - 0.2689)^2, approximately 0.0723.",
+        "Add this to the running total: 0.3365 (previous 3 examples) + 0.0723 = 0.4088.",
+        "Divide by the new count, n=4: MSE = 0.4088 / 4, approximately 0.1022."
+      ],
+      "answer": "MSE over all 4 examples is approximately 0.1022, slightly lower than the 3-example MSE of 0.1122, because the new example's loss (0.0723) was below the previous average."
+    },
+    "practice": [
+      {
+        "problem": "Using only the first two examples, (x=2, t=1) and (x=4, t=1), with w=0.5, b=-1, compute the MSE.",
+        "solution": "L for (2,1) is 0.25; L for (4,1) is approximately 0.0723. MSE = (0.25 + 0.0723) / 2 = 0.3223 / 2, approximately 0.1611."
+      },
+      {
+        "problem": "Of the three original examples, (x=2,t=1) has the largest loss, L=0.25. Why does this one example contribute more to the MSE than the other two?",
+        "solution": "At x=2 with w=0.5,b=-1, the prediction p=0.5 sits exactly halfway between 0 and 1, as far as it can be (in this small dataset) from its target t=1, giving the largest squared error of the three; the other two examples' predictions land closer to their own targets, giving smaller losses."
+      },
+      {
+        "problem": "A different two-example dataset, (x=2, t=1) and (x=6, t=1), still uses w=0.5, b=-1. Compute its MSE.",
+        "solution": "For (2,1): L=0.25 (as before). For (6,1): z=6(0.5)-1=2, p=sigma(2) is approximately 0.8808, L=(1-0.8808)^2, approximately 0.0142. MSE = (0.25 + 0.0142) / 2 = 0.2642 / 2, approximately 0.1321."
+      },
+      {
+        "problem": "If EVERY example in a dataset had exactly the same loss, 0.1, what would the MSE equal, regardless of how many examples there are?",
+        "solution": "0.1 — the mean of a list of identical values equals that value itself, per lesson 5.x's mean rule, no matter how many entries the list has."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does MSE (Mean Squared Error) compute?",
+        "choices": [
+          "The average of each example's own squared-error loss, across the whole dataset",
+          "The single largest loss in the dataset",
+          "The weight and bias values that were used",
+          "The number of examples with zero loss"
+        ],
+        "answerIndex": 0,
+        "explanation": "MSE averages every example's individual squared-error loss (11.1) into one number describing the whole dataset."
+      },
+      {
+        "type": "short",
+        "question": "Using the three losses 0.25, 0.0723, and 0.0142, what is their MSE, rounded to 4 decimals?",
+        "answer": "0.1122",
+        "acceptable": [
+          "0.1122",
+          ".1122"
+        ],
+        "explanation": "(0.25 + 0.0723 + 0.0142) / 3 = 0.3365 / 3, approximately 0.1122."
+      },
+      {
+        "type": "mc",
+        "question": "Why divide by the number of examples (take the mean) instead of just summing every example's loss?",
+        "choices": [
+          "Averaging keeps the loss number comparable across datasets of different sizes — adding more examples doesn't automatically inflate it",
+          "Summing is mathematically impossible for squared numbers",
+          "Division is required by the sigmoid function",
+          "There's no real reason; sum and mean always give the same ranking"
+        ],
+        "answerIndex": 0,
+        "explanation": "A raw sum grows just from adding more examples, even if each one fits equally well; the mean stays a fair, size-independent summary of average fit."
+      },
+      {
+        "type": "short",
+        "question": "In the three-example dataset, which example (given as its x value) has the largest individual loss?",
+        "answer": "2",
+        "acceptable": [
+          "x=2",
+          "2"
+        ],
+        "explanation": "The example (x=2, t=1) has L=0.25, the largest of the three, since its prediction (p=0.5) sits farthest from its target relative to the other two examples."
+      },
+      {
+        "type": "mc",
+        "question": "What does a single MSE number describe?",
+        "choices": [
+          "How well ONE fixed set of weights (w, b) fits the ENTIRE dataset at once, not just one example",
+          "How many layers the network has",
+          "The exact prediction for a single, specific example",
+          "The learning rate used during training"
+        ],
+        "answerIndex": 0,
+        "explanation": "MSE summarizes one w,b choice's overall fit across every example in the dataset simultaneously — it is not tied to any single example."
+      }
+    ]
+  },
+  {
+    "id": "11.3",
+    "number": 3,
+    "title": "Loss as a function of the weights",
+    "objectives": [
+      "Read loss as a function of a single weight, L(w), by fixing every other neuron parameter (input, bias, target) and varying only w — the same treatment lesson 9.10 gave E(w)",
+      "Compute L(w) by hand at several w values and recognize the shape of the resulting curve",
+      "Identify the weight value that minimizes loss for a given example, and explain why that value is the 'best-fitting' weight"
+    ],
+    "explanation": [
+      "Lesson 9.10 treated E as a function of exactly one thing at a time: the weight w, holding the input x and target t fixed, and read off how E changed as w changed. Phase 11's loss works exactly the same way: fix x, b, and t; let only w vary; and ask how L(w) changes as w is tweaked up or down.",
+      "Concrete setup: x=2, b=-1 fixed, and a target t=0.5 — unlike the targets 1 or 0 used in lessons 11.1-11.2 (which sigmoid only ever approaches, never quite reaches), t=0.5 is a value sigma(z) can hit EXACTLY, at z=0 (lesson 10.4's sigma(0)=0.5). With these fixed, L(w) = (0.5 - sigma(2w - 1))^2, a function of w alone.",
+      "Computing L(w) at five points: w=-0.5 gives z=-2, p is about 0.1192, L is about 0.1450. w=0 gives z=-1, p is about 0.2689, L is about 0.0534. w=0.5 gives z=0, p=0.5 exactly, L=0. w=1 gives z=1, p is about 0.7311, L is about 0.0534. w=1.5 gives z=2, p is about 0.8808, L is about 0.1450. Laid out in order, the losses are 0.1450, 0.0534, 0, 0.0534, 0.1450 — a symmetric bowl shape, dropping to exactly 0 at w=0.5 and rising the same amount on either side.",
+      "The minimum sits exactly at w=0.5 because that's the only weight where z lands on 0, making the prediction match the target exactly (p=0.5=t). Lesson 10.4's symmetry property, sigma(-z) = 1 - sigma(z), explains the bowl's symmetry: since z = 2w - 1 is a straight line in w, moving w away from 0.5 by some amount moves z away from 0 by the same amount in either direction, and because the target sits exactly at the sigmoid's own symmetric midpoint (0.5), equal-sized moves of z in either direction produce equal-sized increases in loss.",
+      "Real datasets rarely have a target that sigmoid can hit exactly (11.1-11.2's t=1 and t=0 examples never let L reach precisely 0), so their loss curves won't be perfectly symmetric or bottom out at exactly 0. But every such curve still HAS a shape, and every such shape still has a lowest point somewhere. Finding that lowest point — for every weight in a neuron simultaneously — is literally what lessons 11.4 onward mean by 'training' a model."
+    ],
+    "example": {
+      "problem": "Using the same setup (x=2, b=-1, t=0.5), compute L(w) at w=2, and compare it to the L(1.5)=0.1450 value found above.",
+      "steps": [
+        "Compute z: z = 2(2) - 1 = 3.",
+        "Compute p: p = sigma(3) = 1/(1+e^-3). e^-3 is about 0.0498, so p is about 1/1.0498, approximately 0.9526.",
+        "Compute L: L = (0.5 - 0.9526)^2 = (-0.4526)^2, approximately 0.2048.",
+        "Compare: 0.2048 is larger than 0.1450 (the value at w=1.5), confirming the curve keeps RISING as w moves farther past the w=0.5 minimum."
+      ],
+      "answer": "L(2) is approximately 0.2048 — larger than L(1.5)=0.1450, showing the loss curve continues climbing the farther w moves from the minimum at w=0.5."
+    },
+    "practice": [
+      {
+        "problem": "Compute L(-1) for this same setup (x=2, b=-1, t=0.5), and compare it to L(2)=0.2048.",
+        "solution": "z = 2(-1) - 1 = -3. p = sigma(-3), approximately 0.0474. L = (0.5 - 0.0474)^2, approximately 0.2048 — exactly equal to L(2), because w=-1 and w=2 are each 1.5 away from the minimum at w=0.5, on opposite sides of the symmetric bowl."
+      },
+      {
+        "problem": "At what value of w is L(w) exactly 0 for this setup, and why?",
+        "solution": "w=0.5, because that's the only weight that makes z = 2w-1 equal 0, giving p = sigma(0) = 0.5, which exactly matches the target t=0.5 — zero gap, zero loss."
+      },
+      {
+        "problem": "Is L(w) ever negative, for any value of w? Why or why not?",
+        "solution": "No, never. L(w) is a squared quantity, (0.5 - p)^2, and a squared real number can never be negative — the smallest it can get is 0, exactly as in lesson 11.1's reasoning about squared-error loss."
+      },
+      {
+        "problem": "Compute L(0.25) for this setup.",
+        "solution": "z = 2(0.25) - 1 = -0.5. p = sigma(-0.5), approximately 0.3775. L = (0.5 - 0.3775)^2, approximately 0.0150 — small, since w=0.25 is close to the minimizing weight, w=0.5."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does holding x, b, and t fixed while varying only w let us do?",
+        "choices": [
+          "Read the loss as a function of a single weight, L(w), tracing out a curve",
+          "Change the target value for the dataset",
+          "Skip computing the sigmoid function entirely",
+          "Compute the mean squared error automatically"
+        ],
+        "answerIndex": 0,
+        "explanation": "Fixing everything except one weight turns loss into a function of that one weight alone, L(w), whose shape can be traced by computing it at several w values — exactly lesson 9.10's approach to E(w)."
+      },
+      {
+        "type": "short",
+        "question": "For the worked example (x=2, b=-1, t=0.5), what is L(w) at w=0.5?",
+        "answer": "0",
+        "acceptable": [
+          "0",
+          "0.0",
+          "zero"
+        ],
+        "explanation": "At w=0.5, z=0 and p=sigma(0)=0.5, exactly matching the target t=0.5, so L=(0.5-0.5)^2=0."
+      },
+      {
+        "type": "mc",
+        "question": "What shape does L(w) take across w=-0.5 to w=1.5 in the worked example?",
+        "choices": [
+          "A symmetric bowl-like curve, dropping to a lowest point at w=0.5 and rising equally on either side",
+          "A straight line with constant slope",
+          "A curve that keeps decreasing forever as w increases",
+          "A curve with two separate lowest points"
+        ],
+        "answerIndex": 0,
+        "explanation": "The computed losses (0.1450, 0.0534, 0, 0.0534, 0.1450) form a symmetric bowl centered on w=0.5, where the loss is exactly 0."
+      },
+      {
+        "type": "short",
+        "question": "Why is L(w) never negative, for any w?",
+        "answer": "because it is a squared quantity",
+        "acceptable": [
+          "it's squared",
+          "squared quantities can't be negative",
+          "because L is a square",
+          "it is squared"
+        ],
+        "explanation": "L(w) = (t - p)^2 is always the square of a real number, and squares are never negative."
+      },
+      {
+        "type": "mc",
+        "question": "What does the LOWEST POINT of a loss curve L(w) represent?",
+        "choices": [
+          "The weight value that makes the prediction match the target as closely as possible — the best-fitting weight",
+          "The weight value that makes the prediction as wrong as possible",
+          "The average of all the weights ever tried",
+          "The bias value, not a weight at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "Since lower loss always means a closer match between prediction and target, the lowest point on the curve marks the weight that fits this example best."
+      }
+    ]
+  },
+  {
+    "id": "11.4",
+    "number": 4,
+    "title": "The gradient",
+    "objectives": [
+      "Recall lesson 9.6's partial derivative: how loss changes when ONE weight moves, holding every other weight fixed, computed lesson 9.9's numerical-derivative way",
+      "Define the gradient of the loss as a vector containing one partial derivative per weight — e.g. [dL/dw1, dL/dw2] for a two-weight neuron",
+      "Compute a two-weight neuron's gradient vector by hand and read each component's sign and size to say which weight's change would shrink loss the most, and in which direction"
+    ],
+    "explanation": [
+      "Lesson 9.6 introduced partial derivatives: for a function with several inputs, hold every input but one fixed, and measure how the output changes as just that one input moves. A two-weight neuron's loss, L(w1, w2), is exactly that kind of multi-input function — two knobs, w1 and w2, both feeding into the same single output number, L.",
+      "Lesson 9.9 built numerical_derivative(f, x, h): approximating a derivative by nudging the input by a tiny h and dividing the resulting change in output by h. Apply that same technique to EACH weight in turn: nudge w1 by h while holding w2 fixed, to get dL/dw1; nudge w2 by h while holding w1 fixed, to get dL/dw2. This is exactly lesson 9.6's partial derivative, computed lesson 9.9's numerical way.",
+      "Package both of these numbers into ONE object: the GRADIENT, written as a vector with one entry per weight — gradient = [dL/dw1, dL/dw2]. Every entry answers the same question ('which way is uphill for the loss, if I move just this ONE weight?') for its own weight, all measured from the same starting z, p, and L.",
+      "Worked example: a two-input neuron with x1=2, x2=1, b=0, weights w1=0.5, w2=-0.5, target t=1. z = w1.x1 + w2.x2 + b = 0.5(2) + (-0.5)(1) + 0 = 1 - 0.5 = 0.5. p = sigma(0.5), approximately 0.6225. L = (1 - 0.6225)^2, approximately 0.1425. Nudging w1 by h=0.001 (holding w2 fixed) and recomputing L gives dL/dw1, approximately -0.355; nudging w2 by h=0.001 (holding w1 fixed) gives dL/dw2, approximately -0.177. The gradient is [-0.355, -0.177].",
+      "Reading this gradient: both components are negative, meaning loss DECREASES as EITHER weight increases (lesson 9.5's sign rule, applied separately to each weight) — so increasing either w1 or w2 alone would shrink the loss, exactly like lesson 9.10's single-weight case, just now tracked for two weights at once. And |-0.355| is roughly double |-0.177|, meaning w1's change has roughly twice the effect on loss that w2's does at this point — because x1=2 is twice x2=1, and the input a weight multiplies scales how much moving that weight matters, echoing lesson 9.6's z4=3x1^2+4x2-style scaling intuition."
+    ],
+    "example": {
+      "problem": "For a two-input neuron with x1=3, x2=0.5, b=0, weights w1=0.2, w2=0.2, target t=1, compute z, p, L, and the gradient [dL/dw1, dL/dw2] using h=0.001.",
+      "steps": [
+        "Compute z: z = 0.2(3) + 0.2(0.5) + 0 = 0.6 + 0.1 = 0.7.",
+        "Compute p: p = sigma(0.7), approximately 0.6682.",
+        "Compute L: L = (1 - 0.6682)^2, approximately 0.1101.",
+        "Nudge w1 by h=0.001 (w2 fixed at 0.2), recompute L, and divide the change by h: dL/dw1 is approximately -0.4407.",
+        "Nudge w2 by h=0.001 (w1 fixed at 0.2), recompute L, and divide the change by h: dL/dw2 is approximately -0.0735."
+      ],
+      "answer": "Gradient is approximately [-0.4407, -0.0735] — both negative, so increasing either weight would shrink the loss, with w1 having roughly 6 times the effect of w2 (matching x1=3 being 6 times x2=0.5)."
+    },
+    "practice": [
+      {
+        "problem": "For a neuron with x1=1, x2=3, b=0, weights w1=0.5, w2=-0.5, target t=0, compute z, p, L, and the gradient [dL/dw1, dL/dw2] using h=0.001.",
+        "solution": "z = 0.5(1) + (-0.5)(3) + 0 = 0.5 - 1.5 = -1. p = sigma(-1), approximately 0.2689. L = (0 - 0.2689)^2, approximately 0.0723. Gradient is approximately [0.1058, 0.3178] — both POSITIVE, meaning increasing either weight would INCREASE the loss, so decreasing either weight would shrink it (the opposite direction from the phase's earlier worked example)."
+      },
+      {
+        "problem": "For a THREE-weight neuron, how many numbers would its gradient vector contain, and what does each one represent?",
+        "solution": "3 — one partial derivative per weight, each computed by nudging that one weight alone (holding the other two fixed) and measuring the resulting change in loss, exactly as lesson 9.6's partial derivative is computed for however many inputs a function has."
+      },
+      {
+        "problem": "In the phase's main worked example, gradient = [-0.355, -0.177] for weights w1 and w2. Which single weight, if increased alone, would shrink the loss faster?",
+        "solution": "w1 — its partial derivative, -0.355, has a larger magnitude than w2's, -0.177, meaning a small increase in w1 produces roughly twice the loss decrease that the same-sized increase in w2 would."
+      },
+      {
+        "problem": "Why is the gradient called a VECTOR, rather than a single number like lesson 9.10's dE/dw?",
+        "solution": "Because a multi-weight neuron has more than one knob to turn, and describing 'which way is uphill' for the loss requires one number PER weight, not just one overall number — a single number couldn't capture more than one weight's own slope at the same time, so the gradient packages them together as a vector, one entry per weight."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the gradient of a loss function with multiple weights?",
+        "choices": [
+          "A vector containing one partial derivative per weight",
+          "A single average of all the weights",
+          "The loss function's value at w=0",
+          "The learning rate used during training"
+        ],
+        "answerIndex": 0,
+        "explanation": "The gradient packages one partial derivative per weight into a single vector, e.g. [dL/dw1, dL/dw2] for a two-weight neuron."
+      },
+      {
+        "type": "short",
+        "question": "If dL/dw1 = -0.355, does increasing w1 alone increase or decrease the loss?",
+        "answer": "decrease",
+        "acceptable": [
+          "decrease",
+          "decreases",
+          "it decreases"
+        ],
+        "explanation": "A negative slope (lesson 9.5's sign rule) means the loss decreases as w1 increases."
+      },
+      {
+        "type": "mc",
+        "question": "How is each component of the gradient computed?",
+        "choices": [
+          "By holding every other weight fixed and nudging just that one weight (9.6's partial derivative, computed 9.9's numerical way)",
+          "By averaging every weight together",
+          "By squaring the loss function",
+          "By running the full forward pass twice with all weights changed at once"
+        ],
+        "answerIndex": 0,
+        "explanation": "Each gradient entry is a partial derivative: nudge one weight, hold the rest fixed, and measure the resulting change in loss divided by the nudge size."
+      },
+      {
+        "type": "short",
+        "question": "For a neuron with 4 weights, how many numbers are in its gradient vector?",
+        "answer": "4",
+        "acceptable": [
+          "4",
+          "four"
+        ],
+        "explanation": "The gradient has exactly one entry per weight, so a 4-weight neuron has a 4-entry gradient vector."
+      },
+      {
+        "type": "mc",
+        "question": "In the worked example, gradient = [-0.355, -0.177]. What does the fact that BOTH components are negative tell us?",
+        "choices": [
+          "Increasing EITHER weight alone would decrease the loss from this starting point",
+          "The loss is already at its minimum possible value",
+          "Only w1 can ever affect the loss",
+          "The prediction already exactly matches the target"
+        ],
+        "answerIndex": 0,
+        "explanation": "A negative partial derivative for a weight means increasing that weight alone decreases the loss; here both weights show this, so increasing either one would help."
+      }
+    ]
   }
 ];

@@ -408,13 +408,11 @@ ids. `sw.js` cache bumped to `bab-v14`, committed and pushed (commit
 `data/curriculum.js`). **Phase 10 (Networks of Neurons) is now SHIPPED —
 all 10/10 lessons live**, matching Phases 1-9's shipped status.
 
-## Phase 11 (Learning: Loss & Gradient Descent) — title breakdown
+## Phase 11 (Learning: Loss & Gradient Descent) — title breakdown + progress
 
 Full 10-lesson title breakdown (matching the granularity of Phases 8-10's
 title lists, each building only on Phase 1-10 content + earlier Phase 11
-lessons per the README's progressive-dependency rule). No lesson content
-written yet — titles only, per this wake's guardrail (breakdown first,
-content in a future session).
+lessons per the README's progressive-dependency rule).
 
 **Scope note:** Phase 11 teaches a SINGLE neuron (perceptron-shaped, but
 with 10.4's sigmoid instead of 8.1's step, since step has no useful slope
@@ -431,18 +429,18 @@ multi-layer credit assignment is added on top.
 1. **11.1 — What a loss function measures** — turning "how wrong was this
    prediction" into one number, generalizing 9.10's mini-project
    E(w) = (target - prediction)^2 from a one-off worked example into a
-   named, reusable idea: the loss function.
+   named, reusable idea: the loss function. **WRITTEN.**
 2. **11.2 — Mean Squared Error over a dataset** — averaging squared error
    (5.x's mean, applied across many examples' individual losses) into ONE
    number describing how well a model fits a whole dataset, not just one
-   example.
+   example. **WRITTEN.**
 3. **11.3 — Loss as a function of the weights** — reading loss the same
    way 9.10 read E(w): as a curve that changes as a weight is tweaked,
    with a lowest point representing the best-fitting weight for that
-   dataset.
+   dataset. **WRITTEN.**
 4. **11.4 — The gradient** — packaging 9.6's partial derivatives (one per
    weight) into a single vector that says, for every weight at once,
-   which direction is uphill for the loss.
+   which direction is uphill for the loss. **WRITTEN.**
 5. **11.5 — Gradient descent: the update rule** — formalizing 9.10's
    "downhill direction" into a repeatable algorithm:
    w_new = w_old - (learning rate) x (dLoss/dw), applied to every weight.
@@ -471,17 +469,53 @@ multi-layer credit assignment is added on top.
     4.12/5.12/6.13/7.12/8.10/9.10/10.10's end-of-phase synthesis
     structure.
 
+**11.1-11.4 (group 1) were written and merged into `data/curriculum.js`**,
+staying to a single sigmoid neuron per the scope note above (no
+multi-layer chain rule): 11.1's squared-error loss L=(t-p)^2 for one
+sigmoid-neuron prediction; 11.2's Mean Squared Error, averaging several
+examples' individual losses under one shared weight/bias; 11.3's
+loss-as-a-function-of-w curve, using a target (t=0.5) sigmoid can hit
+exactly so the worked example bottoms out at a clean L=0 at the
+minimizing weight, tracing a symmetric bowl on either side; and 11.4's
+gradient, extending 9.6's partial derivative + 9.9's numerical-derivative
+technique to a two-weight neuron, packaging both partials into one
+vector and reading its sign/magnitude per weight. Schema-validated
+programmatically (`bab-schema-check "11."`: 4/4 lessons checked, plus
+`bab-schema-check` with no argument: 135/135 file-wide, 0 duplicate ids)
+and independently re-verified via actual Python execution for every
+numeric claim: every z/p/L triple in 11.1's example, practice, and quiz
+(x/w/b/t combinations spanning both a near-target and a far-from-target
+case); 11.2's three-example MSE (0.3365/3 ~ 0.1122), the 4th-example
+extension (~0.1022), and both practice-dataset MSEs (~0.1611, ~0.1321);
+11.3's full symmetric-bowl table at w=-1,-0.5,0,0.25,0.5,1,1.5,2 (matching
+pairs like w=-1 and w=2 landing on the identical L=0.2048, confirming the
+bowl's symmetry around the w=0.5 minimum) plus the L=0-at-the-minimum
+claim; and 11.4's two worked gradients (numerical dL/dw1, dL/dw2 at
+h=0.001, cross-checked against the exact chain-rule value
+2(p-t).sigma(z)(1-sigma(z)).x_i, agreeing to 3+ decimal places in both
+the main example and the "Example" block) plus both practice gradients
+(one confirming a sign flip when the target sits below all the
+predictions). `sw.js` cache bumped to `bab-v15` alongside this merge.
+
 ## Pending — next session(s)
 
-- **Phases 1-10 are all SHIPPED. Phase 11's title breakdown is done
-  (above)** — next up is drafting Phase 11 lesson content (11.1 onward),
-  same content bar as every prior phase, each lesson assuming only
-  Phases 1-10 + earlier Phase 11 lessons (and staying to a SINGLE neuron
-  per the scope note above — no multi-layer chain rule until Phase 12's
-  backpropagation). Phases 12-14 still have no lesson content yet — only
-  their phase titles show in the roadmap as locked/coming-soon. Per Mike:
-  build this out phase by phase across future sessions, not all at once
-  ("chained background builds through the day" per his 2026-08-25 ask).
+- **Phases 1-10 are all SHIPPED. Phase 11's title breakdown is done and
+  11.1-11.4 (group 1) are written and merged (above)** — next up is
+  drafting Phase 11's group 2, lessons 11.5-11.8 (gradient descent's
+  update rule, the learning rate, hand-computing one gradient descent
+  step, and coding it in NumPy), same content bar as every prior phase,
+  each lesson assuming only Phases 1-10 + earlier Phase 11 lessons (and
+  staying to a SINGLE neuron per the scope note above — no multi-layer
+  chain rule until Phase 12's backpropagation). Note for whoever writes
+  11.7: it's the first Phase 11 lesson that needs the sigmoid's actual
+  closed-form derivative, sigma'(z) = sigma(z)(1-sigma(z)) — 11.4 stayed
+  with 9.9's numerical-derivative technique deliberately, to introduce the
+  gradient-as-a-vector idea without requiring that formula first; 11.7's
+  "entirely by hand" worked example should derive/state it. Phases 12-14
+  still have no lesson content yet — only their phase titles show in the
+  roadmap as locked/coming-soon. Per Mike: build this out phase by phase
+  across future sessions, not all at once ("chained background builds
+  through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
