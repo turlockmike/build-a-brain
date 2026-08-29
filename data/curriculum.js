@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (1 of ~10 so far — 13.1; remaining lessons pending, see
- * STATUS.md) — 152 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (2 of ~10 so far — 13.1-13.2; remaining lessons pending, see
+ * STATUS.md) — 153 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16023,6 +16023,110 @@ const LESSONS = [
         ],
         "answerIndex": 0,
         "explanation": "Training only ever optimizes fit to the training examples; test accuracy measures something — performance on unseen data — that the update rule never directly targeted, which is exactly why the two scores can diverge."
+      }
+    ]
+  },
+  {
+    "id": "13.2",
+    "number": 2,
+    "title": "The confusion matrix: breaking accuracy into 4 kinds of outcome",
+    "objectives": [
+      "Define the 4 outcomes a binary classifier's rounded prediction can land in against a true target: true positive (TP), true negative (TN), false positive (FP), false negative (FN)",
+      "Build a 2x2 confusion matrix (actual positive/negative rows x predicted positive/negative columns) from a set of predictions, and show that accuracy = (TP+TN) / (TP+TN+FP+FN) — the same accuracy formula from 13.1, just regrouped",
+      "Explain why two classifiers (or two test sets) can have identical accuracy while making very different KINDS of mistakes, and why the confusion matrix — not accuracy alone — is what exposes that difference"
+    ],
+    "explanation": [
+      "13.1 scored 12.10's trained network by counting correct vs. total. That single number hides WHICH kind of mistake happened. A binary classifier's rounded prediction (0 or 1) compared against a true target (0 or 1) can only land in one of 4 buckets: predicted 1 and actually 1 is a true positive (TP) — a correct 'yes'. Predicted 0 and actually 0 is a true negative (TN) — a correct 'no'. Predicted 1 but actually 0 is a false positive (FP) — a wrong 'yes', the network cried wolf. Predicted 0 but actually 1 is a false negative (FN) — a wrong 'no', the network missed a real case. 13.1's single wrong example, (x=[0,-1], t=0) predicted p approximately 0.7535 (rounds to 1) against a true target of 0, is exactly a false positive: it names both halves of what 'wrong' meant there, not just that it was wrong.",
+      "Arrange all 4 counts into a 2x2 table called a confusion matrix: rows are the TRUE label (actual positive / actual negative), columns are the PREDICTED label (predicted positive / predicted negative). Each of the 4 cells is one of TP, FP, FN, TN. Every prediction a classifier makes falls into exactly one cell, so the 4 counts always sum to the total number of predictions scored.",
+      "Extend 13.1's 4-point test set with 2 more held-out points, using 12.10's same final trained weights (no retraining): (x=[-1,2], t=1) and (x=[1,-2], t=1). Forward-passing all 6 points through the unchanged weights gives: (1,1)->p approximately 0.9129, rounds to 1, t=1, TP. (-1,-1)->p approximately 0.1174, rounds to 0, t=0, TN. (0,-1)->p approximately 0.7535, rounds to 1, t=0, FP (13.1's original wrong case). (-2,2)->p approximately 0.0602, rounds to 0, t=0, TN. (-1,2)->p approximately 0.0650, rounds to 0, t=1, FN — a NEW kind of mistake 13.1's 4-point set never showed, because it happened to contain no false negatives. (1,-2)->p approximately 0.9689, rounds to 1, t=1, TP.",
+      "The confusion matrix over these 6 points: TP=2, TN=2, FP=1, FN=1. Accuracy, recomputed with 13.1's own formula, is (TP+TN)/total = (2+2)/6 = 4/6 approximately 0.667, or 66.7% — different from 13.1's 75% only because the test SET changed (2 new points added), not because the network or the rule changed, exactly the same lesson 13.1's training-vs-test gap already taught about data mattering more than the weights.",
+      "The real payoff: accuracy alone reports '4 correct, 2 wrong' either way, but the confusion matrix reports WHICH 2 wrong, and that difference matters. A network with 1 FP and 1 FN (this one) fails in two opposite directions — sometimes crying wolf, sometimes missing a real case. A different network could reach the exact same 66.7% accuracy with 0 FP and 2 FN (never cries wolf, but misses twice as often) or 2 FP and 0 FN (never misses a real case, but cries wolf twice as often) — three classifiers, identical accuracy, three very different failure patterns. Precision and recall, later in this phase, turn TP/FP/FN into scores that tell those patterns apart; the confusion matrix is the raw material both of them are built from."
+    ],
+    "example": {
+      "problem": "Using 12.10's trained network (same final weights as 13.1: W_hidden=[[2.6713,-0.8203],[2.2003,-0.6652]], b_hidden=[-0.3101,-0.3218], W_output=[3.7789,2.5863], b_output=-2.7568), build the confusion matrix for these 6 held-out points: (1,1,t=1), (-1,-1,t=0), (0,-1,t=0), (-2,2,t=0), (-1,2,t=1), (1,-2,t=1).",
+      "steps": [
+        "Forward-pass each point and round at 0.5: (1,1)->p approximately 0.9129->1. (-1,-1)->p approximately 0.1174->0. (0,-1)->p approximately 0.7535->1. (-2,2)->p approximately 0.0602->0. (-1,2)->p approximately 0.0650->0. (1,-2)->p approximately 0.9689->1.",
+        "Compare each rounded prediction to its target: (1,1): pred 1, t 1 -> TP. (-1,-1): pred 0, t 0 -> TN. (0,-1): pred 1, t 0 -> FP. (-2,2): pred 0, t 0 -> TN. (-1,2): pred 0, t 1 -> FN. (1,-2): pred 1, t 1 -> TP.",
+        "Tally the 4 buckets: TP=2 ((1,1) and (1,-2)), TN=2 ((-1,-1) and (-2,2)), FP=1 ((0,-1)), FN=1 ((-1,2)).",
+        "Accuracy = (TP+TN)/(TP+TN+FP+FN) = (2+2)/6 = 4/6 approximately 0.667 = 66.7%, the same recount-correct-over-total accuracy 13.1 defined, just derived from the matrix instead of a plain tally."
+      ],
+      "answer": "Confusion matrix: TP=2, TN=2, FP=1, FN=1 (total 6). Accuracy = 4/6 approximately 66.7%. The 1 FP is 13.1's original wrong case (0,-1); the 1 FN, (-1,2), is a new kind of mistake this 6-point set adds that the original 4-point set never contained."
+    },
+    "practice": [
+      {
+        "problem": "A classifier's rounded predictions on 8 points are [1,0,1,1,0,0,1,0]; the true targets are [1,0,0,1,0,1,1,0]. Build the confusion matrix (TP, TN, FP, FN).",
+        "solution": "Compare position by position: (1,1)TP, (0,0)TN, (1,0)FP, (1,1)TP, (0,0)TN, (0,1)FN, (1,1)TP, (0,0)TN. Tally: TP=3, TN=3, FP=1, FN=1. (Check: 3+3+1+1=8, matches the total.)"
+      },
+      {
+        "problem": "Using the previous problem's matrix (TP=3, TN=3, FP=1, FN=1), compute accuracy two ways: (a) directly, counting matches over total, and (b) using (TP+TN)/(TP+TN+FP+FN). Do they agree?",
+        "solution": "(a) 6 of the 8 predictions match their targets (all but positions 3 and 6) = 6/8 = 0.75. (b) (TP+TN)/(TP+TN+FP+FN) = (3+3)/(3+3+1+1) = 6/8 = 0.75. Yes — they must agree, because TP and TN are exactly the correct predictions, and TP+TN+FP+FN is exactly the total count; the matrix is just a regrouping of the same tally accuracy already uses."
+      },
+      {
+        "problem": "Two classifiers each score 80% accuracy on the same 10-point test set. Classifier A's matrix is TP=4, TN=4, FP=2, FN=0. Classifier B's matrix is TP=4, TN=4, FP=0, FN=2. What is different between them, given the identical accuracy?",
+        "solution": "Both get 8/10 = 80% correct, but the 2 mistakes are opposite kinds. Classifier A makes 2 false positives and 0 false negatives — it never misses a real positive case, but sometimes cries wolf. Classifier B makes 0 false positives and 2 false negatives — it never cries wolf, but sometimes misses a real positive case. Accuracy alone can't tell them apart; only the confusion matrix shows which failure pattern each one has."
+      },
+      {
+        "problem": "Why must TP + TN + FP + FN always equal the total number of predictions scored?",
+        "solution": "Every single prediction has exactly one rounded value (0 or 1) and exactly one true target (0 or 1), so it falls into exactly one of the 4 (predicted, actual) combinations — TP, TN, FP, or FN — and no prediction can belong to more than one bucket or to none. Summing the 4 mutually-exclusive, collectively-exhaustive buckets therefore always recovers the total count."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "short",
+        "question": "A classifier predicts 1 (positive) for an example whose true target is actually 0. What is this outcome called?",
+        "answer": "false positive",
+        "acceptable": [
+          "false positive",
+          "FP",
+          "a false positive"
+        ],
+        "explanation": "Predicted positive (1) but actually negative (0) is a false positive — a wrong 'yes'."
+      },
+      {
+        "type": "short",
+        "question": "A classifier predicts 0 (negative) for an example whose true target is actually 1. What is this outcome called?",
+        "answer": "false negative",
+        "acceptable": [
+          "false negative",
+          "FN",
+          "a false negative"
+        ],
+        "explanation": "Predicted negative (0) but actually positive (1) is a false negative — a wrong 'no', missing a real positive case."
+      },
+      {
+        "type": "mc",
+        "question": "Using 12.10's trained network on the 6-point extended test set from this lesson, what is the confusion matrix (TP, TN, FP, FN)?",
+        "choices": [
+          "TP=2, TN=2, FP=1, FN=1",
+          "TP=3, TN=3, FP=0, FN=0",
+          "TP=4, TN=2, FP=0, FN=0",
+          "TP=2, TN=2, FP=0, FN=2"
+        ],
+        "answerIndex": 0,
+        "explanation": "(1,1) and (1,-2) are TP; (-1,-1) and (-2,2) are TN; (0,-1) is FP; (-1,2) is FN — TP=2, TN=2, FP=1, FN=1."
+      },
+      {
+        "type": "mc",
+        "question": "Why can two classifiers have identical accuracy but very different confusion matrices?",
+        "choices": [
+          "Because accuracy only counts HOW MANY predictions are wrong, not WHICH kind of wrong (false positive vs. false negative) they are — different mixes of FP and FN can sum to the same total error count",
+          "Because accuracy and the confusion matrix measure completely unrelated things",
+          "Because the confusion matrix only applies to networks with a hidden layer",
+          "It isn't possible — identical accuracy always means an identical confusion matrix"
+        ],
+        "answerIndex": 0,
+        "explanation": "Accuracy is (TP+TN)/total — it doesn't distinguish an FP from an FN, only counts total errors, so a classifier with 2 FP/0 FN and one with 0 FP/2 FN can score identical accuracy while failing in opposite directions."
+      },
+      {
+        "type": "short",
+        "question": "In the 2x2 confusion matrix layout (rows = actual, columns = predicted), which single number, divided by the total, reproduces exactly 13.1's accuracy formula?",
+        "answer": "TP+TN",
+        "acceptable": [
+          "TP + TN",
+          "the sum of TP and TN",
+          "true positives plus true negatives"
+        ],
+        "explanation": "TP and TN are exactly the correct predictions (predicted value matches target), so (TP+TN)/total is the same correct-over-total ratio 13.1 defined as accuracy — the confusion matrix just breaks both the correct and incorrect counts into finer categories."
       }
     ]
   }
