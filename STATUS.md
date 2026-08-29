@@ -1,10 +1,13 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-10 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** Phases 1-12 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
-Phase 10: 2026-08-29) — live on GitHub Pages. Phase 10 (Networks of Neurons)
-is now 10/10 lessons written — see "Phase 10" section below.
+Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
+GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.2/~10
+lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
+line drifts easily — see the ship-log sections below and git log for the
+authoritative per-phase state; trust those over this summary on conflict.)
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -766,29 +769,49 @@ an already-trained, already-verified network). `bab-schema-check "13."` 1/1 clea
 `bab-v21`->`bab-v22`; top-of-file ROADMAP/LESSONS doc comment refreshed to match (was stale
 since before Phase 9 shipped — undercounted Phases 9-12 as unwritten).
 
-**Next up: Phase 13 lessons 13.2 onward** — confusion matrix (true/false positive/negative,
-building directly on 13.1's single "WRONG" case at (x=[0,-1],t=0), which is itself a false
-positive), then precision/recall, then overfitting vs underfitting and why data
-size/quality/regularization matter (the phase's stated scope). No lesson-title breakdown was
-pre-written for Phase 13 the way Phases 9-12 got one before content started — 13.1 was
-written directly against the phase title's own bullet list (accuracy, confusion matrix,
-precision/recall, overfitting vs underfitting, data size/quality, regularization); a future
-session may still want to write the explicit 13.1-13.N title breakdown for planning
-continuity, mirroring Phases 9-12's pattern, before pushing further into content.
+**Next up: Phase 13 lessons 13.3 onward** — precision/recall (building directly on 13.2's
+TP/FP/FN counts), then overfitting vs underfitting and why data size/quality/regularization
+matter (the phase's stated scope). No lesson-title breakdown was pre-written for Phase 13
+the way Phases 9-12 got one before content started — 13.1 and 13.2 were written directly
+against the phase title's own bullet list (accuracy, confusion matrix, precision/recall,
+overfitting vs underfitting, data size/quality, regularization); a future session may still
+want to write the explicit 13.1-13.N title breakdown for planning continuity, mirroring
+Phases 9-12's pattern, before pushing further into content.
+
+## Phase 13 (Evaluation & Overfitting) — lesson 13.2 SHIPPED 2026-08-29
+
+**Phase 13 lesson 13.2, "The confusion matrix: breaking accuracy into 4 kinds of outcome,"
+SHIPPED 2026-08-29:** defines TP/TN/FP/FN, names 13.1's single wrong case (x=[0,-1],t=0)
+explicitly as a false positive, then extends 13.1's 4-point held-out test set with 2 new
+points — (x=[-1,2],t=1) and (x=[1,-2],t=1) — using the SAME 12.10 final trained weights (no
+retraining) to surface a false negative, a mistake kind the original 4-point set never
+contained. Confusion matrix over the resulting 6 points: TP=2, TN=2, FP=1, FN=1; accuracy =
+(TP+TN)/6 = 4/6 approximately 66.7% — differs from 13.1's 75% only because the test set
+changed, not the network or the rule (13.1's own point about data vs. weights, now
+regrouped through the matrix). Payoff: two classifiers can tie on accuracy (e.g. 2 FP/0 FN
+vs. 0 FP/2 FN) while failing in opposite directions — accuracy alone can't tell them apart,
+the confusion matrix can. Every forward-pass number independently computed via actual NumPy
+execution against 12.10's exact weight formula, cross-checked to reproduce 13.1's own 4
+stated numbers before adding the 2 new points; no training/gradients in this lesson, so no
+finite-difference check applies (same as 13.1). 153/153 lessons total across Phases 1-13 so
+far. `bab-schema-check "13."` 2/2 clean, 153/153 file-wide, 0 dup ids; `sw.js` bumped
+`bab-v22`->`bab-v23`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
+comment refreshed (152->153, 13.1->13.1-13.2).
 
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1/~10 shipped
-  2026-08-29, see section above).** Next session: continue Phase 13 lesson-by-lesson
-  (confusion matrix next, per the "Next up" note above), following the same verification bar
-  as every prior phase — every worked example/practice/quiz numeric claim independently
-  Python/NumPy-verified before being written into the lesson (not mental math; if a lesson
-  involves any hand-derived gradient or slope, cross-check it against NumPy's
-  finite-difference technique the way every Phase 11-12 lesson did — 13.1 itself needed none,
-  since it only evaluates an already-trained network), `bab-schema-check`, file-wide
-  duplicate-id check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming
-  live. Per Mike: build this out phase by phase across future sessions, not all at once
-  ("chained background builds through the day" per his 2026-08-25 ask).
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.2/~10
+  shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
+  (precision/recall next, per the "Next up" note above, building on 13.2's TP/FP/FN counts),
+  following the same verification bar as every prior phase — every worked example/practice/
+  quiz numeric claim independently Python/NumPy-verified before being written into the
+  lesson (not mental math; if a lesson involves any hand-derived gradient or slope,
+  cross-check it against NumPy's finite-difference technique the way every Phase 11-12
+  lesson did — neither 13.1 nor 13.2 needed one, since both only evaluate an already-trained
+  network), `bab-schema-check`, file-wide duplicate-id check, `sw.js` cache version bump,
+  commit + push, `bab-ship-verify` confirming live. Per Mike: build this out phase by phase
+  across future sessions, not all at once ("chained background builds through the day" per
+  his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
