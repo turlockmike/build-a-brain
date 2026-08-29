@@ -4,7 +4,7 @@
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
 Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
-GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.3/~10
+GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.4/~10
 lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
@@ -823,38 +823,66 @@ check applies (same as 13.1/13.2). 154/154 lessons total across Phases 1-13 so f
 `bab-v23`->`bab-v24`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
 comment refreshed (153->154, 13.1-13.2->13.1-13.3).
 
-**Next up: Phase 13's remaining lessons** — overfitting vs. underfitting is the natural
-next topic (13.1-13.3 were all purely EVALUATION tools scoring an already-trained, fixed
-network; overfitting/underfitting returns to the TRAINING side, building on 13.1's own
-training-vs-test accuracy gap), then data size/quality and regularization, continuing the
-~10-lesson Phase 13 arc one lesson/session at a time per Mike's phase-by-phase pacing.
+## Phase 13 (Evaluation & Overfitting) — lesson 13.4 SHIPPED 2026-08-29
+
+**Phase 13 lesson 13.4, "Overfitting vs. underfitting: when more training stops helping,"
+SHIPPED 2026-08-29:** the first Phase 13 lesson back on the TRAINING side (13.1-13.3 only
+ever scored an already-trained, fixed network). Re-runs 12.10's exact training setup (same
+starting weights, same 3-example training set, 12.8's per-example loop, lr=0.5) and scores
+against 13.1's own 4-point held-out test set at many epoch checkpoints from epoch 1 through
+epoch 20000 — far past 13.1's own stopping point of 300 — tracking training MSE and test MSE
+together instead of one before/after snapshot. Underfitting shows up at epoch 20 (both train
+MSE approximately 0.2076/66.7% accuracy and test MSE approximately 0.3544/25% accuracy are
+poor together). Test MSE bottoms out at approximately 0.1450 around epoch 200 (13.1's own
+epoch-300 checkpoint, MSE approximately 0.1482, turns out to sit just past that floor).
+Past epoch 200 the curves split: training MSE keeps falling smoothly toward 0 (approximately
+0.0001 by epoch 5000, approximately 0.0000 by epoch 20000) while test MSE turns around and
+rises monotonically (approximately 0.1482 -> 0.1537 -> 0.1622 -> 0.1711 -> 0.1825 -> 0.1906
+-> 0.1982 at epochs 300/500/1000/2000/5000/10000/20000) — the textbook overfitting curve.
+Test ACCURACY never shows any of this: it is frozen at exactly 75% from epoch 50 through
+epoch 20000 because the same single point, (x=[0,-1], t=0), is the only one ever wrong the
+whole time — only its predicted probability drifts further wrong (approximately 0.7349 at
+epoch 200 to 0.8535 at epoch 5000), invisible to a threshold-based score, extending 13.2/13.3's
+point that a single accuracy number can hide the real pattern. Every number independently
+computed via NumPy re-execution of the actual training loop (not hand-derived): epoch 1's
+forward pass/gradients for the first training example matched 12.10's own published numbers
+to 4 decimals before being trusted (this lesson's version of the 13.3-learned reimplementation
+check), and the resulting epoch-300 weights/test predictions matched 13.1/13.2/13.3's own
+published numbers exactly, confirming this is the SAME training run those lessons used,
+carried further. Two finite-difference checks (11.4's technique) — one reproducing 12.10's
+own published epoch-1 check, one freshly computed at epoch 200's weights (a state no prior
+lesson published) — both matched analytic gradients to within 1e-6. 155/155 lessons total
+across Phases 1-13 so far. `bab-schema-check "13."` 4/4 clean, 155/155 file-wide, 0 dup ids;
+`sw.js` bumped `bab-v24`->`bab-v25`, confirmed live via `bab-ship-verify`. Top-of-file
+ROADMAP/LESSONS doc comment refreshed (154->155, 13.1-13.3->13.1-13.4).
+
+**Next up: Phase 13's remaining lessons** — data size/quality is the natural next topic
+(13.4 already showed WHY more training epochs alone can hurt generalization once a tiny
+3-example training set is "used up"; the natural next question is what more OR better
+training data would do to the same picture), then regularization as a direct fix for the
+overfitting 13.4 just demonstrated, continuing the ~10-lesson Phase 13 arc one lesson/session
+at a time per Mike's phase-by-phase pacing.
 
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.3/~10
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.4/~10
   shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
-  (overfitting vs. underfitting next, per the "Next up" note above — the first Phase 13
-  lesson to look at the TRAINING side again rather than just scoring a fixed trained
-  network, building on 13.1's own training-vs-test accuracy gap as the motivating example),
-  following the same verification bar as every prior phase — every worked example/practice/
-  quiz numeric claim independently Python/NumPy-verified before being written into the
-  lesson (not mental math; if a lesson involves any hand-derived gradient or slope,
-  cross-check it against NumPy's finite-difference technique the way every Phase 11-12
-  lesson did — none of 13.1-13.3 needed one, since all three only evaluate an
-  already-trained network; an overfitting lesson that trains a NEW network to demonstrate
-  the effect may need one again). **Extra caveat learned the hard way in 13.3:** if a
-  session re-derives a PRIOR lesson's trained-network forward pass from the stated weights
-  (rather than training fresh), a wrong matrix convention (e.g. `x @ W` instead of `W @ x`)
-  runs cleanly and produces plausible probabilities in [0,1] WITHOUT erroring — "it ran" is
-  not evidence it's right. 13.3's first attempt did exactly this and silently produced
-  numbers that didn't match 13.1/13.2's own published p-values. The check that catches it:
-  after reimplementing, diff the new run's output against the specific numbers the prior
-  lesson(s) already published, to 4 decimal places, BEFORE reusing those numbers in the new
-  lesson — not just "the code runs / outputs look like probabilities." Then continue:
-  `bab-schema-check`, file-wide duplicate-id check, `sw.js`
-  cache version bump, commit + push, `bab-ship-verify` confirming live. Per Mike: build
-  this out phase by phase across future sessions, not all at once ("chained background
-  builds through the day" per his 2026-08-25 ask).
+  (data size/quality next, per the "Next up" note above, then regularization — the direct fix
+  for the overfitting 13.4 just demonstrated numerically), following the same verification bar
+  as every prior phase — every worked example/practice/quiz numeric claim independently
+  Python/NumPy-verified before being written into the lesson (not mental math; cross-check any
+  hand-derived gradient or slope against NumPy's finite-difference technique the way every
+  Phase 11-12 lesson and now 13.4 did). **Extra caveat learned the hard way in 13.3, reused in
+  13.4:** if a session re-derives a PRIOR lesson's trained-network forward pass from the stated
+  weights (rather than training fresh), a wrong matrix convention (e.g. `x @ W` instead of
+  `W @ x`) runs cleanly and produces plausible probabilities in [0,1] WITHOUT erroring — "it
+  ran" is not evidence it's right. The check that catches it: after reimplementing, diff the
+  new run's output against the specific numbers the prior lesson(s) already published, to 4
+  decimal places, BEFORE reusing those numbers in the new lesson — not just "the code runs /
+  outputs look like probabilities." Then continue: `bab-schema-check`, file-wide duplicate-id
+  check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming live. Per
+  Mike: build this out phase by phase across future sessions, not all at once ("chained
+  background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —

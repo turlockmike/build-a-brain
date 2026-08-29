@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (3 of ~10 so far — 13.1-13.3; remaining lessons pending, see
- * STATUS.md) — 154 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (4 of ~10 so far — 13.1-13.4; remaining lessons pending, see
+ * STATUS.md) — 155 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16232,6 +16232,113 @@ const LESSONS = [
           "always 1.0 since FN is always 0"
         ],
         "explanation": "Since the classifier never predicts negative, FN=0 always, making recall = TP/(TP+0) = 1.0 regardless of how many actual negatives it wrongly calls positive — which is exactly why recall must always be read alongside precision."
+      }
+    ]
+  },
+  {
+    "id": "13.4",
+    "number": 4,
+    "title": "Overfitting vs. underfitting: when more training stops helping",
+    "objectives": [
+      "Define underfitting (both training and test performance are poor because the network has not yet learned the pattern) and overfitting (training performance keeps improving while test performance stops improving or gets worse) as the two failure modes on either side of a good fit, extending 13.1's single before/after train-vs-test snapshot into a curve traced across many epochs",
+      "Re-run 12.10's own training loop (12.8's per-example forward-loss-backward-update cycle, lr=0.5) from 12.10's identical starting weights on its identical 3-example training set, tracking BOTH training MSE and 13.1's own 4-point held-out test MSE together at many epoch checkpoints from epoch 1 through epoch 20000 — far past where 13.1 stopped at epoch 300",
+      "Read the resulting U-shaped test-loss curve — test loss falls together with training loss during an early underfitting stretch, bottoms out, then RISES even as training loss keeps shrinking toward 0 — and explain why 13.1's own test ACCURACY score, frozen at 75% from epoch 50 onward, cannot show this rise at all, extending 13.2/13.3's warning that a single score can hide what is really happening"
+    ],
+    "explanation": [
+      "13.1 trained 12.10's exact network for 300 epochs and found training accuracy 100% but test accuracy only 75% on 4 held-out points, treating that gap as proof that WHICH data scores a network matters as much as its weights. 13.1 never asked whether 300 was a special number of epochs, or what training for less time, or a lot more time, would have shown. This lesson re-runs that exact same training — same starting weights, same 3-example training set, same 12.8 loop, same 13.1 test set — and simply keeps going, checkpointing training MSE (11.2's formula) and test MSE together every so often out to epoch 20000, to see the two curves as a single continuous story instead of one frozen snapshot.",
+      "Before any training resembles a fit at all, both scores are bad together. At epoch 20: training MSE approximately 0.2076 with training accuracy only 66.7% (2 of 3, the network still gets (x=[-1,1], t=0) wrong), and test MSE approximately 0.3544 with test accuracy only 25% (1 of 4) — worse than guessing. Neither the training data nor the test data is being fit well yet, because the weights have not moved far enough from their small random start to capture the pattern at all. That 'bad on both' signature, not 'bad on one, fine on the other', is underfitting: the network simply has not learned enough yet.",
+      "Both curves then fall together fast. By epoch 50, training accuracy already reaches 100% and test accuracy jumps to 75% (3 of 4) and both stay at those exact accuracy figures for the rest of the run — but the underlying MSE keeps moving even after accuracy stops. Test MSE keeps dropping a while longer, reaching its LOWEST value anywhere in the entire 1-to-20000-epoch run at epoch 200: approximately 0.1450, with training MSE at approximately 0.0044 there. 13.1's own chosen stopping point, epoch 300, turns out to sit just barely past that floor (test MSE approximately 0.1482 there, confirmed by 13.1's own published numbers) — a coincidence of where 13.1 happened to stop, not a specially chosen 'best' epoch.",
+      "Past epoch 200, the two curves split apart. Training MSE keeps shrinking smoothly toward 0 — approximately 0.0025 at epoch 300, 0.0013 at 500, 0.0006 at 1000, 0.0003 at 2000, 0.0001 at 5000, essentially 0.0000 by 20000 — the network is fitting its 3 training points ever more exactly. Test MSE does the opposite: it turns around and RISES, monotonically, epoch after epoch — approximately 0.1482 (300) -> 0.1537 (500) -> 0.1622 (1000) -> 0.1711 (2000) -> 0.1825 (5000) -> 0.1906 (10000) -> 0.1982 (20000). That shape — training loss still falling while test loss climbs — is the textbook overfitting curve: extra epochs beyond the point where the network already captured what 3 tiny examples can teach it only push the weights to specialize further on those exact 3 points, at the cost of everything else.",
+      "Yet test ACCURACY never records any of this. It is stuck at exactly 75% (3 of 4) from epoch 50 all the way through epoch 20000, because the same single point, (x=[0,-1], t=0), is the only one ever wrong the whole time — it just gets more confidently wrong, its predicted probability climbing from approximately 0.7349 (epoch 200) to 0.7535 (epoch 300, 13.1's own number) to 0.8535 (epoch 5000). Anyone watching only test accuracy after training, the way 13.1 did, would see a flat, unchanging 75% and have no idea the network had quietly gotten worse underneath — the same kind of blind spot 13.2's confusion matrix and 13.3's precision/recall exposed in accuracy alone, this time hidden not by which examples get scored but by which epoch a session happens to stop at.",
+      "Underfitting and overfitting are therefore mirror-image failures bracketing a middle region: underfitting is too little training relative to the pattern (bad on training AND test data together), overfitting is too much training relative to how much real signal 3 tiny examples can support (still-improving-on-training but no-longer-improving, or actively worsening, on test data). The useful place to stop is near where test loss bottoms out (here, around epoch 200), not wherever training loss happens to reach its own minimum — training loss alone always keeps improving if you let it run long enough, which is exactly why it is the wrong curve to watch when deciding when a network is done learning.",
+      "Verification note: every number above comes from actually re-running 12.10's training loop in NumPy, not from re-deriving weights by hand. Epoch 1's forward pass and gradients for the first training example were diffed against 12.10's own already-published numbers before trusting anything further (zh, h, zo, p, L, delta_output, and delta_hidden all matched 12.10's stated values to 4 decimals) — the exact check 13.3 learned the hard way is required before reusing a reimplemented forward pass. The resulting epoch-300 weights and test predictions also matched 13.1/13.2/13.3's own published numbers exactly (test predictions approximately 0.9129, 0.1174, 0.7535, 0.0602 for the 4 test points), confirming this is the SAME training run those lessons already used, just carried further in both directions. Two independent finite-difference checks (11.4's technique) — one at epoch 1 reproducing 12.10's own published check, one freshly computed at epoch 200's weights (a state no prior lesson published) — both matched their analytic gradients to within 1e-6, confirming the training loop itself, not just one early step of it, is implemented correctly all the way through the extended run."
+    ],
+    "example": {
+      "problem": "Re-running 12.10's exact training setup (same starting weights, same 3-example training set, same 12.8 loop, lr=0.5) and scoring against 13.1's same 4-point test set at three checkpoints — epoch 20, epoch 200, and epoch 5000 — gives: epoch 20: train MSE 0.2076/accuracy 66.7%, test MSE 0.3544/accuracy 25%. Epoch 200: train MSE 0.0044/accuracy 100%, test MSE 0.1450/accuracy 75%. Epoch 5000: train MSE 0.0001/accuracy 100%, test MSE 0.1825/accuracy 75%. Which failure mode, if any, does each checkpoint represent?",
+      "steps": [
+        "Epoch 20: both train (66.7%) and test (25%) accuracy are poor, and both MSEs are still high (0.2076 and 0.3544) — bad on training data AND test data together is underfitting's signature, not overfitting's.",
+        "Epoch 200: train MSE (0.0044) and test MSE (0.1450) are both near their best values anywhere in the run — this is the good-fit region, right around where test MSE reaches its lowest point.",
+        "Epoch 5000: train MSE (0.0001) is far lower than at epoch 200, but test MSE (0.1825) is noticeably HIGHER than epoch 200's 0.1450, even though test accuracy (75%) has not moved from epoch 200's value — training performance still improving while test performance has gotten worse (in loss, even though not in accuracy) is overfitting's signature."
+      ],
+      "answer": "Epoch 20 is underfitting (bad on both train and test), epoch 200 is close to the best achievable fit (test MSE is at its lowest observed value), and epoch 5000 is overfitting (training MSE kept falling well past epoch 200, but test MSE rose instead of falling — the network specialized further on its 3 training points at test data's expense, even though test accuracy alone never shows it)."
+    },
+    "practice": [
+      {
+        "problem": "At epoch 20, training accuracy is only 66.7% — not 100%. Why does this rule out calling epoch 20 'overfitting', even though its test accuracy (25%) is also poor?",
+        "solution": "Overfitting specifically means training performance is GOOD (or still improving) while test performance is not — a network fitting its training data tightly but failing to generalize. At epoch 20 the network has not even fit its OWN training data well yet (2 of 3 correct, MSE still approximately 0.21), so both scores being poor together is underfitting, not overfitting: the network has not learned enough yet, on any data."
+      },
+      {
+        "problem": "Between epoch 300 and epoch 5000, test accuracy stays exactly 75% the entire time, but test MSE rises from approximately 0.1482 to approximately 0.1825. How can accuracy stay perfectly flat while the loss visibly gets worse?",
+        "solution": "Accuracy only checks which side of the 0.5 threshold a prediction lands on; it does not care HOW FAR from the target that prediction is. The one wrong test point, (x=[0,-1], t=0), is already on the wrong side of 0.5 at epoch 300 (p approximately 0.7535) and stays on the wrong side the whole time, so accuracy never changes — but its predicted probability keeps drifting further from the true target of 0 (up to approximately 0.8535 by epoch 5000), which MSE (an average of squared distances from the target) does register as a rising loss even though accuracy is blind to it."
+      },
+      {
+        "problem": "Does training MSE ever increase at any point across the whole epoch 1-to-20000 run, the way test MSE does after epoch 200?",
+        "solution": "No — training MSE falls (or stays flat) at every checkpoint across the entire run: approximately 0.2425 (epoch 1) down to essentially 0.0000 (epoch 20000), with no reversal anywhere. Gradient descent's update rule always moves weights to reduce loss on the examples it is actually trained on, so training loss has no mechanism to rise; only loss on data OUTSIDE the training set (test loss) can turn around and get worse."
+      },
+      {
+        "problem": "Based on this experiment, if you had to pick a single epoch to stop training at without knowing the future curve in advance, would 'train until training MSE stops decreasing' be a good stopping rule? What would you watch instead?",
+        "solution": "No — training MSE in this run never stops decreasing (it is still falling, however slowly, even at epoch 20000), so that rule would never trigger a stop and would run straight through the entire overfitting region. A better rule is to watch TEST (or other held-out) loss and stop near where IT bottoms out and starts rising again (here, around epoch 200) — training loss measures fit to data already seen, which always keeps improving, not the ability to generalize, which is what test loss tracks."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the key difference between underfitting and overfitting, based on how training and test performance behave?",
+        "choices": [
+          "Underfitting: both training and test performance are poor. Overfitting: training performance is good (or still improving) while test performance stops improving or gets worse",
+          "Underfitting and overfitting both mean training performance is poor",
+          "Underfitting means test performance is better than training performance",
+          "Overfitting means training accuracy has dropped below test accuracy"
+        ],
+        "answerIndex": 0,
+        "explanation": "Epoch 20 (underfitting) was bad on both training (66.7%) and test (25%) data. Epoch 5000 (overfitting) had training MSE far below epoch 200's while test MSE was higher than epoch 200's — training still improving, test no longer improving."
+      },
+      {
+        "type": "short",
+        "question": "In this experiment's full epoch-1-to-20000 run, at approximately which epoch does test MSE reach its LOWEST value?",
+        "answer": "epoch 200",
+        "acceptable": [
+          "200",
+          "around 200",
+          "epoch 200"
+        ],
+        "explanation": "Test MSE falls to approximately 0.1450 at epoch 200 — lower than at any earlier or later checkpoint recorded, including 13.1's own epoch 300 checkpoint (approximately 0.1482)."
+      },
+      {
+        "type": "mc",
+        "question": "Test accuracy stays at exactly 75% from epoch 50 through epoch 20000, yet test MSE rises substantially over that same stretch after epoch 200. Why doesn't accuracy show the overfitting that the loss curve shows?",
+        "choices": [
+          "The one wrong test point stays on the same (wrong) side of the 0.5 threshold the whole time — it just becomes more confidently wrong, which accuracy (a threshold check) cannot see but MSE (a distance-from-target measure) does",
+          "Accuracy and MSE always move together, so this cannot actually happen",
+          "Test accuracy is computed on a different, changing set of points than test MSE",
+          "The network's weights stop changing after epoch 50"
+        ],
+        "answerIndex": 0,
+        "explanation": "Accuracy only checks which side of 0.5 a prediction falls on. Since the misclassified point never crosses back over 0.5, accuracy cannot change, even as its predicted probability keeps drifting further from the true target — exactly the kind of information a single threshold-based score throws away, extending 13.2/13.3's point about accuracy hiding failure patterns."
+      },
+      {
+        "type": "mc",
+        "question": "Why is 'keep training until training loss stops decreasing' a bad rule for deciding when to stop, based on this experiment's full curve?",
+        "choices": [
+          "Because training MSE never stops decreasing in this run (it is still falling, however slowly, at epoch 20000), so that rule would train straight through the entire overfitting region without ever stopping",
+          "Because training MSE increases after epoch 200, so the rule would stop too early",
+          "Because training loss is not a real number that can be tracked over epochs",
+          "Because this network has no training loss, only test loss"
+        ],
+        "answerIndex": 0,
+        "explanation": "Training MSE falls at every single checkpoint in the run, all the way to essentially 0.0000 by epoch 20000, with no plateau or reversal — a rule based on training loss stopping would never fire, unlike a rule based on watching test/held-out loss, which visibly bottoms out around epoch 200."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, what general strategy does this experiment suggest for choosing when to stop training, instead of training until training loss is as low as possible?",
+        "answer": "stop near where test (held-out) loss is lowest, not where training loss is lowest",
+        "acceptable": [
+          "stop when test loss stops improving",
+          "watch test loss and stop near its minimum",
+          "stop around the point where held-out loss bottoms out",
+          "use test loss, not training loss, to decide when to stop"
+        ],
+        "explanation": "Training loss always keeps improving (or at worst plateaus) the longer training runs, so it cannot signal when to stop; test loss's own minimum (here, around epoch 200) is the point past which further training only helps memorize the training set at test performance's expense."
       }
     ]
   }
