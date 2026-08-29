@@ -28,8 +28,9 @@ Foundations I, 20/20), Phase 2 (Programming Foundations I — Python, 17/17),
 Phase 3 (How Brains Work, 15/15), Phase 4 (Logic & Computing Basics, 12/12),
 Phase 5 (Statistics & Data, 12/12), Phase 6 (Math Foundations II, 13/13),
 Phase 7 (Programming Foundations II, 12/12), and Phase 8 (The Perceptron,
-10/10).
-Phases 9-14 are visible in the roadmap as titles only ("coming soon") so the
+10/10). **Phase 9 (Calculus for Learning) is in progress: 2/10 lessons
+written** (9.1, 9.2), with the remaining 8 titled but not yet drafted.
+Phases 10-14 are visible in the roadmap as titles only ("coming soon") so the
 whole path is motivating to see, but have no lesson content yet. See
 `STATUS.md` for the exact cutoff and what's next.
 
@@ -95,9 +96,9 @@ automatically.
 
 ## Adding a new phase (for the next session)
 
-1. Pick the next phase from `ROADMAP` (currently phase 9:
-   "Calculus for Learning — derivatives/slopes, chain rule, 'finding the
-   downhill direction'").
+1. Pick the next phase from `ROADMAP` (currently phase 9, in progress —
+   2/10 lessons written; continue at 9.3 using the title breakdown in
+   `STATUS.md`. Once 9.10 ships, move to phase 10: "Networks of Neurons").
 2. Write that phase's lesson list (title-only breakdown first, then full content
    per lesson using the exact schema above — same content bar as Phase 1-6: a
    real 300-500 word explanation with analogies, a worked example, 3-5

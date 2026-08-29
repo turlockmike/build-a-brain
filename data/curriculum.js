@@ -1,9 +1,11 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 9-14 — content not written yet).
+ * ROADMAP: all 14 phases (title only for phases 10-14 — content not written yet).
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
- * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), and Phase 8 (10) —
- * 111 lessons total. Phases 9-14 will each get their own LESSONS entries in a
- * future session — see README.md "Adding a new phase".
+ * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10), and
+ * Phase 9 (2 of 10 so far — 9.1, 9.2; the other 8 titles are drafted in
+ * STATUS.md pending full content) — 113 lessons total. Phases 10-14 will each
+ * get their own LESSONS entries in a future session — see README.md "Adding
+ * a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -11726,6 +11728,206 @@ const LESSONS = [
         ],
         "answerIndex": 1,
         "explanation": "The whole phase's closing payoff: Phase 4's gate-built alarm and this phase's perceptron-built alarm are different mechanisms that produce identical decisions across all eight input combinations."
+      }
+    ]
+  },
+
+  /* Phase 9: Calculus for Learning (in progress — 2/10 lessons so far). */
+  {
+    "id": "9.1",
+    "number": 1,
+    "title": "Average rate of change — the slope of a curve between two points",
+    "objectives": [
+      "Extend the slope idea from lesson 6.3's straight lines to curves like lesson 6.4's y = x^2",
+      "Compute average rate of change with (f(b) - f(a)) / (b - a)",
+      "See why a curve's average rate of change depends on which interval you pick, unlike a straight line's"
+    ],
+    "explanation": [
+      "Lesson 6.3 defined a straight line's slope as rise over run, and that slope is the SAME number no matter which two points on the line you pick — that's what makes it a straight line. Lesson 6.4 then showed y = x^2 curving: its rate of change is NOT constant, it keeps changing as x grows. This lesson gives that changing steepness a name and a formula: the average rate of change of a function f between two input values a and b is (f(b) - f(a)) / (b - a) — exactly the same rise-over-run idea from 6.3, just applied to any two points on any function, straight or curved.",
+      "Picture drawing a straight line connecting those two points on the curve — mathematicians call that connecting line a secant line. Its slope IS the average rate of change over that interval. For a straight line, every secant line has the same slope as the line itself, so \"average rate of change\" and \"the slope\" are just two names for one number. For a curve, the secant line's slope depends entirely on which two points you chose — pick a steeper stretch of the curve and the secant line tilts more; pick a flatter stretch and it tilts less.",
+      "Take f(x) = x^2, the same function 6.4 introduced. Between x = 2 and x = 5: f(2) = 4 and f(5) = 25, so the average rate of change is (25 - 4) / (5 - 2) = 21 / 3 = 7. Between x = 0 and x = 1, though: f(0) = 0 and f(1) = 1, giving (1 - 0) / (1 - 0) = 1. Same function, two different intervals, two different average rates of change — 7 versus 1 — because the curve is steeper out past x = 2 than it is near x = 0. A straight line like g(x) = 3x + 1 could never do this: pick ANY two points on it and the average rate of change always comes out to exactly 3, its fixed slope.",
+      "This matters for what's coming: a curve's steepness is different at every point along it, and later lessons in this phase will need a way to talk about the steepness AT one exact point rather than averaged across an interval. Average rate of change is the stepping stone to that — it's the same calculation, just not yet shrunk down to a single point."
+    ],
+    "example": {
+      "problem": "Find the average rate of change of f(x) = x^2 between x = 2 and x = 5.",
+      "steps": [
+        "f(2) = 2^2 = 4",
+        "f(5) = 5^2 = 25",
+        "Average rate of change = (f(5) - f(2)) / (5 - 2) = (25 - 4) / 3 = 21 / 3"
+      ],
+      "answer": "7 — between x = 2 and x = 5, f(x) = x^2 rises by an average of 7 units of output for every 1 unit of input."
+    },
+    "practice": [
+      {
+        "problem": "Find the average rate of change of f(x) = x^2 between x = 0 and x = 4.",
+        "solution": "f(0) = 0, f(4) = 16. (16 - 0) / (4 - 0) = 16 / 4 = 4."
+      },
+      {
+        "problem": "Find the average rate of change of f(x) = x^2 between x = 1 and x = 2.",
+        "solution": "f(1) = 1, f(2) = 4. (4 - 1) / (2 - 1) = 3 / 1 = 3."
+      },
+      {
+        "problem": "Find the average rate of change of f(x) = x^2 between x = -2 and x = 2. Why might a result of 0 make sense here?",
+        "solution": "f(-2) = 4, f(2) = 4. (4 - 4) / (2 - (-2)) = 0 / 4 = 0. It makes sense because f(-2) and f(2) are equal (x^2 gives the same output for a number and its negative), so the curve ends up at the same height it started at — zero NET change over the interval, even though the curve dipped down to f(0)=0 and back up in between."
+      },
+      {
+        "problem": "Find the average rate of change of the straight line g(x) = 3x + 1 both between x = 0 and x = 5, and between x = 10 and x = 15. What do you notice?",
+        "solution": "[0,5]: g(0)=1, g(5)=16, (16-1)/5 = 3. [10,15]: g(10)=31, g(15)=46, (46-31)/5 = 3. Both intervals give exactly 3 — a straight line's average rate of change never depends on which interval you pick, since its slope is constant."
+      },
+      {
+        "problem": "Find the average rate of change of f(x) = x^2 between x = 3 and x = 6.",
+        "solution": "f(3) = 9, f(6) = 36. (36 - 9) / (6 - 3) = 27 / 3 = 9."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the formula for the average rate of change of a function f between x = a and x = b?",
+        "choices": [
+          "f(a) + f(b)",
+          "(f(b) - f(a)) / (b - a)",
+          "(a - b) / (f(a) - f(b))",
+          "f(b) / f(a)"
+        ],
+        "answerIndex": 1,
+        "explanation": "Average rate of change is rise over run applied to any two points on a function: the change in output divided by the change in input."
+      },
+      {
+        "type": "short",
+        "question": "What is the average rate of change of f(x) = x^2 between x = 2 and x = 4?",
+        "answer": "6",
+        "acceptable": ["6", "6.0"],
+        "explanation": "f(2)=4, f(4)=16. (16-4)/(4-2) = 12/2 = 6."
+      },
+      {
+        "type": "mc",
+        "question": "Why is a straight line's average rate of change the same no matter which two points you pick?",
+        "choices": [
+          "It isn't — it always changes",
+          "Because a straight line has one constant slope everywhere along it",
+          "Because straight lines have no rate of change",
+          "Only true if both points are positive"
+        ],
+        "answerIndex": 1,
+        "explanation": "A straight line's defining property is a fixed slope, so any secant line drawn between two of its points has that exact same slope."
+      },
+      {
+        "type": "short",
+        "question": "For f(x) = x^2, is the average rate of change bigger over the interval [1, 2] or over [5, 6]?",
+        "answer": "[5, 6]",
+        "acceptable": ["[5,6]", "5 to 6", "the second one", "over 5 to 6"],
+        "explanation": "[1,2] gives (4-1)/1 = 3. [5,6] gives (36-25)/1 = 11. The curve is steeper further out, so its average rate of change is bigger there."
+      },
+      {
+        "type": "mc",
+        "question": "Geometrically, what does the secant line between two points on a curve represent?",
+        "choices": [
+          "A line touching the curve at only one point",
+          "The straight line connecting those two points, whose slope equals the average rate of change between them",
+          "The curve's highest point",
+          "A vertical line through the curve"
+        ],
+        "answerIndex": 1,
+        "explanation": "The secant line is the straight line drawn through the two chosen points, and its slope is exactly the average rate of change formula."
+      }
+    ]
+  },
+  {
+    "id": "9.2",
+    "number": 2,
+    "title": "The derivative — instantaneous rate of change as the interval shrinks to zero",
+    "objectives": [
+      "Understand the derivative as what average rate of change (9.1) becomes when the interval shrinks toward zero",
+      "Estimate a derivative numerically by computing average rate of change for smaller and smaller intervals",
+      "Recognize the derivative notation f'(x) as naming the instantaneous rate of change at a single point"
+    ],
+    "explanation": [
+      "Lesson 9.1's average rate of change always needed TWO points and an interval between them. But what if you want the curve's exact steepness at just ONE point — no interval, no averaging? Start from a point a, and a second point a tiny distance h away, so the interval is [a, a+h]. Lesson 9.1's formula becomes (f(a+h) - f(a)) / h. Now imagine shrinking h — making that second point creep closer and closer to a. The secant line from 9.1 keeps pivoting as h shrinks, and it approaches a limiting line that touches the curve at exactly one point: a, called the tangent line. The slope that secant line's slope approaches, as h shrinks all the way toward (but never quite reaching) zero, is called the derivative of f at a, written f'(a).",
+      "This isn't a new formula to memorize so much as a limit of a formula you already know: keep using 9.1's average-rate-of-change calculation, just with smaller and smaller h, and watch what number the results are homing in on. Take f(x) = x^2 at x = 3. With h = 1: (f(4) - f(3)) / 1 = (16 - 9) / 1 = 7. With h = 0.1: (f(3.1) - f(3)) / 0.1 = (9.61 - 9) / 0.1 = 6.1. With h = 0.01: (f(3.01) - f(3)) / 0.01 = (9.0601 - 9) / 0.01 = 6.01. The results — 7, then 6.1, then 6.01 — are clearly homing in on 6 as h keeps shrinking. That limiting value, 6, is f'(3): the instantaneous rate of change of x^2 at x = 3.",
+      "Notice something else: 6 is exactly 2 x 3 — twice the x-value. That's not a coincidence unique to x = 3; it's the general pattern for f(x) = x^2, and lesson 9.3 will show precisely why it holds for every x, turning it into a reusable shortcut called the power rule. For now, the important idea is just this: the derivative f'(x) is a NEW function in its own right, built out of f(x), that outputs the exact steepness of f's curve at whatever x you plug in — no averaging, no interval, one exact number per point.",
+      "The two notations f'(x) and dy/dx both mean the same thing (\"the derivative of the function\"); this course will mostly use f'(x) since it reads directly off of f(x), the same function-notation habit lesson 6.1 already built."
+    ],
+    "example": {
+      "problem": "Estimate f'(3) for f(x) = x^2 by computing the average rate of change over [3, 3+h] for h = 1, h = 0.1, and h = 0.01, and say what value it's approaching.",
+      "steps": [
+        "h = 1: (f(4) - f(3)) / 1 = (16 - 9) / 1 = 7",
+        "h = 0.1: (f(3.1) - f(3)) / 0.1 = (9.61 - 9) / 0.1 = 6.1",
+        "h = 0.01: (f(3.01) - f(3)) / 0.01 = (9.0601 - 9) / 0.01 = 6.01"
+      ],
+      "answer": "The values 7, 6.1, 6.01 are approaching 6 as h shrinks toward 0, so f'(3) = 6 — matching the pattern 2 times x (2 x 3 = 6)."
+    },
+    "practice": [
+      {
+        "problem": "For f(x) = x^2 at x = 2, compute the average rate of change over [2, 2.1] (h = 0.1). What value does the pattern 2x predict f'(2) should be?",
+        "solution": "(f(2.1) - f(2)) / 0.1 = (4.41 - 4) / 0.1 = 0.41 / 0.1 = 4.1, closing in on 4 as h shrinks further — matching 2x = 2(2) = 4."
+      },
+      {
+        "problem": "For f(x) = x^2 at x = 5, compute the average rate of change over [5, 5.01] (h = 0.01). What value does the pattern 2x predict f'(5) should be?",
+        "solution": "(f(5.01) - f(5)) / 0.01 = (25.1001 - 25) / 0.01 = 0.1001 / 0.01 = 10.01, closing in on 10 as h shrinks further — matching 2x = 2(5) = 10."
+      },
+      {
+        "problem": "Using the pattern f'(x) = 2x for f(x) = x^2, what is the instantaneous rate of change at x = 10?",
+        "solution": "f'(10) = 2(10) = 20."
+      },
+      {
+        "problem": "In your own words, why does shrinking h make the secant line approach the tangent line?",
+        "solution": "As h shrinks, the second point (a+h) slides closer and closer to the first point a, so the secant line connecting them pivots to hug the curve more and more tightly right around a — in the limit, it touches the curve at essentially just that one point, which is exactly what a tangent line does."
+      },
+      {
+        "problem": "For f(x) = x^2 at x = 1, compute the average rate of change over [1, 1.001] (h = 0.001). What value is it approaching?",
+        "solution": "(f(1.001) - f(1)) / 0.001 = (1.002001 - 1) / 0.001 = 0.002001 / 0.001 = 2.001, approaching 2 — matching 2x = 2(1) = 2."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "The derivative f'(a) is defined as:",
+        "choices": [
+          "The average rate of change over the interval [0, a]",
+          "The limiting value of the average rate of change over [a, a+h] as h shrinks toward zero",
+          "The value of f(a) itself",
+          "The slope of the line connecting the two endpoints of the whole graph"
+        ],
+        "answerIndex": 1,
+        "explanation": "The derivative is what average rate of change becomes as the interval shrinks to a single point — the tangent line's slope at that point."
+      },
+      {
+        "type": "short",
+        "question": "For f(x) = x^2, what does the pattern observed in this lesson say f'(x) equals, in terms of x?",
+        "answer": "2x",
+        "acceptable": ["2x", "2 times x", "2*x"],
+        "explanation": "The numerical estimates at x=3, x=2, x=5, and x=1 all converged to exactly twice the x-value, giving the pattern f'(x) = 2x."
+      },
+      {
+        "type": "mc",
+        "question": "What is the geometric name for the line that a secant line approaches as h shrinks toward zero?",
+        "choices": [
+          "The x-axis",
+          "The tangent line",
+          "A parallel line",
+          "The secant line itself never changes"
+        ],
+        "answerIndex": 1,
+        "explanation": "As h shrinks, the secant line pivots to touch the curve at essentially one point — that limiting line is called the tangent line."
+      },
+      {
+        "type": "short",
+        "question": "Using f'(x) = 2x, what is the instantaneous rate of change of f(x) = x^2 at x = 7?",
+        "answer": "14",
+        "acceptable": ["14", "f'(7)=14"],
+        "explanation": "f'(7) = 2(7) = 14."
+      },
+      {
+        "type": "mc",
+        "question": "Why do we say f'(x) is a new function 'in its own right'?",
+        "choices": [
+          "Because it has nothing to do with f(x)",
+          "Because it takes any x as input and outputs the exact steepness of f's curve at that point",
+          "Because it only works for x = 3",
+          "Because it replaces f(x) entirely"
+        ],
+        "answerIndex": 1,
+        "explanation": "Like any function, f'(x) maps inputs to outputs — here, each x maps to the instantaneous rate of change of f at that x, which is itself a well-defined number for every x."
       }
     ]
   }

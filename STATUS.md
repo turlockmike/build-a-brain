@@ -3,6 +3,8 @@
 **Status:** Phases 1-8 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27) — live on GitHub Pages.
+Phase 9 (Calculus for Learning) is IN PROGRESS: 2/10 lessons written (9.1,
+9.2), title breakdown for all 10 done — see "Phase 9" section below.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -225,16 +227,67 @@ Repo: https://github.com/turlockmike/build-a-brain
   post-deploy, for the Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, Phase 6,
   Phase 7, and Phase 8 ships.
 
+## Phase 9 (Calculus for Learning) — title breakdown + progress
+
+Full 10-lesson title breakdown (matching the granularity of Phases 1-8's
+title lists, each building only on Phase 1-8 content + earlier Phase 9
+lessons per the README's progressive-dependency rule):
+
+1. **9.1 — Average rate of change** — the slope of a curve between two
+   points (extends 6.3's straight-line slope to curves like 6.4's y = x^2
+   via the secant line). **WRITTEN.**
+2. **9.2 — The derivative** — instantaneous rate of change as the interval
+   shrinks to zero (secant line -> tangent line; numerically estimates
+   f'(x) for x^2 and surfaces the f'(x) = 2x pattern). **WRITTEN.**
+3. **9.3 — The power rule** — a shortcut for the derivative of x^n, checked
+   against 9.2's shrinking-interval method instead of just asserted.
+4. **9.4 — Derivatives of sums and constant multiples** — building a bigger
+   function's derivative from its pieces (needed for anything beyond a
+   single power term).
+5. **9.5 — What the sign of a derivative means** — positive slope = uphill,
+   negative slope = downhill, zero slope = flat; the exact vocabulary
+   "finding the downhill direction" (this phase's own subtitle) will cash
+   out as, foreshadowing Phase 11's gradient descent.
+6. **9.6 — Derivatives of multi-input functions** — holding all-but-one
+   input still (partial derivatives), applied to a weighted sum shaped like
+   8.3's z = (x . w) + b.
+7. **9.7 — The chain rule, part 1** — how a change ripples through a
+   function of a function (a "gears" or "dominoes" analogy for composed
+   functions), building intuition before any computation.
+8. **9.8 — The chain rule, part 2** — computing it step by step on a worked
+   composed function, turning 9.7's intuition into a repeatable procedure
+   (this is the piece Phase 12's backpropagation will lean on hardest).
+9. **9.9 — Coding a derivative** — the tiny-step numerical approximation
+   (f(x+h)-f(x))/h in Python, i.e. literally what 9.1/9.2 did by hand,
+   now as a function (callback to Phase 7's function-writing).
+10. **9.10 — Mini-project** — using a derivative to find which direction
+    shrinks a small error-like quantity, a hand-worked preview of the
+    "downhill direction" idea Phase 11's gradient descent will formalize;
+    mirrors 4.12/5.12/6.13/7.12/8.10's end-of-phase synthesis structure.
+
+**9.1 and 9.2 are fully written and merged into `data/curriculum.js`**
+(113 lessons total across Phases 1-9 now), schema-validated
+programmatically (correct id/number sequence, no duplicate ids across all
+113, 3-5 practice problems, exactly 5 quiz questions, valid mc answerIndex
+bounds) and hand-verified via actual Python execution for every average-
+rate-of-change and shrinking-h numerical claim in both lessons (all match:
+9.1's four practice intervals plus the x^2-vs-line contrast, and 9.2's four
+h-shrinking sequences at x=1,2,3,5 all converging to 2x as predicted).
+9.3-9.10 are titled but not yet drafted — same title-then-content order
+Phases 1-8 followed, this is intentionally a multi-session build (Mike,
+2026-08-25: "even if it takes 200 lessons it's okay").
+`sw.js` cache bumped to `bab-v10` alongside the 9.1/9.2 merge so returning
+users pick up the partial Phase 9 content.
+
 ## Pending — next session(s)
 
-- **Phases 9-14 have no lesson content yet** — only their phase titles show
+- **Phase 9 is 2/10** — pick up at lesson 9.3 (the power rule) using the
+  title breakdown above; each remaining lesson may assume Phases 1-8 +
+  earlier Phase 9 lessons (9.1, 9.2) only.
+- **Phases 10-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
   through the day" per his 2026-08-25 ask).
-- Next up: Phase 9, "Calculus for Learning — derivatives/slopes, chain
-  rule, 'finding the downhill direction.'" Needs its own lesson-title
-  breakdown (like Phase 1-8 got) before full lesson content in the same
-  schema.
 - **Live-deploy verify tool:** use `bab-ship-verify <cache-version>
   <lesson-id-prefix> [timeout-s]` (e.g. `bab-ship-verify bab-v10 "9."`)
   instead of a manual curl after pushing a new phase — it polls past
