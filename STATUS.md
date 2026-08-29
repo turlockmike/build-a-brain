@@ -4,7 +4,7 @@
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
 Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29) — live on
-GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.6/~10
+GitHub Pages. Phase 13 (Evaluation & Overfitting) is underway, 13.1-13.7/~10
 lessons shipped 2026-08-29 — see "Phase 13" sections below. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
@@ -945,25 +945,62 @@ file-wide, 0 dup ids; `sw.js` bumped `bab-v26`->`bab-v27`, confirmed live via
 `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc comment refreshed (156->157,
 13.1-13.5->13.1-13.6).
 
+**Next up (superseded by 13.7 section below — see there for the current pointer).**
+
+## Phase 13 (Evaluation & Overfitting) — lesson 13.7 SHIPPED 2026-08-29
+
+Lesson 13.7 (`data/curriculum.js`, id "13.7") turns 13.4's hand-checked advice ("watch test
+loss, not training loss, to decide when to stop") into an automatic rule: early stopping.
+Monitor a held-out metric (test MSE) every epoch, keep the best-seen weights, and stop once
+`patience` consecutive epochs pass with no improvement — then report the SAVED best weights,
+not the current ones. Re-running 13.4's identical lambda=0 setup (12.10's starting weights,
+the same 3-example training set, lr=0.5, 13.1's 4-point test set) but checking EVERY epoch
+instead of only 13.4's 10 checkpoints found two things 13.4's coarser grid could not see:
+(1) the run's TRUE global-minimum test MSE is approximately 0.1442 at epoch 151, slightly
+lower and earlier than 13.4's own reported lowest checkpoint value (approximately 0.1450 at
+epoch 200) — not an error in 13.4 (epoch 200 genuinely was the lowest of its 10 sampled
+points), just a gap only every-epoch monitoring can close; (2) test MSE is not simply
+fall-then-rise — it actually RISES for the first 14 epochs (approximately 0.3098 at epoch 1
+to approximately 0.3600 at epoch 14) before falling to the epoch-151 floor, a three-segment
+shape (up, down, up) 13.4's checkpoints never revealed. That opening rise makes `patience`
+a real, load-bearing choice, not a free knob: test MSE does not fall back below its own
+epoch-1 value until epoch 31, so patience<=29 exhausts itself during that stretch and stops
+at epoch 30 having only ever recorded epoch 1 (66.7% train accuracy, 25% test accuracy —
+essentially untrained) as "best", while patience>=30 survives to epoch 31's first real
+improvement and rides the curve down to the true epoch-151 optimum (100% train accuracy,
+75% test accuracy, test MSE approximately 0.1442 — better than any fixed checkpoint any
+prior Phase 13 lesson used). Every checkpoint reused from 13.4 (epochs
+20/50/200/300/500/1000/2000/5000/10000/20000, train+test MSE+accuracy) was independently
+re-derived in NumPy and matched 13.4's own published numbers to 4 decimal places, and epoch
+1's training MSE (approximately 0.2425) matched 12.10's own published value, before the
+finer every-epoch grid was trusted. Since this lesson adds no new gradient term (only a
+monitoring/stopping rule on top of 12.8's existing backprop), a finite-difference check
+(11.4's technique) was still run at the epoch-150 weights (a state no prior lesson
+published), on training example 1 — analytic and numerical grad_W_output, grad_b_output,
+grad_W_hidden, and grad_b_hidden all matched to within 1e-6 (measured agreement on the
+order of 1e-11). 158/158 lessons total across Phases 1-13 so far. `bab-schema-check "13."`
+7/7 clean, 158/158 file-wide, 0 dup ids; `sw.js` bumped `bab-v27`->`bab-v28`, confirmed live
+via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc comment refreshed (157->158,
+13.1-13.6->13.1-13.7).
+
 **Next up: Phase 13's remaining lessons** — with epoch count (13.4), data size/quality
-(13.5), and L2 regularization (13.6) each covered as separate knobs on the same 3-example
-overfitting picture, a natural next topic is cross-validation / a proper train-vs-validation
-split (this course has used a single fixed 4-point test set throughout Phase 13 — worth
-surfacing explicitly that hyperparameters like lambda itself were chosen by eyeballing
-performance ON that same test set, which is its own subtle form of fitting to the "held
-out" data), or could instead cover another regularization technique (e.g. early stopping,
-which 13.4's own epoch-200 floor already demonstrates the SHAPE of without naming it as a
-technique). Continuing the ~10-lesson Phase 13 arc one lesson/session at a time per Mike's
-phase-by-phase pacing.
+(13.5), L2 regularization (13.6), and early stopping (13.7) each covered as a separate knob
+on the same 3-example overfitting picture, the one clearly-named remaining candidate is
+cross-validation / a proper train-vs-validation split: this course has used a single fixed
+4-point test set throughout all of Phase 13 so far, and it is worth surfacing explicitly
+that hyperparameters like 13.6's lambda and 13.7's patience were themselves chosen by
+eyeballing performance ON that same fixed test set — its own subtle form of fitting to the
+"held out" data, and the natural closing topic for the ~10-lesson Phase 13 arc. Continuing
+one lesson/session at a time per Mike's phase-by-phase pacing.
 
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.6/~10
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.7/~10
   shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
-  (cross-validation / train-vs-validation split, or another regularization technique like
-  early stopping, per the "Next up" note above — 13.4/13.5/13.6 have now each covered a
-  separate knob on the same 3-example overfitting picture: epoch count, data size/quality,
-  and L2 weight decay), following the same verification bar as every prior phase — every
+  (cross-validation / train-vs-validation split — the one clearly-named remaining topic per
+  the "Next up" note above, now that epoch count, data size/quality, L2 weight decay, and
+  early stopping have each covered a separate knob on the same 3-example overfitting
+  picture), following the same verification bar as every prior phase — every
   worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
   math; cross-check any hand-derived gradient or slope against NumPy's finite-difference

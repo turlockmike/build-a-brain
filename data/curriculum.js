@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (6 of ~10 so far — 13.1-13.6; remaining lessons pending, see
- * STATUS.md) — 157 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (7 of ~10 so far — 13.1-13.7; remaining lessons pending, see
+ * STATUS.md) — 158 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16552,6 +16552,113 @@ const LESSONS = [
           "regularization shrank the weights so much the network stopped using its input"
         ],
         "explanation": "By epoch 20000, lambda=0.1's W_hidden and W_output are near zero (order 1e-4 to 1e-5), so zh and zo are dominated entirely by the unpenalized bias terms — the network's prediction becomes a constant close to the majority training label (2 of 3 training points are t=1) regardless of what x actually is."
+      }
+    ]
+  },
+  {
+    "id": "13.7",
+    "number": 7,
+    "title": "Early stopping: watching the test curve every epoch, not just at checkpoints",
+    "objectives": [
+      "Learn early stopping: monitor a held-out (test/validation) metric EVERY epoch during training itself, keep the BEST-seen weights, and stop once that metric has failed to improve for `patience` consecutive epochs — turning 13.4's hand-checked advice ('watch test loss, not training loss, to decide when to stop') into an automatic rule",
+      "Discover, by checking every single epoch of 13.4's own lambda=0 run instead of only its 10 checkpoints (epoch 20/50/200/300/500/1000/2000/5000/10000/20000), that the run's TRUE lowest test MSE is not at epoch 200 (approximately 0.1450, 13.4's own claim from its checkpoint grid) but at epoch 151 (approximately 0.1442) — a real, previously-unpublished number a coarse checkpoint schedule cannot see, and exactly why early stopping monitors continuously instead of at hand-picked points",
+      "Show that `patience` is not free to pick arbitrarily: the same run's test MSE actually RISES for its first 14 epochs before falling to the epoch-151 floor, so a patience of 29 or fewer stops the run at epoch 30 having learned almost nothing (restoring epoch 1's weights: 66.7% train accuracy, 25% test accuracy), while a patience of 30 or more rides through that early rise and correctly finds the epoch-151 optimum (100% train accuracy, 75% test accuracy) — a sharp, measured cliff between a stopping rule that fails and one that works"
+    ],
+    "explanation": [
+      "13.4 traced 12.10's exact training run out to epoch 20000 and argued, from 10 hand-picked checkpoints, that the right place to stop is 'near where test loss bottoms out (here, around epoch 200), not wherever training loss happens to reach its own minimum' — training loss never stops falling, so a rule based on training loss would never fire. That is the right IDEA, but 13.4 never turned it into an actual stopping RULE, and it only ever looked at 10 specific epochs (20, 50, 200, 300, 500, 1000, 2000, 5000, 10000, 20000) out of 20000. Early stopping is the automatic version: watch the held-out metric after EVERY epoch, remember whichever epoch's weights gave the best value seen so far, and stop once `patience` consecutive epochs have passed without a new best — then use the REMEMBERED best weights, not whatever the final epoch happened to produce.",
+      "Re-running 13.4's identical lambda=0 setup (12.10's starting weights, the same 3-example training set, lr=0.5, 13.1's 4-point test set) but recording test MSE at EVERY epoch from 1 to 20000, instead of only 13.4's 10 checkpoints, shows something 13.4's own checkpoint grid could not see: the true global minimum of the whole run is at epoch 151 (test MSE approximately 0.1442), not epoch 200 (approximately 0.1450) as 13.4 reported. 13.4 was not wrong about ITS OWN checkpoints — epoch 200 genuinely was the lowest of the 10 points it happened to sample — but the continuous curve dips slightly lower and a little earlier than any of those 10 points landed. This is the entire motivation for early stopping's every-epoch monitoring: a hand-picked checkpoint schedule can miss the actual best moment to stop by simply not looking there.",
+      "The every-epoch view also reveals a shape 13.4's coarser grid entirely missed: test MSE does not just fall-then-rise once. Starting from 12.10's given weights, test MSE actually RISES for the first 14 epochs — from approximately 0.3098 at epoch 1 up to a small peak of approximately 0.3600 at epoch 14 — before turning around and falling all the way down to the epoch-151 floor, and only then rising again the way 13.4 already documented past epoch 200. The full curve has three segments (up, then down, then up), not the two (down, then up) 13.4's checkpoints suggested, because none of 13.4's checkpoints happened to fall inside that first small uphill stretch.",
+      "That opening uphill stretch is exactly what makes `patience` matter, not just whether a stopping rule exists at all. Define the rule precisely: after every epoch, if the new test MSE beats the best one seen so far, save these weights as the new best and reset a wait-counter to 0; otherwise increment the wait-counter; stop as soon as the wait-counter reaches `patience`, and report the SAVED best weights, not the current ones. Applied to this run: with patience=29 (or less), the wait-counter climbs through the entire epoch 2-30 uphill/still-recovering stretch (test MSE does not drop back below epoch 1's own value of approximately 0.3098 until epoch 31) and hits 29 at epoch 30 — the rule stops right there, having never once beaten epoch 1, so the 'best' it reports IS epoch 1: 66.7% train accuracy, 25% test accuracy, essentially the untrained starting point.",
+      "With patience=30 (or more), the wait-counter is still one epoch short of firing when test MSE finally drops below epoch 1's value at epoch 31, resetting the counter and letting training continue — past the uphill stretch, through the real learning, all the way to the true floor at epoch 151, then far enough past it (patience=30 needs 30 further non-improving epochs, so it actually stops at epoch 181) to be confident 151 really was the best, before finally reporting the SAVED epoch-151 weights: 100% train accuracy, 75% test accuracy, test MSE approximately 0.1442 — better than every fixed checkpoint any prior Phase 13 lesson (13.1, 13.4, 13.5, 13.6) used, found automatically and without ever training all the way to epoch 20000.",
+      "This gives Phase 13 a genuine three-way spectrum on stopping RULES, mirroring 13.6's three-way spectrum on regularization strength: too little patience (here, 29 or fewer) is fooled by a harmless early wiggle and stops before the network has learned anything at all — its own new failure mode, distinct from 13.4's epoch-20 underfitting because it is not about too little total training time, it is about a monitoring rule too eager to give up. Well-chosen patience (30 or more, including the practically-sized patience=50 used above) finds the actual best epoch on this run, beating every hand-picked checkpoint. No early stopping at all reproduces 13.4's full climb to test MSE approximately 0.1982 by epoch 20000 — the overfitting 13.4 already showed, now recast as the outcome of using a patience of infinity.",
+      "Verification note: every checkpoint this lesson reuses from 13.4 (epoch 20/50/200/300/500/1000/2000/5000/10000/20000, train and test MSE and accuracy) was independently re-derived in NumPy and matched 13.4's own published numbers to 4 decimal places before the finer, every-epoch grid was trusted, and epoch 1's training MSE (approximately 0.2425) matched 12.10's own published value. Because this lesson only ADDS a monitoring/stopping rule on top of 12.8's existing backprop — it introduces no new gradient term the way 13.6's L2 penalty did — a finite-difference check (11.4's technique) was still run at the epoch-150 weights (a state no prior lesson published), on training example 1, confirming the underlying gradients driving this entire curve remain correct: analytic and numerical grad_W_output, grad_b_output, grad_W_hidden, and grad_b_hidden all matched to within 1e-6 (measured agreement on the order of 1e-11)."
+    ],
+    "example": {
+      "problem": "Using 13.4's identical lambda=0 training run, an early-stopping rule with patience=10 and an early-stopping rule with patience=50 are both applied, monitoring test MSE every epoch and keeping the best-seen weights. patience=10 stops at epoch 11, reporting epoch 1's weights (test MSE approximately 0.3098, train accuracy 66.7%, test accuracy 25%). patience=50 stops at epoch 201, reporting epoch 151's weights (test MSE approximately 0.1442, train accuracy 100%, test accuracy 75%). Why does the smaller patience do so much worse, given that both rules use the exact same stopping LOGIC?",
+      "steps": [
+        "Test MSE does not fall monotonically from the very first epoch on this run — it actually RISES from approximately 0.3098 (epoch 1) to approximately 0.3600 (epoch 14) before turning around, because 12.10's starting weights are small and not yet aligned with the training data's pattern.",
+        "patience=10 only tolerates 10 consecutive non-improving epochs. Test MSE does not drop back below its own epoch-1 value (approximately 0.3098) until epoch 31 — 30 non-improving epochs after epoch 1 — so a wait-counter with patience=10 reaches its limit and fires at epoch 11, long before the curve has a chance to recover.",
+        "Because the rule reports the BEST-SEEN weights, not the final ones, and epoch 1 was never beaten before patience=10 fired, the 'best' it has on record IS epoch 1 — essentially 12.10's untrained starting point (66.7% train accuracy, 25% test accuracy).",
+        "patience=50 tolerates far more non-improving epochs, so it survives the entire uphill stretch (epochs 2-30) without giving up, lets training continue past epoch 31 where test MSE finally beats epoch 1's value, and keeps riding the curve down to its true floor at epoch 151 before 50 non-improving epochs finally accumulate (at epoch 201) and it reports the correct, much better epoch-151 weights."
+      ],
+      "answer": "patience=10 is fooled by test MSE's harmless early rise (epoch 1 to 14) into believing training is already hopeless, stopping at epoch 11 having never seen an improvement — its reported 'best' is really just the untrained starting point. patience=50 tolerates enough non-improving epochs to survive that same rise, lets training reach the real floor at epoch 151, and reports weights that reach 100% train accuracy and 75% test accuracy with a lower test MSE (approximately 0.1442) than any fixed checkpoint 13.1-13.6 used — the same stopping LOGIC produces opposite outcomes purely because of the patience value."
+    },
+    "practice": [
+      {
+        "problem": "13.4 claimed the lowest test MSE anywhere in its epoch-1-to-20000 run was approximately 0.1450, at epoch 200. This lesson found a lower value, approximately 0.1442, at epoch 151. Does this mean 13.4's number was wrong?",
+        "solution": "No. 13.4 only checked 10 specific checkpoints (epoch 20, 50, 200, 300, 500, 1000, 2000, 5000, 10000, 20000), and epoch 200 genuinely was the lowest test MSE among THOSE 10 points — that claim was accurate for the data 13.4 actually looked at. This lesson checked every single one of the 20000 epochs and found the continuous curve dips slightly lower, and a little earlier, than any of 13.4's 10 sampled points happened to land. The lesson is not that 13.4 made an error, but that a coarse checkpoint schedule can miss the true best moment simply by not sampling it — exactly why early stopping monitors every epoch instead of a hand-picked few."
+      },
+      {
+        "problem": "An early-stopping rule is defined to stop once training MSE (not test MSE) fails to improve for `patience` epochs. Using 13.4's own finding that training MSE falls at every single checkpoint from epoch 1 to epoch 20000 with no reversal anywhere, what would this rule actually do, for any finite patience?",
+        "solution": "It would never fire. Since training MSE keeps decreasing (however slowly) at every epoch all the way to epoch 20000, the wait-counter would never reach any finite patience value — training would run to whatever maximum epoch count was set, exactly the failure 13.4 already pointed out in the abstract ('that rule would never trigger a stop'). This is precisely why early stopping must monitor a HELD-OUT metric like test MSE, which can and does get worse, rather than training loss, which structurally cannot."
+      },
+      {
+        "problem": "The early-stopping rule in this lesson always reports the BEST-SEEN weights when it stops, not the weights from the epoch where it actually stops (e.g. patience=50 stops at epoch 201 but reports epoch 151's weights). Why does that distinction matter here?",
+        "solution": "By the time patience=50 actually fires (epoch 201), the network has already trained 50 epochs past its true floor and test MSE has started climbing back up again (per 13.4's own post-floor rise). If the rule reported the CURRENT (epoch 201) weights instead of the remembered best (epoch 151), it would hand back a slightly-overfit network instead of the best one actually seen — the whole point of tracking a separate 'best-seen' checkpoint is to be able to look a little further past the optimum (for confidence that it really is the optimum) without paying for that extra training in the final result."
+      },
+      {
+        "problem": "Suppose patience were set to exactly 30 versus exactly 29 on this run. One of these correctly finds the epoch-151 floor and the other stops at epoch 30 having only ever seen epoch 1 as its best. Which is which, and what single fact about the epoch-2-to-30 test MSE values explains the cutoff falling exactly there?",
+        "solution": "patience=29 stops at epoch 30 reporting epoch 1 as best; patience=30 survives to find epoch 151. The cutoff falls exactly there because test MSE does not drop back below its own epoch-1 value (approximately 0.3098) until epoch 31 — that is 30 consecutive non-improving epochs (epochs 2 through 31) after epoch 1. A wait-counter needs to tolerate at least those 30 non-improving epochs to still be running when epoch 31 finally provides the first improvement; patience=29 gives up one epoch too early to make it that far, and patience=30 just barely lasts long enough."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does early stopping, as defined in this lesson, actually do during training?",
+        "choices": [
+          "Monitor a held-out metric (like test MSE) every epoch, remember the best-seen weights, and stop once `patience` consecutive epochs have passed without a new best — then use the remembered best weights",
+          "Stop training as soon as training MSE stops decreasing",
+          "Train for a fixed number of epochs chosen in advance and always use the final weights",
+          "Stop training the first time test accuracy (not test MSE) changes at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "Early stopping tracks a held-out metric every epoch, keeps whichever weights produced the best value seen so far, and stops once `patience` epochs pass with no improvement — reporting the SAVED best weights, not the final ones. Stopping on training MSE would never fire (it never stops decreasing), and using the final weights would throw away the improvement early stopping is meant to preserve."
+        },
+      {
+        "type": "short",
+        "question": "In one sentence, why did checking every epoch of 13.4's run (rather than just its 10 checkpoints) find a lower test MSE (approximately 0.1442 at epoch 151) than 13.4's own reported lowest value (approximately 0.1450 at epoch 200)?",
+        "answer": "13.4 only sampled 10 specific checkpoints and epoch 151 was not one of them, so its true minimum was never checked",
+        "acceptable": [
+          "13.4's checkpoint grid never included epoch 151, so it could not find the true floor there",
+          "a coarse checkpoint schedule can miss the actual minimum simply by not sampling that epoch",
+          "checking every epoch sees the continuous curve; checking 10 points can miss its true minimum"
+        ],
+        "explanation": "13.4 was accurate about the 10 points it checked (epoch 200 was the lowest among them), but the continuous test-MSE curve actually dips slightly lower, at epoch 151, a point 13.4's checkpoint schedule never sampled — exactly the blind spot early stopping's every-epoch monitoring avoids."
+      },
+      {
+        "type": "mc",
+        "question": "On this run, an early-stopping rule with patience=10 stops at epoch 11 and reports epoch 1's weights as 'best' (66.7% train accuracy, 25% test accuracy). What causes this failure?",
+        "choices": [
+          "Test MSE actually RISES for the first 14 epochs before falling, so patience=10 gives up before the curve ever improves on epoch 1, and epoch 1 (essentially untrained) is the only 'best' it ever recorded",
+          "The training data has changed since epoch 1, so the network is now solving a different problem",
+          "patience=10 is too LARGE, causing the rule to overfit to the training set",
+          "The finite-difference gradient check failed at epoch 10, so the weights are wrong"
+        ],
+        "answerIndex": 0,
+        "explanation": "Test MSE rises from approximately 0.3098 (epoch 1) to approximately 0.3600 (epoch 14) before it starts falling, and does not drop back below epoch 1's own value until epoch 31 — far more non-improving epochs than patience=10 tolerates, so the rule fires having never beaten epoch 1's essentially untrained weights."
+      },
+      {
+        "type": "mc",
+        "question": "Between patience=29 and patience=30 on this exact run, the outcome flips from 'stops at epoch 30 having only ever seen epoch 1 as best' to 'survives to find the true floor at epoch 151.' What does this cliff show about choosing a patience value?",
+        "choices": [
+          "Patience is not a free-to-tune, low-stakes knob here — one extra epoch of tolerance (29 versus 30) is the entire difference between a stopping rule that fails completely and one that finds the run's best point, because it must be large enough to outlast whatever non-monotonic behavior the held-out curve happens to show early on",
+          "Patience has no effect on the outcome as long as it is greater than zero",
+          "A smaller patience always produces a better final result because it stops sooner",
+          "The cliff proves the gradient computation is unstable between epoch 29 and epoch 30"
+        ],
+        "answerIndex": 0,
+        "explanation": "The entire gap between patience=29 (fails, reports epoch 1) and patience=30 (succeeds, reports epoch 151) comes from a single fact: test MSE does not beat its own epoch-1 value until epoch 31, meaning 30 non-improving epochs must be tolerated first. Patience below that survives-length fails outright; patience at or above it works — a sharp threshold, not a gentle tradeoff, on this particular curve's early wiggle."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does the early-stopping rule report the weights from the BEST epoch seen (e.g. epoch 151) rather than the weights from the epoch where it actually stops (e.g. epoch 201, for patience=50)?",
+        "answer": "because training continues past the true optimum before the patience counter confirms it, so the current weights at the stopping epoch are already a bit past the best point",
+        "acceptable": [
+          "the epoch where it stops is already past the optimum, so the saved best-seen weights are better",
+          "patience epochs of extra training happen after the true best, so using the current weights would be worse than the remembered best",
+          "it needs to keep training past the optimum to confirm it, so it saves the best weights separately from wherever it ends up"
+        ],
+        "explanation": "By the time the wait-counter reaches `patience` and the rule stops, `patience` extra epochs have already run past the true best point, during which the held-out metric was getting worse again — using the CURRENT (stopping-epoch) weights would hand back a slightly worse network than the BEST-SEEN weights the rule deliberately saved along the way."
       }
     ]
   }
