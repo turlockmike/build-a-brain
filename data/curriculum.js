@@ -1,11 +1,11 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 10-14 — content not written yet).
+ * ROADMAP: all 14 phases (title only for phases 14 — content not written yet).
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
- * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10), and
- * Phase 9 (6 of 10 so far — 9.1-9.6; the remaining 4 titles are drafted in
- * STATUS.md pending full content) — 117 lessons total. Phases 10-14 will each
- * get their own LESSONS entries in a future session — see README.md "Adding
- * a new phase".
+ * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
+ * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
+ * Phase 13 (1 of ~10 so far — 13.1; remaining lessons pending, see
+ * STATUS.md) — 152 lessons total. Phase 14 will get its own LESSONS
+ * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -15916,6 +15916,113 @@ const LESSONS = [
         ],
         "answerIndex": 0,
         "explanation": "The finite-difference check compares every hand-derived analytic gradient this lesson computed — not just one isolated formula — against 11.4's numerical-derivative technique, on data the pipeline has never seen, confirming the whole chain from forward pass to backward pass is implemented correctly rather than merely reproducing a previously-checked example."
+      }
+    ]
+  },
+  {
+    "id": "13.1",
+    "number": 1,
+    "title": "Accuracy: turning predictions into a single score",
+    "objectives": [
+      "Define classification accuracy as (number of correct predictions) / (total predictions), formalizing the round-to-0-or-1-at-threshold-0.5 rule every lesson since 11.9 has used informally to call a prediction 'correct'",
+      "Compute BOTH training accuracy (scoring a trained network against the exact examples it learned from) and test accuracy (scoring the same network, same weights, against NEW labeled examples it never trained on) for 12.10's already-trained network",
+      "Explain why a network can reach 100% training accuracy while still making real mistakes on data it never saw, motivating why evaluation needs a held-out set separate from the training set"
+    ],
+    "explanation": [
+      "Every lesson since 11.9 has quietly used a rule to turn a sigmoid probability p into a yes/no classification decision: round p to whichever of 0 or 1 it is closer to (p >= 0.5 rounds to 1, p < 0.5 rounds to 0), then call the prediction 'correct' if that rounded decision matches the target t. 12.9 and 12.10 both used exactly this rule when they said 'all predictions round to the correct target' — this lesson gives that rule a name and a formula: accuracy = (number of examples whose rounded prediction matches its target) / (total number of examples).",
+      "12.10 trained a 2-input/2-hidden/1-output sigmoid network on 3 examples — (x=[1,-1],t=1), (x=[-1,1],t=0), (x=[2,2],t=1) — for 300 epochs. Running that exact training loop (12.8's forward-loss-backward-update cycle, lr=0.5, starting from 12.10's given weights) to completion gives final weights of approximately W_hidden=[[2.6713,-0.8203],[2.2003,-0.6652]], b_hidden=[-0.3101,-0.3218], W_output=[3.7789,2.5863], b_output=-2.7568. Forward-passing the 3 TRAINING examples through these final weights gives p approximately 0.9634 (target 1, rounds correctly), 0.0710 (target 0, rounds correctly), 0.9654 (target 1, rounds correctly) — 3 correct out of 3, a TRAINING accuracy of 3/3 = 1.00, or 100%.",
+      "100% is the best accuracy score exists, and it is tempting to stop there. But every one of those 3 examples is one the network's weights were DIRECTLY adjusted to fit — 12.8's update rule moved every weight specifically to shrink the loss on exactly these 3 points. Training accuracy answers 'how well did the network memorize the examples it was shown', not 'how well will it handle an example it has never seen.' Answering that second question needs a TEST set: labeled examples with known true targets that were never used in any forward-backward-update step for these weights.",
+      "Take 4 new points from the same 2-input classification task, with true labels given (never used to train this network): (x=[1,1], t=1), (x=[-1,-1], t=0), (x=[0,-1], t=0), (x=[-2,2], t=0). Forward-passing each through the SAME final weights (no further training, no further weight changes) gives: (1,1) -> p approximately 0.9129, rounds to 1, matches t=1, correct. (-1,-1) -> p approximately 0.1174, rounds to 0, matches t=0, correct. (0,-1) -> p approximately 0.7535, rounds to 1, but t=0 — WRONG. (-2,2) -> p approximately 0.0602, rounds to 0, matches t=0, correct.",
+      "TEST accuracy is therefore 3 correct out of 4 = 0.75, or 75% — lower than the 100% training accuracy computed from the exact same weights using the exact same 0.5 threshold rule. Nothing about the weights or the rounding rule changed between the two calculations; the only thing that changed is WHICH examples were used to grade them. That gap — 100% on the data the network trained on, 75% on data it did not — is the entire reason evaluation needs its own held-out set, and it is exactly the gap the rest of this phase (confusion matrices, precision/recall, and eventually overfitting itself) exists to look at more closely."
+    ],
+    "example": {
+      "problem": "Using 12.10's trained network (final weights approximately W_hidden=[[2.6713,-0.8203],[2.2003,-0.6652]], b_hidden=[-0.3101,-0.3218], W_output=[3.7789,2.5863], b_output=-2.7568), compute (a) TRAINING accuracy on its own 3 training examples and (b) TEST accuracy on 4 new labeled examples it never trained on: (x=[1,1],t=1), (x=[-1,-1],t=0), (x=[0,-1],t=0), (x=[-2,2],t=0).",
+      "steps": [
+        "Training set forward passes: (1,-1)->p approximately 0.9634, rounds to 1, target 1, correct. (-1,1)->p approximately 0.0710, rounds to 0, target 0, correct. (2,2)->p approximately 0.9654, rounds to 1, target 1, correct.",
+        "Training accuracy = 3 correct / 3 total = 1.00 = 100%.",
+        "Test set forward passes, same weights, no retraining: (1,1)->p approximately 0.9129, rounds to 1, target 1, correct. (-1,-1)->p approximately 0.1174, rounds to 0, target 0, correct. (0,-1)->p approximately 0.7535, rounds to 1, target 0, WRONG. (-2,2)->p approximately 0.0602, rounds to 0, target 0, correct.",
+        "Test accuracy = 3 correct / 4 total = 0.75 = 75%."
+      ],
+      "answer": "Training accuracy is 100% (3/3); test accuracy on the 4 new, never-trained-on examples is 75% (3/4), missing only (x=[0,-1], t=0), which the network rounds to 1. Same weights, same 0.5 threshold rule, two different scores — because the two calculations use different data."
+    },
+    "practice": [
+      {
+        "problem": "A separate classifier's rounded predictions on 5 new points are [1, 0, 1, 1, 0]. The true labels for those same 5 points are [1, 0, 0, 1, 0]. Compute its accuracy.",
+        "solution": "Compare position by position: 1=1 correct, 0=0 correct, 1 vs 0 WRONG, 1=1 correct, 0=0 correct — 4 matches out of 5. Accuracy = 4/5 = 0.80 = 80%."
+      },
+      {
+        "problem": "12.10's network scores 100% on its training set but only 75% on the 4 new test points. Since the weights and the 0.5 threshold rule are identical in both calculations, what actually explains the different scores?",
+        "solution": "The DATA is different, not the network or the rule. 12.8's update rule only ever adjusted weights to reduce loss on the 3 training examples — nothing in that process ever looked at the 4 test examples' labels, so nothing guarantees the resulting decision boundary happens to classify them correctly too. Training accuracy measures fit to seen data; test accuracy measures something the network was never directly optimized for."
+      },
+      {
+        "problem": "Which one of the 4 test-set examples does the network get wrong, and what are its predicted probability and true label?",
+        "solution": "(x=[0,-1], t=0): the network predicts p approximately 0.7535, which rounds to 1 — disagreeing with the true target of 0."
+      },
+      {
+        "problem": "Suppose someone recomputes test accuracy and gets a different number this time. Does that mean the network's weights changed?",
+        "solution": "Not necessarily from the accuracy calculation itself — accuracy is a read-only scorecard computed AFTER the forward pass, using already-fixed weights; nothing in computing it feeds a gradient back into W_hidden/b_hidden/W_output/b_output the way 12.8's training loop does. A different accuracy number would mean either the weights changed for some OTHER reason (further training) or the set of examples being scored changed — not that grading itself altered the network."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the formula for classification accuracy?",
+        "choices": [
+          "(number of correct predictions) / (total predictions)",
+          "(total predictions) / (number of correct predictions)",
+          "(correct predictions) - (total predictions)",
+          "The sum of all predicted probabilities"
+        ],
+        "answerIndex": 0,
+        "explanation": "Accuracy counts how many rounded predictions match their targets, divided by how many predictions were made in total."
+      },
+      {
+        "type": "short",
+        "question": "What decision rule turns a sigmoid output p into a 0/1 classification, per the convention 12.9 and 12.10 already used?",
+        "answer": "round at a 0.5 threshold",
+        "acceptable": [
+          "round to nearest using 0.5 as the threshold",
+          "p >= 0.5 rounds to 1, else 0",
+          "0.5 threshold",
+          "round p to the nearer of 0 or 1"
+        ],
+        "explanation": "p >= 0.5 is treated as a prediction of 1; p < 0.5 is treated as a prediction of 0 — the same rounding rule 12.9/12.10 used when checking whether predictions matched their targets."
+      },
+      {
+        "type": "mc",
+        "question": "What is 12.10's trained network's TRAINING accuracy, scored on its own 3 training examples?",
+        "choices": [
+          "100% (3/3)",
+          "75% (3/4)",
+          "66.7% (2/3)",
+          "0% (0/3)"
+        ],
+        "answerIndex": 0,
+        "explanation": "All 3 training predictions (approximately 0.9634, 0.0710, 0.9654) round correctly to their targets (1, 0, 1), giving 3/3 = 100%."
+      },
+      {
+        "type": "short",
+        "question": "What is the same network's TEST accuracy on the 4 new, never-trained-on labeled examples?",
+        "answer": "75%",
+        "acceptable": [
+          "75",
+          "3/4",
+          "0.75",
+          "three out of four"
+        ],
+        "explanation": "3 of the 4 test predictions round correctly; only (x=[0,-1], t=0) is misclassified (predicted p approximately 0.7535, rounds to 1), giving 3/4 = 75%."
+      },
+      {
+        "type": "mc",
+        "question": "Why can test accuracy differ from training accuracy even though both use the exact same weights and the exact same 0.5 threshold rule?",
+        "choices": [
+          "The weights were only ever adjusted (by 12.8's update rule) to reduce loss on the training examples; nothing in that process used the test examples' labels, so nothing guarantees the network generalizes correctly to inputs it never trained on",
+          "The weights secretly change while accuracy is being computed",
+          "The 0.5 threshold rule is different when scoring test data",
+          "Accuracy is inherently random and changes each time it is computed"
+        ],
+        "answerIndex": 0,
+        "explanation": "Training only ever optimizes fit to the training examples; test accuracy measures something — performance on unseen data — that the update rule never directly targeted, which is exactly why the two scores can diverge."
       }
     ]
   }

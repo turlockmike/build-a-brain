@@ -738,18 +738,57 @@ correctly appears 4 times. `bab-schema-check "12."` 10/10 clean, file-wide 151/1
 duplicate ids; `node --check` and a full LESSONS-array load both clean; `sw.js` cache bumped
 `bab-v20`->`bab-v21`; committed, pushed, live confirmed via `bab-ship-verify`.
 
+## Phase 13 (Evaluation & Overfitting) — lesson 13.1 SHIPPED 2026-08-29
+
+**Phase 13 (Evaluation & Overfitting), lesson 13.1 ("Accuracy: turning predictions into a
+single score") SHIPPED 2026-08-29:** formalizes the round-at-0.5-threshold decision rule
+every lesson since 11.9 already used informally, into accuracy = correct/total. Worked
+example reuses 12.10's already-trained 2-input/2-hidden/1-output network — its exact
+300-epoch training run was independently re-executed in Python/NumPy this session (matching
+every intermediate number 12.10's own text states: epoch-1 example deltas, the epoch
+1/2/10/50/100/300 MSE checkpoints, and the final 3 training predictions ~0.9634/~0.0710/
+~0.9654) to obtain the network's ACTUAL final weights (not previously recorded in the
+curriculum text), approximately W_hidden=[[2.6713,-0.8203],[2.2003,-0.6652]],
+b_hidden=[-0.3101,-0.3218], W_output=[3.7789,2.5863], b_output=-2.7568. Training accuracy
+on the network's own 3 training examples: 3/3 = 100%. A NEW 4-point held-out labeled test
+set — (x=[1,1],t=1), (x=[-1,-1],t=0), (x=[0,-1],t=0), (x=[-2,2],t=0), never used in any
+training update — scored against the SAME final weights: 3/4 = 75%, missing only
+(x=[0,-1],t=0) which the network rounds to 1 (p approximately 0.7535). The 100%-vs-75% gap
+from identical weights and the identical threshold rule, using only different data, is the
+lesson's payoff and sets up the rest of the phase (confusion matrix, precision/recall,
+overfitting).
+
+152/152 lessons total across Phases 1-13 so far (13.1 of ~10 planned for Phase 13). Every
+forward-pass number in 13.1 was independently computed via actual NumPy execution (no
+training/gradients in this lesson, so no finite-difference check applies — 13.1 only scores
+an already-trained, already-verified network). `bab-schema-check "13."` 1/1 clean, file-wide
+152/152 clean, 0 duplicate ids; `node --check` clean; `sw.js` cache bumped
+`bab-v21`->`bab-v22`; top-of-file ROADMAP/LESSONS doc comment refreshed to match (was stale
+since before Phase 9 shipped — undercounted Phases 9-12 as unwritten).
+
+**Next up: Phase 13 lessons 13.2 onward** — confusion matrix (true/false positive/negative,
+building directly on 13.1's single "WRONG" case at (x=[0,-1],t=0), which is itself a false
+positive), then precision/recall, then overfitting vs underfitting and why data
+size/quality/regularization matter (the phase's stated scope). No lesson-title breakdown was
+pre-written for Phase 13 the way Phases 9-12 got one before content started — 13.1 was
+written directly against the phase title's own bullet list (accuracy, confusion matrix,
+precision/recall, overfitting vs underfitting, data size/quality, regularization); a future
+session may still want to write the explicit 13.1-13.N title breakdown for planning
+continuity, mirroring Phases 9-12's pattern, before pushing further into content.
+
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons, Phase 12/Backpropagation now complete).**
-  Phases 13-14 still have no lesson content yet — only their phase titles show in the roadmap
-  as locked/coming-soon. Next session: scope and begin Phase 13, following the same
-  verification bar as every prior phase — every worked example/practice/quiz numeric claim
-  independently Python/NumPy-verified before being written into the lesson (not mental math;
-  if Phase 13 involves any hand-derived gradient or slope, cross-check it against NumPy's
-  finite-difference technique the way every Phase 11-12 lesson did), `bab-schema-check`,
-  file-wide duplicate-id check, `sw.js` cache version bump, commit + push, `bab-ship-verify`
-  confirming live. Per Mike: build this out phase by phase across future sessions, not all at
-  once ("chained background builds through the day" per his 2026-08-25 ask).
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1/~10 shipped
+  2026-08-29, see section above).** Next session: continue Phase 13 lesson-by-lesson
+  (confusion matrix next, per the "Next up" note above), following the same verification bar
+  as every prior phase — every worked example/practice/quiz numeric claim independently
+  Python/NumPy-verified before being written into the lesson (not mental math; if a lesson
+  involves any hand-derived gradient or slope, cross-check it against NumPy's
+  finite-difference technique the way every Phase 11-12 lesson did — 13.1 itself needed none,
+  since it only evaluates an already-trained network), `bab-schema-check`, file-wide
+  duplicate-id check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming
+  live. Per Mike: build this out phase by phase across future sessions, not all at once
+  ("chained background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
