@@ -497,25 +497,53 @@ the main example and the "Example" block) plus both practice gradients
 (one confirming a sign flip when the target sits below all the
 predictions). `sw.js` cache bumped to `bab-v15` alongside this merge.
 
+**11.5-11.8 (group 2) were written and merged into `data/curriculum.js`**,
+staying to the same single sigmoid neuron scope: 11.5 formalizes the
+gradient descent update rule w_new = w_old - eta.(dL/dw), applied per
+weight, reusing 11.4's own worked example (gradient [-0.355, -0.177]) to
+show one step with eta=0.1 shrinking loss from ~0.1425 to ~0.1274; 11.6
+explains the learning rate eta with a 3-step worked comparison on a
+single-weight neuron (x=1, b=0, t=0.5, start w=-2) across eta=0.5
+(crawls: L 0.1450->0.1349), eta=4 (reasonable: L 0.1450->0.0473), and
+eta=30 (too large: overshoots the minimum on step 1 then bounces back up
+to L=0.1217, worse than the reasonable run); 11.7 derives the sigmoid's
+exact closed-form derivative sigma'(z)=sigma(z)(1-sigma(z)) and the
+chain-rule gradient dL/dw_i = 2(p-t).sigma'(z).x_i, replacing 11.4's
+numerical-derivative technique, then hand-traces one full forward-pass ->
+loss -> gradient -> update cycle (x1=2, x2=-1, w1=0.6, w2=0.2, t=0,
+eta=0.5: loss drops from ~0.5344 to ~0.3248); 11.8 codes the identical
+4-step computation in vectorized NumPy (`grad = 2*(p-t)*p*(1-p)*x`,
+`w = w - eta*grad`), confirming its output matches 11.7's hand-computed
+numbers exactly. Schema-validated programmatically (`bab-schema-check
+"11."`: 8/8 lessons checked, plus `bab-schema-check` with no argument:
+139/139 file-wide, 0 duplicate ids) and independently re-verified via
+actual Python/NumPy execution for every numeric claim, including 11.7's
+exact-formula-vs-11.4's-numerical-method cross-check (agreeing to 3+
+decimal places) and 11.8's NumPy output matching 11.7's hand trace
+exactly. `sw.js` cache bumped to `bab-v16` alongside this merge, confirmed
+live via `bab-ship-verify`.
+
 ## Pending — next session(s)
 
 - **Phases 1-10 are all SHIPPED. Phase 11's title breakdown is done and
-  11.1-11.4 (group 1) are written and merged (above)** — next up is
-  drafting Phase 11's group 2, lessons 11.5-11.8 (gradient descent's
-  update rule, the learning rate, hand-computing one gradient descent
-  step, and coding it in NumPy), same content bar as every prior phase,
-  each lesson assuming only Phases 1-10 + earlier Phase 11 lessons (and
-  staying to a SINGLE neuron per the scope note above — no multi-layer
-  chain rule until Phase 12's backpropagation). Note for whoever writes
-  11.7: it's the first Phase 11 lesson that needs the sigmoid's actual
-  closed-form derivative, sigma'(z) = sigma(z)(1-sigma(z)) — 11.4 stayed
-  with 9.9's numerical-derivative technique deliberately, to introduce the
-  gradient-as-a-vector idea without requiring that formula first; 11.7's
-  "entirely by hand" worked example should derive/state it. Phases 12-14
-  still have no lesson content yet — only their phase titles show in the
-  roadmap as locked/coming-soon. Per Mike: build this out phase by phase
-  across future sessions, not all at once ("chained background builds
-  through the day" per his 2026-08-25 ask).
+  11.1-11.4 (group 1) and 11.5-11.8 (group 2) are written and merged
+  (above)** — next up is drafting Phase 11's final group, lessons
+  11.9-11.10: 11.9 the training loop / epochs (repeating 11.8's one-step
+  update many times, watching the loss get smaller pass after pass, and
+  naming one full pass an "epoch"); 11.10 the mini-project, training a
+  single sigmoid neuron from scratch on a small toy dataset using 11.9's
+  loop, tracing the loss curve dropping across iterations and combining
+  every Phase 11 idea (loss, gradient, update rule, learning rate,
+  epochs) end-to-end, mirroring every prior phase's end-of-phase
+  synthesis lesson. Each lesson should assume only Phases 1-10 + earlier
+  Phase 11 lessons, staying to the SAME single neuron per the scope note
+  above (no multi-layer chain rule until Phase 12's backpropagation).
+  Landing 11.9-11.10 completes Phase 11 (10/10) and clears the way for
+  Phase 12 (backpropagation) to begin. Phases 12-14 still have no lesson
+  content yet — only their phase titles show in the roadmap as
+  locked/coming-soon. Per Mike: build this out phase by phase across
+  future sessions, not all at once ("chained background builds through
+  the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —

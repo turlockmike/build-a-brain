@@ -14242,5 +14242,424 @@ const LESSONS = [
         "explanation": "A negative partial derivative for a weight means increasing that weight alone decreases the loss; here both weights show this, so increasing either one would help."
       }
     ]
+  },
+  {
+    "id": "11.5",
+    "number": 5,
+    "title": "Gradient descent: the update rule",
+    "objectives": [
+      "Recall lesson 11.4's gradient: a vector with one entry per weight, each entry saying which direction is uphill for the loss with respect to that one weight",
+      "Define the gradient descent update rule, w_new = w_old - eta x (dL/dw), that moves each weight a small step in the DOWNHILL direction — opposite the gradient",
+      "Apply the update rule to every weight in a two-weight neuron's gradient, computing new weight values after one step"
+    ],
+    "explanation": [
+      "Lesson 9.10's mini-project noticed that increasing w in the direction opposite the slope's sign shrinks E(w), one small step at a time, without ever having to try every possible value of w. Lesson 11.4 packaged that same slope information, for every weight at once, into the gradient. Gradient descent turns 'move opposite the slope' into one precise, repeatable formula.",
+      "The update rule: for each weight w, compute w_new = w_old - eta x (dL/dw), where dL/dw is that weight's own entry in the gradient (lesson 11.4) and eta ('learning rate,' pronounced 'AY-tuh') is a small positive number controlling step size (lesson 11.6 looks at what it controls). The minus sign is what makes this DESCENT: if dL/dw is positive (loss increases as w increases, i.e. uphill in the positive direction), subtracting a positive amount moves w DOWN; if dL/dw is negative (loss decreases as w increases), subtracting a negative amount moves w UP — exactly lesson 9.10's downhill direction, now written as a formula instead of a picture.",
+      "Applied to a neuron with more than one weight, the SAME formula runs for every weight in the gradient vector, each one using its own dL/dw entry and the same shared learning rate eta — every weight takes one step at the same time, all using the gradient that was computed before any of them moved.",
+      "Worked example, reusing 11.4's two-input neuron: x1=2, x2=1, b=0, weights w1=0.5, w2=-0.5, target t=1, whose gradient (11.4's numerical method) was approximately [-0.355, -0.177]. Applying one gradient descent step with eta=0.1: w1_new = 0.5 - 0.1x(-0.355) = 0.5355. w2_new = -0.5 - 0.1x(-0.177) = -0.4823. Plugging the new weights back into the forward pass gives z approximately 0.5887, p approximately 0.6431, and L approximately 0.1274 — down from the original L approximately 0.1425, confirming the step moved both weights in a direction that shrank the loss."
+    ],
+    "example": {
+      "problem": "Using 11.4's two-input neuron (x1=2, x2=1, b=0, target t=1) at w1=0.5, w2=-0.5, whose gradient was approximately [-0.355, -0.177], apply one gradient descent step with learning rate eta=0.1. What are the new weights, and does the loss shrink?",
+      "steps": [
+        "Recall the update rule: w_new = w_old - eta x (dL/dw), applied separately to each weight using its own gradient entry.",
+        "w1_new = 0.5 - 0.1x(-0.355) = 0.5 + 0.0355 = 0.5355.",
+        "w2_new = -0.5 - 0.1x(-0.177) = -0.5 + 0.0177 = -0.4823.",
+        "Recompute z, p, and L with the new weights: z = 0.5355(2) + (-0.4823)(1) = 1.071 - 0.4823, approximately 0.5887. p = sigma(0.5887), approximately 0.6431. L = (1-0.6431)^2, approximately 0.1274."
+      ],
+      "answer": "New weights are approximately w1=0.5355, w2=-0.4823 — the loss dropped from approximately 0.1425 to approximately 0.1274, confirming one gradient descent step moved both weights in a direction that reduced the loss."
+    },
+    "practice": [
+      {
+        "problem": "For a neuron with x1=1, x2=-1, b=0, weights w1=0.2, w2=0.4, target t=0, the gradient (computed lesson 11.4's numerical way, h=0.001) is approximately [0.2229, -0.2228]. Apply one gradient descent step with eta=0.2. What are the new weights?",
+        "solution": "w1_new = 0.2 - 0.2x0.2229, approximately 0.2 - 0.0446 = 0.1554. w2_new = 0.4 - 0.2x(-0.2228), approximately 0.4 + 0.0446 = 0.4446."
+      },
+      {
+        "problem": "Why does the update rule subtract eta x (dL/dw) rather than add it?",
+        "solution": "Because the gradient points UPHILL (the direction that increases loss) — subtracting moves each weight in the opposite, DOWNHILL direction, the direction lesson 9.10 showed shrinks the loss."
+      },
+      {
+        "problem": "If a weight's gradient entry is exactly 0, what does the update rule do to that weight?",
+        "solution": "Nothing — w_new = w_old - eta x 0 = w_old. A zero gradient entry means that weight is already sitting at a flat point (no uphill or downhill direction for the loss with respect to that weight alone), so gradient descent leaves it unchanged this step."
+      },
+      {
+        "problem": "A three-weight neuron's gradient is [0.1, -0.4, 0.05]. Using eta=0.5 and starting weights [1.0, 1.0, 1.0], what are all three updated weights?",
+        "solution": "w1_new = 1.0 - 0.5(0.1) = 0.95. w2_new = 1.0 - 0.5(-0.4) = 1.2. w3_new = 1.0 - 0.5(0.05) = 0.975 — the SAME update rule applied independently to each weight using its own gradient entry."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the gradient descent update rule compute for each weight?",
+        "choices": [
+          "w_new = w_old - eta x (dL/dw)",
+          "w_new = w_old + L",
+          "w_new = eta / (dL/dw)",
+          "w_new = w_old x gradient"
+        ],
+        "answerIndex": 0,
+        "explanation": "Each weight moves opposite its own gradient entry, scaled by the learning rate eta."
+      },
+      {
+        "type": "short",
+        "question": "In the update rule w_new = w_old - eta x (dL/dw), what is the common name for eta?",
+        "answer": "learning rate",
+        "acceptable": [
+          "learning rate",
+          "the learning rate"
+        ],
+        "explanation": "Eta is the learning rate — it scales how big a step the update rule takes."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the rule SUBTRACT eta x (dL/dw) instead of adding it?",
+        "choices": [
+          "Because the gradient points uphill, so subtracting moves the weight downhill toward lower loss",
+          "Because subtraction is required by the sigmoid function",
+          "Because it prevents the weight from ever becoming negative",
+          "Because loss is always positive"
+        ],
+        "answerIndex": 0,
+        "explanation": "The gradient's sign shows the uphill direction; subtracting it moves the weight downhill, toward lower loss."
+      },
+      {
+        "type": "short",
+        "question": "For a weight at w=0.5 with gradient entry dL/dw=-0.2 and eta=0.1, what is w_new?",
+        "answer": "0.52",
+        "acceptable": [
+          "0.52",
+          "w=0.52"
+        ],
+        "explanation": "w_new = 0.5 - 0.1x(-0.2) = 0.5 + 0.02 = 0.52."
+      },
+      {
+        "type": "mc",
+        "question": "When a neuron has several weights, how many times is the update rule applied per gradient descent step?",
+        "choices": [
+          "Once per weight, each using its own gradient entry and the same shared learning rate",
+          "Once total, using only the largest gradient entry",
+          "Twice, regardless of how many weights exist",
+          "Only for the first weight in the list"
+        ],
+        "answerIndex": 0,
+        "explanation": "Every weight gets its own update, all computed from the same gradient vector and the same eta."
+      }
+    ]
+  },
+  {
+    "id": "11.6",
+    "number": 6,
+    "title": "The learning rate",
+    "objectives": [
+      "Recall lesson 11.5's update rule w_new = w_old - eta x (dL/dw), and identify eta, the learning rate, as the number controlling how big each step is",
+      "Explain why too large a learning rate can overshoot the minimum and make the loss bounce around instead of settling, while too small a learning rate barely moves the weight each step",
+      "Compare a single-weight neuron's loss after a few gradient descent steps under a too-small, a reasonable, and a too-large learning rate, using the same starting point"
+    ],
+    "explanation": [
+      "Lesson 11.5's update rule, w_new = w_old - eta x (dL/dw), has one number that isn't part of the gradient at all: eta, the learning rate. It scales EVERY step gradient descent takes — the gradient decides WHICH direction is downhill, and eta decides HOW FAR to move in that direction each time.",
+      "Picture lesson 11.3's bowl-shaped loss curve. A small eta takes a tiny step down the bowl each time — safe, but slow: after several steps the weight has barely moved and the loss has barely shrunk. This is called CRAWLING.",
+      "A large eta takes a huge step — big enough to jump straight past the bottom of the bowl and land partway up the OTHER side, where the loss is climbing again. The next gradient then points back the other way, and another oversized step can jump past the bottom again, so instead of settling into the minimum, the weight bounces back and forth (OVERSHOOTING), and the loss can climb instead of shrinking.",
+      "A well-chosen eta lands somewhere between these two: small enough not to jump past the bottom of the bowl, large enough to make real progress each step. This is one of the first numbers worth trying a few different values for when a training run isn't cooperating.",
+      "Worked comparison: a single-weight sigmoid neuron with x=1, b=0, target t=0.5, so the loss is minimized exactly at w=0 (z=0, p=sigma(0)=0.5, matching the target exactly, 11.3's clean-minimum trick). Starting from w=-2 (L approximately 0.1450), running 3 gradient descent steps (11.5's rule, gradient via 11.4's numerical method) under three learning rates: eta=0.5 (too small): w moves -2.00, -1.96, -1.92, -1.88; L moves 0.1450, 0.1418, 0.1384, 0.1349 — shrinking, but barely, after 3 whole steps. eta=4 (reasonable): w moves -2.00, -1.68, -1.32, -0.93; L moves 0.1450, 0.1176, 0.0833, 0.0473 — steadily and meaningfully smaller every step. eta=30 (too large): w moves -2.00, 0.40, -1.02, 1.73; L moves 0.1450, 0.0097, 0.0555, 0.1217 — the first step jumps almost all the way to the minimum, but overshoots PAST it (w=0 is the minimum, and w=0.40 is just beyond it); the next steps bounce back and forth across the minimum, and by step 3 the loss is worse than either other run."
+    ],
+    "example": {
+      "problem": "A single-weight sigmoid neuron has x=1, b=0, and target t=0.5, so the loss is minimized exactly at w=0. Starting from w=-2 (L approximately 0.1450), run 3 gradient descent steps (11.5's update rule, gradient via 11.4's numerical method with h=0.001) using three different learning rates: eta=0.5, eta=4, and eta=30. What happens to the loss under each?",
+      "steps": [
+        "eta=0.5 (too small): w moves -2.00 -> -1.96 -> -1.92 -> -1.88 across 3 steps; L moves 0.1450 -> 0.1418 -> 0.1384 -> 0.1349 — shrinking, but barely, after 3 whole steps.",
+        "eta=4 (reasonable): w moves -2.00 -> -1.68 -> -1.32 -> -0.93; L moves 0.1450 -> 0.1176 -> 0.0833 -> 0.0473 — steadily and meaningfully smaller every step.",
+        "eta=30 (too large): w moves -2.00 -> 0.40 -> -1.02 -> 1.73; L moves 0.1450 -> 0.0097 -> 0.0555 -> 0.1217 — the first step jumps almost all the way to the minimum (w=0), but overshoots PAST it; the next steps bounce back and forth across the minimum, and by step 3 the loss is worse than either other run."
+      ],
+      "answer": "Too-small crawls (steady but tiny progress). Reasonable shrinks steadily, landing at the lowest loss of the three after 3 steps (L approximately 0.0473). Too-large overshoots the minimum on its very first step (a great-looking L approximately 0.0097) and then bounces back and forth, ending up WORSE off (L approximately 0.1217) than the reasonable run despite taking far bigger steps — bigger steps are not automatically better."
+    },
+    "practice": [
+      {
+        "problem": "In the update rule w_new = w_old - eta x (dL/dw), if eta is doubled while everything else stays the same, what happens to the SIZE of each step?",
+        "solution": "It doubles too — eta directly scales the step size, so doubling eta doubles how far each update moves the weight."
+      },
+      {
+        "problem": "A training run's loss shrinks a tiny bit every step, but after 50 steps it still hasn't gotten close to its minimum. Is the learning rate more likely too large or too small?",
+        "solution": "Too small — steady but tiny progress every step, with the loss barely moving even after many steps, is the signature of crawling from an undersized learning rate (the loss under eta=0.5 in this lesson's worked example)."
+      },
+      {
+        "problem": "A training run's loss jumps to a very good value on step 1, then gets noticeably WORSE on step 2. Is the learning rate more likely too large or too small?",
+        "solution": "Too large — a great first step followed by the loss climbing back up is overshoot: the step jumped past the minimum onto the loss curve's other side, exactly like this lesson's eta=30 example (L=0.0097 after step 1, then back up to 0.0555 after step 2)."
+      },
+      {
+        "problem": "Using this lesson's single-weight neuron (x=1, b=0, target t=0.5) starting at w=-2 with gradient dL/dw approximately -0.0800 (11.4's numerical method), compute w after ONE step with eta=1.",
+        "solution": "w_new = -2 - 1x(-0.0800) = -2 + 0.0800 = -1.92 — between the too-small run's -1.96 and the reasonable run's -1.68 after one step, since eta=1 sits between eta=0.5 and eta=4."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the learning rate eta control in gradient descent's update rule?",
+        "choices": [
+          "How big a step each update takes in the downhill direction",
+          "Which direction is downhill",
+          "How many weights the neuron has",
+          "The target value the neuron is trying to reach"
+        ],
+        "answerIndex": 0,
+        "explanation": "The gradient decides direction; eta decides how far each step moves in that direction."
+      },
+      {
+        "type": "short",
+        "question": "A learning rate that's too small causes the loss to shrink very ___ each step.",
+        "answer": "slowly",
+        "acceptable": [
+          "slowly",
+          "slow",
+          "little",
+          "barely"
+        ],
+        "explanation": "Too-small a learning rate crawls — tiny, steady progress that takes many steps to matter."
+      },
+      {
+        "type": "mc",
+        "question": "What typically happens when the learning rate is too large?",
+        "choices": [
+          "Steps overshoot the minimum and the loss can bounce around or get worse instead of settling",
+          "The gradient becomes exactly zero",
+          "The weight stops updating entirely",
+          "The loss shrinks perfectly every step"
+        ],
+        "answerIndex": 0,
+        "explanation": "An oversized step can jump past the bottom of the loss curve, landing somewhere the loss is climbing again."
+      },
+      {
+        "type": "short",
+        "question": "In this lesson's worked example, which learning rate (0.5, 4, or 30) produced the LOWEST loss after all 3 steps?",
+        "answer": "4",
+        "acceptable": [
+          "4",
+          "eta=4"
+        ],
+        "explanation": "eta=4 ended at L approximately 0.0473 — lower than both eta=0.5 (0.1349) and eta=30 (0.1217)."
+      },
+      {
+        "type": "mc",
+        "question": "Why can a too-large learning rate's FIRST step still look great, even though the run overall does worse?",
+        "choices": [
+          "A big step can land very close to the minimum by chance, then overshoot past it on the following steps and bounce away again",
+          "Loss always improves on the first step no matter what",
+          "The gradient is recalculated to be smaller after step 1",
+          "Large learning rates always converge faster than small ones"
+        ],
+        "answerIndex": 0,
+        "explanation": "The first oversized step can land near the bottom of the bowl by coincidence, but the same oversized steps keep overshooting on every later step too."
+      }
+    ]
+  },
+  {
+    "id": "11.7",
+    "number": 7,
+    "title": "Hand-computing one gradient descent step",
+    "objectives": [
+      "Derive the sigmoid's exact derivative, sigma'(z) = sigma(z)(1-sigma(z)), from lesson 10.4's sigmoid definition, replacing 11.4's numerical-derivative approximation with an exact formula",
+      "Compute a two-weight sigmoid neuron's exact gradient by hand using the chain rule: dL/dw_i = 2(p-t) x sigma'(z) x x_i",
+      "Trace one full gradient descent step entirely by hand — forward pass, loss, gradient, updated weights — extending lesson 10.7's hand-traced forward pass one step further"
+    ],
+    "explanation": [
+      "Every gradient computed so far (11.4, 11.5, 11.6) has used lesson 9.9's NUMERICAL trick — nudge a weight by a tiny h and divide the resulting change in loss by h. That approximation works, but it takes 2 extra forward passes per weight just to estimate ONE slope. There is an EXACT formula instead, and computing it starts with the sigmoid's own derivative.",
+      "Lesson 10.4 defined sigma(z) = 1/(1+e^(-z)). Its derivative works out to a strikingly clean formula: sigma'(z) = sigma(z) x (1 - sigma(z)) — the slope of the sigmoid at any point z, written entirely in terms of the sigmoid's OWN output at that point. The formula's result is what matters for this lesson: sigma'(z) = p(1-p), where p is that same sigmoid's output.",
+      "Chain rule (informally, extending 9.6's partial derivatives): loss L=(t-p)^2 depends on w_i through TWO steps — w_i affects z (z=w1x1+w2x2+b, so dz/dw_i = x_i), and z affects p (p=sigma(z), so dp/dz = sigma'(z) = p(1-p)), and p affects L (L=(t-p)^2, so dL/dp = -2(t-p) = 2(p-t)). Multiplying these slopes together (the chain rule) gives the EXACT gradient entry: dL/dw_i = 2(p-t) x p(1-p) x x_i — no nudging, no h, no approximation.",
+      "Worked example, entirely by hand, extending 10.7's traced forward pass: a two-input sigmoid neuron with x1=2, x2=-1, b=0, weights w1=0.6, w2=0.2, target t=0. Forward pass: z = 0.6(2) + 0.2(-1) + 0 = 1.0. p = sigma(1.0), approximately 0.7311. Loss: L = (0-0.7311)^2, approximately 0.5344. sigma'(z) = p(1-p) = 0.7311 x 0.2689, approximately 0.1966. dL/dp = 2(p-t) = 2(0.7311) = 1.4622. Exact gradient: dL/dw1 = 1.4622 x 0.1966 x 2, approximately 0.5749; dL/dw2 = 1.4622 x 0.1966 x (-1), approximately -0.2875. Update with eta=0.5 (11.5's rule): w1_new = 0.6 - 0.5(0.5749), approximately 0.3125. w2_new = 0.2 - 0.5(-0.2875), approximately 0.3437 — matching 11.4's numerical cross-check method to 3+ decimal places (numerical dL/dw1 approximately 0.5748, dL/dw2 approximately -0.2875)."
+    ],
+    "example": {
+      "problem": "A two-input sigmoid neuron has x1=2, x2=-1, b=0, weights w1=0.6, w2=0.2, and target t=0. By hand, using the exact formula (not 11.4's numerical approximation), compute the forward pass, the loss, the exact gradient, and the updated weights after one gradient descent step with eta=0.5.",
+      "steps": [
+        "Forward pass (10.7's method): z = w1x1 + w2x2 + b = 0.6(2) + 0.2(-1) + 0 = 1.2 - 0.2 = 1.0. p = sigma(1.0), approximately 0.7311.",
+        "Loss: L = (t-p)^2 = (0 - 0.7311)^2, approximately 0.5344.",
+        "sigma'(z) = p(1-p) = 0.7311 x 0.2689, approximately 0.1966.",
+        "dL/dp = 2(p-t) = 2(0.7311-0) = 1.4622.",
+        "Exact gradient: dL/dw1 = 1.4622 x 0.1966 x 2 (=x1), approximately 0.5749. dL/dw2 = 1.4622 x 0.1966 x (-1) (=x2), approximately -0.2875.",
+        "Update (11.5's rule): w1_new = 0.6 - 0.5(0.5749) = 0.6 - 0.2875 = 0.3125. w2_new = 0.2 - 0.5(-0.2875) = 0.2 + 0.1437 = 0.3437."
+      ],
+      "answer": "New weights are approximately w1=0.3125, w2=0.3437. Plugging them back in gives z approximately 0.2813, p approximately 0.5699, L approximately 0.3248 — down from L approximately 0.5344 before the step, confirming the exact hand-computed gradient moved the weights in a direction that shrank the loss."
+    },
+    "practice": [
+      {
+        "problem": "Derive: what is sigma'(z) in terms of sigma(z)?",
+        "solution": "sigma'(z) = sigma(z) x (1 - sigma(z)) — the sigmoid's derivative at any point equals its own output there times one minus that output."
+      },
+      {
+        "problem": "For a two-input sigmoid neuron with x1=1, x2=1, b=0, weights w1=0.3, w2=-0.1, target t=1, compute z, p, L, sigma'(z), the exact gradient [dL/dw1, dL/dw2], and the updated weights after one step with eta=1.0.",
+        "solution": "z = 0.3(1) + (-0.1)(1) = 0.2. p = sigma(0.2), approximately 0.5498. L = (1-0.5498)^2, approximately 0.2026. sigma'(z) = 0.5498 x 0.4502, approximately 0.2475. dL/dp = 2(0.5498-1) = -0.9004. Gradient: dL/dw1 = -0.9004 x 0.2475 x 1, approximately -0.2228; dL/dw2 = same since x1=x2=1, also approximately -0.2228. Update: w1_new = 0.3 - 1(-0.2228) = 0.5228. w2_new = -0.1 - 1(-0.2228) = 0.1228."
+      },
+      {
+        "problem": "Why does dL/dw1 equal dL/dw2 in the previous problem, even though w1 and w2 started at different values?",
+        "solution": "Because dL/dw_i = 2(p-t) x sigma'(z) x x_i, and x1 = x2 = 1 in that example — the only part of the formula that differs per weight is x_i, so equal inputs give equal gradient entries regardless of what the weights themselves are set to."
+      },
+      {
+        "problem": "A neuron's exact gradient formula is dL/dw_i = 2(p-t) x sigma'(z) x x_i. If x_i = 0 for some input, what is that weight's gradient entry, and what does that mean for the update rule?",
+        "solution": "0 — multiplying by x_i=0 zeroes the whole product regardless of p, t, or sigma'(z). Lesson 11.5's update rule then leaves that weight unchanged this step (w_new = w_old - eta x 0 = w_old), because an input that's 0 contributes nothing to z, so changing that weight wouldn't have changed the prediction anyway."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the exact derivative of the sigmoid function, sigma'(z)?",
+        "choices": [
+          "sigma(z) x (1 - sigma(z))",
+          "1 / (1+e^(-z))",
+          "2(t-p)",
+          "sigma(z) + 1"
+        ],
+        "answerIndex": 0,
+        "explanation": "The sigmoid's derivative equals its own output times one minus that output."
+      },
+      {
+        "type": "short",
+        "question": "The exact gradient formula is dL/dw_i = 2(p-t) x sigma'(z) x ___. What goes in the blank?",
+        "answer": "x_i",
+        "acceptable": [
+          "x_i",
+          "xi",
+          "x sub i",
+          "that input"
+        ],
+        "explanation": "The chain rule's last factor is dz/dw_i = x_i, the input that weight multiplies."
+      },
+      {
+        "type": "mc",
+        "question": "Why does lesson 11.7 use the EXACT gradient formula instead of 11.4's numerical-derivative approximation?",
+        "choices": [
+          "Because the exact chain-rule formula is available once sigma'(z) is known, and gives the slope directly without extra nudged forward passes",
+          "Because the numerical method is wrong",
+          "Because the exact formula only works for one weight at a time",
+          "Because 11.4's method can't be used again after 11.4"
+        ],
+        "answerIndex": 0,
+        "explanation": "Once sigma'(z) is known in closed form, the chain rule gives every gradient entry directly, no extra nudged forward passes needed."
+      },
+      {
+        "type": "short",
+        "question": "In this lesson's main worked example (x1=2, x2=-1, w1=0.6, w2=0.2, t=0), did the loss go up or down after one gradient descent step?",
+        "answer": "down",
+        "acceptable": [
+          "down",
+          "decreased",
+          "decrease",
+          "it went down"
+        ],
+        "explanation": "Loss dropped from approximately 0.5344 to approximately 0.3248 after the step."
+      },
+      {
+        "type": "mc",
+        "question": "What four things does one full gradient descent step trace, entirely by hand?",
+        "choices": [
+          "Forward pass, loss, gradient, updated weights",
+          "Only the forward pass",
+          "Only the loss and the learning rate",
+          "The dataset, the loss, and nothing else"
+        ],
+        "answerIndex": 0,
+        "explanation": "One full step traces all four: compute the prediction, measure the loss, compute the gradient, then update the weights."
+      }
+    ]
+  },
+  {
+    "id": "11.8",
+    "number": 8,
+    "title": "Coding gradient descent in NumPy",
+    "objectives": [
+      "Reuse lesson 10.8's NumPy forward-pass pattern and 7.x's vectorized-thinking toolkit to code a sigmoid neuron's forward pass, loss, gradient, and weight update as a few lines of vectorized NumPy",
+      "Translate 11.7's exact gradient formula, dL/dw_i = 2(p-t) x sigma'(z) x x_i, into ONE vectorized expression covering every weight at once, instead of writing it out per-weight",
+      "Run the SAME numeric example as 11.7's hand computation in NumPy and confirm the code's output matches the hand-traced numbers"
+    ],
+    "explanation": [
+      "Every piece of 11.7's hand computation has a direct NumPy translation. The forward pass is 10.8's familiar pattern: z = np.dot(w, x) + b, then p = sigmoid(z) using 8.x's sigmoid function. The loss is L = (t - p)**2, unchanged from 11.1. What's NEW here is coding the gradient and the update.",
+      "11.7's exact gradient formula, dL/dw_i = 2(p-t) x sigma'(z) x x_i, has exactly ONE part that changes per weight: x_i. Everything else — 2(p-t) and sigma'(z) — is the SAME single number for every weight, because it only depends on z and p, not on which weight is being asked about. That means the WHOLE gradient vector can be written as one NumPy line: grad = 2*(p - t) * p*(1-p) * x — the shared scalar part automatically multiplies EVERY entry of the array x, using the elementwise broadcasting 7.x already introduced, producing one gradient value per weight without a loop.",
+      "The update rule (11.5) is just as short: w = w - eta * grad — NumPy subtracts the two same-length arrays element-by-element, applying the SAME formula to every weight at once, exactly like 11.5's by-hand version applied it one weight at a time.",
+      "Together, that's the whole 4-step computation — forward pass, loss, gradient, update — in about 5 lines of code, reusable for a neuron with 2 weights or 200 without changing a single line."
+    ],
+    "example": {
+      "problem": "Write NumPy code for 11.7's exact same worked example (x1=2, x2=-1, b=0, w1=0.6, w2=0.2, t=0, eta=0.5) that computes z, p, L, the gradient, and the updated weights, and confirm the output matches 11.7's hand-computed numbers.",
+      "steps": [
+        "import numpy as np; x = np.array([2.0, -1.0]); w = np.array([0.6, 0.2]); b = 0.0; t = 0.0; eta = 0.5",
+        "z = np.dot(w, x) + b  # 1.0, matching 11.7's hand-computed z",
+        "p = sigmoid(z)  # approximately 0.7311, matching 11.7",
+        "L = (t - p)**2  # approximately 0.5344, matching 11.7",
+        "grad = 2*(p - t) * p*(1-p) * x  # approximately [0.5749, -0.2875], matching 11.7's exact gradient",
+        "w = w - eta * grad  # approximately [0.3125, 0.3437], matching 11.7's updated weights"
+      ],
+      "answer": "The NumPy output — z=1.0, p approximately 0.7311, L approximately 0.5344, grad approximately [0.5749, -0.2875], updated w approximately [0.3125, 0.3437] — matches 11.7's hand-traced numbers exactly, confirming the vectorized code performs the identical 4-step computation (forward pass, loss, gradient, update) that 11.7 worked through one number at a time."
+    },
+    "practice": [
+      {
+        "problem": "In the vectorized line grad = 2*(p - t) * p*(1-p) * x, which single part of the expression is an ARRAY (not a single number), and why?",
+        "solution": "x — the input vector, one value per weight's own input. Everything else (2, p, t, p*(1-p)) is a single scalar number shared across every weight, since it depends only on z and p, not on any particular weight's index. Multiplying that shared scalar by the array x produces one gradient value per weight via elementwise broadcasting (7.x)."
+      },
+      {
+        "problem": "Code this lesson's pattern for a 3-weight neuron: x = np.array([1.0, 2.0, -1.0]), w = np.array([0.1, -0.2, 0.4]), b=0.0, t=1.0, eta=1.0. What are z, p, L, the gradient, and the updated w?",
+        "solution": "z = np.dot(w,x)+b = -0.7. p = sigmoid(-0.7), approximately 0.3318. L = (1-0.3318)^2, approximately 0.4465. grad = 2(p-t) x p(1-p) x x, approximately [-0.2963, -0.5926, 0.2963]. w_new = w - eta*grad, approximately [0.3963, 0.3926, 0.1037]."
+      },
+      {
+        "problem": "Why doesn't the NumPy gradient line need a loop over each weight, the way 11.7's hand computation worked through w1 and w2 separately?",
+        "solution": "Because NumPy's elementwise multiplication (7.x) already applies the shared scalar part of the formula to every entry of the array x at once — the array itself stands in for 'do this for every weight,' the same reason 10.8's forward pass used np.dot instead of adding w1x1 + w2x2 term by term."
+      },
+      {
+        "problem": "If w had 200 entries instead of 2, would the code w = w - eta * grad need to change?",
+        "solution": "No — the exact same one line works for 2 weights or 200, because NumPy's array subtraction and multiplication apply elementwise regardless of array length; this is the whole point of coding the update vectorized instead of writing it out per-weight."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Which NumPy line computes the exact gradient for every weight at once?",
+        "choices": [
+          "grad = 2*(p - t) * p*(1-p) * x",
+          "grad = w - eta",
+          "grad = np.dot(w, x) + b",
+          "grad = (t - p)**2"
+        ],
+        "answerIndex": 0,
+        "explanation": "The shared scalar part multiplies the array x elementwise, giving one gradient entry per weight in a single expression."
+      },
+      {
+        "type": "short",
+        "question": "In grad = 2*(p - t) * p*(1-p) * x, which variable is the only ARRAY (one value per weight)?",
+        "answer": "x",
+        "acceptable": [
+          "x",
+          "the input array",
+          "x (inputs)"
+        ],
+        "explanation": "x holds one input value per weight; every other factor in the expression is a single shared scalar."
+      },
+      {
+        "type": "mc",
+        "question": "Why can the same scalar (2*(p-t)*p*(1-p)) multiply every entry of x without a loop?",
+        "choices": [
+          "NumPy's elementwise broadcasting applies a scalar to every array entry automatically",
+          "Python automatically loops behind the scenes only for sigmoid functions",
+          "The scalar is secretly also an array",
+          "It can't — a loop is required"
+        ],
+        "answerIndex": 0,
+        "explanation": "NumPy broadcasts a scalar across every entry of an array automatically, no explicit loop needed."
+      },
+      {
+        "type": "short",
+        "question": "What line of code applies 11.5's update rule to every weight in NumPy?",
+        "answer": "w = w - eta * grad",
+        "acceptable": [
+          "w = w - eta * grad",
+          "w -= eta * grad"
+        ],
+        "explanation": "NumPy's elementwise subtraction applies the update rule to every weight in the array at once."
+      },
+      {
+        "type": "mc",
+        "question": "In this lesson's main worked example, what confirms the NumPy code is correct?",
+        "choices": [
+          "Its output (z, p, L, gradient, updated weights) matches 11.7's hand-computed numbers exactly",
+          "It runs without printing an error",
+          "It uses fewer lines than 11.7's hand computation",
+          "It produces a different gradient than 11.7, showing NumPy is more precise"
+        ],
+        "answerIndex": 0,
+        "explanation": "Matching 11.7's independently hand-computed numbers is what confirms the vectorized code is doing the right computation."
+      }
+    ]
   }
 ];
