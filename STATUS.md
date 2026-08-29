@@ -549,22 +549,130 @@ clean, file-wide 141/141 clean, 0 duplicate ids; `sw.js` cache bumped to
 `bab-v17` alongside this merge, confirmed live via `bab-ship-verify`.
 **Phase 11 (Learning: Loss & Gradient Descent) is now COMPLETE, 10/10.**
 
+## Phase 12 (Backpropagation) — title breakdown (kickoff, no content yet)
+
+Full 10-lesson title breakdown (matching the granularity of Phases 9-11's
+title lists, each building only on Phase 1-11 content + earlier Phase 12
+lessons per the README's progressive-dependency rule). **No lessons
+written this session — this is the scope-note + breakdown session that
+Phase 9/10/11 each did before their own content-writing sessions.**
+
+**Scope note:** Phase 12 lifts the single-neuron restriction Phase 11 held
+throughout (per Phase 11's own scope note above). It teaches multi-layer
+CREDIT ASSIGNMENT — computing dL/dw for every weight in a network with a
+hidden layer, not only the weights that touch the output directly — which
+is what the roadmap's own Phase 12 description names: "chain rule applied
+layer by layer, error flowing backward through the network"
+(`data/curriculum.js:26`). Phase 12 keeps Phase 11's loss (11.1-11.2), the
+update rule (11.5), the learning rate (11.6), and epochs (11.9) exactly as
+defined — the ONLY new machinery is how to compute a gradient for a weight
+that sits one layer before the output, by extending 11.7's two-step chain
+rule (loss -> activation -> z -> weight) one link further (loss -> output
+activation -> output z -> hidden activation -> hidden z -> weight) and
+naming the reusable intermediate quantity at each layer a "delta." Scope
+stays to a network with exactly ONE hidden layer, mirroring 10.7/10.9's
+worked-example architecture — a second hidden layer would only repeat the
+same backward step again, not teach a new idea, so it's left as an
+unstated generalization rather than a taught case. Sigmoid (10.4) stays
+the activation function in every worked example, reusing 11.7's exact
+sigma'(z)=sigma(z)(1-sigma(z)) formula at every layer; ReLU (10.5) is not
+given full backprop treatment in this phase, to keep the phase's actual
+new idea (the backward-flowing chain rule / credit assignment) the
+throughline rather than juggling two derivative formulas at once.
+**Corrected while reading this context:** lesson 10.2's explanation and
+one of its quiz solutions both said "Phase 11's backpropagation" — a
+holdover from before Phase 11 became the single-neuron loss/gradient-
+descent phase; fixed to "Phase 12's backpropagation" to match the current
+roadmap (`data/curriculum.js:12871`, `:12905`), `bab-schema-check`
+re-confirmed clean (141/141) after the fix.
+
+1. **12.1 — The multi-layer credit-assignment problem** — why 11.7's exact
+   gradient formula, dL/dw_i = 2(p-t).sigma'(z).x_i, only answers "how
+   wrong was this weight" for a weight that connects DIRECTLY to the
+   output neuron; a hidden-layer weight is one more forward-pass step
+   removed, so the same formula doesn't yet apply — naming the gap this
+   phase exists to close.
+2. **12.2 — Extending the chain rule across layers** — revisiting 9.7's
+   chain rule and 11.7's two-link chain (loss -> activation -> z ->
+   weight) and adding one more link for a hidden-layer weight (loss ->
+   output activation -> output z -> hidden activation -> hidden z ->
+   weight), showing algebraically that the extra link is one more
+   multiplication, not a new kind of math.
+3. **12.3 — The output layer's error signal (delta)** — naming
+   delta_output = dL/dz for the output neuron (the same 2(p-t).sigma'(z)
+   quantity from 11.7, now given its own reusable name instead of being
+   recomputed), because it is about to be passed backward in 12.4.
+4. **12.4 — Backpropagating error to the hidden layer** — the phase's
+   core new idea: each hidden neuron's "blame" (delta_hidden) is a
+   WEIGHTED SUM of every output-layer delta it feeds into, using the same
+   weights from the forward pass read backward (transposed), times that
+   hidden neuron's own sigma'(z) — this is literally the "error flowing
+   backward through the network" the roadmap names the phase for.
+5. **12.5 — Computing every gradient from the deltas** — combining
+   12.3/12.4's deltas with each layer's own inputs (delta times input,
+   matching 11.7's x_i term) to get dL/dw for BOTH layers' weights,
+   showing the output-layer and hidden-layer gradient formulas are
+   structurally identical once the right delta is known.
+6. **12.6 — Hand-computing one full backward pass** — a fully worked tiny
+   2-input/2-hidden/1-output sigmoid network (extending 10.7's
+   hand-traced forward pass and 11.7's hand-traced single-neuron gradient
+   step): forward pass, loss, delta_output, delta_hidden, every weight's
+   gradient, entirely by hand.
+7. **12.7 — Coding backpropagation in NumPy** — vectorizing 12.6's hand
+   computation into matrix operations (`delta_hidden = (W_output.T @
+   delta_output) * sigmoid_derivative(z_hidden)`), reusing 10.8's
+   forward-pass matrix code and 11.8's NumPy gradient-descent pattern.
+8. **12.8 — Training loop for a multi-layer network** — wrapping 12.7's
+   forward-pass-then-backward-pass computation in 11.9's epoch loop
+   (forward, loss, backward, update — every layer, every epoch),
+   extending single-neuron training (Phase 11) to a whole network.
+9. **12.9 — Learning XOR from scratch** — the payoff: training a small
+   hidden-layer network via 12.8's loop, starting from RANDOM weights
+   (not the hand-picked OR/NAND/AND or ReLU-tent weights 10.2/10.9 used),
+   watching gradient descent discover XOR-solving weights on its own —
+   finally answering, by learning rather than by hand-design, the
+   question Phase 8's single perceptron provably couldn't and Phase 10
+   could only solve by construction.
+10. **12.10 — Mini-project: training a 2-layer network end-to-end** —
+    building and training a small hidden-layer network on a toy
+    multi-example dataset from scratch, tracing the loss curve across
+    epochs, combining every idea from the phase (credit assignment, the
+    backward-flowing chain rule, deltas, hand + NumPy backprop, the
+    training loop) with Phase 10's forward pass and Phase 11's
+    loss/update-rule/learning-rate machinery into one complete pipeline —
+    mirroring
+    4.12/5.12/6.13/7.12/8.10/9.10/10.10/11.10's end-of-phase synthesis
+    structure.
+
+Suggested content-writing groups (mirroring Phase 11's 4+4+2 split):
+group 1 = 12.1-12.4 (the conceptual buildup: problem, chain rule
+extension, output delta, backprop-to-hidden), group 2 = 12.5-12.8 (the
+mechanics: gradient formulas, hand computation, NumPy code, training
+loop), group 3 = 12.9-12.10 (the payoff: learning XOR from scratch, then
+the phase mini-project). Not started this session — next session's job.
+
 ## Pending — next session(s)
 
-- **Phases 1-11 are all SHIPPED (141/141 lessons).** Phase 11 (Learning:
-  Loss & Gradient Descent) closed out with group 3 (11.9-11.10) above —
-  next up is **Phase 12 (backpropagation)**: re-derive its own scope note
-  and lesson-title breakdown first (the same way Phase 9's, Phase 10's,
-  and Phase 11's title-breakdown sessions each preceded their own
-  content-writing sessions), THEN write content group by group. Phase 12
-  is where the single-neuron restriction Phase 11 held throughout finally
-  lifts — multi-layer credit assignment (the chain rule across stacked
-  layers, building on Phase 10's stacked networks and Phase 11's
-  single-neuron gradient/update-rule machinery) is the whole point of
-  this phase. Phases 13-14 still have no lesson content yet — only their
-  phase titles show in the roadmap as locked/coming-soon. Per Mike: build
-  this out phase by phase across future sessions, not all at once
-  ("chained background builds through the day" per his 2026-08-25 ask).
+- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12's scope note +
+  title breakdown are done (above) but NO Phase 12 content is written
+  yet.** Next session: write Phase 12 content group by group, starting
+  with group 1 (12.1-12.4), following the same verification bar as every
+  prior phase (every numeric claim independently Python/NumPy-verified —
+  see backprop-specific note below — `bab-schema-check`, file-wide
+  duplicate-id check, `sw.js` cache version bump, commit + push,
+  `bab-ship-verify` confirming live). **Backprop-specific verification
+  note:** cross-check every hand-derived gradient against NumPy's
+  autodiff-free finite-difference check (perturb one weight by a small
+  epsilon, recompute loss, confirm the numerical slope matches the
+  analytic backprop gradient to several decimal places) — this is the
+  same numerical-derivative technique 11.4 already used, and it is the
+  standard "gradient check" sanity test for backprop specifically, worth
+  calling out explicitly in the lesson content itself, not just as an
+  authoring-time check. Phases 13-14 still have no lesson content yet —
+  only their phase titles show in the roadmap as locked/coming-soon. Per
+  Mike: build this out phase by phase across future sessions, not all at
+  once ("chained background builds through the day" per his 2026-08-25
+  ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
