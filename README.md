@@ -97,7 +97,7 @@ automatically.
 ## Adding a new phase (for the next session)
 
 1. Pick the next phase from `ROADMAP` (currently phase 9, in progress —
-   2/10 lessons written; continue at 9.3 using the title breakdown in
+   6/10 lessons written; continue at 9.7 using the title breakdown in
    `STATUS.md`. Once 9.10 ships, move to phase 10: "Networks of Neurons").
 2. Write that phase's lesson list (title-only breakdown first, then full content
    per lesson using the exact schema above — same content bar as Phase 1-6: a

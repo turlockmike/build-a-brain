@@ -2,8 +2,8 @@
  * ROADMAP: all 14 phases (title only for phases 10-14 — content not written yet).
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10), and
- * Phase 9 (2 of 10 so far — 9.1, 9.2; the other 8 titles are drafted in
- * STATUS.md pending full content) — 113 lessons total. Phases 10-14 will each
+ * Phase 9 (6 of 10 so far — 9.1-9.6; the remaining 4 titles are drafted in
+ * STATUS.md pending full content) — 117 lessons total. Phases 10-14 will each
  * get their own LESSONS entries in a future session — see README.md "Adding
  * a new phase".
  *
@@ -11732,7 +11732,7 @@ const LESSONS = [
     ]
   },
 
-  /* Phase 9: Calculus for Learning (in progress — 2/10 lessons so far). */
+  /* Phase 9: Calculus for Learning (in progress — 6/10 lessons so far). */
   {
     "id": "9.1",
     "number": 1,
@@ -11928,6 +11928,401 @@ const LESSONS = [
         ],
         "answerIndex": 1,
         "explanation": "Like any function, f'(x) maps inputs to outputs — here, each x maps to the instantaneous rate of change of f at that x, which is itself a well-defined number for every x."
+      }
+    ]
+  },
+  {
+    "id": "9.3",
+    "number": 3,
+    "title": "The power rule — a shortcut for the derivative of x^n",
+    "objectives": [
+      "State the power rule: for f(x) = x^n, f'(x) = n·x^(n-1)",
+      "Verify the power rule against 9.2's shrinking-interval method instead of just accepting it as a rule",
+      "Apply the power rule to find derivatives of x^3, x^4, and other powers without redoing the shrinking-h process each time"
+    ],
+    "explanation": [
+      "Lesson 9.2 found, by shrinking h smaller and smaller, that f(x) = x^2 has derivative f'(x) = 2x — a pattern discovered empirically, one function at a time. This lesson names the general shortcut behind that pattern: for f(x) = x^n, f'(x) = n · x^(n-1) — bring the exponent down as a multiplying factor, then subtract 1 from the exponent. This is called the power rule. Check it against what 9.2 already found: for n = 2, the power rule gives f'(x) = 2 · x^(2-1) = 2x^1 = 2x — exactly 9.2's result, not a coincidence.",
+      "Rather than accept the power rule on faith, test it the same way 9.2 built trust in 2x: pick a new function, f(x) = x^3, and see whether shrinking h converges to what the power rule predicts. The power rule predicts f'(x) = 3x^2, so at x = 2 it predicts f'(2) = 3(2^2) = 12. Compute with 9.2's method: h = 0.1 gives (2.1^3 - 2^3) / 0.1 = (9.261 - 8) / 0.1 = 12.61; h = 0.01 gives (2.01^3 - 8) / 0.01 = 12.0601; h = 0.001 gives (2.001^3 - 8) / 0.001 = 12.006. The sequence 12.61, 12.0601, 12.006 is closing in on exactly 12 — matching the power rule's prediction.",
+      "The pattern holds for any whole-number power, not just 2 and 3: for x^4, the power rule predicts f'(x) = 4x^3; for x^5, f'(x) = 5x^4, and so on — always \"bring the exponent down, subtract one from the exponent.\" This turns what used to be a multi-step shrinking-h computation into a two-step arithmetic shortcut: read the exponent, apply the rule.",
+      "This is the first of several shortcut rules this phase will build; lesson 9.4 combines it with rules for sums and constant multiples so you can differentiate functions with more than one term (like 3x^2 + x) without treating the whole expression as one shrinking-h computation."
+    ],
+    "example": {
+      "problem": "Use the power rule to find the derivative of f(x) = x^5, then evaluate it at x = 2.",
+      "steps": [
+        "f'(x) = 5 · x^(5-1) = 5x^4",
+        "f'(2) = 5 · 2^4 = 5 · 16"
+      ],
+      "answer": "80"
+    },
+    "practice": [
+      {
+        "problem": "Use the power rule to find f'(x) for f(x) = x^3.",
+        "solution": "Bring the exponent down and subtract 1: f'(x) = 3x^(3-1) = 3x^2."
+      },
+      {
+        "problem": "Use the power rule to find f'(2) for f(x) = x^4.",
+        "solution": "f'(x) = 4x^3, so f'(2) = 4(2^3) = 4(8) = 32."
+      },
+      {
+        "problem": "Verify the power rule's prediction for f(x) = x^3 at x = 1 using the shrinking-h method from 9.2, with h = 0.001. Does it match 3x^2 at x = 1?",
+        "solution": "(f(1.001) - f(1)) / 0.001 = (1.003003001 - 1) / 0.001 ≈ 3.003, closing in on 3 — matching the power rule's prediction of 3(1^2) = 3."
+      },
+      {
+        "problem": "Use the power rule to find f'(x) for f(x) = x^6.",
+        "solution": "f'(x) = 6x^(6-1) = 6x^5."
+      },
+      {
+        "problem": "Using the power rule, what is f'(3) for f(x) = x^4?",
+        "solution": "f'(x) = 4x^3, so f'(3) = 4(3^3) = 4(27) = 108."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the power rule say the derivative of f(x) = x^n is?",
+        "choices": [
+          "n^x",
+          "n·x^(n-1)",
+          "x^n / n",
+          "(n-1)·x^n"
+        ],
+        "answerIndex": 1,
+        "explanation": "The power rule brings the exponent down as a multiplying factor, then subtracts 1 from the exponent: f'(x) = n·x^(n-1)."
+      },
+      {
+        "type": "short",
+        "question": "Using the power rule, what is f'(x) for f(x) = x^7?",
+        "answer": "7x^6",
+        "acceptable": ["7x^6", "7*x^6", "7 x^6"],
+        "explanation": "Bring the exponent (7) down and subtract 1 from it: f'(x) = 7x^(7-1) = 7x^6."
+      },
+      {
+        "type": "mc",
+        "question": "For f(x) = x^2, how does the power rule's prediction compare to what lesson 9.2 found by shrinking h?",
+        "choices": [
+          "They disagree",
+          "They match exactly: 2x",
+          "The power rule only works for x^3 and higher",
+          "9.2 found 2x^2"
+        ],
+        "answerIndex": 1,
+        "explanation": "Power rule: f'(x) = 2x^(2-1) = 2x, exactly what 9.2's shrinking-h numerical estimates converged to."
+      },
+      {
+        "type": "short",
+        "question": "Using the power rule, what is f'(4) for f(x) = x^3?",
+        "answer": "48",
+        "acceptable": ["48"],
+        "explanation": "f'(x) = 3x^2, so f'(4) = 3(16) = 48."
+      },
+      {
+        "type": "mc",
+        "question": "Why did this lesson check the power rule against the shrinking-h method instead of just stating it?",
+        "choices": [
+          "To build trust that the shortcut actually matches the slower method it's replacing, not just assert it",
+          "Because the power rule is wrong",
+          "Because shrinking h is required every time",
+          "There was no reason"
+        ],
+        "answerIndex": 0,
+        "explanation": "Verifying the shortcut against the method that defines the derivative (9.2's shrinking h) confirms the power rule is a genuine shortcut, not an unrelated guess."
+      }
+    ]
+  },
+  {
+    "id": "9.4",
+    "number": 4,
+    "title": "Derivatives of sums and constant multiples — building a bigger function's derivative from its pieces",
+    "objectives": [
+      "Learn the constant multiple rule: the derivative of c·f(x) is c·f'(x)",
+      "Learn the sum rule: the derivative of f(x) + g(x) is f'(x) + g'(x)",
+      "Combine the power rule (9.3) with the sum and constant multiple rules to differentiate multi-term functions like 3x^2 + x"
+    ],
+    "explanation": [
+      "So far the power rule only handles a single power term like x^3 by itself. Real functions usually have more than one term — like the perceptron's weighted sum z = x·w + b from lesson 8.3, which adds several pieces together. Two more shortcut rules make that possible: the constant multiple rule says the derivative of c·f(x) (a constant c times a function) is just c times f's derivative: (c·f(x))' = c·f'(x). The sum rule says the derivative of a sum of functions is the sum of their derivatives: (f(x) + g(x))' = f'(x) + g'(x).",
+      "Put together with the power rule, this means differentiating a multi-term function like f(x) = 3x^2 + x is just differentiating each term separately and adding the results: the derivative of 3x^2 is 3 times the derivative of x^2 (constant multiple rule + power rule: 3·2x = 6x), and the derivative of x (which is x^1) is 1·x^0 = 1 (power rule with n = 1). Adding them: f'(x) = 6x + 1.",
+      "Check this against 9.2's shrinking-h method to confirm it's not just symbol pushing: at x = 2, the shortcut predicts f'(2) = 6(2) + 1 = 13. Shrinking h: h = 0.01 gives (f(2.01) - f(2)) / 0.01 = 13.03; h = 0.001 gives 13.003 — closing in on 13, matching the shortcut.",
+      "This piece-by-piece approach is exactly why these shortcut rules matter: a function built from several power terms, however many, can be differentiated one term at a time instead of one enormous shrinking-h computation on the whole thing — which is exactly the shape needed for anything with more than one term, including every weighted sum this course has built since Phase 6."
+    ],
+    "example": {
+      "problem": "Find the derivative of f(x) = x^3 - 2x^2, then evaluate it at x = 3.",
+      "steps": [
+        "Derivative of x^3 (power rule): 3x^2",
+        "Derivative of -2x^2 (constant multiple + power rule): -2·2x = -4x",
+        "Add the pieces (sum rule): f'(x) = 3x^2 - 4x",
+        "f'(3) = 3(3^2) - 4(3) = 3(9) - 12 = 27 - 12"
+      ],
+      "answer": "15"
+    },
+    "practice": [
+      {
+        "problem": "Find f'(x) for f(x) = 5x^2.",
+        "solution": "Constant multiple rule + power rule: derivative of x^2 is 2x, so f'(x) = 5·2x = 10x."
+      },
+      {
+        "problem": "Find f'(2) for f(x) = 5x^2.",
+        "solution": "f'(x) = 10x, so f'(2) = 10(2) = 20."
+      },
+      {
+        "problem": "Find f'(x) for f(x) = x^2 + 3x.",
+        "solution": "Sum rule: derivative of x^2 is 2x (power rule); derivative of 3x is 3·1 = 3 (constant multiple + power rule with x^1). f'(x) = 2x + 3."
+      },
+      {
+        "problem": "Find f'(4) for f(x) = x^2 + 3x.",
+        "solution": "f'(x) = 2x + 3, so f'(4) = 2(4) + 3 = 8 + 3 = 11."
+      },
+      {
+        "problem": "Find f'(x) for f(x) = 4x^3 - x, then evaluate it at x = 1.",
+        "solution": "Derivative of 4x^3 is 4·3x^2 = 12x^2; derivative of -x is -1. f'(x) = 12x^2 - 1. f'(1) = 12(1) - 1 = 11."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does the constant multiple rule say about the derivative of c·f(x)?",
+        "choices": [
+          "It equals f'(x) regardless of c",
+          "It equals c·f'(x)",
+          "It equals c + f'(x)",
+          "It cannot be found"
+        ],
+        "answerIndex": 1,
+        "explanation": "A constant factor carries straight through: differentiate f(x) as usual, then multiply the result by c."
+      },
+      {
+        "type": "short",
+        "question": "Using the sum and power rules, what is f'(x) for f(x) = x^2 + x^3?",
+        "answer": "2x + 3x^2",
+        "acceptable": ["2x+3x^2", "3x^2+2x", "2x + 3x^2", "3x^2 + 2x"],
+        "explanation": "Differentiate each term separately and add: derivative of x^2 is 2x, derivative of x^3 is 3x^2."
+      },
+      {
+        "type": "mc",
+        "question": "Why does checking the sum/constant-multiple shortcut against 9.2's shrinking-h method matter?",
+        "choices": [
+          "It doesn't, the rules are just assumed",
+          "It confirms the shortcut agrees with the slower method that actually defines the derivative",
+          "Shrinking h gives a different, more correct answer",
+          "It's required by law"
+        ],
+        "answerIndex": 1,
+        "explanation": "The shrinking-h method is what a derivative IS by definition (9.2); matching it confirms the sum/constant-multiple shortcuts are genuine, not just convenient symbol pushing."
+      },
+      {
+        "type": "short",
+        "question": "What is f'(5) for f(x) = x^2 + 3x?",
+        "answer": "13",
+        "acceptable": ["13"],
+        "explanation": "f'(x) = 2x + 3, so f'(5) = 2(5) + 3 = 13."
+      },
+      {
+        "type": "mc",
+        "question": "Which rules let you differentiate f(x) = x^3 - 2x^2 one term at a time instead of as one whole shrinking-h computation?",
+        "choices": [
+          "The power rule alone",
+          "The sum rule combined with the constant multiple rule and the power rule",
+          "There is no such rule",
+          "The chain rule"
+        ],
+        "answerIndex": 1,
+        "explanation": "The sum rule splits the expression into terms, the constant multiple rule pulls out the -2, and the power rule differentiates each power term."
+      }
+    ]
+  },
+  {
+    "id": "9.5",
+    "number": 5,
+    "title": "What the sign of a derivative means — uphill, downhill, or flat",
+    "objectives": [
+      "Interpret a positive derivative as the function increasing (uphill), a negative derivative as decreasing (downhill), and a zero derivative as momentarily flat",
+      "Use the sign of f'(x) at different x-values to describe a curve's shape without graphing it",
+      "Recognize the phrase 'finding the downhill direction' as a preview of a later idea (Phase 11: gradient descent)"
+    ],
+    "explanation": [
+      "Every derivative computed so far in this phase has been a NUMBER telling how steep the curve is at a point — but the SIGN of that number carries meaning on its own, separate from its size. A positive f'(x) means the function is increasing at that point (going uphill as x increases); a negative f'(x) means the function is decreasing (going downhill); an f'(x) of exactly zero means the curve is momentarily flat — neither rising nor falling right at that instant.",
+      "Take f(x) = x^2 - 4x + 3 (built from the power/sum/constant-multiple rules of 9.3-9.4: f'(x) = 2x - 4). At x = 0: f'(0) = 2(0) - 4 = -4 — negative, so the curve is going downhill there. At x = 3: f'(3) = 2(3) - 4 = 2 — positive, uphill. At x = 2: f'(2) = 2(2) - 4 = 0 — flat. Nothing about picturing the parabola was needed to know this — the sign of f'(x) alone tells the story: downhill, then flat, then uphill, as x increases past 2.",
+      "This is exactly the shape a U-shaped curve (a valley) has: negative slope walking down into the bottom, zero slope exactly at the bottom, positive slope climbing back out. Because f'(x) = 2x - 4 is itself a straight line (from the power/sum rules), it's negative for x < 2, zero at x = 2, and positive for x > 2 — matching the pattern of walking downhill, hitting flat ground, then walking uphill.",
+      "This phase's own subtitle, \"Calculus for Learning,\" and the idea of \"finding the downhill direction,\" will cash out literally in Phase 11: a learning algorithm called gradient descent repeatedly checks the sign of a derivative to decide which way to step to walk DOWNHILL toward a low point — exactly the sign-reading skill this lesson practices, just applied to a different function later."
+    ],
+    "example": {
+      "problem": "For f(x) = x^2 - 4x + 3 (so f'(x) = 2x - 4, from lessons 9.3-9.4), is the function increasing, decreasing, or flat at x = 1?",
+      "steps": [
+        "f'(x) = 2x - 4",
+        "f'(1) = 2(1) - 4 = 2 - 4"
+      ],
+      "answer": "-2, which is negative, so f is decreasing (going downhill) at x = 1."
+    },
+    "practice": [
+      {
+        "problem": "For f(x) = x^2 - 4x + 3 (f'(x) = 2x - 4), is f increasing, decreasing, or flat at x = 4?",
+        "solution": "f'(4) = 2(4) - 4 = 4, positive, so f is increasing (uphill) at x = 4."
+      },
+      {
+        "problem": "For g(x) = -x^2 + 6x (a downward-opening parabola), g'(x) = -2x + 6. Is g increasing, decreasing, or flat at x = 1?",
+        "solution": "g'(1) = -2(1) + 6 = 4, positive, so g is increasing at x = 1."
+      },
+      {
+        "problem": "For the same g(x) = -x^2 + 6x, is g increasing, decreasing, or flat at x = 5?",
+        "solution": "g'(5) = -2(5) + 6 = -4, negative, so g is decreasing at x = 5."
+      },
+      {
+        "problem": "At what x-value is g(x) = -x^2 + 6x (g'(x) = -2x + 6) exactly flat?",
+        "solution": "Set g'(x) = 0: -2x + 6 = 0, so x = 3 — g is flat (momentarily neither rising nor falling) at x = 3."
+      },
+      {
+        "problem": "A curve's derivative is positive for x < 5, zero at x = 5, and negative for x > 5. Describe its shape in words.",
+        "solution": "It climbs uphill up to x = 5, is momentarily flat exactly at x = 5, then goes downhill after — the shape of a hill or peak, the opposite of the valley shape in this lesson's example."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does a negative derivative at a point mean about the function there?",
+        "choices": [
+          "It's increasing",
+          "It's decreasing (downhill)",
+          "It's undefined",
+          "It equals zero"
+        ],
+        "answerIndex": 1,
+        "explanation": "A negative f'(x) means the function's output is falling as x increases — going downhill."
+      },
+      {
+        "type": "short",
+        "question": "For f(x) = x^2 - 4x + 3 (f'(x) = 2x - 4), what is f'(0)?",
+        "answer": "-4",
+        "acceptable": ["-4"],
+        "explanation": "f'(0) = 2(0) - 4 = -4."
+      },
+      {
+        "type": "mc",
+        "question": "What does f'(x) = 0 at a point mean geometrically?",
+        "choices": [
+          "The function is at its highest possible value everywhere",
+          "The curve is momentarily flat at that point",
+          "The function is undefined there",
+          "The function is always negative after that point"
+        ],
+        "answerIndex": 1,
+        "explanation": "A zero derivative means the tangent line is horizontal right at that point — neither rising nor falling in that instant."
+      },
+      {
+        "type": "short",
+        "question": "For g(x) = -x^2 + 6x (g'(x) = -2x + 6), at what x is g exactly flat?",
+        "answer": "3",
+        "acceptable": ["3", "x=3"],
+        "explanation": "Set -2x + 6 = 0: x = 3."
+      },
+      {
+        "type": "mc",
+        "question": "Which later idea (named in this phase's subtitle) will reuse the skill of reading a derivative's sign to decide which way to step?",
+        "choices": [
+          "The chain rule",
+          "Gradient descent (Phase 11), finding the downhill direction",
+          "The power rule",
+          "Vector addition"
+        ],
+        "answerIndex": 1,
+        "explanation": "Phase 11's gradient descent repeatedly checks a derivative's sign to step downhill toward a low point — exactly this lesson's sign-reading skill, applied later to a different function."
+      }
+    ]
+  },
+  {
+    "id": "9.6",
+    "number": 6,
+    "title": "Derivatives of multi-input functions — holding all-but-one input still",
+    "objectives": [
+      "Understand a partial derivative as the derivative of a multi-input function with respect to ONE input, holding every other input fixed",
+      "Compute partial derivatives of a weighted-sum-shaped function like z = w1·x1 + w2·x2 + b (the same shape as lesson 8.3's z = x·w + b)",
+      "Apply the power/sum/constant-multiple rules from 9.3-9.4 one input at a time on functions with more than one input"
+    ],
+    "explanation": [
+      "Every function differentiated so far in this phase has had exactly one input, x. But lesson 8.3's perceptron formula z = x·w + b takes MULTIPLE inputs (x1, x2, ... one per weight), and Phase 6's vectors/dot-products built functions of several inputs routinely. Differentiating a multi-input function needs one new idea, not a new rule: hold every input EXCEPT ONE completely fixed (treat it like a constant number), and take the ordinary derivative with respect to just that one input, using 9.3/9.4's rules exactly as before. This is called a partial derivative, written with a curly ∂ instead of the ordinary d — for example ∂z/∂x1 means \"the derivative of z with respect to x1, holding every other input still.\"",
+      "Try it on a weighted sum shaped exactly like 8.3's z = x·w + b: z(x1, x2) = 2x1 + 5x2 + 1 (weights 2 and 5, bias 1). To find ∂z/∂x1, treat x2 as a fixed constant — then z looks like 2x1 + (a constant), and the constant-multiple rule from 9.4 gives ∂z/∂x1 = 2 (the weight on x1; the +5x2+1 part vanishes the same way a plain number's derivative is zero). Symmetrically, ∂z/∂x2 = 5, holding x1 fixed. Each input's partial derivative is just its own weight — because a weighted sum is built entirely from constant-multiple and sum-rule pieces, one per input.",
+      "The same hold-everything-else-still idea works even when a term isn't linear. Take z(x1, x2) = x1^2 + 3x2. Holding x2 fixed, ∂z/∂x1 uses the power rule on x1^2: ∂z/∂x1 = 2x1 (the 3x2 term is a constant with respect to x1, so it contributes 0). Holding x1 fixed instead, ∂z/∂x2 uses the constant-multiple rule on 3x2 (x1^2 is now the fixed constant, contributing 0): ∂z/∂x2 = 3.",
+      "Nothing here required a new differentiation rule — every partial derivative in this lesson used only 9.3's power rule and 9.4's sum/constant-multiple rules, one input at a time. That's the whole idea: multi-input functions get differentiated by temporarily pretending they're single-input functions, one input per partial derivative."
+    ],
+    "example": {
+      "problem": "For z(x1, x2) = x1^2 + 3x2, find ∂z/∂x1 and ∂z/∂x2, then evaluate both at x1 = 4, x2 = 2.",
+      "steps": [
+        "∂z/∂x1: hold x2 fixed, differentiate x1^2 (power rule) → ∂z/∂x1 = 2x1; the 3x2 term is constant with respect to x1, contributing 0",
+        "∂z/∂x2: hold x1 fixed, differentiate 3x2 (constant multiple rule) → ∂z/∂x2 = 3; the x1^2 term is constant with respect to x2, contributing 0",
+        "At x1 = 4: ∂z/∂x1 = 2(4) = 8. ∂z/∂x2 = 3 regardless of x1 or x2."
+      ],
+      "answer": "∂z/∂x1 = 8, ∂z/∂x2 = 3."
+    },
+    "practice": [
+      {
+        "problem": "For z(x1, x2) = 2x1 + 5x2 + 1, what is ∂z/∂x1?",
+        "solution": "Hold x2 fixed; 2x1's derivative (constant multiple rule) is 2, and the 5x2 + 1 part is constant with respect to x1, contributing 0. ∂z/∂x1 = 2."
+      },
+      {
+        "problem": "For the same z(x1, x2) = 2x1 + 5x2 + 1, what is ∂z/∂x2?",
+        "solution": "Hold x1 fixed; 5x2's derivative is 5, and 2x1 + 1 is constant with respect to x2. ∂z/∂x2 = 5."
+      },
+      {
+        "problem": "For z3(x1, x2) = 5x1 + x2^2, find ∂z3/∂x1 and ∂z3/∂x2.",
+        "solution": "∂z3/∂x1: 5x1's derivative (constant multiple rule) is 5, x2^2 is constant with respect to x1. ∂z3/∂x1 = 5. ∂z3/∂x2: x2^2's derivative (power rule) is 2x2, 5x1 is constant with respect to x2. ∂z3/∂x2 = 2x2."
+      },
+      {
+        "problem": "For z3(x1, x2) = 5x1 + x2^2, evaluate ∂z3/∂x2 at x2 = 3.",
+        "solution": "∂z3/∂x2 = 2x2, so at x2 = 3: 2(3) = 6."
+      },
+      {
+        "problem": "For z4(x1, x2) = 3x1^2 + 4x2, find ∂z4/∂x1 and evaluate it at x1 = 2.",
+        "solution": "∂z4/∂x1: 3x1^2's derivative (constant multiple + power rule) is 3·2x1 = 6x1; 4x2 is constant with respect to x1, contributing 0. At x1 = 2: 6(2) = 12."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does a partial derivative like ∂z/∂x1 mean?",
+        "choices": [
+          "The derivative of z with respect to x1, holding every other input fixed",
+          "The average of all inputs' derivatives",
+          "Derivatives only work if there's one input",
+          "The same as an ordinary derivative, no difference at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "A partial derivative treats every input except the one being differentiated as a fixed constant."
+      },
+      {
+        "type": "short",
+        "question": "For z(x1, x2) = 2x1 + 5x2 + 1, what is ∂z/∂x1?",
+        "answer": "2",
+        "acceptable": ["2"],
+        "explanation": "Holding x2 fixed, the derivative of 2x1 is 2 (constant multiple rule); the rest is constant with respect to x1."
+      },
+      {
+        "type": "mc",
+        "question": "For z(x1, x2) = x1^2 + 3x2, why does ∂z/∂x2 come out to just 3, with no x1 or x2 in it?",
+        "choices": [
+          "Because x1^2 is held fixed (constant) when differentiating with respect to x2, contributing 0, leaving only 3x2's constant-multiple derivative",
+          "Because partial derivatives are always constants",
+          "Because x1 and x2 must be equal",
+          "It's a coincidence"
+        ],
+        "answerIndex": 0,
+        "explanation": "Holding x1 fixed makes x1^2 act like a plain number, whose derivative is 0; only the 3x2 term (constant multiple rule) contributes."
+      },
+      {
+        "type": "short",
+        "question": "For z4(x1, x2) = 3x1^2 + 4x2, what is ∂z4/∂x2?",
+        "answer": "4",
+        "acceptable": ["4"],
+        "explanation": "Holding x1 fixed, 4x2's derivative (constant multiple rule) is 4; 3x1^2 is constant with respect to x2."
+      },
+      {
+        "type": "mc",
+        "question": "Which lesson's z = x·w + b formula does this lesson's weighted-sum example (z = 2x1 + 5x2 + 1) directly mirror?",
+        "choices": [
+          "Lesson 5.3 (median)",
+          "Lesson 8.3 (the perceptron formula)",
+          "Lesson 4.2 (binary addition)",
+          "Lesson 2.9 (while loops)"
+        ],
+        "answerIndex": 1,
+        "explanation": "Lesson 8.3 defined the perceptron's z = x·w + b weighted sum; this lesson's z(x1,x2) = 2x1 + 5x2 + 1 is that same shape with concrete weights and a bias."
       }
     ]
   }

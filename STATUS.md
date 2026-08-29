@@ -3,8 +3,8 @@
 **Status:** Phases 1-8 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27) — live on GitHub Pages.
-Phase 9 (Calculus for Learning) is IN PROGRESS: 2/10 lessons written (9.1,
-9.2), title breakdown for all 10 done — see "Phase 9" section below.
+Phase 9 (Calculus for Learning) is IN PROGRESS: 6/10 lessons written (9.1-
+9.6), title breakdown for all 10 done — see "Phase 9" section below.
 
 Live: https://turlockmike.github.io/build-a-brain/
 Repo: https://github.com/turlockmike/build-a-brain
@@ -241,16 +241,17 @@ lessons per the README's progressive-dependency rule):
    f'(x) for x^2 and surfaces the f'(x) = 2x pattern). **WRITTEN.**
 3. **9.3 — The power rule** — a shortcut for the derivative of x^n, checked
    against 9.2's shrinking-interval method instead of just asserted.
+   **WRITTEN.**
 4. **9.4 — Derivatives of sums and constant multiples** — building a bigger
    function's derivative from its pieces (needed for anything beyond a
-   single power term).
+   single power term). **WRITTEN.**
 5. **9.5 — What the sign of a derivative means** — positive slope = uphill,
    negative slope = downhill, zero slope = flat; the exact vocabulary
    "finding the downhill direction" (this phase's own subtitle) will cash
-   out as, foreshadowing Phase 11's gradient descent.
+   out as, foreshadowing Phase 11's gradient descent. **WRITTEN.**
 6. **9.6 — Derivatives of multi-input functions** — holding all-but-one
    input still (partial derivatives), applied to a weighted sum shaped like
-   8.3's z = (x . w) + b.
+   8.3's z = (x . w) + b. **WRITTEN.**
 7. **9.7 — The chain rule, part 1** — how a change ripples through a
    function of a function (a "gears" or "dominoes" analogy for composed
    functions), building intuition before any computation.
@@ -265,25 +266,33 @@ lessons per the README's progressive-dependency rule):
     "downhill direction" idea Phase 11's gradient descent will formalize;
     mirrors 4.12/5.12/6.13/7.12/8.10's end-of-phase synthesis structure.
 
-**9.1 and 9.2 are fully written and merged into `data/curriculum.js`**
-(113 lessons total across Phases 1-9 now), schema-validated
+**9.1-9.6 are fully written and merged into `data/curriculum.js`**
+(117 lessons total across Phases 1-9 now), schema-validated
 programmatically (correct id/number sequence, no duplicate ids across all
-113, 3-5 practice problems, exactly 5 quiz questions, valid mc answerIndex
-bounds) and hand-verified via actual Python execution for every average-
-rate-of-change and shrinking-h numerical claim in both lessons (all match:
-9.1's four practice intervals plus the x^2-vs-line contrast, and 9.2's four
-h-shrinking sequences at x=1,2,3,5 all converging to 2x as predicted).
-9.3-9.10 are titled but not yet drafted — same title-then-content order
-Phases 1-8 followed, this is intentionally a multi-session build (Mike,
-2026-08-25: "even if it takes 200 lessons it's okay").
-`sw.js` cache bumped to `bab-v10` alongside the 9.1/9.2 merge so returning
-users pick up the partial Phase 9 content.
+117, 3-5 practice problems, exactly 5 quiz questions, valid mc answerIndex
+bounds) and independently re-verified via actual Python execution for
+every numeric claim in all six lessons: 9.1's four practice intervals plus
+the x^2-vs-line contrast; 9.2's four h-shrinking sequences at x=1,2,3,5
+converging to 2x; 9.3's power-rule predictions checked against fresh
+shrinking-h computations for x^3 and x^4 (h=0.1/0.01/0.001 sequences
+converging to the predicted value) plus every practice/quiz power-rule
+evaluation; 9.4's sum/constant-multiple predictions checked against
+shrinking-h for 3x^2+x plus every practice/quiz evaluation; 9.5's sign
+claims (f'(x)=2x-4 and g'(x)=-2x+6 evaluated at each x used, including the
+flat point x=3) all recomputed independently; 9.6's partial-derivative
+claims (linear z=2x1+5x2+1, and nonlinear z=x1^2+3x2, z3=5x1+x2^2,
+z4=3x1^2+4x2) checked against finite-difference partials in both x1 and
+x2. 9.7-9.10 are titled but not yet drafted — same title-then-content
+order Phases 1-8 followed, this is intentionally a multi-session build
+(Mike, 2026-08-25: "even if it takes 200 lessons it's okay").
+`sw.js` cache bumped to `bab-v11` alongside the 9.3-9.6 merge so returning
+users pick up the expanded Phase 9 content.
 
 ## Pending — next session(s)
 
-- **Phase 9 is 2/10** — pick up at lesson 9.3 (the power rule) using the
-  title breakdown above; each remaining lesson may assume Phases 1-8 +
-  earlier Phase 9 lessons (9.1, 9.2) only.
+- **Phase 9 is 6/10** — pick up at lesson 9.7 (the chain rule, part 1)
+  using the title breakdown above; each remaining lesson may assume
+  Phases 1-8 + earlier Phase 9 lessons (9.1-9.6) only.
 - **Phases 10-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds
