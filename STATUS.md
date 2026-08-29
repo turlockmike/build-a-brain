@@ -842,7 +842,16 @@ training-vs-test accuracy gap), then data size/quality and regularization, conti
   cross-check it against NumPy's finite-difference technique the way every Phase 11-12
   lesson did — none of 13.1-13.3 needed one, since all three only evaluate an
   already-trained network; an overfitting lesson that trains a NEW network to demonstrate
-  the effect may need one again), `bab-schema-check`, file-wide duplicate-id check, `sw.js`
+  the effect may need one again). **Extra caveat learned the hard way in 13.3:** if a
+  session re-derives a PRIOR lesson's trained-network forward pass from the stated weights
+  (rather than training fresh), a wrong matrix convention (e.g. `x @ W` instead of `W @ x`)
+  runs cleanly and produces plausible probabilities in [0,1] WITHOUT erroring — "it ran" is
+  not evidence it's right. 13.3's first attempt did exactly this and silently produced
+  numbers that didn't match 13.1/13.2's own published p-values. The check that catches it:
+  after reimplementing, diff the new run's output against the specific numbers the prior
+  lesson(s) already published, to 4 decimal places, BEFORE reusing those numbers in the new
+  lesson — not just "the code runs / outputs look like probabilities." Then continue:
+  `bab-schema-check`, file-wide duplicate-id check, `sw.js`
   cache version bump, commit + push, `bab-ship-verify` confirming live. Per Mike: build
   this out phase by phase across future sessions, not all at once ("chained background
   builds through the day" per his 2026-08-25 ask).
