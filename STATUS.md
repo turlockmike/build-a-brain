@@ -296,12 +296,62 @@ minimum (E(5)=0, dE/dw=0). **Phase 9 is now SHIPPED — all 10/10 lessons
 live.** `sw.js` cache bumped to `bab-v12` alongside the 9.7-9.10 merge so
 returning users pick up the complete Phase 9 content.
 
+## Phase 10 (Networks of Neurons) — title breakdown
+
+Full 10-lesson title breakdown (matching the granularity of Phases 1-9's
+title lists, each building only on Phase 1-9 content + earlier Phase 10
+lessons per the README's progressive-dependency rule). No lesson content
+written yet — titles only, per this wake's guardrail (breakdown first,
+content in a future session).
+
+1. **10.1 — From one perceptron to a layer** — running several perceptrons
+   side by side on the same inputs, each with its own weights/bias,
+   producing several outputs instead of one (a direct generalization of
+   6.10-6.11's matrix-vector multiplication: one dot product per row is now
+   one perceptron per row, stacked into a weight matrix).
+2. **10.2 — Stacking layers: the forward pass** — feeding one layer's
+   outputs as the next layer's inputs; naming input layer / hidden layer /
+   output layer, and "forward pass" as the name for one full left-to-right
+   pass through the network.
+3. **10.3 — Why nonlinearity matters** — showing algebraically that
+   stacking two purely-linear (weighted-sum-only) layers collapses to one
+   equivalent linear layer, so depth alone buys nothing without something
+   nonlinear between layers; reconnects to 8.13's XOR wall as the concrete
+   case a stack of linear layers still can't solve.
+4. **10.4 — The sigmoid activation function** — squashing any real number
+   into (0, 1), contrasted with 8.2's hard step function (smooth vs.
+   all-or-nothing), as the nonlinearity 10.3 said was missing.
+5. **10.5 — The ReLU activation function** — max(0, x), simpler and
+   cheaper than sigmoid, and why it's the default choice in modern deep
+   networks (brief compare/contrast with 10.4's sigmoid).
+6. **10.6 — Network architecture: width and depth** — input layer size
+   fixed by the number of features (callback to Phase 5/6's dataset
+   rows/columns), output layer size fixed by the task, hidden layer count
+   and width as the tunable choices ("architecture" as a name for these
+   choices).
+7. **10.7 — Hand-computing a forward pass** — a fully worked small 2-layer
+   example (2 inputs, one 2-neuron hidden layer with ReLU, one output
+   neuron), tracing every weighted sum and activation by hand, extending
+   8.5's hand-computation drill to more than one layer.
+8. **10.8 — Coding a forward pass in NumPy** — the same computation as
+   10.7 written as matrix multiplication + an elementwise activation
+   function, reusing Phase 7's NumPy vectorized-operations toolkit instead
+   of hand-rolled loops.
+9. **10.9 — Solving XOR with a hidden layer** — the direct payoff of
+   8.13's forward-referenced wall and 10.3's motivating example: a
+   worked/coded 2-layer network that correctly classifies all four XOR
+   inputs, something no single perceptron (Phase 8) could do.
+10. **10.10 — Mini-project** — build and trace a small 2-hidden-neuron
+    network's forward pass on a toy multi-example dataset by hand and in
+    code, combining every idea from the phase (layers, forward pass,
+    nonlinearity choice, architecture, NumPy implementation), mirroring
+    4.12/5.12/6.13/7.12/8.10/9.10's end-of-phase synthesis structure.
+
 ## Pending — next session(s)
 
-- **Phase 9 is SHIPPED (10/10)** — next up is Phase 10 ("Networks of
-  Neurons"): write its title breakdown first (same pattern as Phase 9's
-  own breakdown above), then draft lesson content, each lesson assuming
-  only Phases 1-9 + earlier Phase 10 lessons.
+- **Phase 10 title breakdown is done (above)** — next up is drafting
+  Phase 10 lesson content (10.1 onward), same content bar as every prior
+  phase, each lesson assuming only Phases 1-9 + earlier Phase 10 lessons.
 - **Phases 10-14 have no lesson content yet** — only their phase titles show
   in the roadmap as locked/coming-soon. Per Mike: build this out phase by
   phase across future sessions, not all at once ("chained background builds

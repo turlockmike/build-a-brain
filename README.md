@@ -97,8 +97,8 @@ automatically.
 ## Adding a new phase (for the next session)
 
 1. Pick the next phase from `ROADMAP` (Phase 9 shipped 2026-08-28, 10/10
-   lessons; next is phase 10: "Networks of Neurons" — write its title
-   breakdown first, same pattern as Phase 9's in `STATUS.md`).
+   lessons; Phase 10 "Networks of Neurons" title breakdown is written —
+   see `STATUS.md` § "Phase 10" — content 10.1 onward is next).
 2. Write that phase's lesson list (title-only breakdown first, then full content
    per lesson using the exact schema above — same content bar as Phase 1-6: a
    real 300-500 word explanation with analogies, a worked example, 3-5

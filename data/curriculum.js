@@ -11732,7 +11732,7 @@ const LESSONS = [
     ]
   },
 
-  /* Phase 9: Calculus for Learning (in progress — 6/10 lessons so far). */
+  /* Phase 9: Calculus for Learning (SHIPPED — 10/10 lessons). */
   {
     "id": "9.1",
     "number": 1,
