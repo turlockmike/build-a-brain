@@ -14869,5 +14869,435 @@ const LESSONS = [
         "explanation": "Phase 11's scope note (set in the title-breakdown lesson) keeps every lesson to one neuron, one layer, so the update rule stays simple; stacking layers and their harder credit-assignment problem is Phase 12's job."
       }
     ]
+  },
+  {
+    "id": "12.1",
+    "number": 1,
+    "title": "The multi-layer credit-assignment problem",
+    "objectives": [
+      "State exactly what lesson 11.7's exact gradient formula, dL/dw_i = 2(p-t) x sigma'(z) x x_i, requires to be true about a weight w_i before it can be used",
+      "Identify, in a network with one hidden layer, which weights satisfy that requirement (the output layer's weights) and which do not (the hidden layer's weights)",
+      "Explain concretely, using a worked network, why 11.7's formula cannot be evaluated at all for a hidden-layer weight — not just that it gives the wrong answer, but that one of its own terms is undefined"
+    ],
+    "explanation": [
+      "Phase 11 (11.1-11.10) trained a single sigmoid neuron: inputs x_i go straight into one z = sum(w_i x_i) + b, then p = sigma(z), then L = (t-p)^2. Lesson 11.7's exact gradient, dL/dw_i = 2(p-t) x sigma'(z) x x_i, works because every weight w_i appears literally inside that one z's own formula — dz/dw_i = x_i is a one-step fact, true by definition of z.",
+      "This phase lifts Phase 11's single-neuron restriction (per the scope note set at Phase 12's kickoff): a network with ONE hidden layer between the inputs and the output. Two kinds of weights now exist. OUTPUT-layer weights (call them wo1, wo2, connecting hidden activations h1, h2 to the output neuron's own z, zo = wo1 h1 + wo2 h2 + bo) are structurally identical to 11.7's case — h1 and h2 just play the role x1 and x2 used to play, so 11.7's formula applies to them directly, unchanged: dL/dwo1 = 2(p-t) x sigma'(zo) x h1. HIDDEN-layer weights (call them w11, w12, connecting the raw inputs x1, x2 to hidden neuron 1's own z, zh1 = w11 x1 + w12 x2 + bh1) are a different story.",
+      "Try to apply 11.7's formula to w11 anyway: it asks for dz/dw11, meaning 'how does THE z that appears in the formula change as w11 changes.' But which z? zo's formula is zo = wo1 h1 + wo2 h2 + bo — w11 does not appear anywhere in it. w11 only appears in zh1's formula. So dzo/dw11 is not a small or approximate quantity here; it's not even the right question, because zo's formula has no w11 term to differentiate. 11.7's chain rule assumed exactly one z stood between a weight and the loss. A hidden-layer weight has TWO z's (and one activation) standing between it and the loss instead of one.",
+      "This is the multi-layer credit-assignment problem the phase title names: how much did w11 contribute to L, when its only effect on L is indirect — w11 changes zh1, which changes h1, which changes zo, which changes p, which changes L? Answering that question, for every hidden weight, is the one new idea this whole phase builds toward."
+    ],
+    "example": {
+      "problem": "A network has 2 inputs (x1=1, x2=0.5), one hidden layer with 2 sigmoid neurons, and one sigmoid output neuron. Hidden neuron 1: w11=0.5, w12=-0.3, bh1=0.1. Hidden neuron 2: w21=0.2, w22=0.4, bh2=-0.1. Output neuron: wo1=0.6, wo2=-0.5, bo=0.2. Target t=1. Run the forward pass, then try to apply 11.7's formula dL/dw_i = 2(p-t) x sigma'(z) x x_i directly to w11. What goes wrong?",
+      "steps": [
+        "Forward pass, hidden layer: zh1 = 0.5(1) + (-0.3)(0.5) + 0.1 = 0.45. zh2 = 0.2(1) + 0.4(0.5) + (-0.1) = 0.30. h1 = sigma(0.45), approximately 0.6106. h2 = sigma(0.30), approximately 0.5744.",
+        "Forward pass, output layer: zo = 0.6(0.6106) + (-0.5)(0.5744) + 0.2, approximately 0.2792. p = sigma(0.2792), approximately 0.5693.",
+        "Loss: L = (1 - 0.5693)^2, approximately 0.1855.",
+        "Apply 11.7's formula to wo1 first, as a sanity check: dL/dwo1 = 2(p-t) x sigma'(zo) x h1 — this works fine, because wo1 genuinely appears in zo's formula (zo = wo1 h1 + wo2 h2 + bo), exactly like 11.7's x_i term.",
+        "Now try the same formula on w11: it needs dz/dw11 where z is whatever z the formula's sigma'(z) refers to. If that z is zo (the only z that feeds L in one step), then dzo/dw11 is being asked for — but zo's formula, zo = wo1 h1 + wo2 h2 + bo, contains no w11 at all. There is nothing in that equation to differentiate with respect to w11.",
+        "The formula isn't merely hard to evaluate here — it's asking a question about the wrong equation. w11 lives inside zh1 = w11 x1 + w12 x2 + bh1, three steps away from zo, not inside zo itself."
+      ],
+      "answer": "11.7's formula applies unchanged to output-layer weights like wo1 (h1 takes the place of x_i). It cannot be evaluated at all for hidden-layer weights like w11, because w11 does not appear in the output neuron's z equation — it only affects L indirectly, through zh1's effect on h1's effect on zo's effect on p. Crossing that gap is exactly what the rest of this phase builds the tools to do."
+    },
+    "practice": [
+      {
+        "problem": "In the worked network above, sort these four weights into 'direct' (11.7's formula applies unchanged) or 'indirect' (11.7's formula cannot be evaluated as written): wo2, w12, bo, bh2.",
+        "solution": "Direct: wo2 and bo (both appear literally in zo = wo1 h1 + wo2 h2 + bo). Indirect: w12 and bh2 (w12 appears only in zh1's formula, bh2 only in zh2's formula — neither appears in zo's formula)."
+      },
+      {
+        "problem": "Why does 11.7's formula work unchanged for wo1 and wo2, even though this is a bigger network than anything Phase 11 covered?",
+        "solution": "Because from the OUTPUT neuron's own point of view, its inputs are h1 and h2 (not the raw x1, x2), and its z (zo = wo1 h1 + wo2 h2 + bo) is built from wo1, wo2 exactly the same way 11.7's single neuron's z was built from its weights and inputs. h1 and h2 simply play the role x1 and x2 used to play — the output layer alone is structurally identical to Phase 11's single neuron."
+      },
+      {
+        "problem": "If this network had TWO hidden layers instead of one, how many intermediate quantities (z's and activations) would sit between the FIRST hidden layer's weights and the loss L, compared to the one hidden layer case above?",
+        "solution": "One hidden layer: w11 -> zh1 -> h1 -> zo -> p -> L (2 z's: zh1, zo). Two hidden layers: the first layer's weights would face w -> zh1a -> h1a -> zh1b -> h1b -> zo -> p -> L (3 z's) — one more z and one more activation than the single-hidden-layer case, extending the same gap the same way each additional layer would."
+      },
+      {
+        "problem": "Does adding a hidden layer change the LOSS FUNCTION (11.1) or the UPDATE RULE (11.5) this phase uses?",
+        "solution": "No — L = (t-p)^2 (11.1) and w_new = w_old - eta x gradient (11.5) both stay exactly as Phase 11 defined them. The only new problem is HOW to compute the gradient for a hidden-layer weight; once that gradient is known, 11.5's update rule applies to it exactly like any other weight."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does lesson 11.7's exact gradient formula, dL/dw_i = 2(p-t) x sigma'(z) x x_i, require to be true about z?",
+        "choices": [
+          "The weight w_i must appear directly in that z's own formula",
+          "z must always equal exactly 1",
+          "The weight w_i must be positive",
+          "There must be at least two hidden layers"
+        ],
+        "answerIndex": 0,
+        "explanation": "The formula's dz/dw_i = x_i step only makes sense if w_i is literally one of the terms building that z, the way 11.7's single neuron's weights built its one z."
+      },
+      {
+        "type": "short",
+        "question": "In a one-hidden-layer network, which layer's weights does 11.7's formula apply to UNCHANGED?",
+        "answer": "output layer",
+        "acceptable": [
+          "output",
+          "output layer",
+          "the output layer's weights",
+          "output weights"
+        ],
+        "explanation": "The output neuron's z is built directly from the output-layer weights and the hidden activations, exactly matching 11.7's single-neuron shape."
+      },
+      {
+        "type": "mc",
+        "question": "Why can't 11.7's formula be evaluated for a hidden-layer weight like w11?",
+        "choices": [
+          "w11 does not appear anywhere in the output neuron's z formula, so there is nothing there to differentiate with respect to w11",
+          "w11 is always exactly 0",
+          "Sigmoid cannot be used in hidden layers",
+          "The loss function does not apply to hidden layers"
+        ],
+        "answerIndex": 0,
+        "explanation": "w11 only appears in the hidden neuron's own z formula (zh1), which is three steps removed from the loss — not in zo's formula, which is what 11.7's formula differentiates."
+      },
+      {
+        "type": "short",
+        "question": "What name does this lesson give to the problem of figuring out how much a HIDDEN weight contributed to the loss, when its effect on the loss is only indirect?",
+        "answer": "the credit-assignment problem",
+        "acceptable": [
+          "credit assignment",
+          "credit-assignment problem",
+          "the credit assignment problem",
+          "multi-layer credit assignment"
+        ],
+        "explanation": "This is exactly the phase's own name for the gap 11.7's formula leaves open — how to assign credit (or blame) to a weight several steps removed from the loss."
+      },
+      {
+        "type": "mc",
+        "question": "In the worked network (x1=1, x2=0.5, hidden weights w11=0.5/w12=-0.3/bh1=0.1 and w21=0.2/w22=0.4/bh2=-0.1, output weights wo1=0.6/wo2=-0.5/bo=0.2, t=1), what is the loss L after the forward pass?",
+        "choices": [
+          "approximately 0.1855",
+          "approximately 0.5693",
+          "approximately 1.0000",
+          "approximately 0.2792"
+        ],
+        "answerIndex": 0,
+        "explanation": "p comes out to approximately 0.5693, so L = (1-0.5693)^2, approximately 0.1855."
+      }
+    ]
+  },
+  {
+    "id": "12.2",
+    "number": 2,
+    "title": "Extending the chain rule across layers",
+    "objectives": [
+      "Write out the full chain of derivatives connecting a hidden-layer weight to the loss — one link longer than 11.7's three-link chain — using only rules already known from 9.7-9.8 and 11.7",
+      "Evaluate that chain numerically for a hidden-layer weight in a worked network, and confirm the result against a finite-difference (gradient-check) approximation",
+      "State why the extra link is 'one more multiplication, not a new kind of math' — every individual factor in the longer chain is a rule already learned"
+    ],
+    "explanation": [
+      "Lesson 9.7-9.8 introduced the chain rule generally: if L depends on p, and p depends on z, and z depends on w, then dL/dw = dL/dp x dp/dz x dz/dw — multiply the slopes of each link together. Lesson 11.7 used exactly a THREE-link version of this: dL/dw_i = dL/dp x dp/dz x dz/dw_i, which simplifies to 2(p-t) x sigma'(z) x x_i.",
+      "12.1 showed a hidden-layer weight like w11 sits behind two z's and one activation, not one: w11 -> zh1 -> h1 -> zo -> p -> L. That's five links to multiply instead of three: dL/dw11 = (dL/dp) x (dp/dzo) x (dzo/dh1) x (dh1/dzh1) x (dzh1/dw11). Every single factor is a rule already known: dL/dp = 2(p-t) (11.1's loss, differentiated), dp/dzo = sigma'(zo) (11.7's exact sigmoid derivative, applied at the output neuron), dzo/dh1 = wo1 (zo = wo1 h1 + wo2 h2 + bo, so its slope with respect to h1 is just the weight multiplying it — the same fact 11.7 used for dz/dw_i, applied here to a different variable), dh1/dzh1 = sigma'(zh1) (11.7's derivative again, this time at the hidden neuron), and dzh1/dw11 = x1 (the same dz/dw_i = x_i fact 11.7 used, now one layer earlier).",
+      "Multiplying: dL/dw11 = 2(p-t) x sigma'(zo) x wo1 x sigma'(zh1) x x1. Nothing here is new machinery — it's 11.7's own three factors (2(p-t), sigma'(zo), and an input) with two more familiar-shaped factors (a weight, and another sigma') inserted in the middle. The chain rule doesn't care how many links it's given; it just keeps multiplying slopes.",
+      "Verification note: any hand-derived chain-rule gradient like this one should be checked against a finite-difference approximation before it's trusted — nudge w11 by a tiny epsilon, recompute L twice (once at w11+epsilon, once at w11-epsilon), and confirm (L_plus - L_minus) / (2 x epsilon) matches the analytic chain-rule answer to several decimal places. This is the same numerical-derivative technique 11.4 and 9.9 already used, now applied specifically as a 'gradient check' for a multi-link chain — exactly the sanity test that catches a dropped or misplaced link."
+    ],
+    "example": {
+      "problem": "Using the same network as 12.1 (x1=1, x2=0.5, w11=0.5/w12=-0.3/bh1=0.1, w21=0.2/w22=0.4/bh2=-0.1, wo1=0.6/wo2=-0.5/bo=0.2, t=1; forward pass already gives h1 approximately 0.6106, h2 approximately 0.5744, zo approximately 0.2792, p approximately 0.5693), evaluate the full five-link chain for dL/dw11, then verify it against a finite-difference check with epsilon=0.00001.",
+      "steps": [
+        "Link 5 (last, closest to L): dL/dp = 2(p-t) = 2(0.5693-1), approximately -0.8614.",
+        "Link 4: dp/dzo = sigma'(zo) = p(1-p) = 0.5693 x 0.4307, approximately 0.2453.",
+        "Link 3: dzo/dh1 = wo1 = 0.6 (the output weight multiplying h1 in zo's formula).",
+        "Link 2: dh1/dzh1 = sigma'(zh1) = h1(1-h1) = 0.6106 x 0.3894, approximately 0.2378.",
+        "Link 1 (closest to w11): dzh1/dw11 = x1 = 1.",
+        "Multiply all five: dL/dw11 = (-0.8614) x 0.2453 x 0.6 x 0.2378 x 1, approximately -0.0301. (Equivalently, in one pass: 2(p-t) x sigma'(zo) = approximately -0.2112, times wo1 x sigma'(zh1) = approximately 0.1427, gives the same approximately -0.0301.)",
+        "Finite-difference check: recompute L with w11=0.50001 (all else fixed) and w11=0.49999, subtract, divide by 2(0.00001). This numerical slope comes out to approximately -0.0301 as well, matching the analytic chain-rule answer to 4+ decimal places."
+      ],
+      "answer": "dL/dw11 is approximately -0.0301, confirmed by both the five-link chain rule and an independent finite-difference gradient check — the two methods agree, so the chain-rule derivation is trustworthy."
+    },
+    "practice": [
+      {
+        "problem": "Using the same network, evaluate the five-link chain for dL/dw12 (the OTHER weight feeding hidden neuron 1, multiplying x2 instead of x1).",
+        "solution": "Only the last link changes: dzh1/dw12 = x2 = 0.5 (instead of x1=1). Everything else is identical to the dL/dw11 chain: dL/dw12 = 2(p-t) x sigma'(zo) x wo1 x sigma'(zh1) x x2, approximately -0.2112 x 0.6 x 0.2378 x 0.5... more directly, (-0.0301 for dL/dw11) x (0.5/1) = approximately -0.0151, since only the final x_i factor differs between w11 and w12's chains."
+      },
+      {
+        "problem": "Evaluate the five-link chain for dL/dw21 (a weight feeding hidden neuron 2, not neuron 1). Which links change compared to the dL/dw11 chain?",
+        "solution": "Links 3 and 2 change: dzo/dh2 = wo2 = -0.5 (not wo1=0.6), and dh2/dzh2 = sigma'(zh2) = h2(1-h2) = 0.5744 x 0.4256, approximately 0.2445 (not sigma'(zh1)). Link 1 becomes dzh2/dw21 = x1 = 1. Multiplying: dL/dw21 = (-0.8614) x 0.2453 x (-0.5) x 0.2445 x 1, approximately 0.0258."
+      },
+      {
+        "problem": "Which SINGLE link in the five-link chain is the only one that differs between computing dL/dw11 and dL/dw12 (both weights feed the SAME hidden neuron 1)?",
+        "solution": "Only the last link, dzh1/dw_i = x_i — it's x1 for w11 and x2 for w12. All four other links (dL/dp, dp/dzo, dzo/dh1, dh1/dzh1) describe how the loss flows back to hidden neuron 1's OWN z, which doesn't depend on which of that neuron's weights is being asked about."
+      },
+      {
+        "problem": "Suppose a hand-derived chain-rule gradient for some weight comes out to approximately 0.4000, but a finite-difference check on the same weight comes out to approximately -0.0301. What should be suspected?",
+        "solution": "A mistake in the hand-derived chain — a dropped link, a wrong sign, or a factor from the wrong neuron. The two methods should agree to several decimal places; a large mismatch like this means the analytic chain, not the finite-difference check, is the one to re-derive and fix."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How many links does the chain rule need to compute dL/dw11 for a hidden-layer weight in a one-hidden-layer network, compared to 11.7's three-link chain for a direct weight?",
+        "choices": [
+          "Five links instead of three — two more, for the extra z and activation the loss has to flow through",
+          "Still three links, nothing changes",
+          "Exactly ten links, regardless of network size",
+          "Zero links — hidden weights cannot be differentiated"
+        ],
+        "answerIndex": 0,
+        "explanation": "w11 -> zh1 -> h1 -> zo -> p -> L is five links (dzh1/dw11, dh1/dzh1, dzo/dh1, dp/dzo, dL/dp), two more than 11.7's dz/dw_i, dp/dz, dL/dp."
+      },
+      {
+        "type": "short",
+        "question": "What single fact does the link dzo/dh1 = wo1 rely on?",
+        "answer": "the output weight multiplying h1 in zo's formula",
+        "acceptable": [
+          "wo1 is the weight on h1",
+          "zo's formula has wo1 times h1 as a term",
+          "the weight multiplying that variable in the equation is the derivative"
+        ],
+        "explanation": "Just as dz/dw_i = x_i in 11.7 because z was a sum of w_i x_i terms, dzo/dh1 = wo1 because zo is a sum of wo_i h_i terms — the same fact, applied to a different variable."
+      },
+      {
+        "type": "mc",
+        "question": "What is dL/dw11 for the worked network (x1=1, x2=0.5, w11=0.5/w12=-0.3/bh1=0.1, w21=0.2/w22=0.4/bh2=-0.1, wo1=0.6/wo2=-0.5/bo=0.2, t=1)?",
+        "choices": [
+          "approximately -0.0301",
+          "approximately -0.2112",
+          "approximately 0.6000",
+          "approximately -0.8614"
+        ],
+        "answerIndex": 0,
+        "explanation": "Multiplying all five links (-0.8614 x 0.2453 x 0.6 x 0.2378 x 1) gives approximately -0.0301, confirmed by a finite-difference check."
+      },
+      {
+        "type": "short",
+        "question": "What technique does this lesson recommend to verify a hand-derived multi-link chain-rule gradient before trusting it?",
+        "answer": "finite-difference / gradient check",
+        "acceptable": [
+          "finite difference",
+          "gradient check",
+          "numerical derivative check",
+          "perturb the weight and recompute the loss"
+        ],
+        "explanation": "Nudge the weight by a small epsilon, recompute the loss at both w+epsilon and w-epsilon, and confirm the numerical slope matches the analytic chain-rule answer — the same technique 9.9 and 11.4 used, now applied as a sanity check on a longer chain."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this lesson describe the extra links for a hidden-layer weight as 'one more multiplication, not a new kind of math'?",
+        "choices": [
+          "Every individual factor in the longer chain (a loss derivative, a sigmoid derivative, a weight, another sigmoid derivative, an input) is a rule already known from 9.7-9.8 and 11.7",
+          "Because hidden layers don't actually need any derivative at all",
+          "Because the chain rule only works for exactly five links",
+          "Because sigma'(z) is different for hidden neurons than for output neurons"
+        ],
+        "answerIndex": 0,
+        "explanation": "The chain just has more factors to multiply — dzo/dh1 = wo1 and dh1/dzh1 = sigma'(zh1) are both familiar-shaped facts (a weight, and a sigmoid derivative), not new mathematical ideas."
+      }
+    ]
+  },
+  {
+    "id": "12.3",
+    "number": 3,
+    "title": "The output layer's error signal (delta)",
+    "objectives": [
+      "Define delta_output = dL/dzo for the output neuron, and show it equals the same 2(p-t) x sigma'(z) quantity 11.7's gradient formula already computed",
+      "Explain what delta_output packages together: the first two links of 12.2's five-link chain (dL/dp x dp/dzo), collapsed into one reusable number",
+      "Compute delta_output for several (p, t) pairs and read its sign as a direction of blame on the output neuron's z"
+    ],
+    "explanation": [
+      "12.2's five-link chain for a hidden weight began dL/dp x dp/dzo x (three more links). Those first two links don't depend on which hidden weight is being asked about at all — dL/dp = 2(p-t) and dp/dzo = sigma'(zo) are properties of the OUTPUT neuron alone. Recomputing them separately for every hidden weight (w11, w12, w21, w22, ...) would be wasteful repetition of the exact same two numbers.",
+      "This lesson gives that repeated pair a name: delta_output = dL/dzo = (dL/dp) x (dp/dzo) = 2(p-t) x sigma'(zo). It is literally 'how much would the loss change for a tiny nudge to the output neuron's own z' — the output neuron's full share of blame for the loss, before that blame gets multiplied by anything layer-specific.",
+      "delta_output is not a new formula. Look back at 11.7's exact gradient: dL/dwo_i = 2(p-t) x sigma'(zo) x h_i. The first two factors, 2(p-t) x sigma'(zo), are exactly delta_output — 11.7's formula was already computing delta_output every time, it just never gave it a name because there was only ever one neuron to worry about. Written with the new name: dL/dwo_i = delta_output x h_i, matching 11.7's dL/dw_i = delta_output x x_i shape exactly (h_i plays the role x_i used to play, per 12.1).",
+      "Why name it now: 12.4 is about to reuse this exact number for EVERY hidden weight feeding into this output neuron, and (in a network with more than one output neuron) it would need to be combined with other output neurons' own deltas too. Naming it once, computing it once per output neuron, and passing it backward is far more efficient than re-deriving 'how wrong was this output, in z-space' from scratch for every weight in the network — this is the first piece of what makes backpropagation a practical algorithm and not just a repeated brute-force derivation."
+    ],
+    "example": {
+      "problem": "For the network used in 12.1-12.2 (p approximately 0.5693, t=1), compute delta_output. Then compute it again for two other (p, t) pairs — (p=0.7, t=0) and (p=0.3, t=1) — and compare the signs.",
+      "steps": [
+        "Case 1 (this phase's running network): delta_output = 2(p-t) x sigma'(zo) = 2(0.5693-1) x [0.5693 x 0.4307] = (-0.8614) x 0.2453, approximately -0.2112.",
+        "Case 2 (p=0.7, t=0): sigma'(z) = p(1-p) = 0.7 x 0.3 = 0.21. delta_output = 2(0.7-0) x 0.21 = 1.4 x 0.21, approximately 0.2940.",
+        "Case 3 (p=0.3, t=1): sigma'(z) = 0.3 x 0.7 = 0.21 (same magnitude as case 2, since p and 1-p swapped roles). delta_output = 2(0.3-1) x 0.21 = (-1.4) x 0.21, approximately -0.2940.",
+        "Compare signs: case 1 (p<t) gives negative delta_output. Case 2 (p>t) gives positive delta_output. Case 3 (p<t again) gives negative delta_output, with the same magnitude as case 2 flipped — because case 2 and case 3 are mirror images of each other (0.7 overshooting a target of 0 vs. 0.3 undershooting a target of 1, by the same 0.3 gap)."
+      ],
+      "answer": "delta_output is negative whenever p<t (the neuron under-predicted, so z should INCREASE to raise p) and positive whenever p>t (the neuron over-predicted, so z should DECREASE). Its sign always points toward the direction that currently makes the loss worse, exactly as 11.5's gradient descent already relied on (subtracting eta x gradient moves the weight in the loss-shrinking direction)."
+    },
+    "practice": [
+      {
+        "problem": "Compute delta_output for p=0.5, t=0.5 (a perfect prediction). What does the result mean?",
+        "solution": "delta_output = 2(0.5-0.5) x sigma'(z) = 2(0) x (anything) = 0. Zero delta_output means the output neuron's z is already exactly right — every weight feeding this output neuron would get a zero gradient contribution from this term, so gradient descent would leave them unchanged from this output neuron's perspective."
+      },
+      {
+        "problem": "Two different (p, t) pairs can produce sigma'(z) = p(1-p) values that look similar even when p and t are far apart. For p=0.9, t=0, compute delta_output, and explain why its MAGNITUDE is smaller than case 2 in the worked example (p=0.7, t=0) even though p is FARTHER from t.",
+        "solution": "sigma'(z) = 0.9 x 0.1 = 0.09. delta_output = 2(0.9-0) x 0.09 = 1.8 x 0.09 = 0.162 — smaller in magnitude than case 2's approximately 0.2940, even though 0.9 is farther from the target 0 than 0.7 was. This is sigmoid SATURATION (10.5's lesson): sigma'(z) shrinks sharply as p approaches 0 or 1, so a confidently wrong prediction (p=0.9 when t=0) produces a smaller sigma'(z) factor than a moderately wrong one, even though the raw error (p-t) is larger."
+      },
+      {
+        "problem": "Rewrite 11.7's formula dL/dwo_i = 2(p-t) x sigma'(zo) x h_i using the new delta_output name.",
+        "solution": "dL/dwo_i = delta_output x h_i — the first two factors collapse into the single named quantity delta_output, leaving only the layer-specific input (h_i) to multiply in."
+      },
+      {
+        "problem": "Why is it worth giving delta_output its own name and computing it just ONCE per output neuron, instead of recomputing 2(p-t) x sigma'(zo) inline for every weight?",
+        "solution": "Because delta_output does not depend on which weight is being differentiated — it's a property of the output neuron alone. A network can have many weights feeding one output neuron (and 12.4 will show it gets reused again for every hidden weight too); computing it once and reusing the same number avoids repeating the same 2(p-t) x sigma'(zo) calculation over and over."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is delta_output defined as?",
+        "choices": [
+          "dL/dzo = 2(p-t) x sigma'(zo) — how much the loss would change for a tiny nudge to the output neuron's own z",
+          "The output neuron's weight values",
+          "The number of hidden neurons in the network",
+          "dL/dw_i for one specific weight only"
+        ],
+        "answerIndex": 0,
+        "explanation": "delta_output packages the first two links of the chain rule (dL/dp x dp/dzo) into one number describing the output neuron's own share of the loss."
+      },
+      {
+        "type": "short",
+        "question": "In 11.7's formula dL/dwo_i = 2(p-t) x sigma'(zo) x h_i, which factors together equal delta_output?",
+        "answer": "2(p-t) x sigma'(zo)",
+        "acceptable": [
+          "2(p-t) times sigma'(zo)",
+          "the first two factors",
+          "2(p-t) and sigma prime of zo"
+        ],
+        "explanation": "delta_output = dL/dp x dp/dzo = 2(p-t) x sigma'(zo) — exactly the two factors that came before h_i in 11.7's formula."
+      },
+      {
+        "type": "mc",
+        "question": "For p=0.5693, t=1 (this phase's running network), what is delta_output, and what does its SIGN mean?",
+        "choices": [
+          "approximately -0.2112; negative because p<t, meaning z should increase to raise p toward t",
+          "approximately +0.2112; positive because the network is correct",
+          "exactly 0; the network already matches the target",
+          "approximately -0.8614; negative because that's just dL/dp alone"
+        ],
+        "answerIndex": 0,
+        "explanation": "p<t here, so the prediction under-shot the target — delta_output comes out negative, and gradient descent will push z upward (toward a higher p) to shrink the loss."
+      },
+      {
+        "type": "short",
+        "question": "What is delta_output when p exactly equals t?",
+        "answer": "0",
+        "acceptable": [
+          "zero",
+          "0",
+          "exactly 0"
+        ],
+        "explanation": "2(p-t) becomes 2(0) = 0 regardless of sigma'(zo), so a perfect prediction always gives delta_output = 0."
+      },
+      {
+        "type": "mc",
+        "question": "Why does this lesson bother naming delta_output at all, instead of just leaving 11.7's formula as one long expression?",
+        "choices": [
+          "Because 12.4 is about to reuse this exact same number again, for every hidden-layer weight feeding into this output neuron",
+          "Because sigma'(zo) cannot be computed without a name for it",
+          "Because 2(p-t) is undefined without a name",
+          "Because naming it changes its numeric value"
+        ],
+        "answerIndex": 0,
+        "explanation": "The whole point of naming and computing delta_output once is that the very same number gets passed backward and reused by every hidden weight's gradient computation in 12.4 — recomputing it each time would be wasted, repeated work."
+      }
+    ]
+  },
+  {
+    "id": "12.4",
+    "number": 4,
+    "title": "Backpropagating error to the hidden layer",
+    "objectives": [
+      "Derive delta_hidden_j = dL/dzh_j for a hidden neuron, showing it equals a WEIGHTED SUM of every output-layer delta it feeds into, times that hidden neuron's own sigma'(zh_j)",
+      "Compute delta_hidden for a hidden neuron feeding a SINGLE output neuron (this phase's running network) and for a hidden neuron feeding TWO output neurons (where the sum has more than one term)",
+      "State the phase's core new idea in one sentence: each hidden neuron's blame is the SAME forward-pass weights, read backward, weighted-summed, and scaled by that neuron's own sigmoid derivative"
+    ],
+    "explanation": [
+      "12.3 named delta_output = dL/dzo for the output neuron. This lesson does the same thing one layer earlier: delta_hidden1 = dL/dzh1, the hidden neuron's own share of blame for the loss. From 12.2's five-link chain, dL/dw11 = dL/dp x dp/dzo x dzo/dh1 x dh1/dzh1 x dzh1/dw11. Group the middle three links together: (dL/dp x dp/dzo) x dzo/dh1 x dh1/dzh1 = delta_output x wo1 x sigma'(zh1). That whole group IS delta_hidden1 — everything about how blame flows from the loss back to zh1, with only the final dzh1/dw11 = x1 factor left outside it (that last factor is layer-specific, just like h_i was for delta_output).",
+      "So for a hidden neuron feeding exactly ONE output neuron: delta_hidden1 = (delta_output x wo1) x sigma'(zh1). Notice wo1 — the SAME weight the forward pass used to combine h1 into zo — reappears here, but now multiplying blame BACKWARD instead of activation forward. This is literally 'using the same weights from the forward pass read backward,' the shape the roadmap's own phase description names.",
+      "The general case, when a hidden neuron feeds MULTIPLE output neurons, is where the real new idea shows up: each output neuron the hidden neuron touches contributes its OWN delta_output x weight term, and all those contributions get ADDED together before the final sigma'(zh_j) multiplication: delta_hidden_j = [sum over every output k the hidden neuron feeds] (delta_output_k x w_jk) x sigma'(zh_j). This is a WEIGHTED SUM because the hidden neuron is jointly responsible for every output it feeds into, and each output's complaint gets weighted by how strongly the hidden neuron influences that particular output (the forward-pass weight w_jk). This phase's running network happens to have only one output neuron, so the sum degenerates to a single term — but the formula is the same either way.",
+      "Once delta_hidden_j is known for a hidden neuron, computing THAT neuron's own weight gradients is just 12.3's h_i pattern again, one layer earlier: dL/dw_ji = delta_hidden_j x x_i (12.1's original x_i, the raw input, not an activation this time — because hidden neuron j's own z is built directly from the raw inputs). The whole point of naming and computing delta_hidden_j is exactly the same as delta_output's: it packages everything upstream of this hidden neuron's own z into one reusable number, so every one of that neuron's own weights can multiply it by their own x_i without re-deriving the chain from scratch."
+    ],
+    "example": {
+      "problem": "A single hidden neuron (input x1=1, weight wh=0.4, bias bh=0.1) feeds TWO output neurons instead of one: output 1 has wo1=0.5, bo1=0.05, target t1=1; output 2 has wo2=-0.3, bo2=0.2, target t2=0. Total loss L = (t1-p1)^2 + (t2-p2)^2. Compute delta_output1, delta_output2, and then delta_hidden (the weighted sum case), and verify it against a finite-difference check.",
+      "steps": [
+        "Forward pass: zh = 0.4(1) + 0.1 = 0.5. h = sigma(0.5), approximately 0.6225.",
+        "Output 1: zo1 = 0.5(0.6225) + 0.05, approximately 0.3612. p1 = sigma(0.3612), approximately 0.5893.",
+        "Output 2: zo2 = -0.3(0.6225) + 0.2, approximately 0.0133. p2 = sigma(0.0133), approximately 0.5033.",
+        "Total loss: L = (1-0.5893)^2 + (0-0.5033)^2, approximately 0.1687 + 0.2533 = approximately 0.4220.",
+        "delta_output1 = 2(p1-t1) x sigma'(zo1) = 2(0.5893-1) x [0.5893 x 0.4107], approximately -0.8214 x 0.2420, approximately -0.1988.",
+        "delta_output2 = 2(p2-t2) x sigma'(zo2) = 2(0.5033-0) x [0.5033 x 0.4967], approximately 1.0066 x 0.2500, approximately 0.2516.",
+        "Weighted sum: delta_hidden = (delta_output1 x wo1 + delta_output2 x wo2) x sigma'(zh) = [(-0.1988)(0.5) + (0.2516)(-0.3)] x [0.6225 x 0.3775] = [-0.0994 - 0.0755] x 0.2350 = (-0.1749) x 0.2350, approximately -0.0411.",
+        "Finite-difference check: recompute L with bh=0.10001 and bh=0.09999 (a tiny nudge to zh, since dzh/dbh=1), subtract, divide by 2(0.00001) — comes out to approximately -0.0411 as well, matching the weighted-sum formula."
+      ],
+      "answer": "delta_hidden is approximately -0.0411, and it is built from BOTH output neurons' deltas — delta_output1 x wo1 contributes approximately -0.0994 and delta_output2 x wo2 contributes approximately -0.0755, summing to approximately -0.1749 before the final sigma'(zh) scaling. Dropping either term would give the wrong answer, confirming the hidden neuron really does need to account for every output it feeds."
+    },
+    "practice": [
+      {
+        "problem": "For this phase's original running network (x1=1, x2=0.5, hidden neuron 1: w11=0.5/w12=-0.3/bh1=0.1, hidden neuron 2: w21=0.2/w22=0.4/bh2=-0.1, output: wo1=0.6/wo2=-0.5/bo=0.2, t=1; delta_output already computed in 12.3 as approximately -0.2112), compute delta_hidden2 (hidden neuron 2 feeds only the ONE output neuron, so its sum has a single term).",
+        "solution": "delta_hidden2 = (delta_output x wo2) x sigma'(zh2) = [(-0.2112)(-0.5)] x [0.5744 x 0.4256] = 0.1056 x 0.2445, approximately 0.0258 — matching the value already cross-checked against finite differences in 12.2's practice problem 2 (dL/dw21 = delta_hidden2 x x1 = approximately 0.0258)."
+      },
+      {
+        "problem": "In the two-output worked example, if delta_output2's term (delta_output2 x wo2 = approximately -0.0755) were left OUT of the weighted sum by mistake, what would delta_hidden come out to instead, and by how much would that be wrong?",
+        "solution": "Leaving out that term would use only delta_output1 x wo1 = approximately -0.0994, times sigma'(zh)=0.2350, giving approximately -0.0234 instead of the correct approximately -0.0411 — off by about 43%, because the hidden neuron's effect on OUTPUT 2's loss would be silently dropped even though wo2=-0.3 is not a small connection."
+      },
+      {
+        "problem": "Once delta_hidden2 (approximately 0.0258) is known, what is dL/dw21 (hidden neuron 2's weight on input x1=1)? What is dL/dbh2 (hidden neuron 2's bias)?",
+        "solution": "dL/dw21 = delta_hidden2 x x1 = 0.0258 x 1 = approximately 0.0258. dL/dbh2 = delta_hidden2 x 1 = approximately 0.0258 as well, since a bias's own 'input' is always exactly 1 (dzh2/dbh2 = 1, the same fact used for output bias bo in 12.3)."
+      },
+      {
+        "problem": "Why does the formula reuse wo1 and wo2 — the SAME weights the forward pass used — instead of some new backward-specific weight?",
+        "solution": "Because those weights are exactly how strongly each hidden neuron's activation influences each output's z in the forward pass (zo = wo1 h1 + wo2 h2 + bo) — so they are exactly the right scaling factor for how much of each output's blame should flow back to that hidden neuron. A stronger forward connection (bigger |wo_i|) means that hidden neuron deserves a bigger share of that output's delta; backprop reads the same connection strength backward instead of inventing a new one."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the general formula for delta_hidden_j, a hidden neuron that may feed one or more output neurons?",
+        "choices": [
+          "delta_hidden_j = [sum over every output k it feeds] (delta_output_k x w_jk), times sigma'(zh_j)",
+          "delta_hidden_j = delta_output alone, with no weighting",
+          "delta_hidden_j = x_i, the raw input only",
+          "delta_hidden_j = sigma'(zh_j) alone, with no delta_output term at all"
+        ],
+        "answerIndex": 0,
+        "explanation": "Every output neuron the hidden neuron feeds contributes its own delta_output times the connecting weight; those contributions are summed, then scaled by the hidden neuron's own sigma'(zh_j)."
+      },
+      {
+        "type": "short",
+        "question": "In the weighted-sum formula, what plays the role of 'how strongly this hidden neuron influences that particular output'?",
+        "answer": "the connecting weight (w_jk)",
+        "acceptable": [
+          "the weight",
+          "w_jk",
+          "the forward-pass weight between them",
+          "wo1 / wo2"
+        ],
+        "explanation": "The same weight the forward pass used to combine the hidden activation into that output's z is reused, read backward, as the scaling factor for how much blame flows back along that connection."
+      },
+      {
+        "type": "mc",
+        "question": "In the two-output worked example (delta_output1 approximately -0.1988 via wo1=0.5, delta_output2 approximately 0.2516 via wo2=-0.3, sigma'(zh) approximately 0.2350), what is delta_hidden?",
+        "choices": [
+          "approximately -0.0411",
+          "approximately -0.1988",
+          "approximately 0.2516",
+          "approximately -0.1749"
+        ],
+        "answerIndex": 0,
+        "explanation": "Summing (-0.1988)(0.5) + (0.2516)(-0.3) gives approximately -0.1749, then multiplying by sigma'(zh) approximately 0.2350 gives approximately -0.0411."
+      },
+      {
+        "type": "short",
+        "question": "In this phase's ONE-output running network, how many terms are in delta_hidden1's weighted sum?",
+        "answer": "one",
+        "acceptable": [
+          "1",
+          "one",
+          "just one term",
+          "a single term"
+        ],
+        "explanation": "With only one output neuron in the network, the general weighted-sum formula degenerates to a single term, delta_output x wo1 — the sum is still correct, it just has nothing else to add."
+      },
+      {
+        "type": "mc",
+        "question": "What is this lesson's core new idea, in the roadmap's own words?",
+        "choices": [
+          "Error flows backward through the network — each hidden neuron's blame is a weighted sum of every output delta it feeds, using the same forward-pass weights read backward",
+          "Hidden neurons never need a gradient at all",
+          "Only the output layer's weights can ever be trained",
+          "Every hidden neuron always gets exactly the same delta value"
+        ],
+        "answerIndex": 0,
+        "explanation": "This is exactly the phase description quoted back in 12.1's kickoff: chain rule applied layer by layer, error flowing backward through the network — realized concretely as the weighted-sum delta_hidden formula."
+      }
+    ]
   }
 ];
