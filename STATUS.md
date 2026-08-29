@@ -993,14 +993,54 @@ eyeballing performance ON that same fixed test set — its own subtle form of fi
 "held out" data, and the natural closing topic for the ~10-lesson Phase 13 arc. Continuing
 one lesson/session at a time per Mike's phase-by-phase pacing.
 
+## Phase 13 (Evaluation & Overfitting) — lesson 13.8 SHIPPED 2026-08-29
+
+Lesson 13.8 (`data/curriculum.js`, id "13.8") closes the "single fixed test set is quietly
+doing double duty" thread 13.6/13.7 raised, but not by splitting the already-tiny 4-point
+external test set further (tried first: splitting it into a 2-point validation set + 2-point
+held-out test set gave three different, noisy "best epoch" answers — best-by-2pt-validation
+at epoch 2000, best-by-full-4pt at epoch 151, best-by-2pt-heldout at epoch 76 — no clean
+story from an already-thin slice). Instead it introduces leave-one-out cross-validation
+(LOOCV) on 12.10's 3-example TRAINING set itself: with only 3 training examples, permanently
+reserving any one as a validation point would cost a third of the data the network ever
+learns from, so LOOCV rotates which single example is held out, training on the other 2 each
+time (3 folds total, each from 12.10's identical starting weights, lr=0.5, 300 epochs).
+Result: fold 1 (hold out (x=[1,-1],t=1), train on the other two) predicts p approximately
+0.8679 — correct. Fold 2 (hold out (x=[-1,1],t=0)) predicts p approximately 0.9750, rounding
+to 1 — WRONG. Fold 3 (hold out (x=[2,2],t=1)) predicts p approximately 0.4402, rounding to 0
+— WRONG. LOOCV-averaged validation accuracy is therefore 1/3 approximately 33.3% (average
+validation MSE approximately 0.4272) — far below both the 100% training accuracy this same
+network reaches when trained on all 3 points together and the 75% accuracy 13.1 reported on
+the fixed 4-point external test set, not because the numbers disagree but because they
+measure different things: LOOCV averages 3 separately-trained 2-point networks, each scored
+on the 1 point excluded from its own fold, revealing that removing even 1 of only 3 training
+points (33% of the data) is enough to flip this network's prediction on the removed point in
+2 of 3 cases. Every fold reuses 12.8's unmodified backprop; the full-3-example (no-fold)
+baseline run was checked first and reproduced 13.1's own published forward-pass numbers to
+4 decimal places before any 2-example fold run was trusted, and a finite-difference check
+(11.4's technique) on fold 1's first training update matched analytic gradients to within
+1e-6 (measured agreement approximately 1e-9). 159/159 lessons total across Phases 1-13.
+`bab-schema-check "13."` 8/8 clean, 159/159 file-wide, 0 dup ids; `sw.js` bumped
+`bab-v28`->`bab-v29`, confirmed live via `bab-ship-verify`. Top-of-file ROADMAP/LESSONS doc
+comment refreshed (158->159, 13.1-13.7->13.1-13.8).
+
+**Next up:** Phase 13's ~10-lesson arc is now at 8/~10 (13.1-13.8 shipped); no single
+clearly-named remaining topic is currently identified — next session should re-survey
+whether Phase 13 has 1-2 more natural closing lessons (e.g. a confusion-matrix/precision-recall
+deep dive was gestured at in 13.1's own text but never given its own lesson) or whether it's
+ready to close and Phase 14 should begin. Continuing one lesson/session at a time per Mike's
+phase-by-phase pacing.
+
 ## Pending — next session(s)
 
-- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.7/~10
-  shipped 2026-08-29, see sections above).** Next session: continue Phase 13 lesson-by-lesson
-  (cross-validation / train-vs-validation split — the one clearly-named remaining topic per
-  the "Next up" note above, now that epoch count, data size/quality, L2 weight decay, and
-  early stopping have each covered a separate knob on the same 3-example overfitting
-  picture), following the same verification bar as every prior phase — every
+- **Phases 1-12 are all SHIPPED (151/151 lessons); Phase 13 has begun (13.1-13.8/~10
+  shipped 2026-08-29, see sections above).** Next session: Phase 13 has no single
+  clearly-named remaining topic left (epoch count, data size/quality, L2 weight decay, early
+  stopping, and now cross-validation/LOOCV have each covered a separate knob on the same
+  3-example overfitting picture) — re-survey whether 1-2 more natural closing lessons exist
+  (e.g. confusion-matrix/precision-recall, gestured at in 13.1 but never given its own
+  lesson) or whether Phase 13 is ready to close and Phase 14 should begin. Whichever topic
+  is chosen, follow the same verification bar as every prior phase — every
   worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
   math; cross-check any hand-derived gradient or slope against NumPy's finite-difference
@@ -1016,6 +1056,16 @@ one lesson/session at a time per Mike's phase-by-phase pacing.
   commit + push, `bab-ship-verify` confirming live. Per Mike: build this out phase by phase
   across future sessions, not all at once ("chained background builds through the day" per
   his 2026-08-25 ask).
+- **Second caveat, learned in 13.7 (sibling to the 13.3 one above, same shape — a check
+  that "ran clean" isn't proof of the strongest claim):** if a session reuses a PRIOR
+  lesson's own checkpoint-sampled numbers (e.g. 13.4 sampled test MSE at 10 hand-picked
+  epochs and reported the lowest of those 10 as "the floor"), don't assert that sampled
+  value is the TRUE extremum over the whole trajectory — it's only the extremum among the
+  points actually checked. 13.7 recomputed 13.4's identical run at every epoch (not just
+  its 10 checkpoints) and found the real minimum was lower and earlier (epoch 151, not
+  200) than 13.4 reported — 13.4 wasn't wrong, its grid was just coarse. Same fix pattern
+  as the matrix-convention caveat: when a lesson depends on "where is the min/max," either
+  check every step or explicitly caveat the claim as "lowest among the N points sampled."
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —

@@ -3,8 +3,8 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (7 of ~10 so far — 13.1-13.7; remaining lessons pending, see
- * STATUS.md) — 158 lessons total. Phase 14 will get its own LESSONS
+ * Phase 13 (8 of ~10 so far — 13.1-13.8; remaining lessons pending, see
+ * STATUS.md) — 159 lessons total. Phase 14 will get its own LESSONS
  * entries in a future session — see README.md "Adding a new phase".
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
@@ -16659,6 +16659,120 @@ const LESSONS = [
           "it needs to keep training past the optimum to confirm it, so it saves the best weights separately from wherever it ends up"
         ],
         "explanation": "By the time the wait-counter reaches `patience` and the rule stops, `patience` extra epochs have already run past the true best point, during which the held-out metric was getting worse again — using the CURRENT (stopping-epoch) weights would hand back a slightly worse network than the BEST-SEEN weights the rule deliberately saved along the way."
+      }
+    ]
+  },
+  {
+    "id": "13.8",
+    "number": 8,
+    "title": "Cross-validation: leave-one-out, when there's too little data to spare a validation set",
+    "objectives": [
+      "Learn leave-one-out cross-validation (LOOCV): with a training set this small (12.10's same 3 examples used throughout Phase 13), permanently setting aside any one of them as a validation example would sacrifice a third of the data the network ever gets to learn from — LOOCV instead rotates which single example is held out, training on the other 2 each time, so every example serves as validation exactly once while still being used for training in the other folds",
+      "Run all 3 LOOCV folds of 12.10's exact setup (identical starting weights, lr=0.5, 300 epochs) and discover only 1 of the 3 held-out points is correctly classified when excluded from training — an LOOCV-averaged validation accuracy of 33.3% (1/3), far below both the 100% training accuracy this same network reaches on all 3 points together and the 75% accuracy 13.1 reported on the separate, fixed 4-point external test set",
+      "Explain why LOOCV's harsher number does not contradict 13.1's 75% test accuracy — the two measure genuinely different things, and LOOCV's low score is an honest signal of exactly how little slack a 3-example training set leaves: removing even 1 of 3 points (33% of the data) is enough to flip this network's prediction on the removed point in 2 of the 3 cases"
+    ],
+    "explanation": [
+      "Phase 13 has used a single fixed 4-point external test set (13.1) throughout every lesson so far, and 13.6 and 13.7 both went a step further, picking their headline hyperparameters (lambda=0.01, patience=50) by watching performance on that SAME 4-point set — the set doing double duty as both the thing hyperparameters get tuned against and the thing the final score gets reported on. The textbook fix is a 3-way split: train, validation (for hyperparameter choices), and test (touched once, at the very end). But this course's TRAINING set itself has only 3 examples (12.10's (x=[1,-1],t=1), (x=[-1,1],t=0), (x=[2,2],t=1)) — permanently carving out even 1 of those 3 as a validation example would remove a third of the already-tiny set the network learns from, on top of the 4 points already reserved as test. With data this scarce, cross-validation gives a different answer.",
+      "Leave-one-out cross-validation (LOOCV): for a dataset of n examples, train n separate models, each time holding out exactly one example as the validation point and training on the remaining n-1. Every example serves as validation exactly once, and as training data in every OTHER fold — unlike a fixed held-out chunk, no example is permanently sacrificed, and across the n folds every point still contributes to training n-1 times. Applied to the 3-example training set, this makes exactly 3 folds, one per example — each fold trained from 12.10's identical starting weights, lr=0.5, for 300 epochs (12.10's own baseline run length), exactly like every other Phase 13 lesson's baseline.",
+      "Fold 1 holds out (x=[1,-1], t=1) and trains only on the other two, (x=[-1,1],t=0) and (x=[2,2],t=1). After 300 epochs the fold-training MSE is approximately 0.0025 (both seen points correctly classified, 100% fold-training accuracy) and the held-out point predicts p approximately 0.8679 — rounds to 1, CORRECT (val MSE approximately 0.0175).",
+      "Fold 2 holds out (x=[-1,1], t=0) and trains on (x=[1,-1],t=1) and (x=[2,2],t=1). Fold-training MSE is approximately 0.0004, 100% fold-training accuracy on those two — but the held-out point predicts p approximately 0.9750, rounding to 1, WRONG (target is 0), a confidently incorrect guess with val MSE approximately 0.9506.",
+      "Fold 3 holds out (x=[2,2], t=1) and trains on (x=[1,-1],t=1) and (x=[-1,1],t=0). Fold-training MSE is approximately 0.0050, again 100% fold-training accuracy on those two — but the held-out point predicts p approximately 0.4402, rounding to 0, WRONG (target is 1), val MSE approximately 0.3134.",
+      "Averaging the 3 folds gives LOOCV's headline numbers: validation accuracy = (1 correct + 0 correct + 0 correct) / 3 approximately 33.3%, and average validation MSE = (0.0175 + 0.9506 + 0.3134) / 3 approximately 0.4272. Both are dramatically worse than the 100% training accuracy this exact network reaches when trained on ALL 3 examples together (13.1's baseline), and considerably worse than the 75% accuracy 13.1 reported on the separate, fixed 4-point external test set using that same full-training-set network.",
+      "This is not a contradiction — the three numbers measure three different things. 100% training accuracy uses no held-out data at all: it just checks fit. 13.1's 75% test accuracy comes from ONE network (trained on the full, untouched 3-point set) scored against 4 separate new points. LOOCV's 33.3% averages 3 DIFFERENT networks, each trained on only 2 of the 3 available points, each scored on the single point excluded from its own training. In 2 of those 3 folds, a network that fits its own 2 training points perfectly still lands confidently on the wrong side for the third — a sign of how little redundancy 3 points give a network to pin down a decision boundary that also covers a point it has never seen. LOOCV's value is exactly this: it measures how sensitive THIS training procedure is to which specific point gets left out, a genuinely different question from 'how well does the fully-trained model do on 4 fixed new points,' and with only 3 examples to rotate through, that sensitivity turns out to be severe.",
+      "This also closes the loop on 13.6/13.7's test-set double-duty: because LOOCV is computed entirely from the training set, it never touches the 4-point external set at all — the same rotation could, in principle, be re-run once per candidate lambda or patience value to pick a hyperparameter using only training-set folds, leaving the external 4 points free to serve as a true, only-ever-touched-once final test score, instead of being read for both hyperparameter selection and the final headline number the way 13.6 and 13.7 quietly did.",
+      "Verification note: each fold reuses 12.8's unmodified training loop (no new gradient term) on 12.10's exact starting weights; the full-3-example (no fold removed) baseline run was checked first and reproduced 13.1's own published numbers to 4 decimal places (final weights W_hidden approximately [[2.6713,-0.8203],[2.2003,-0.6652]], predictions p approximately 0.9634/0.0710/0.9654) before any fold's 2-example run was trusted. A finite-difference check (11.4's technique) on fold 1's very first training update (example (x=[-1,1],t=0), from 12.10's unmodified starting weights) matched analytic gradients to within 1e-6 for grad_W_output, grad_b_output, grad_W_hidden, and grad_b_hidden (measured agreement on the order of 1e-9)."
+    ],
+    "example": {
+      "problem": "Using 12.10's identical starting weights and training setup (lr=0.5, 300 epochs), leave-one-out cross-validation is run over the 3-example training set. Fold 1 (hold out (x=[1,-1],t=1)) predicts p approximately 0.8679 for the held-out point, correct. Fold 2 (hold out (x=[-1,1],t=0)) predicts p approximately 0.9750, rounding to 1 — WRONG. Fold 3 (hold out (x=[2,2],t=1)) predicts p approximately 0.4402, rounding to 0 — WRONG. What is the LOOCV-averaged validation accuracy, and how does it compare with the 100% training accuracy and 75% external test accuracy already established for this same dataset (13.1)?",
+      "steps": [
+        "Score each fold's held-out prediction against its true target: fold 1 correct (1 of 1), fold 2 wrong (0 of 1), fold 3 wrong (0 of 1).",
+        "LOOCV-averaged validation accuracy = (1 + 0 + 0) / 3 = 1/3 approximately 33.3%.",
+        "Compare with 100% training accuracy: that figure comes from scoring the network trained on ALL 3 points against those SAME 3 points — no data is held out at all, so it only measures fit, not generalization.",
+        "Compare with 13.1's 75% test accuracy: that figure comes from ONE network (trained on the full, untouched 3-point set) scored against 4 separate, never-trained-on external points — a single train/test split using the complete training set behind it.",
+        "LOOCV's 33.3% instead averages 3 DIFFERENT networks, each trained on only 2 of the 3 available points (a much smaller training set each time), each scored on the one point excluded from its own fold — a different measurement of a different quantity, not a disagreement about the same one."
+      ],
+      "answer": "LOOCV-averaged validation accuracy is 33.3% (1 of 3 folds correct) — far below both the 100% training accuracy (which uses no held-out data at all) and the 75% external test accuracy (one specific split, using the complete 3-point training set). The gap is not a contradiction: LOOCV measures how sensitive this training procedure is to which single point gets left out of a tiny, 3-example dataset, and with only 3 examples to rotate through, removing any one of them (a full third of the data) is enough to flip the network's prediction on that point in 2 of the 3 cases."
+    },
+    "practice": [
+      {
+        "problem": "If the training set had 10 examples instead of 3, how would LOOCV's folds differ — how many folds would there be, and what fraction of the training data would each fold remove?",
+        "solution": "10 folds, one per example. Each fold would remove exactly 1 of 10 examples (10%) for training, versus 1 of 3 (33%) in this lesson's 3-example case — a much smaller sacrifice of training data each time, so held-out predictions would likely be far less prone to the sharp swings this tiny 3-example dataset shows."
+      },
+      {
+        "problem": "Fold 2 reaches 100% accuracy on its own 2 training examples but predicts the held-out point wrong with high confidence (p approximately 0.9750 vs. target 0). What does that 100% fold-training accuracy actually confirm, and what does it NOT tell you?",
+        "solution": "It only confirms the network correctly classifies the 2 points it was actually trained on in that fold — the same caveat 13.1 first established (training accuracy measures fit, not generalization). It says nothing about the excluded third point, which fold 2's own held-out result then shows is badly and confidently misclassified."
+      },
+      {
+        "problem": "LOOCV's average validation accuracy (33.3%) is much lower than 13.1's single external 4-point test accuracy (75%). Does this mean the LOOCV number is more 'correct' or more 'true' than the test-set number?",
+        "solution": "No — they are not competing answers to the same question. 13.1's 75% comes from ONE trained network (using all 3 training points) scored against 4 fixed new points. LOOCV's 33.3% averages 3 DIFFERENT networks, each trained on only 2 of the 3 available points, scored on the one point excluded from each. Neither is 'more true'; LOOCV specifically measures how sensitive this training procedure is to which point gets left out, given how little data there is to work with."
+      },
+      {
+        "problem": "Why does LOOCV rotate which example is held out across n folds, instead of just permanently reserving 1 fixed example as a validation point for every fold?",
+        "solution": "A single fixed held-out example would need to be excluded from every training run, permanently losing 1 of only 3 training points and producing just 1 validation score total. LOOCV instead rotates which point is held out, so across the 3 folds every example gets to be both a training point (in the other 2 folds) and the one-time validation point (in its own fold) — using all the data for training somewhere while still getting a validation score for every point, with no example wasted or trained-on and validated-on at the same time."
+      },
+      {
+        "problem": "Suppose a 4th LOOCV-style fold were added by mistake, holding out one of the 4 points from 13.1's EXTERNAL test set and training on it instead. What's wrong with this idea?",
+        "solution": "LOOCV rotates through the TRAINING set specifically because those are the only examples the network is ever allowed to learn from; the 4 external test points exist precisely to be evaluated on and never trained on (13.1's whole point in first introducing them). Folding one of them into training would contaminate the one dataset this course has deliberately kept as a true, never-trained-on measurement, destroying its value as an unbiased final check."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What does leave-one-out cross-validation (LOOCV), as defined in this lesson, actually do?",
+        "choices": [
+          "Rotate through the training set, holding out exactly one example at a time as the validation point and training on the remaining n-1, so every example is used for both training (in other folds) and validation (in its own fold) across the n folds",
+          "Train once on the full training set, then re-score it on a randomly chosen subset of the SAME points already used for training",
+          "Permanently remove one training example forever and never use it again for anything",
+          "Train n identical models on n exact copies of the same dataset with no example ever held out"
+        ],
+        "answerIndex": 0,
+        "explanation": "LOOCV trains n separate models (one per example), each holding out a different single example as its validation point and training on the rest — so every example serves as validation exactly once while contributing to training in every other fold, without permanently sacrificing any example."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does this lesson use LOOCV on the 3-example TRAINING set rather than permanently carving out a separate validation chunk from it?",
+        "answer": "with only 3 training examples, permanently removing even one for validation would sacrifice a third of the already-tiny training set",
+        "acceptable": [
+          "the training set only has 3 examples, so a fixed validation split would waste a third of it",
+          "too little data to permanently spare any example as a fixed validation point",
+          "removing one of only 3 examples forever is too costly, so LOOCV rotates instead"
+        ],
+        "explanation": "A permanent validation split needs at least one example set aside forever; with only 3 training examples that means losing a third of the data the network ever learns from. LOOCV avoids this by rotating which example is held out, so every point still contributes to training in the other folds."
+      },
+      {
+        "type": "mc",
+        "question": "LOOCV's averaged validation accuracy on this dataset is 33.3% (1 of 3 folds correct) — far below the 100% training accuracy this same network reaches when trained on all 3 points together. What explains fold 2 and fold 3 both getting their held-out point WRONG despite each fold reaching 100% accuracy on its own 2 training points?",
+        "choices": [
+          "Each fold trains on only 2 of the 3 available points (a third of the data removed), and a network that perfectly fits those 2 seen points can still land confidently on the wrong side of a point it was never shown — 100% fold-training accuracy only ever confirms fit to the points actually trained on",
+          "The gradient computation is unstable whenever exactly 2 training examples are used",
+          "Fold-training accuracy of 100% mathematically guarantees the held-out prediction must also be correct",
+          "The starting weights are different in each fold, which is the real cause of the wrong predictions"
+        ],
+        "answerIndex": 0,
+        "explanation": "Every fold starts from the same 12.10 weights — only WHICH 2 points it trains on differs. 100% fold-training accuracy is a fit measurement on the seen points only; it says nothing about the excluded point, which fold 2 and fold 3 both then get wrong once the boundary learned from just 2 points doesn't happen to cover the third."
+      },
+      {
+        "type": "mc",
+        "question": "13.1 reported 75% accuracy on a fixed 4-point external test set, using a network trained on all 3 training examples. This lesson's LOOCV instead reports 33.3% average validation accuracy. What is the key structural difference between what these two numbers measure?",
+        "choices": [
+          "13.1's 75% comes from ONE network (trained on the complete 3-point set) scored against 4 separate external points; LOOCV's 33.3% averages 3 DIFFERENT networks, each trained on only 2 of the 3 training points, each scored on the single point excluded from its own fold",
+          "There is no real difference — both numbers should always be identical for the same dataset",
+          "13.1's number is measured on training data, while LOOCV's number is measured on test data",
+          "LOOCV's number is simply 13.1's number recomputed with a different random seed"
+        ],
+        "answerIndex": 0,
+        "explanation": "13.1's test accuracy reflects the fully-trained (all 3 points) network against 4 fixed new points. LOOCV instead measures 3 separately-trained 2-point networks against the 1 point each excludes — a genuinely different procedure, which is exactly why the two numbers needn't (and here, don't) match."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why does folding one of 13.1's 4 EXTERNAL test points into an LOOCV-style training rotation (instead of only rotating through the 3 TRAINING examples) break the point of having that external set at all?",
+        "answer": "the external test points exist specifically to never be trained on, so training on one would contaminate the only true, never-trained-on evaluation set this course has",
+        "acceptable": [
+          "it would train on data meant to stay held out, ruining it as an unbiased final check",
+          "the 4-point set is only useful because it's never used for training; folding it into LOOCV destroys that",
+          "contaminates the one dataset kept aside purely for unbiased evaluation"
+        ],
+        "explanation": "13.1 introduced the 4-point external set specifically as data the network never trains on, so its score reflects true generalization. Training on even one of those points for an LOOCV fold would erase that guarantee, leaving no dataset left that was never seen during training."
       }
     ]
   }
