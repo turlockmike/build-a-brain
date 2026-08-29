@@ -651,28 +651,54 @@ mechanics: gradient formulas, hand computation, NumPy code, training
 loop), group 3 = 12.9-12.10 (the payoff: learning XOR from scratch, then
 the phase mini-project). Not started this session — next session's job.
 
+## Phase 12 (Backpropagation) — group 1 (12.1-12.4) SHIPPED 2026-08-29
+
+**Content written, verified, and live:** 12.1 the multi-layer credit-assignment problem
+(why 11.7's exact gradient formula only covers weights touching the output directly —
+worked with a 2-input/2-hidden/1-output network, x1=1/x2=0.5/t=1, showing w11 does not even
+appear in zo's formula); 12.2 extending the chain rule across layers (the 5-link chain
+dL/dw11 = dL/dp x dp/dzo x dzo/dh1 x dh1/dzh1 x dzh1/dw11, evaluated to approximately
+-0.0301 and cross-checked against a finite-difference gradient check); 12.3 naming the
+output layer's error signal, delta_output = dL/dzo = 2(p-t) x sigma'(zo) (the same quantity
+11.7's formula always computed, now packaged for reuse); 12.4 backpropagating error to the
+hidden layer, delta_hidden_j = [weighted sum of every output delta it feeds, via the same
+forward-pass weights read backward] x sigma'(zh_j) — worked with both the running
+single-output network (delta_hidden2 approximately 0.0258) and a supplementary
+1-hidden/2-output network (delta_hidden approximately -0.0411) to make the weighted-sum
+case concrete, both cross-checked against finite differences.
+
+145/145 lessons total across Phases 1-12 so far. Every worked example/practice/quiz numeric
+claim independently re-verified via actual Python execution (not mental math), including
+the finite-difference gradient checks called out explicitly in 12.2's and 12.4's lesson
+text per the verification note below. Pre-flight grep for stray "Phase 11's backpropagation"
+misattributions came back clean (already fully fixed in the prior session's 10.2 patch —
+nothing new to correct). `bab-schema-check "12."` 4/4 clean, file-wide 145/145 clean, 0
+duplicate ids; `sw.js` cache bumped `bab-v18`->`bab-v19`; committed `5d7a09b`, pushed, live
+confirmed via `bab-ship-verify bab-v19 "12."`.
+
+**Next up: Phase 12 group 2, lessons 12.5-12.8** (computing every gradient from the deltas,
+a fully hand-traced 2-input/2-hidden/1-output backward pass, coding backprop in NumPy, the
+multi-layer training loop) — per Mike's explicit sizing preference, stop at group 1 this
+session and do NOT roll into group 2 even with budget to spare.
+
 ## Pending — next session(s)
 
-- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12's scope note +
-  title breakdown are done (above) but NO Phase 12 content is written
-  yet.** Next session: write Phase 12 content group by group, starting
-  with group 1 (12.1-12.4), following the same verification bar as every
-  prior phase (every numeric claim independently Python/NumPy-verified —
-  see backprop-specific note below — `bab-schema-check`, file-wide
-  duplicate-id check, `sw.js` cache version bump, commit + push,
-  `bab-ship-verify` confirming live). **Backprop-specific verification
-  note:** cross-check every hand-derived gradient against NumPy's
-  autodiff-free finite-difference check (perturb one weight by a small
-  epsilon, recompute loss, confirm the numerical slope matches the
-  analytic backprop gradient to several decimal places) — this is the
-  same numerical-derivative technique 11.4 already used, and it is the
-  standard "gradient check" sanity test for backprop specifically, worth
-  calling out explicitly in the lesson content itself, not just as an
-  authoring-time check. Phases 13-14 still have no lesson content yet —
-  only their phase titles show in the roadmap as locked/coming-soon. Per
-  Mike: build this out phase by phase across future sessions, not all at
-  once ("chained background builds through the day" per his 2026-08-25
-  ask).
+- **Phases 1-11 are all SHIPPED (141/141 lessons); Phase 12 group 1 (12.1-12.4) is now also
+  SHIPPED (above).** Next session: Phase 12 group 2 (12.5-12.8), following the same
+  verification bar as every prior phase (every numeric claim independently Python/NumPy-
+  verified — see backprop-specific note below — `bab-schema-check`, file-wide duplicate-id
+  check, `sw.js` cache version bump, commit + push, `bab-ship-verify` confirming live).
+  **Backprop-specific verification note:** cross-check every hand-derived gradient against
+  NumPy's autodiff-free finite-difference check (perturb one weight by a small epsilon,
+  recompute loss, confirm the numerical slope matches the analytic backprop gradient to
+  several decimal places) — this is the same numerical-derivative technique 11.4 already
+  used, and it is the standard "gradient check" sanity test for backprop specifically, worth
+  calling out explicitly in the lesson content itself, not just as an authoring-time check
+  (12.1-12.4 already did this for delta_output/delta_hidden — group 2's per-weight gradients
+  and 12.6's full hand-traced backward pass should do the same). Phases 13-14 still have no
+  lesson content yet — only their phase titles show in the roadmap as locked/coming-soon.
+  Per Mike: build this out phase by phase across future sessions, not all at once ("chained
+  background builds through the day" per his 2026-08-25 ask).
 - **Schema-check tool:** use `bab-schema-check [lesson-id-prefix]` (e.g.
   `bab-schema-check "9."`, or no argument to check every lesson in the
   file) BEFORE hand-rolling a Node `vm` sandbox to load `curriculum.js` —
