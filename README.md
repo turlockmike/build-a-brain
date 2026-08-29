@@ -112,6 +112,13 @@ automatically.
    `curriculum.js` yourself, that workaround is already saved in the tool.
    Separately re-verify every arithmetic/prose claim via actual Python
    execution (schema-check does not and cannot check correctness, only shape).
+   When a claim is an *exact* symbolic derivative/algebraic identity (not a
+   numeric approximation), cross-check it against SymPy's independent
+   symbolic differentiation/expansion in addition to (or instead of)
+   `numerical_derivative`-style finite-difference checks — numerical carries
+   an inherent epsilon of h-error, symbolic expansion is exact. Proven on
+   Phase 9's chain-rule lessons (2026-08-28): SymPy caught the same answers a
+   finite-difference check would, but with zero approximation error.
 4. `renderRoadmap()` in `app.js` needs no further change — it already unlocks
    any phase with matching `LESSONS` entries automatically.
 5. Bump the `CACHE` version string in `sw.js` (e.g. `bab-v6` → `bab-v7`) so
