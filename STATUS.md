@@ -1196,15 +1196,32 @@ phase-by-phase pacing.
   all 29 gradients, both finite-difference checks) was computed and verified in a standalone
   Python script before being written into the lesson content — not derived by mental math.
   `bab-schema-check` (both `"14."` and full-file) passed clean at 168 lessons, 0 duplicate
-  ids. `sw.js` cache bumped `bab-v31`->`bab-v32`. **Next session: Phase 14 content, group 3
-  (14.9-14.10, closing the phase)** — 14.9 (a NumPy training loop that actually trains the
-  capstone network on 14.3's 6 training examples using 14.5-14.8's now fully-derived loss/
-  gradient machinery) and 14.10 (evaluating the trained network on 14.3's 3 held-out test
-  examples using Phase 13's full toolkit — accuracy, confusion matrix, precision/recall/F1
-  adapted to 3 classes). This closes both halves of the ROADMAP title 14.1 named (BUILD +
-  EVALUATE) and closes Phase 14 itself. Watch for the same matrix-convention trap named
-  below if either lesson re-derives a prior lesson's numbers from stated weights rather than
-  training fresh.
+  ids. `sw.js` cache bumped `bab-v31`->`bab-v32`. **Phase 14 content group 3 SHIPPED
+  (2026-08-29, ACT stage) — 14.9-14.10 written into `curriculum.js` (170 lessons total
+  across Phases 1-14, Phase 14 content complete at 10/10):** 14.9 (training the capstone —
+  a NumPy training loop assembling 12.8's four-step shape with 14.5's summed K=3 loss and
+  14.6-14.8's backprop machinery; started from 14.8's exact initial weights so the loop's
+  first computed gradient was cross-checked against 14.8's hand-verified numbers and matched
+  to 4 decimals; 12.9's per-example convention, lr=0.5, 2000 epochs over 14.3's 6 training
+  examples; MSE fell approximately 0.8032->0.0008, no XOR-style plateau-then-cliff, honestly
+  reported as such; reaches 100% training accuracy (6/6) under this lesson's argmax
+  extension of 13.1's round-to-nearest rule) and 14.10 (evaluating the capstone — 14.9's
+  final weights scored, untouched, on 14.3's 3 held-out test examples: 2/3 correct
+  (approximately 66.7%), the same train/test gap 13.1 first showed, now on a 3-class task;
+  extends 13.2's confusion matrix to 3x3 and 13.3/13.9's precision/recall/F1 to K classes via
+  one-vs-rest; surfaces a genuine new edge case — class "7" is never predicted at all
+  (TP=0, FP=0), so its precision is mathematically UNDEFINED (0/0), not 0, the precision-side
+  companion to 13.3's recall-can-be-gamed warning). Every numeric claim across both lessons
+  (all gradients, the full MSE curve, all final weights, all 3 test forward passes, the
+  confusion matrix, every precision/recall/F1 value including the undefined case) was
+  computed and verified in a standalone Python/NumPy script before being written into the
+  lesson content, cross-checked against 14.8's own hand-computed gradients where applicable —
+  not derived by mental math. `bab-schema-check` (both `"14."` and full-file) passed clean at
+  170 lessons, 0 duplicate ids. `sw.js` cache bumped `bab-v32`->`bab-v33`. **This closes Phase
+  14 content at 10/10 (both ROADMAP halves, BUILD + EVALUATE).** Per Phase 13's own pattern,
+  a closure survey is the natural next-session task — deciding whether the course itself is
+  now complete (14 phases, matching the ROADMAP's original scope) or a Phase 15 gets scoped —
+  deliberately left as a follow-on decision, not forced into this same session.
   Once Phase 14 content lessons begin, follow the same
   verification bar as every prior phase — every
   worked example/practice/quiz numeric

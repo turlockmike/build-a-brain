@@ -3,9 +3,9 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), Phase 13
- * (9, closed at 13.1-13.9 — see STATUS.md), and Phase 14 (8 of 10 so far —
- * 14.1-14.8, groups 1+2 of the capstone's suggested 4+4+2 content groups;
- * 14.9-14.10 (group 3, phase-closing) pending, see STATUS.md) — 168 lessons total.
+ * (9, closed at 13.1-13.9 — see STATUS.md), and Phase 14 content complete
+ * at 10/10 (14.1-14.10 — closure survey, Phase 13's pattern, still pending;
+ * see STATUS.md) — 170 lessons total.
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -17731,6 +17731,221 @@ const LESSONS = [
         ],
         "answerIndex": 0,
         "explanation": "12.6 proved the five-step procedure was a general algorithm on a small, abstract network; this lesson proves that same procedure, with no new step, handles the capstone's actual multi-output, larger-input architecture correctly."
+      }
+    ]
+  },
+  {
+    "id": "14.9",
+    "number": 9,
+    "title": "Training the capstone network",
+    "objectives": [
+      "Assemble 12.8's four-step training-loop shape (forward, loss, backward, update) with 14.5's summed K=3 loss and 14.6-14.8's now fully-derived multi-output backprop machinery, and actually run it on the capstone's real 9/2/3 architecture",
+      "Start training from 14.8's exact hand-traced initial weights (not a fresh random draw), so the loop's very first computed gradient is directly checkable against 14.8's already hand-verified numbers",
+      "Follow 12.9's per-example convention (forward-loss-backward-update once per training example, in order) at lr=0.5 (unchanged since 11.5) across all 6 of 14.3's training examples, every epoch, and track dataset MSE (11.2's mean wrapped around 14.5's per-example sum) as training proceeds",
+      "Extend 13.1's round-to-nearest-of-0-or-1 correctness rule to K=3 outputs via argmax, and confirm the trained network reaches 100% training accuracy under that rule"
+    ],
+    "explanation": [
+      "12.8 already fixed the training loop's shape — repeat for a fixed number of epochs: forward pass, compute loss, compute gradients (backward pass), update every parameter by subtracting learning_rate times its gradient — and nothing about that SHAPE changes for the capstone. What's new is that, for the first time in this course, W_output is a genuine matrix rather than a vector: 12.7 noted that with exactly one output neuron, delta_hidden = (W_output.T @ delta_output) * sigmoid_derivative(z_hidden) \"reduces to elementwise multiplication by the weight vector,\" and that only \"with more than one output neuron this becomes a real matrix-vector product that performs the weighted SUM across output neurons automatically.\" The capstone's K=3 outputs (14.4) are where that parenthetical finally becomes real: W_output is a (3,2) matrix, delta_output is a length-3 vector, and W_output.T @ delta_output genuinely sums each hidden neuron's blame across all 3 output neurons — exactly 14.6's weighted-sum formula, now running as one matrix operation instead of 3 separate scalar terms.",
+      "Training starts from 14.8's exact initial weights (w_h1, w_h2, both output-layer rows and biases) — not a fresh random draw the way 12.9's XOR network started. Every epoch loops over all 6 of 14.3's training examples in a fixed order (1A, 1B, 0A, 0B, 7A, 7B), running 12.8's forward-loss-backward-update cycle once per example (12.9's per-example convention), for 2000 epochs at a learning rate of 0.5 — the same learning rate every training-loop lesson has used since 11.5.",
+      "Because training starts from 14.8's own weights, the loop's very first backward call (on example 1A, before any update has happened) must reproduce 14.8's hand-computed gradients exactly, and it does: dL/dwo1_1=0.1830, dL/dwo1_2=0.1347, dL/dwo2_1=-0.1428, dL/dwo2_2=-0.1051, dL/dwo3_1=0.1756, dL/dwo3_2=0.1293 — all six output-layer weight gradients from 14.8's hand-trace, reproduced to 4 decimal places by the NumPy loop before a single parameter has moved. The very first parameter update then follows directly: wo1_1 moves from 0.4 to 0.4 - 0.5(0.1830) = 0.3085.",
+      "Tracking dataset MSE (14.5's per-example sum of 3 squared errors, wrapped in 11.2's mean over all 6 examples) across training: epoch 0 (before any update) approximately 0.8032, epoch 100 approximately 0.0348, epoch 500 approximately 0.0037, epoch 1000 approximately 0.0017, epoch 2000 approximately 0.0008 — a steady, roughly monotonic decrease throughout. This is worth contrasting honestly with 12.9's XOR run, which sat nearly flat for hundreds of epochs before a sudden cliff: the capstone's loss shows no such plateau, most likely because its 3 pixel-grid classes are far more easily separated by a straight decision boundary than XOR's genuinely non-linear pattern — not every dataset produces the same loss-curve shape, and this lesson reports what actually happened rather than expecting 12.9's story to repeat.",
+      "By epoch 2000, every one of the 6 training examples classifies correctly under this lesson's extension of 13.1's rule: with K=1 output, 13.1 rounded p to whichever of 0 or 1 it was closer to; with K=3 outputs, there is no single number to round — instead, the predicted class is whichever output neuron has the HIGHEST probability (argmax of p), the natural generalization of \"closer to 1 than to 0\" once there is more than one output slot to compare. Final predictions: 1A p=[0.0127,0.9805,0.0126]->\"1\" correct, 1B p=[0.0142,0.9812,0.0107]->\"1\" correct, 0A p=[0.9823,0.0179,0.0100]->\"0\" correct, 0B p=[0.9783,0.0165,0.0135]->\"0\" correct, 7A p=[0.0163,0.0169,0.9793]->\"7\" correct, 7B p=[0.0167,0.0159,0.9801]->\"7\" correct — training accuracy 6/6, 100%. These are the FINAL trained weights; no further training happens after this lesson, and 14.10 evaluates these exact weights on the untouched test set.",
+      "Verification note: every gradient, weight, and loss value in this lesson was computed in a standalone Python/NumPy script (matrix forward/backward pass, per-example SGD update, exactly as described). The loop's first-epoch gradients on example 1A were cross-checked against 14.8's independently hand-computed and finite-difference-verified values and matched to 4 decimal places; two additional first-update gradients (one output-layer weight, one active-pixel hidden-layer weight) were independently re-confirmed by a fresh finite-difference check in this same script, both matching the analytic gradient to within 1e-6."
+    ],
+    "example": {
+      "problem": "Starting from 14.8's exact initial weights, run the training loop's very first backward call on training example 1A (digit \"1\" variant A), confirm the computed gradient dL/dwo1_1 matches 14.8's hand-computed value, then compute wo1_1's new value after one update at lr=0.5.",
+      "steps": [
+        "Forward pass on 1A with 14.8's initial weights reproduces 14.8's own forward pass exactly: h approximately [0.6792,0.5], p approximately [0.5428,0.5710,0.5178].",
+        "delta_output (14.8's step 3, unchanged): approximately [0.2694,-0.2102,0.2586].",
+        "dL/dwo1_1 = delta_output1 x h1 = 0.2694 x 0.6792, approximately 0.1830 — matching 14.8's hand-computed dL/dwo1_1 exactly.",
+        "Update: wo1_1_new = wo1_1_old - lr x gradient = 0.4 - 0.5 x 0.1830 = 0.3085."
+      ],
+      "answer": "wo1_1 moves from 0.4 to 0.3085 after the loop's first per-example update. The loop's first computed gradient reproduces 14.8's hand-computed 0.1830 exactly, confirming the NumPy training loop runs the identical arithmetic 14.8 already verified by hand, not a different computation that only happens to look similar."
+    },
+    "practice": [
+      {
+        "problem": "After training completes (2000 epochs, lr=0.5), what is the network's training accuracy under the argmax rule, and how many of the 6 training examples get it right?",
+        "solution": "100% — all 6 of the 6 training examples (1A, 1B, 0A, 0B, 7A, 7B) round correctly to their true class under argmax by epoch 2000."
+      },
+      {
+        "problem": "Why does this lesson start training from 14.8's exact hand-traced weights instead of a fresh random draw, unlike 12.9's XOR lesson which started from random weights?",
+        "solution": "Starting from 14.8's already-verified weights lets the training loop's very first computed gradient be checked directly against 14.8's independently hand-computed and finite-difference-verified numbers — an extra correctness check a random start could never offer, since there would be no prior hand-trace on those exact weights to compare against."
+      },
+      {
+        "problem": "The dataset MSE falls from approximately 0.8032 at epoch 0 to approximately 0.0008 at epoch 2000. Does a low training MSE, by itself, tell you how well the network will do on data it has never seen?",
+        "solution": "No — 13.1 already established that training performance (low training loss, high training accuracy) only shows how well the network fit the examples it trained ON. Only a held-out test set, never touched during training, can answer how well the network generalizes — exactly what 14.10 evaluates next."
+      },
+      {
+        "problem": "This lesson says W_output.T @ delta_output performs a REAL matrix-vector product across multiple output neurons for the first time in the course. Why didn't any network before the capstone exercise that case?",
+        "solution": "Every network before the capstone had exactly K=1 output neuron, so W_output was only a length-hidden_width VECTOR (as 12.7 stated explicitly), and W_output.T @ delta_output reduced to elementwise multiplication by a single scalar delta. The capstone's K=3 outputs are the first time W_output is a genuine (3,2) matrix, so that same line of code now performs an actual weighted sum across 3 output neurons' deltas."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What is the ONE thing about the training loop's SHAPE that changes for the capstone, compared to 12.8's single-output loop?",
+        "choices": [
+          "Nothing about the loop's shape changes — only the sizes of the tensors involved (W_output genuinely a (3,2) matrix instead of a length-2 vector, delta_output genuinely length-3), which 14.5-14.8 already worked out",
+          "A sixth step (renormalization) must be added after the update step",
+          "The learning rate must be reduced for networks with more than one output",
+          "Biases are no longer updated for multi-output networks"
+        ],
+        "answerIndex": 0,
+        "explanation": "12.8's four-step loop (forward, loss, backward, update) is unchanged; only the shapes of the weight tensors involved grew, exactly as 14.5-14.8 already derived."
+      },
+      {
+        "type": "short",
+        "question": "What rule extends 13.1's round-to-nearest-0-or-1 correctness rule to the capstone's K=3 outputs?",
+        "answer": "argmax — the predicted class is whichever output neuron has the highest probability",
+        "acceptable": [
+          "argmax of p",
+          "whichever output has the highest probability",
+          "pick the class with the largest p value"
+        ],
+        "explanation": "With more than one output slot, there is no single number to round to 0 or 1; the natural generalization is to predict whichever class's output neuron has the highest probability."
+      },
+      {
+        "type": "mc",
+        "question": "The training loop's very first computed gradient for dL/dwo1_1, before any update, comes out to approximately 0.1830. What confirms this value is correct?",
+        "choices": [
+          "It exactly matches 14.8's independently hand-computed and finite-difference-verified value for the same quantity, on the same initial weights and the same training example",
+          "It is the smallest gradient among all 29 parameters",
+          "NumPy printed no error message",
+          "It matches the final trained value of wo1_1 after 2000 epochs"
+        ],
+        "answerIndex": 0,
+        "explanation": "14.8 already hand-computed and finite-difference-checked dL/dwo1_1=0.1830 on these exact initial weights and this exact example; the training loop's first backward call reproducing that number is what confirms it, not any property of the number itself."
+      },
+      {
+        "type": "short",
+        "question": "What is the capstone network's training accuracy after 2000 epochs, under the argmax rule?",
+        "answer": "100% (6/6)",
+        "acceptable": [
+          "6 out of 6",
+          "100 percent",
+          "6/6"
+        ],
+        "explanation": "All 6 training examples (1A, 1B, 0A, 0B, 7A, 7B) classify to their correct digit class by epoch 2000."
+      },
+      {
+        "type": "mc",
+        "question": "Does the capstone's training MSE curve show 12.9's XOR-style \"long flat stretch then a sudden cliff\" pattern?",
+        "choices": [
+          "No — the capstone's MSE decreases steadily from the start, unlike XOR's plateau-then-cliff, most likely because the capstone's 3 pixel-grid classes are more easily separated than XOR's non-linear boundary",
+          "Yes, an identical flat-then-cliff pattern appears at the same epoch",
+          "The capstone's MSE increases steadily throughout training",
+          "The capstone's MSE oscillates and never converges"
+        ],
+        "answerIndex": 0,
+        "explanation": "The checkpointed MSE values (0.8032, 0.0348, 0.0037, 0.0017, 0.0008 at epochs 0, 100, 500, 1000, 2000) show steady decline with no plateau — a genuinely different loss-curve shape from 12.9's XOR run, reported honestly rather than forced to match."
+      }
+    ]
+  },
+  {
+    "id": "14.10",
+    "number": 10,
+    "title": "Evaluating the capstone: confusion matrix, precision, recall, and F1 for 3 classes",
+    "objectives": [
+      "Evaluate 14.9's final trained weights (no further training) on 14.3's 3 held-out test examples, using 14.9's argmax rule to score each prediction",
+      "Extend 13.2's binary confusion matrix to K=3 classes: a 3x3 table of true-class rows against predicted-class columns",
+      "Extend 13.3's precision/recall and 13.9's F1 from binary TP/FP/FN/TN to K classes via one-vs-rest: for each class, compute its own TP/FP/FN/TN by treating that class as \"positive\" and every other class as \"negative\", exactly as before, just applied once per class",
+      "Encounter and correctly handle the case where a class the network never predicts leaves its own precision score mathematically undefined (0/0), the precision-side companion to 13.3's recall-can-be-gamed warning"
+    ],
+    "explanation": [
+      "14.9 finished training and reported 100% TRAINING accuracy. This lesson runs 13.1's exact test-set discipline — score the SAME final weights, with no further updates, on data never used during training — using 14.3's 3 held-out test examples (1T, 0T, 7T), one per class, decided before any training happened. The class order stays fixed at (\"0\",\"1\",\"7\") per 14.4 throughout.",
+      "Forward-passing each test example through 14.9's final weights: 1T (true \"1\") gives p approximately [0.0480,0.9425,0.0101], argmax picks class \"1\" — correct. 0T (true \"0\") gives p approximately [0.9726,0.0163,0.0175], argmax picks class \"0\" — correct. 7T (true \"7\") gives p approximately [0.0083,0.9711,0.0293], argmax picks class \"1\" (its highest slot) — WRONG, the network mistakes the \"7\" test example for a \"1\". Test accuracy is therefore 2/3, approximately 66.7% — lower than 14.9's 100% training accuracy on the exact same weights, the same train-vs-test accuracy gap 13.1 first demonstrated on a binary task (100% train vs 75% test), now showing up on the capstone's genuinely multi-class task too.",
+      "Arranging all 3 results into a 3x3 confusion matrix (rows = true class, columns = predicted class, order \"0\",\"1\",\"7\"): row \"0\" is [1,0,0], row \"1\" is [0,1,0], row \"7\" is [0,1,0]. Every row sums to 1 since 14.3 built exactly one test example per class. The single off-diagonal entry, at true-row \"7\"/predicted-column \"1\", is the one mistake — a 3x3 matrix visually locates WHICH pair of classes gets confused (here, \"7\" for \"1\"), not just that a prediction was wrong, exactly the \"which kind of wrong\" payoff 13.2 promised for the binary case.",
+      "Precision and recall extend to K=3 classes by one-vs-rest: for each class, treat it as \"positive\" and every other class as \"negative\", then count 13.2's same 4 buckets. Class \"0\": TP=1, FP=0, FN=0, TN=2 -> precision=1.0, recall=1.0, F1=1.0 (a perfect score on this test set). Class \"1\": TP=1 (1T correctly caught), FP=1 (7T wrongly called \"1\"), FN=0, TN=1 -> precision=1/(1+1)=0.5, recall=1/(1+0)=1.0, F1=2(0.5)(1.0)/(0.5+1.0) approximately 0.667 — class \"1\"'s recall is perfect (it catches the one real \"1\") but its precision suffers because the network ALSO mislabels an unrelated example (the \"7\" test case) as \"1\", the same precision-vs-recall split 13.3's spam filter and classifier-A/B examples illustrated for binary classifiers.",
+      "Class \"7\" surfaces a genuine edge case: TP=0 (no correct \"7\" predictions), FP=0 (nothing was ever WRONGLY called \"7\" either — the network simply never predicts class \"7\" for any test example), FN=1 (7T's true label missed), TN=2. Recall_7 = 0/(0+1) = 0.0 — the network never once correctly identifies a \"7\". Precision_7 = 0/(0+0), which is mathematically UNDEFINED, not 0: precision's denominator TP+FP is 0 because the network never predicts \"7\" at all, so there is no \"predicted-7\" column to compute a fraction over. This is precision's own companion to 13.3's earlier warning — 13.3 showed recall can be gamed for free by always predicting positive; here, a class that is NEVER predicted leaves its own precision undefined rather than a computable 0, and reporting it as 0 would wrongly imply the network sometimes guessed \"7\" and simply got it wrong, when in fact it never guessed \"7\" at all.",
+      "Verification note: 14.9's final trained weights, all 3 test-example forward passes, the confusion matrix, and every precision/recall/F1 value (including the undefined 0/0 case) were computed directly in a standalone Python/NumPy script and cross-checked by hand against the 3x3 matrix — no value was estimated."
+    ],
+    "example": {
+      "problem": "Using 14.9's final trained weights, evaluate all 3 of 14.3's held-out test examples, build the 3x3 confusion matrix, and compute class \"1\"'s precision and recall.",
+      "steps": [
+        "Forward pass 1T (true \"1\"): p approximately [0.0480,0.9425,0.0101] -> argmax class \"1\" -> correct.",
+        "Forward pass 0T (true \"0\"): p approximately [0.9726,0.0163,0.0175] -> argmax class \"0\" -> correct.",
+        "Forward pass 7T (true \"7\"): p approximately [0.0083,0.9711,0.0293] -> argmax class \"1\" -> WRONG (true class is \"7\").",
+        "Confusion matrix (rows=true 0/1/7, cols=predicted 0/1/7): [[1,0,0],[0,1,0],[0,1,0]].",
+        "Class \"1\" one-vs-rest counts: TP=1 (1T), FP=1 (7T wrongly predicted as \"1\"), FN=0, TN=1 (0T correctly not predicted as \"1\").",
+        "precision_1 = TP/(TP+FP) = 1/(1+1) = 0.5. recall_1 = TP/(TP+FN) = 1/(1+0) = 1.0."
+      ],
+      "answer": "Confusion matrix: [[1,0,0],[0,1,0],[0,1,0]] (rows/cols in order 0,1,7), giving overall test accuracy 2/3. Class \"1\" scores precision=0.5, recall=1.0 (F1 approximately 0.667) — perfect at catching real \"1\"s but half its \"this is a 1\" calls are wrong, because it also misclassifies the \"7\" test example as \"1\"."
+    },
+    "practice": [
+      {
+        "problem": "Class \"0\" scores a perfect precision=1.0, recall=1.0, F1=1.0 on this test set. Does that mean the network has perfectly learned to recognize the digit \"0\" in general?",
+        "solution": "No — this is measured on exactly ONE test example (14.3's test set has only 1 example per class). A perfect score on a single test point is evidence, not proof of general accuracy; a larger test set could reveal mistakes this tiny one has no chance to catch, the same caveat that applies to every small test set 13.1-13.9 used."
+      },
+      {
+        "problem": "Why is class \"7\"'s precision reported as UNDEFINED rather than as 0?",
+        "solution": "Precision = TP/(TP+FP), and for class \"7\" both TP and FP are 0 — the network never predicts \"7\" for any test example, correctly or incorrectly — so the denominator itself is 0, giving a genuine 0/0 with no defined value. This differs from a case where FP>0 and TP=0, which WOULD correctly compute to precision=0 (some wrong \"7\" guesses were made, just no right ones)."
+      },
+      {
+        "problem": "What is the capstone's overall test accuracy, and how does it compare to 14.9's training accuracy?",
+        "solution": "Test accuracy is 2/3, approximately 66.7%, versus 14.9's training accuracy of 6/6, 100% — the same train-vs-test accuracy gap 13.1 first demonstrated on a binary task, now showing up on the capstone's 3-class task as well."
+      },
+      {
+        "problem": "The one test mistake (7T predicted as \"1\") shows up as a single off-diagonal entry in the confusion matrix, at true-row \"7\"/predicted-column \"1\". In general, what would a perfectly correct classifier's confusion matrix look like?",
+        "solution": "Every count would lie on the diagonal (each row's single count would fall in the column matching its own class) and every off-diagonal cell would be 0 — exactly what classes \"0\" and \"1\"'s diagonal entries already show here, broken only by the one true-\"7\"/predicted-\"1\" mistake."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How is a K=3 confusion matrix's one-vs-rest TP/FP/FN/TN computed for a given class, compared to 13.2's binary version?",
+        "choices": [
+          "Identically — treat that one class as \"positive\" and every other class as \"negative\", then count the same 4 buckets 13.2 defined, repeated once per class",
+          "A completely new formula is needed for 3 or more classes",
+          "Only TP and TN can be computed for more than 2 classes",
+          "The confusion matrix must be converted to a binary matrix first"
+        ],
+        "answerIndex": 0,
+        "explanation": "One-vs-rest reuses 13.2's exact TP/FP/FN/TN definitions, just applied once per class with that class treated as \"positive\" and all others lumped together as \"negative\"."
+      },
+      {
+        "type": "short",
+        "question": "What is the capstone's confusion-matrix entry at true row \"7\", predicted column \"1\"?",
+        "answer": "1",
+        "acceptable": [
+          "1",
+          "one"
+        ],
+        "explanation": "The 7T test example, whose true class is \"7\", gets predicted as class \"1\" — the single mistake among the 3 test examples."
+      },
+      {
+        "type": "mc",
+        "question": "Why is class \"7\"'s precision undefined rather than a low number like 0.1?",
+        "choices": [
+          "Because the network made zero predictions of class \"7\" at all on this test set (TP=0 AND FP=0), so precision's denominator TP+FP is 0 — a genuine 0/0, not just a small fraction",
+          "Because class \"7\" only has 1 test example, and precision requires at least 2",
+          "Because the network's weights for class \"7\" are all exactly 0",
+          "Because 13.3's formula does not apply to more than 2 classes"
+        ],
+        "answerIndex": 0,
+        "explanation": "TP+FP=0 for class \"7\" because the network never predicts \"7\" for any test example, right or wrong — the fraction 0/0 has no defined value, unlike a genuinely low but computable precision."
+      },
+      {
+        "type": "short",
+        "question": "What is the capstone's overall test accuracy on its 3 held-out examples?",
+        "answer": "2/3 (approximately 66.7%)",
+        "acceptable": [
+          "66.7%",
+          "2 out of 3",
+          "0.667"
+        ],
+        "explanation": "2 of the 3 test examples (1T and 0T) classify correctly; 7T is misclassified as \"1\", giving 2/3 approximately 66.7% overall accuracy."
+      },
+      {
+        "type": "mc",
+        "question": "What does class \"1\"'s precision of 0.5 (against its recall of 1.0) reveal about the network's mistake pattern on this test set?",
+        "choices": [
+          "The network catches the one real \"1\" test example (perfect recall) but also wrongly labels an unrelated example (the \"7\" test case) as \"1\", so half of its \"this is a 1\" predictions are wrong (imperfect precision) — the same precision/recall split 13.3's spam filter and classifier-A/B examples illustrated for binary classifiers",
+          "The network never correctly identifies class \"1\" at all",
+          "The network's recall and precision formulas were computed incorrectly",
+          "Class \"1\" has no false positives"
+        ],
+        "answerIndex": 0,
+        "explanation": "Precision=0.5 with recall=1.0 for class \"1\" means every real \"1\" was caught, but exactly one of the network's two \"this is a 1\" calls (on 1T and on the misclassified 7T) was wrong — precision and recall together pinpoint that specific failure pattern, a single number could not."
       }
     ]
   }
