@@ -1,11 +1,11 @@
 /* Build a Brain — curriculum data.
- * ROADMAP: all 14 phases (title only for phases 14 — content not written yet).
+ * ROADMAP: all 14 phases, all with full LESSONS content now underway.
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
- * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), and
- * Phase 13 (9 of ~10 so far — 13.1-13.9; remaining lessons pending, see
- * STATUS.md) — 160 lessons total. Phase 14 will get its own LESSONS
- * entries in a future session — see README.md "Adding a new phase".
+ * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), Phase 13
+ * (9, closed at 13.1-13.9 — see STATUS.md), and Phase 14 (4 of 10 so far —
+ * 14.1-14.4, group 1 of the capstone's suggested 4+4+2 content groups;
+ * 14.5-14.10 pending, see STATUS.md) — 164 lessons total.
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -16881,6 +16881,432 @@ const LESSONS = [
           "solves the awkwardness of comparing classifiers on two numbers at once by folding them into one"
         ],
         "explanation": "13.3 closed by warning that precision and recall must be reported together, since either alone can be gamed (e.g. predict-everything-positive for free recall). F1 folds both into one number that inherits that same protection, making classifiers directly rankable on a single score."
+      }
+    ]
+  },
+  {
+    "id": "14.1",
+    "number": 1,
+    "title": "Framing the capstone",
+    "objectives": [
+      "State the ROADMAP's Phase 14 title (`data/curriculum.js:28`) as two halves — BUILD a real multi-class classifier, and properly EVALUATE it — and identify which earlier phase supplies each",
+      "Inventory every piece already in hand: the forward pass (Phase 10), loss and gradient descent (Phase 11), backpropagation (Phase 12), and the full evaluation toolkit (Phase 13)",
+      "Name the two genuinely NEW pieces this phase adds — representing an image as a numeric input vector, and an output layer with more than one neuron",
+      "Explain why the capstone deliberately keeps every output neuron an independent sigmoid scored by squared error, rather than introducing softmax or cross-entropy loss"
+    ],
+    "explanation": [
+      "The ROADMAP's own words for Phase 14 (`data/curriculum.js:28`) are: \"code a tiny neural net from scratch, no frameworks, that recognizes handwritten digits, then properly evaluate it.\" That single sentence is really two separate jobs. The first half — BUILD a real classifier — means constructing a network that takes a handwritten digit and decides which digit it is, out of more than the yes/no decisions every earlier phase used. The second half — properly EVALUATE it — means not stopping at \"it ran and produced numbers,\" but applying Phase 13's entire toolkit (accuracy, a confusion matrix, precision/recall, F1, cross-validation) the way 13.1 through 13.9 built it, to find out whether the trained network's predictions are actually trustworthy.",
+      "Nothing about doing either half is new in kind — this lesson's job is just to name exactly which earlier phase already supplies which piece, the same stock-taking move 10.10 and 12.10 each made before their own end-of-phase mini-projects, extended here one level up to the WHOLE course. The forward pass — turning an input into a prediction by multiplying by weights, adding biases, and applying an activation function layer by layer — is Phase 10's. Measuring how wrong a prediction is, and using that error to nudge every weight in the direction that reduces it, is Phase 11's loss-and-gradient-descent machinery. Doing that nudging correctly across MULTIPLE layers, so a hidden layer's weights get credit or blame for the final output's error, is Phase 12's backpropagation. And judging whether the whole trained network actually works, rather than just memorized its own training data, is Phase 13's evaluation toolkit in full: accuracy (13.1), a confusion matrix (13.2), precision and recall (13.3), overfitting vs. underfitting (13.4), why data size and quality matter (13.5), regularization (13.6), early stopping (13.7), leave-one-out cross-validation (13.8), and F1 (13.9).",
+      "Given all of that is already built, exactly two pieces are genuinely new to this phase, and both come from the fact that a handwritten digit is a PICTURE, not a short list of hand-picked numbers like every prior lesson's inputs (test scores, gym stats, XOR bits). The first new piece is turning a picture into numbers at all — a small grid of pixel values, flattened into the same kind of flat feature vector every earlier lesson's forward pass already expects (covered next, in 14.2). The second new piece is an output layer with more than one neuron, because \"which digit is this\" has more than two possible answers, unlike every earlier lesson's single yes/no output — and that idea was already foreshadowed explicitly back in 10.6: \"a network sorting an example into one of 5 categories would need exactly 5 outputs, one per category.\" This phase cashes that foreshadowing in for real (covered in 14.4).",
+      "One thing this phase deliberately does NOT add: softmax or cross-entropy loss, the tools a real digit-recognition system would typically reach for with a multi-neuron output. Every output neuron in this capstone stays an independent sigmoid (10.4's activation function), and the loss stays squared error (11.1's loss function) — just applied to K output neurons and summed instead of 1 (worked out in 14.5-14.6). That choice keeps this phase's throughline intact: everything the course already taught, applied to a real-shaped problem, rather than new machinery introduced for its own sake. The network also keeps exactly ONE hidden layer throughout (12.x's proven architecture) — depth was never this course's pedagogical point, and it isn't here either."
+    ],
+    "example": {
+      "problem": "For each of the following capstone requirements, name the earlier phase (10, 11, 12, or 13) that already supplies it, or say \"NEW to Phase 14\" if it isn't covered by any earlier phase: (a) computing a prediction by multiplying inputs by weights and applying sigmoid, (b) measuring how wrong a prediction is and nudging weights to reduce that error, (c) turning a picture into a numeric input vector, (d) correctly assigning blame to a hidden layer's weights for the final output's error, (e) checking whether the trained network's predictions hold up on data it never trained on.",
+      "steps": [
+        "(a) Computing a prediction via weights, biases, and an activation function is the forward pass — Phase 10.",
+        "(b) Measuring error and nudging weights to reduce it is loss and gradient descent — Phase 11.",
+        "(c) Turning a picture into a numeric input vector is not covered by any earlier phase — every prior dataset's features were already numbers (test scores, gym stats, XOR bits) — so this is NEW to Phase 14.",
+        "(d) Assigning blame to a hidden layer's weights for the final output's error is backpropagation — Phase 12 (specifically 12.3-12.4's delta_hidden).",
+        "(e) Checking whether predictions hold up on unseen data is the evaluation toolkit — Phase 13 (13.1's train/test accuracy gap onward)."
+      ],
+      "answer": "(a) Phase 10, (b) Phase 11, (c) NEW to Phase 14, (d) Phase 12, (e) Phase 13 — only turning a picture into numbers is genuinely new; the other four capstone requirements are direct reuses of machinery this course already built."
+    },
+    "practice": [
+      {
+        "problem": "Besides turning a picture into numbers, what is the SECOND genuinely new piece Phase 14 introduces, and which earlier lesson already foreshadowed it?",
+        "solution": "An output layer with more than one neuron — one neuron per digit class instead of a single yes/no output. Lesson 10.6 already foreshadowed this exact idea: \"a network sorting an example into one of 5 categories would need exactly 5 outputs, one per category.\""
+      },
+      {
+        "problem": "Why does the capstone keep every output neuron an independent sigmoid scored by squared error, instead of using softmax and cross-entropy loss the way a typical real-world digit classifier would?",
+        "solution": "Softmax and cross-entropy would be genuinely new machinery this course never built up to. Keeping sigmoid (10.4) and squared error (11.1) — just applied per output neuron and summed across K of them — lets the capstone reuse 100% of the course's existing tools on a real-shaped multi-class problem, matching the phase's throughline of applying what's already known rather than introducing new machinery for its own sake."
+      },
+      {
+        "problem": "Does the capstone network use more than one hidden layer? Why or why not?",
+        "solution": "No — exactly one hidden layer, the same architecture 12.x already used throughout. Depth (multiple hidden layers) was never this course's pedagogical focus, so the capstone doesn't introduce it just because the problem is now multi-class; only the output layer's width changes, not the network's depth."
+      },
+      {
+        "problem": "A classmate says \"Phase 14 is where backpropagation gets invented.\" Correct this statement using this lesson's inventory.",
+        "solution": "Backpropagation was already built in Phase 12 (12.1-12.10) and reused as-is by 13.x's evaluation examples. Phase 14 doesn't invent backpropagation — it extends 12.4's delta_hidden formula to sum over K output deltas instead of 1 (covered in 14.6), which is a direct generalization of existing machinery, not a new invention."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "According to this lesson's inventory, which phase already supplies the capstone's forward pass?",
+        "choices": [
+          "Phase 10",
+          "Phase 11",
+          "Phase 12",
+          "Phase 13"
+        ],
+        "answerIndex": 0,
+        "explanation": "The forward pass — computing a prediction via weights, biases, and an activation function layer by layer — is Phase 10's contribution, reused as-is by the capstone."
+      },
+      {
+        "type": "short",
+        "question": "Name the ONE piece of the capstone pipeline that no earlier phase already supplies.",
+        "answer": "turning a picture (handwritten digit) into a numeric input vector",
+        "acceptable": [
+          "representing an image as numbers",
+          "converting the pixel grid into a feature vector",
+          "image-as-numbers input representation"
+        ],
+        "explanation": "Every earlier phase's inputs were already numbers (test scores, gym stats, XOR bits); converting a picture into a numeric vector in the first place is genuinely new to Phase 14 (covered in 14.2)."
+      },
+      {
+        "type": "mc",
+        "question": "Which lesson already foreshadowed the capstone's multi-neuron output layer, and what did it say?",
+        "choices": [
+          "10.6 — \"a network sorting an example into one of 5 categories would need exactly 5 outputs, one per category\"",
+          "11.1 — \"loss functions measure how wrong a prediction is\"",
+          "12.4 — \"delta_hidden is a weighted sum of every output delta\"",
+          "13.2 — \"a confusion matrix breaks down every prediction outcome\""
+        ],
+        "answerIndex": 0,
+        "explanation": "10.6, while explaining that an output layer's size is fixed by the task rather than a design choice, gave exactly this example: a 5-category sort needs 5 outputs, one per category — the capstone cashes this quote in directly for its own K classes."
+      },
+      {
+        "type": "mc",
+        "question": "Why does the capstone deliberately avoid softmax and cross-entropy loss?",
+        "choices": [
+          "Because sigmoid and squared error, applied per output neuron and summed, let the whole capstone reuse machinery this course already built, rather than introducing new tools for their own sake",
+          "Because softmax and cross-entropy don't work with more than one output neuron",
+          "Because sigmoid is mathematically identical to softmax",
+          "Because Phase 13's evaluation toolkit requires squared error specifically"
+        ],
+        "answerIndex": 0,
+        "explanation": "The capstone's whole design principle is applying everything already taught to a real-shaped problem. Sigmoid (10.4) and squared error (11.1), extended to K output neurons, achieve the multi-class goal without requiring any function this course never introduced."
+      },
+      {
+        "type": "short",
+        "question": "How many hidden layers does the capstone network use, and why?",
+        "answer": "one, because depth was never this course's pedagogical focus and the capstone reuses 12.x's proven single-hidden-layer architecture",
+        "acceptable": [
+          "1 - the same single hidden layer used throughout phase 12",
+          "just one hidden layer, matching earlier phases",
+          "one, since only the output width changes for the capstone, not the depth"
+        ],
+        "explanation": "The capstone keeps exactly one hidden layer, identical to every Phase 12 network. Becoming multi-class changes the output layer's width (14.4), not the network's depth."
+      }
+    ]
+  },
+  {
+    "id": "14.2",
+    "number": 2,
+    "title": "Turning a picture into numbers",
+    "objectives": [
+      "Represent a tiny handwritten digit as a small 2D grid of pixel values (filled = 1, blank = 0)",
+      "Flatten a 2D pixel grid into a 1D feature vector in row-major order, extending 7.1's nested-loop pattern and 6.9's row-as-vector idea to image data specifically",
+      "Compute the flat index of a given (row, col) pixel using flat_index = row * num_columns + col",
+      "Explain why this flattened vector is exactly the kind of input every earlier phase's forward pass already expects"
+    ],
+    "explanation": [
+      "Every dataset this course has used so far already arrived as numbers — test scores, gym stats, XOR bits. A handwritten digit doesn't start that way; it starts as a PICTURE. This lesson's whole job is converting a picture into the one thing every forward pass since Phase 10 has ever needed: a flat list of numbers, one per input. The capstone stays tiny and synthetic rather than using real scanned digit images (this course's worked examples have stayed to single-digit example counts throughout, e.g. 12.10's 3-example training set) — so a handwritten digit here is represented as a small grid of pixels, each pixel either filled (1) or blank (0). A 3-row by 3-column grid is plenty to sketch a recognizable stroke pattern at this scale.",
+      "Here are the three capstone digit shapes this phase will use throughout, each as a 3x3 grid of 0s and 1s (1 = filled, 0 = blank), read top row first: digit \"1\" is [[0,1,0],[0,1,0],[0,1,0]] — a single vertical stroke down the middle column. Digit \"0\" is [[1,1,1],[1,0,1],[1,1,1]] — a hollow ring, filled all around the border with a blank center. Digit \"7\" is [[1,1,1],[0,0,1],[0,1,0]] — a filled top row, a stroke down the right column, then a short diagonal foot. This is exactly the 2D-grid shape lesson 6.9 called a matrix and lesson 7.1 called a 2D list — each grid here has 3 rows and 3 columns, and each row, read on its own, is a vector (6.9), or a Python inner list (7.1), of 3 pixel values.",
+      "Flattening means taking that 2D grid and laying it out as a single 1D vector, so it can be fed into a network the same way every earlier lesson's feature vector was. The flattening order matters and must stay IDENTICAL for every example in the dataset: this lesson uses row-major order, the same order 7.1's nested loop already visits a 2D list in — the outer loop moves down the rows, the inner loop moves across each row's columns, so row 0's 3 values come first, then row 1's 3 values, then row 2's. Flattening digit \"1\"'s grid, [[0,1,0],[0,1,0],[0,1,0]], row by row gives the 9-element vector [0,1,0, 0,1,0, 0,1,0] — 3 rows of 3 pixels each become one vector of 9 numbers, in the exact same spirit as 6.9's own example of a matrix's rows being read out as vectors.",
+      "Given a pixel's original (row, col) position in the grid, its position in the flattened vector (its flat index) is flat_index = row * num_columns + col — multiply the row number by how many columns each row has (3, here), then add the column number, both zero-indexed exactly as 7.1's table[row][col] indexing already was. For example, the pixel at row 1, column 1 (the grid's exact center) lands at flat_index = 1*3 + 1 = 4 — the 5th entry (index 4) of the flattened vector. Checking against digit \"1\"'s flattened vector [0,1,0, 0,1,0, 0,1,0], index 4 is indeed 1, matching the center pixel of the original grid, which was filled.",
+      "Verification note: every flat index and flattened vector in this lesson was computed directly in Python from the stated 3x3 grids using flat_index = row*3+col and a row-major list comprehension, and cross-checked pixel-by-pixel against the original grids — no mental flattening was used."
+    ],
+    "example": {
+      "problem": "Digit \"0\"'s grid is [[1,1,1],[1,0,1],[1,1,1]]. Flatten it into a 1D vector using row-major order, and state the flat index and value of the pixel at row 2, column 0.",
+      "steps": [
+        "Row-major flattening visits row 0 first: [1,1,1]. Then row 1: [1,0,1]. Then row 2: [1,1,1].",
+        "Concatenating all three rows in order gives the flattened vector: [1,1,1, 1,0,1, 1,1,1].",
+        "For the pixel at row 2, column 0: flat_index = row*num_columns + col = 2*3 + 0 = 6.",
+        "Checking index 6 of the flattened vector [1,1,1, 1,0,1, 1,1,1] (0-indexed): the 7th entry is 1.",
+        "This matches the original grid: row 2 of [[1,1,1],[1,0,1],[1,1,1]] is [1,1,1], and column 0 of that row is 1 (filled)."
+      ],
+      "answer": "Digit \"0\" flattens to [1,1,1, 1,0,1, 1,1,1]. The pixel at row 2, column 0 lands at flat_index 6, with value 1 (filled), matching the original grid."
+    },
+    "practice": [
+      {
+        "problem": "Digit \"7\"'s grid is [[1,1,1],[0,0,1],[0,1,0]]. Flatten it into a 1D vector using row-major order.",
+        "solution": "Row 0 = [1,1,1], row 1 = [0,0,1], row 2 = [0,1,0]. Concatenated in order: [1,1,1, 0,0,1, 0,1,0]."
+      },
+      {
+        "problem": "Using digit \"1\"'s grid ([[0,1,0],[0,1,0],[0,1,0]]), what is the flat index of the pixel at row 0, column 1, and what value is stored there?",
+        "solution": "flat_index = 0*3 + 1 = 1. The flattened vector is [0,1,0, 0,1,0, 0,1,0]; index 1 is 1, matching row 0's middle pixel, which is filled."
+      },
+      {
+        "problem": "Two students flatten the same 3x3 grid, but one uses row-major order (row 0's pixels first, then row 1, then row 2) and the other uses column-major order (column 0's pixels first, then column 1, then column 2). Would their two flattened vectors, in general, be the same list of numbers? What does this mean for a dataset of many flattened grids?",
+        "solution": "No — for most grids the two orders produce different flattened vectors (only a grid that's symmetric under transpose would happen to match). This means the SAME flattening order must be used for every single example in a dataset; mixing row-major flattening for some examples and column-major for others would scramble which flat-vector position corresponds to which actual pixel, breaking the network's ability to learn anything consistent."
+      },
+      {
+        "problem": "A grid has 4 rows and 4 columns (16 pixels total) instead of 3x3. Using the same flat_index = row*num_columns + col formula, what is the flat index of the pixel at row 3, column 2?",
+        "solution": "flat_index = 3*4 + 2 = 14. With a 4-column grid, num_columns = 4, not 3, so the formula's multiplier changes to match the grid's actual width."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "This lesson flattens a 2D pixel grid into a 1D vector using which order?",
+        "choices": [
+          "Column-major (all of column 0's pixels, then column 1's, and so on)",
+          "Row-major (all of row 0's pixels, then row 1's, and so on) — the same order 7.1's nested loop already visits a 2D list in",
+          "Random order, since order doesn't matter for a neural network",
+          "Diagonal order, starting from the top-left corner"
+        ],
+        "answerIndex": 1,
+        "explanation": "Row-major order lays out row 0's pixels first, then row 1's, then row 2's — exactly the order 7.1's outer-then-inner nested loop already visits a 2D list, applied here to pixel data."
+      },
+      {
+        "type": "short",
+        "question": "What is the formula for a pixel's flat index, given its row and column in a grid with num_columns columns?",
+        "answer": "flat_index = row * num_columns + col",
+        "acceptable": [
+          "row*num_columns+col",
+          "row times num_columns plus col",
+          "(row * columns) + col"
+        ],
+        "explanation": "Multiplying the row number by how many columns each row has, then adding the column number, gives the pixel's position once all rows are concatenated in row-major order."
+      },
+      {
+        "type": "mc",
+        "question": "Digit \"1\"'s grid is [[0,1,0],[0,1,0],[0,1,0]]. What is its row-major flattened vector?",
+        "choices": [
+          "[0,0,0, 1,1,1, 0,0,0]",
+          "[0,1,0, 0,1,0, 0,1,0]",
+          "[0,1,0,0,1,0,0,1]",
+          "[1,1,1, 0,0,0, 1,1,1]"
+        ],
+        "answerIndex": 1,
+        "explanation": "Row 0 is [0,1,0], row 1 is [0,1,0], row 2 is [0,1,0]; concatenating all three in order gives [0,1,0, 0,1,0, 0,1,0], 9 values total."
+      },
+      {
+        "type": "short",
+        "question": "Why must every example in a dataset use the exact same flattening order?",
+        "answer": "so that each position in the flattened vector always corresponds to the same actual pixel location across every example, letting the network learn a consistent relationship between input positions and the labels",
+        "acceptable": [
+          "so the same flat index always means the same pixel for every example",
+          "inconsistent flattening would scramble which vector position maps to which pixel",
+          "to keep every example's features aligned to the same meaning, the same way every dataset column must mean the same thing across all rows"
+        ],
+        "explanation": "This mirrors 5.1's dataset rule that every row must share the same feature columns with the same meaning — here, flat index 4 must mean the grid's center pixel for every single example, which only holds if every example is flattened the same way."
+      },
+      {
+        "type": "mc",
+        "question": "In a 3x3 grid, what is the flat index of the pixel at row 1, column 2?",
+        "choices": [
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "answerIndex": 2,
+        "explanation": "flat_index = row*num_columns + col = 1*3 + 2 = 5."
+      }
+    ]
+  },
+  {
+    "id": "14.3",
+    "number": 3,
+    "title": "Building the capstone dataset",
+    "objectives": [
+      "Hand-design a small labeled dataset of pixel-grid digit examples across 3 digit classes (\"0\", \"1\", \"7\"), reusing 14.2's flattening",
+      "Build a genuinely separate held-out test set from the start — one example per class, distinct from every training example — rather than retrofitting it after training the way 13.1 first had to",
+      "State the final dataset's shape: 6 training examples (2 per class) and 3 test examples (1 per class), 9 total",
+      "Verify, by direct comparison, that no test example's flattened vector is identical to any training example's flattened vector"
+    ],
+    "explanation": [
+      "13.1 built its first-ever test set only AFTER a network had already been trained on all the data it had — it had to retrofit 4 new points as a test set because none had been held out from the start. This lesson does the opposite, deliberately, per 5.11's train/test intuition: the held-out test rows are decided and set aside BEFORE any training happens, so there is no chance of the network (or the lesson author) accidentally using a test example while shaping the dataset.",
+      "The capstone uses 3 digit classes: \"0\", \"1\", and \"7\", each as a 3x3 pixel grid per 14.2. Real handwriting varies even for the same digit, so each class gets 2 slightly different TRAINING variants, both flattened using 14.2's row-major order. Digit \"1\": variant A (the canonical stroke) is [[0,1,0],[0,1,0],[0,1,0]] -> flattened [0,1,0,0,1,0,0,1,0]; variant B (a small foot added at the bottom-left) is [[0,1,0],[0,1,0],[1,1,0]] -> flattened [0,1,0,0,1,0,1,1,0]. Digit \"0\": variant A (the full ring) is [[1,1,1],[1,0,1],[1,1,1]] -> flattened [1,1,1,1,0,1,1,1,1]; variant B (a small gap in the bottom-left of the ring) is [[1,1,1],[1,0,1],[0,1,1]] -> flattened [1,1,1,1,0,1,0,1,1]. Digit \"7\": variant A (foot centered) is [[1,1,1],[0,0,1],[0,1,0]] -> flattened [1,1,1,0,0,1,0,1,0]; variant B (foot directly under the vertical stroke) is [[1,1,1],[0,0,1],[0,0,1]] -> flattened [1,1,1,0,0,1,0,0,1]. That's 6 training examples, 2 per class.",
+      "The 3 TEST examples — one per class, decided at the same time as the training variants above, before any training runs — are each a THIRD variation, genuinely different from both of that class's training variants: digit \"1\" test is [[0,1,0],[1,1,0],[0,1,0]] -> flattened [0,1,0,1,1,0,0,1,0] (a tick on the middle-left instead of a bottom-left foot). Digit \"0\" test is [[1,1,1],[1,0,1],[1,1,0]] -> flattened [1,1,1,1,0,1,1,1,0] (the ring's gap on the bottom-right instead of bottom-left). Digit \"7\" test is [[1,1,0],[0,1,0],[0,1,0]] -> flattened [1,1,0,0,1,0,0,1,0] (the top-right pixel blank and the vertical stroke down the middle column instead of the right column).",
+      "Every one of these 9 flattened vectors is unique — no two examples, whether both training, both test, or one of each, share the exact same 9 numbers, confirmed by direct pairwise comparison of all 9 vectors. In particular, none of the 3 test vectors matches any of the 6 training vectors, which is the property that actually matters: a test set that happened to duplicate a training example wouldn't be testing anything new, the same failure 5.11 warned against with overlapping train/test rows. The final capstone dataset, then, has 9 total labeled examples across 3 classes: 6 for training (used to fit the network in 14.9) and 3 held out for testing (untouched until 14.10's evaluation).",
+      "Verification note: all 9 grids above were flattened using 14.2's exact row-major formula in Python, and every pairwise comparison among the 9 resulting 9-element vectors was checked programmatically for equality — no vector matched any other, and specifically no test vector matched any training vector, confirmed by code rather than by eye."
+    ],
+    "example": {
+      "problem": "Confirm that digit \"1\"'s test example ([[0,1,0],[1,1,0],[0,1,0]]) is genuinely distinct from both of digit \"1\"'s training variants (A: [[0,1,0],[0,1,0],[0,1,0]], B: [[0,1,0],[0,1,0],[1,1,0]]), by comparing their flattened vectors.",
+      "steps": [
+        "Flatten variant A (row-major): [0,1,0, 0,1,0, 0,1,0].",
+        "Flatten variant B (row-major): [0,1,0, 0,1,0, 1,1,0].",
+        "Flatten the test example (row-major): [0,1,0, 1,1,0, 0,1,0].",
+        "Compare test vs. A position by position: they differ only at index 3 (1 vs 0) — not identical.",
+        "Compare test vs. B position by position: they differ at index 3 (1 vs 0) and index 6 (0 vs 1) — not identical.",
+        "Since the test vector matches neither training vector exactly, it qualifies as a genuinely held-out example for digit \"1\"."
+      ],
+      "answer": "The test example's flattened vector, [0,1,0,1,1,0,0,1,0], differs from variant A's [0,1,0,0,1,0,0,1,0] at 1 position (index 3) and from variant B's [0,1,0,0,1,0,1,1,0] at 2 positions (indices 3 and 6) — it matches neither exactly, confirming it is a genuinely new example the training variants never covered."
+    },
+    "practice": [
+      {
+        "problem": "Flatten digit \"0\"'s test grid, [[1,1,1],[1,0,1],[1,1,0]], using row-major order, and confirm it does not exactly match digit \"0\"'s training variant A, [[1,1,1],[1,0,1],[1,1,1]] (flattened: [1,1,1,1,0,1,1,1,1]).",
+        "solution": "Flattening the test grid row-major: [1,1,1, 1,0,1, 1,1,0]. Comparing to variant A's [1,1,1,1,0,1,1,1,1]: every position matches except the very last one (0 vs 1). Since one position differs, the vectors are not identical, so the test example is genuinely distinct from variant A."
+      },
+      {
+        "problem": "How many total labeled examples does the finished capstone dataset have, and how are they split between training and test?",
+        "solution": "9 total: 6 training examples (2 per class across 3 classes) and 3 test examples (1 per class), matching 5.11's requirement that training and test sets be non-overlapping and both drawn from the same overall dataset."
+      },
+      {
+        "problem": "Why was the digit \"7\" test example ([[1,1,0],[0,1,0],[0,1,0]]) deliberately built to have its vertical stroke down the MIDDLE column, when both of digit \"7\"'s training variants have their stroke down the RIGHT column?",
+        "solution": "Making the test example structurally different from both training variants (not just a copy with one pixel toggled at random) ensures the test set genuinely represents handwriting variation the network hasn't been shown, rather than a near-duplicate of a training example that would make the held-out test artificially easy."
+      },
+      {
+        "problem": "Suppose, by mistake, digit \"1\"'s test grid had been built as an exact copy of training variant A. What would be wrong with using that as the test example?",
+        "solution": "An exact copy would mean the test example isn't independent evidence at all — the network would already have been trained directly on those exact pixel values, so scoring well on it would only show the network memorized that one example, not that it generalizes. This is the same overlap problem 5.11 warned about: training and test rows must be non-overlapping for the test set to mean anything."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Why does this lesson decide the test examples at the SAME time as the training examples, before any training happens, rather than picking them afterward?",
+        "choices": [
+          "To avoid 13.1's original mistake of retrofitting a test set after training, and to guarantee the test rows can't be accidentally shaped by anything learned during training",
+          "Because test examples must always be created before training examples, as a fixed rule of neural networks",
+          "It makes no difference when the test set is decided, as long as it exists eventually",
+          "Because the network needs the test set's labels during training to compute gradients"
+        ],
+        "answerIndex": 0,
+        "explanation": "13.1 had to retrofit 4 test points only after already training on everything it had. Deciding the capstone's test examples up front, before training, guarantees they were never used to shape the training process, matching 5.11's train/test intuition from the start."
+      },
+      {
+        "type": "short",
+        "question": "How many training examples and how many test examples does the finished capstone dataset have?",
+        "answer": "6 training examples and 3 test examples",
+        "acceptable": [
+          "6 train, 3 test",
+          "6 and 3",
+          "6 training, 3 test, 9 total"
+        ],
+        "explanation": "2 training variants per class across 3 classes gives 6 training examples; 1 held-out test example per class gives 3 test examples."
+      },
+      {
+        "type": "mc",
+        "question": "What property was directly verified about the 3 test examples relative to the 6 training examples?",
+        "choices": [
+          "No test example's flattened vector is identical to any training example's flattened vector",
+          "Every test example has more filled pixels than every training example",
+          "The test examples use a different grid size than the training examples",
+          "The test examples were flattened in a different order than the training examples"
+        ],
+        "answerIndex": 0,
+        "explanation": "All 9 flattened vectors were pairwise compared in Python; none matched, and specifically no test vector duplicated any training vector — the property that actually makes the test set an independent check."
+      },
+      {
+        "type": "short",
+        "question": "In one sentence, why would it be a problem if a test example turned out to be an exact copy of a training example?",
+        "answer": "the network would already have trained directly on that example's exact values, so it wouldn't be testing generalization at all — just memorization of that same example",
+        "acceptable": [
+          "it would no longer be independent evidence, since the network was already trained on those exact numbers",
+          "an overlapping row can't test whether the pattern generalizes, since the pattern was built from that same row",
+          "it defeats the point of a held-out test, the same overlap problem 5.11 warned about"
+        ],
+        "explanation": "5.11 established that training and test sets must be non-overlapping for the test set to serve as an independent check; a duplicated example would let the network appear to succeed by memorization rather than genuine generalization."
+      },
+      {
+        "type": "mc",
+        "question": "How many digit classes does the capstone dataset cover, and which ones?",
+        "choices": [
+          "3 classes: \"0\", \"1\", and \"7\"",
+          "10 classes, one for every digit 0-9",
+          "2 classes: \"0\" and \"1\" only",
+          "5 classes, matching 10.6's foreshadowing example"
+        ],
+        "answerIndex": 0,
+        "explanation": "The capstone deliberately stays to a handful of digit classes rather than all 10 real digits, matching this course's tiny-dataset style throughout — 3 classes (\"0\", \"1\", \"7\"), each with 2 training variants and 1 held-out test variant."
+      }
+    ]
+  },
+  {
+    "id": "14.4",
+    "number": 4,
+    "title": "From one output to many",
+    "objectives": [
+      "Define one-hot encoding: representing a class label as a vector with a 1 in the position of the true class and 0 everywhere else",
+      "One-hot encode all 3 of the capstone's digit classes using a fixed class order",
+      "Size the capstone's output layer at exactly K = 3 neurons, one per class, directly cashing in 10.6's own foreshadowing quote",
+      "Distinguish a one-hot TARGET vector (14.4, one per label) from a flattened INPUT vector (14.2, one per example) — both are vectors of numbers, but they answer different questions"
+    ],
+    "explanation": [
+      "10.6 already named the rule this lesson cashes in: \"a network sorting an example into one of 5 categories would need exactly 5 outputs, one per category\" — the output layer's size is fixed by the TASK, not chosen by the designer, the same way 10.6 fixed the input layer's size to the dataset's feature count. The capstone's task is sorting a digit into one of 3 classes (\"0\", \"1\", \"7\" per 14.3), so its output layer needs exactly K = 3 neurons, one per class. This is not a design choice, any more than 10.2's XOR network's single output was a design choice — it is read directly off how many classes the task has.",
+      "But every network built so far compared its single output against a single number target (0 or 1). With 3 output neurons, the network needs a target that also has 3 numbers, one matching up with each output neuron — and a class label like \"7\" isn't a number at all yet. One-hot encoding solves this: pick a fixed order for the classes, then represent a label as a vector of length K with a 1 in the position matching that label's class, and 0 in every other position. Using the class order (\"0\", \"1\", \"7\") -> (position 0, 1, 2): the label \"0\" one-hot encodes to [1,0,0], the label \"1\" one-hot encodes to [0,1,0], and the label \"7\" one-hot encodes to [0,0,1]. Exactly one entry is 1 (marking the true class) and every other entry is 0 — hence \"one-hot.\"",
+      "Applying this to 14.3's dataset: every training and test example's label becomes a length-3 one-hot vector using this same fixed order. Digit \"1\"'s training variant A and B, and its test example, all carry the target [0,1,0] — the specific pixel pattern differs between variants (14.3), but the target vector is identical for every example labeled \"1\", because one-hot encoding depends only on the class, not on which particular pixel pattern represents it. Once training begins (14.9), output neuron 0 is trained toward the first entry of each example's one-hot target, output neuron 1 toward the second entry, and output neuron 2 toward the third — each one still an independent sigmoid (10.4) scored by squared error (11.1) against its own single target number, exactly as 14.1 established. No new activation function or loss is needed; only the NUMBER of output neurons and targets has grown, from 1 to K.",
+      "It is worth being precise about which vector is which, since this phase now has two different 9-and-3-length lists of numbers floating around: 14.2's flattened INPUT vector (9 numbers, one per pixel, describing what the digit LOOKS like) and this lesson's one-hot TARGET vector (3 numbers, one per class, describing what the digit IS). They are never the same length by coincidence and never interchangeable — the input vector feeds INTO the network, while the one-hot target vector is what the OUTPUT layer is being trained to reproduce. 14.7 will fix the hidden layer's width, which (per 10.1's shape rule) then fixes W_output's shape as (3 x hidden_width) — 3 rows because the output layer has exactly 3 neurons, fixed by this lesson, no matter what hidden width gets chosen.",
+      "Verification note: this lesson makes no gradient or trained-weight claim, so the applicable check is exact enumeration rather than a finite-difference check — all 3 one-hot vectors above, and their application to all 9 of 14.3's examples, were verified directly in Python against the fixed class order (\"0\", \"1\", \"7\")."
+    ],
+    "example": {
+      "problem": "Using the fixed class order (\"0\", \"1\", \"7\") -> (position 0, 1, 2), one-hot encode the label \"7\", and state the capstone's output layer size and what each of its 3 neurons is being trained toward for an example labeled \"7\".",
+      "steps": [
+        "The label \"7\" is at position 2 in the fixed class order (\"0\"=0, \"1\"=1, \"7\"=2).",
+        "One-hot encoding places a 1 at position 2 and 0 everywhere else in a length-3 vector: [0,0,1].",
+        "The output layer size is K = 3, fixed by the task (3 classes), per 10.6's rule that output size is fixed by the task, not a design choice.",
+        "For an example labeled \"7\", output neuron 0's target is the one-hot vector's entry 0, which is 0; output neuron 1's target is entry 1, which is 0; output neuron 2's target is entry 2, which is 1."
+      ],
+      "answer": "\"7\" one-hot encodes to [0,0,1]. The output layer has exactly 3 neurons (fixed by the 3-class task); for a \"7\"-labeled example, neurons 0 and 1 are trained toward target 0, and neuron 2 is trained toward target 1."
+    },
+    "practice": [
+      {
+        "problem": "One-hot encode the label \"0\" using the fixed class order (\"0\", \"1\", \"7\") -> (position 0, 1, 2).",
+        "solution": "\"0\" is at position 0, so its one-hot vector is [1,0,0] — a 1 in position 0, 0 elsewhere."
+      },
+      {
+        "problem": "Digit \"1\"'s training variant A and training variant B (from 14.3) have different pixel patterns. Do they have the same one-hot target vector? Why or why not?",
+        "solution": "Yes — both are labeled \"1\", and one-hot encoding depends only on the class label, not on the specific pixel pattern. Both variant A and variant B carry the target [0,1,0], even though their flattened INPUT vectors (14.2) differ."
+      },
+      {
+        "problem": "If a 4th digit class, \"3\", were added to the capstone dataset, what would need to change about the one-hot vectors and the output layer size?",
+        "solution": "The one-hot vectors would need to grow from length 3 to length 4 (one position per class, now 4 classes), and the output layer would need to grow from 3 neurons to 4, one per class — per 10.6's rule that output size is fixed by the number of classes the task has, not chosen independently of the data."
+      },
+      {
+        "problem": "Explain the difference between 14.2's flattened input vector and this lesson's one-hot target vector, for a single digit \"1\" example.",
+        "solution": "The flattened input vector (14.2) has 9 numbers, one per pixel, and describes what that specific digit example LOOKS like (its pixel pattern) — it feeds INTO the network. The one-hot target vector (14.4) has 3 numbers, one per class, and describes what that example IS (its class label) — it is what the output layer is trained to reproduce. They have different lengths (9 vs. 3) and serve opposite roles (input vs. target)."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "What determines the capstone's output layer size, per 10.6's rule cashed in by this lesson?",
+        "choices": [
+          "The number of pixels in the input grid",
+          "The number of digit classes the task must sort between (K = 3 here)",
+          "The hidden layer's width, chosen in a later lesson",
+          "It is a free design choice, same as hidden layer width"
+        ],
+        "answerIndex": 1,
+        "explanation": "10.6 established that output layer size is fixed by the task, not a design choice — a task sorting into K categories needs exactly K outputs. The capstone sorts into 3 digit classes, so its output layer has exactly 3 neurons."
+      },
+      {
+        "type": "short",
+        "question": "Using the fixed class order (\"0\", \"1\", \"7\") -> (0, 1, 2), what is the one-hot encoding of the label \"1\"?",
+        "answer": "[0,1,0]",
+        "acceptable": [
+          "0,1,0",
+          "[0, 1, 0]",
+          "a 1 in the middle position, 0s elsewhere"
+        ],
+        "explanation": "\"1\" is at position 1 in the fixed class order, so its one-hot vector has a 1 at position 1 and 0 everywhere else: [0,1,0]."
+      },
+      {
+        "type": "mc",
+        "question": "What is the key difference between 14.2's flattened input vector and this lesson's one-hot target vector?",
+        "choices": [
+          "They are the same vector, just computed at different times",
+          "The input vector (9 numbers) describes what a digit example looks like and feeds into the network; the target vector (3 numbers) describes what class it belongs to and is what the output layer is trained toward",
+          "The target vector is always longer than the input vector",
+          "Only the target vector uses 0s and 1s; the input vector never does"
+        ],
+        "answerIndex": 1,
+        "explanation": "The two vectors serve opposite roles and have different, unrelated lengths (9 pixels vs. 3 classes) — confusing them would mean feeding a target into the network or trying to train toward pixel values, neither of which is correct."
+      },
+      {
+        "type": "short",
+        "question": "Do digit \"1\"'s two different training pixel patterns (variant A and variant B from 14.3) have the same one-hot target vector? Answer yes or no and say why.",
+        "answer": "yes, because one-hot encoding depends only on the class label (\"1\"), not on which specific pixel pattern represents that class",
+        "acceptable": [
+          "yes - both are labeled 1, so both get target [0,1,0] regardless of pixel differences",
+          "yes, one-hot encoding only depends on the label, not the input pixels"
+        ],
+        "explanation": "One-hot encoding is a function of the class label alone. Since both variants share the label \"1\", both carry the identical target [0,1,0], even though their flattened input vectors differ."
+      },
+      {
+        "type": "mc",
+        "question": "If a 4th class were added to the capstone (making 4 total classes), what would happen to the one-hot vector length and the output layer size?",
+        "choices": [
+          "Both would grow from 3 to 4",
+          "Only the output layer size would grow; one-hot vectors would stay length 3",
+          "Only the one-hot vector length would grow; the output layer would stay at 3 neurons",
+          "Neither would change, since one-hot encoding always uses exactly 3 positions"
+        ],
+        "answerIndex": 0,
+        "explanation": "One-hot vector length and output layer size are both tied directly to the number of classes (K) — adding a 4th class means K becomes 4, so both the one-hot vectors and the output layer grow from length/size 3 to 4."
       }
     ]
   }

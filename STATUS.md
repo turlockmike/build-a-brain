@@ -1038,6 +1038,106 @@ Phase 13 is functionally complete at 9/~10 and ready to close, or Phase 14 (caps
 begin its own scoping/title-breakdown session. Continuing one lesson/session at a time per
 Mike's phase-by-phase pacing.
 
+## Phase 14 (Capstone) — title breakdown (kickoff, no content yet)
+
+Full 10-lesson title breakdown (matching the granularity of Phases 9-13's
+title lists, building only on Phase 1-13 content + earlier Phase 14 lessons
+per the README's progressive-dependency rule). **No lessons written this
+session — this is the scope-note + breakdown session that Phase 9/10/11/12
+each did before their own content-writing sessions**, per STATUS.md's own
+"Pending" note above (now superseded by this section) that explicitly
+warned against writing 14.1 content directly from the one-line ROADMAP
+title without this pass first.
+
+**Scope note:** the ROADMAP title (`data/curriculum.js:28`) is "code a tiny
+neural net from scratch, no frameworks, that recognizes handwritten digits,
+then properly evaluate it" — two halves: BUILD (a real multi-class
+classifier) and EVALUATE (properly, per Phase 13's whole toolkit). Phase 14
+introduces exactly two genuinely new pieces and reuses everything else
+verbatim: (1) turning a small hand-drawn digit into a flat numeric input
+vector (a tiny synthetic pixel grid, not real MNIST images — this course's
+worked examples have stayed to single-digit example counts throughout,
+e.g. 12.10's 3-example training set, so the capstone dataset stays
+similarly tiny by design, not as a shortcut) and (2) an output LAYER of
+more than one neuron, one per digit class, directly cashing in lesson
+10.6's own foreshadowing ("a network sorting an example into one of 5
+categories would need exactly 5 outputs, one per category"). Deliberately
+NOT introduced: softmax or cross-entropy loss. Every output neuron stays
+an independent sigmoid (10.4) scored by squared error, exactly as every
+prior phase used — 14.5/14.6 below show this generalizes cleanly to K
+outputs with no new function, keeping the phase's throughline "everything
+you already know, applied to a real-shaped problem" rather than adding new
+machinery for its own sake. The network keeps exactly ONE hidden layer
+(12.x's proven architecture) — depth was never the pedagogical point in
+this course and isn't the point here either.
+
+1. **14.1 — Framing the capstone** — naming the two halves of the ROADMAP
+   title (build a real classifier; properly evaluate it) and inventorying
+   every piece already in hand to do both: the forward pass (Phase 10),
+   loss/gradient descent (Phase 11), backprop (Phase 12), and the
+   evaluation toolkit (Phase 13) — then naming the two genuinely NEW
+   pieces this phase adds (image-as-numbers input, multi-class output),
+   extending 10.10/12.10's own "everything so far, combined" framing one
+   level up to the whole course.
+2. **14.2 — Turning a picture into numbers** — representing a tiny
+   handwritten digit as a small grid of pixel values (e.g. filled=1,
+   blank=0) and flattening the 2D grid into a 1D feature vector, the same
+   flattening idea 7.x's array-thinking and 6.9's matrix-row-as-example
+   already use, applied here to image data specifically for the first
+   time.
+3. **14.3 — Building the capstone dataset** — hand-designing a small set
+   of labeled tiny pixel-grid digit examples across a handful of digit
+   classes, WITH a genuinely separate held-out test set built in from the
+   start (5.x's train/test-split intuition), rather than retrofitted after
+   the fact the way 13.1 first had to.
+4. **14.4 — From one output to many** — one-hot encoding a multi-class
+   label (a target vector like [1,0,0] instead of a single 0/1 target) and
+   sizing the output layer at exactly K neurons, one per class, directly
+   cashing in 10.6's own foreshadowing quote about multi-category output
+   sizing.
+5. **14.5 — Loss with multiple outputs** — extending 11.2's Mean Squared
+   Error to sum squared error across all K output neurons per example
+   (still the same sigmoid, same squared-error idea from 11.1, just
+   applied per output slot and summed — no new function).
+6. **14.6 — Backpropagation with multiple outputs** — extending
+   12.3/12.4's delta_output/delta_hidden derivation to K output neurons
+   sharing one hidden layer: each hidden neuron's delta becomes a weighted
+   sum over ALL K output deltas (not just 1), a direct generalization of
+   12.4's "weighted sum of every output delta the hidden neuron feeds."
+7. **14.7 — Choosing the capstone architecture** — applying 10.6's
+   input-size-is-fixed-by-the-data / output-size-is-fixed-by-the-task /
+   width-is-a-choice rules concretely: input size = 14.2's pixel count,
+   output size = 14.4's K classes, then picking (and justifying) a hidden
+   width.
+8. **14.8 — Hand-tracing one full forward + backward pass** — a fully
+   worked tiny example on the capstone's actual input/output sizes,
+   mirroring 12.6's hand-trace pattern, including a finite-difference
+   gradient check per the precedent set in every Phase 12/13 lesson that
+   introduced a new gradient term.
+9. **14.9 — Coding and training the capstone network in NumPy** —
+   vectorizing 14.8's per-example computation (7.x/10.8/12.7's NumPy
+   patterns), wrapping it in 11.9's epoch loop, training on 14.3's
+   dataset, and tracking loss falling across epochs the way every
+   end-of-phase mini-project since 11.10 has.
+10. **14.10 — Properly evaluating the capstone classifier** — the payoff
+    half of the ROADMAP title: applying Phase 13's full toolkit to the
+    trained network's actual predictions on 14.3's held-out test
+    set — train-vs-test accuracy (13.1), a genuinely multi-class confusion
+    matrix (13.2, now bigger than the 2x2 case every prior lesson used),
+    per-class precision/recall (13.3) and F1 (13.9), and — given how
+    necessarily tiny the training set is — leave-one-out cross-validation
+    (13.8) — closing both the phase and the course's own throughline that
+    training performance alone is never sufficient evidence a model
+    works.
+
+Suggested content-writing groups (mirroring Phase 11's 4+4+2 / Phase 12's
+4+4+2 split): group 1 = 14.1-14.4 (framing, input representation, dataset,
+multi-class output), group 2 = 14.5-14.8 (loss, backprop, and architecture
+for K outputs, hand-traced), group 3 = 14.9-14.10 (the payoff: coding +
+training the capstone, then properly evaluating it). Not started this
+session — next session's job, one lesson/session at a time per Mike's
+phase-by-phase pacing.
+
 ## Pending — next session(s)
 
 - **Phase 13 closure survey (done 2026-08-29, ACT stage):** Phase 13 is CLOSED at 9
@@ -1051,12 +1151,36 @@ Mike's phase-by-phase pacing.
   size/quality=13.5, regularization=13.6 — with 13.7 (early stopping), 13.8
   (cross-validation), 13.9 (F1) as natural evaluation-topic extensions beyond the title's
   minimum, not gaps. No 10th lesson is missing; ~10 in the phase-open estimate was always
-  approximate. **Next session: Phase 14 (the capstone — a from-scratch handwritten-digit
-  classifier, properly evaluated) needs its own scoping/title-breakdown session before any
-  content lesson** (same pattern Phase 9-12 each used: a scoping pass that breaks the
-  ROADMAP title into a lesson-by-lesson list before 14.1 gets written) — do not write 14.1
-  content directly from the one-line ROADMAP title without that breakdown first.
-  Once Phase 14's lesson list exists and content lessons begin, follow the same
+  approximate. **Phase 14 title breakdown done (2026-08-29, ACT stage) — see "Phase 14
+  (Capstone) — title breakdown" section above:** 10 lesson titles (14.1-14.10), scope note
+  (tiny synthetic pixel-grid digits, multi-output sigmoid layer per 10.6's own
+  foreshadowing, no softmax/cross-entropy — every new piece is a direct generalization of
+  already-taught machinery), and suggested 4+4+2 content groups. **Phase 14 content group 1
+  SHIPPED (2026-08-29, ACT stage) — 14.1-14.4 written into `curriculum.js` (164 lessons
+  total across Phases 1-14):** 14.1 (framing — the two-halves ROADMAP split, an inventory
+  of which earlier phase supplies each capstone piece, and why softmax/cross-entropy stay
+  out), 14.2 (turning a picture into numbers — a 3x3 pixel grid per digit, row-major
+  flattening via flat_index = row*num_columns+col, extending 6.9/7.1), 14.3 (the capstone
+  dataset itself — 3 classes ("0","1","7"), 2 hand-designed training variants per class (6
+  training examples) plus 1 genuinely distinct held-out test example per class (3 test
+  examples), built before any training the way 13.1 originally could NOT, all 9 flattened
+  vectors confirmed pairwise-unique in Python with zero train/test overlap), and 14.4
+  (one-hot encoding the 3 classes -> output layer fixed at K=3 neurons, cashing in 10.6's
+  foreshadowing quote verbatim, with an explicit input-vector-vs-target-vector distinction
+  since this phase now has two different vectors of numbers in play). Every numeric claim
+  (all 9 flattened pixel vectors, every flat-index computation, all pairwise vector
+  comparisons, all 3 one-hot vectors) was independently computed and verified in Python
+  before being written into the lesson content, not derived by mental math or eyeballing —
+  `bab-schema-check` (both `"14."` and full-file) passed clean at 164 lessons, 0 duplicate
+  ids. `sw.js` cache bumped `bab-v30`->`bab-v31`. **Next session: Phase 14 content, group 2
+  (14.5-14.8)** — loss with multiple outputs, backprop with multiple outputs, choosing the
+  capstone architecture (input size from 14.2, output size=3 from 14.4, hidden width TBD),
+  and a full hand-traced forward+backward pass on the capstone's actual sizes, each with a
+  finite-difference gradient check per every prior Phase 12/13 lesson introducing a new
+  gradient term. Do not skip straight to 14.9's NumPy training loop without 14.7's
+  architecture choice and 14.8's hand-trace first — same "breakdown before content" pacing
+  this file already used for 14.1-14.4 itself.
+  Once Phase 14 content lessons begin, follow the same
   verification bar as every prior phase — every
   worked example/practice/quiz numeric
   claim independently Python/NumPy-verified before being written into the lesson (not mental
