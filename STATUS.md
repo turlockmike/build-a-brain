@@ -1,12 +1,14 @@
 # Build a Brain — Status
 
-**Status:** Phases 1-12 SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
+**Status:** ALL 14 PHASES SHIPPED (Phase 1: 2026-08-24, Phase 2: 2026-08-25,
 Phase 3: 2026-08-25, Phase 4: 2026-08-27, Phase 5: 2026-08-27, Phase 6:
 2026-08-27, Phase 7: 2026-08-27, Phase 8: 2026-08-27, Phase 9: 2026-08-28,
 Phase 10: 2026-08-29, Phase 11: 2026-08-29, Phase 12: 2026-08-29, Phase 13:
-2026-08-29) — live on GitHub Pages. Phase 13 (Evaluation & Overfitting) CLOSED
-at 9 lessons (13.1-13.9) 2026-08-29 — see "Phase 13" sections below and the
-closure survey note in Pending. (This header
+2026-08-29, Phase 14: 2026-08-29) — live on GitHub Pages, 170/170 lessons.
+Phase 13 (Evaluation & Overfitting) CLOSED at 9 lessons (13.1-13.9)
+2026-08-29. Phase 14 (Capstone) CLOSED at 10 lessons (14.1-14.10) 2026-08-29.
+**Course closure survey (2026-08-29): COMPLETE AT 14 PHASES, no Phase 15** —
+see "Course closure survey" section below. (This header
 line drifts easily — see the ship-log sections below and git log for the
 authoritative per-phase state; trust those over this summary on conflict.)
 
@@ -1137,6 +1139,33 @@ for K outputs, hand-traced), group 3 = 14.9-14.10 (the payoff: coding +
 training the capstone, then properly evaluating it). Not started this
 session — next session's job, one lesson/session at a time per Mike's
 phase-by-phase pacing.
+
+## Course closure survey (2026-08-29, ACT stage) — COMPLETE AT 14 PHASES
+
+**Verdict: the course is COMPLETE at 14 phases — no Phase 15 gets scoped.**
+Ran the same survey-against-the-ROADMAP pattern the Phase 13 closure survey
+used below (grep the actual data structure, not this file's prose, which has
+drifted stale before): `data/curriculum.js`'s `ROADMAP` array (lines 14-28)
+defines exactly 14 phases, numbered 1-14, with no 15th entry anywhere in the
+file or referenced in `README.md` (which independently states the course's
+scope as "14 phases" in its own "What this is" section, not merely as a
+progress count). Phase 14 is itself titled "Capstone — code a tiny neural net
+from scratch, no frameworks, that recognizes handwritten digits, then
+properly evaluate it" — a capstone is definitionally the closing phase of a
+progressive-dependency curriculum, not a phase after which further phases are
+expected. Phase 14's own content (10/10, 14.1-14.10, shipped in the prior
+session per the "Phase 14 content group 3" entry below) already delivers
+both halves of that title's own scope: BUILD (a real 9-input/2-hidden/3-output
+multi-class classifier, trained from scratch via 14.9) and EVALUATE (14.10
+extends Phase 13's full toolkit — accuracy, confusion matrix, per-class
+precision/recall/F1, the undefined-precision edge case — to the K-class
+case). No sub-topic of Phase 14's own scope note (image-as-numbers input,
+multi-class output, K-output loss/backprop, capstone architecture,
+hand-traced forward+backward, NumPy training, proper multi-class evaluation)
+is left uncovered. 170/170 lessons across all 14 phases; every phase 1-14
+independently SHIPPED per its own section above. Dashboard row + linked
+detail file updated same session (see below) to reflect course-complete
+status, not "next phase pending."
 
 ## Pending — next session(s)
 
