@@ -1172,14 +1172,39 @@ phase-by-phase pacing.
   comparisons, all 3 one-hot vectors) was independently computed and verified in Python
   before being written into the lesson content, not derived by mental math or eyeballing —
   `bab-schema-check` (both `"14."` and full-file) passed clean at 164 lessons, 0 duplicate
-  ids. `sw.js` cache bumped `bab-v30`->`bab-v31`. **Next session: Phase 14 content, group 2
-  (14.5-14.8)** — loss with multiple outputs, backprop with multiple outputs, choosing the
-  capstone architecture (input size from 14.2, output size=3 from 14.4, hidden width TBD),
-  and a full hand-traced forward+backward pass on the capstone's actual sizes, each with a
-  finite-difference gradient check per every prior Phase 12/13 lesson introducing a new
-  gradient term. Do not skip straight to 14.9's NumPy training loop without 14.7's
-  architecture choice and 14.8's hand-trace first — same "breakdown before content" pacing
-  this file already used for 14.1-14.4 itself.
+  ids. `sw.js` cache bumped `bab-v30`->`bab-v31`. **Phase 14 content group 2 SHIPPED
+  (2026-08-29, ACT stage) — 14.5-14.8 written into `curriculum.js` (168 lessons total across
+  Phases 1-14):** 14.5 (loss with multiple outputs — 11.1's squared-error formula applied
+  independently to each of K=3 output slots and SUMMED, not averaged, per example; worked
+  example p=[0.7,0.3,0.6] vs one-hot t=[1,0,0] -> L=0.54; explicitly distinguishes this
+  per-example sum-over-outputs from 11.2's per-dataset mean-over-examples as two separate,
+  stacked aggregation levels), 14.6 (backprop with multiple outputs — proves delta_output_k
+  keeps 12.3's formula unchanged per output neuron since 14.5's loss sums independent
+  per-slot terms, then extends 12.4's own 2-output worked example by one more output neuron
+  to show delta_hidden's weighted sum simply grows to 3 terms, cross-checked against a
+  finite-difference check on the shared hidden neuron's bias), 14.7 (choosing the capstone
+  architecture — applies 10.6's rule concretely: input=9 fixed by 14.2's data, output=3
+  fixed by 14.4's task, hidden width=2 is the one free design choice, chosen to match every
+  Phase 12 running network and keep 14.8's hand-trace tractable; states W_hidden=2x9,
+  W_output=3x2 per 10.1's shape rule, 29 total trainable parameters), and 14.8 (hand-tracing
+  one full forward+backward pass — runs 12.6's exact five-step procedure on the capstone's
+  real 9/2/3 architecture using digit "1" training variant A as input, exploiting that 6 of
+  its 9 pixels are blank so their weights' gradients come out to exactly 0 both analytically
+  and via finite-difference check, while an active-pixel weight's gradient (approximately
+  -0.0026) is independently confirmed by finite differences too). Every numeric claim across
+  all 4 lessons (all loss sums, every delta_output/delta_hidden value, the full forward pass,
+  all 29 gradients, both finite-difference checks) was computed and verified in a standalone
+  Python script before being written into the lesson content — not derived by mental math.
+  `bab-schema-check` (both `"14."` and full-file) passed clean at 168 lessons, 0 duplicate
+  ids. `sw.js` cache bumped `bab-v31`->`bab-v32`. **Next session: Phase 14 content, group 3
+  (14.9-14.10, closing the phase)** — 14.9 (a NumPy training loop that actually trains the
+  capstone network on 14.3's 6 training examples using 14.5-14.8's now fully-derived loss/
+  gradient machinery) and 14.10 (evaluating the trained network on 14.3's 3 held-out test
+  examples using Phase 13's full toolkit — accuracy, confusion matrix, precision/recall/F1
+  adapted to 3 classes). This closes both halves of the ROADMAP title 14.1 named (BUILD +
+  EVALUATE) and closes Phase 14 itself. Watch for the same matrix-convention trap named
+  below if either lesson re-derives a prior lesson's numbers from stated weights rather than
+  training fresh.
   Once Phase 14 content lessons begin, follow the same
   verification bar as every prior phase — every
   worked example/practice/quiz numeric

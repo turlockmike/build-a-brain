@@ -3,9 +3,9 @@
  * LESSONS: full lesson content for Phase 1 (20), Phase 2 (17), Phase 3 (15),
  * Phase 4 (12), Phase 5 (12), Phase 6 (13), Phase 7 (12), Phase 8 (10),
  * Phase 9 (10), Phase 10 (10), Phase 11 (10), Phase 12 (10), Phase 13
- * (9, closed at 13.1-13.9 — see STATUS.md), and Phase 14 (4 of 10 so far —
- * 14.1-14.4, group 1 of the capstone's suggested 4+4+2 content groups;
- * 14.5-14.10 pending, see STATUS.md) — 164 lessons total.
+ * (9, closed at 13.1-13.9 — see STATUS.md), and Phase 14 (8 of 10 so far —
+ * 14.1-14.8, groups 1+2 of the capstone's suggested 4+4+2 content groups;
+ * 14.9-14.10 (group 3, phase-closing) pending, see STATUS.md) — 168 lessons total.
  *
  * Loaded as a plain <script> (like kana.js in the kana-cards template) so app.js can
  * use ROADMAP / LESSONS as globals with no fetch/CORS dependency — works from a
@@ -17307,6 +17307,430 @@ const LESSONS = [
         ],
         "answerIndex": 0,
         "explanation": "One-hot vector length and output layer size are both tied directly to the number of classes (K) — adding a 4th class means K becomes 4, so both the one-hot vectors and the output layer grow from length/size 3 to 4."
+      }
+    ]
+  },
+  {
+    "id": "14.5",
+    "number": 5,
+    "title": "Loss with multiple outputs",
+    "objectives": [
+      "Extend 11.1's single-output squared-error loss to K output neurons by applying it independently to each output slot and summing the results — no new function, only more addends per example",
+      "Compute a K=3-output example's total loss by hand, given each output's prediction and its one-hot target entry",
+      "Distinguish this lesson's per-example SUM across K output slots from 11.2's per-dataset MEAN across n examples — two separate, stacked aggregation steps, not one",
+      "Explain why the K output slots are summed rather than averaged, and what that preserves for 14.6's gradient"
+    ],
+    "explanation": [
+      "11.1 defined loss for exactly one example with exactly one output: L = (t-p)^2, comparing a single prediction to a single target number. 14.4 fixed the capstone's output layer at K = 3 neurons, one per digit class, so a single training example no longer produces one prediction — it produces three, p1, p2, p3, one per output neuron, compared against the three entries of that example's one-hot target vector (14.4). 11.1's formula, as written, has no place to put the other two (prediction, target) pairs — it needs to be extended before it can score a capstone example at all.",
+      "The extension is exactly the move 14.1 promised: apply 11.1's own formula, unchanged, to EACH output slot k separately, producing K individual squared errors (t_k - p_k)^2, then add all K of them together into one number for the example: L_example = (t_1-p_1)^2 + (t_2-p_2)^2 + ... + (t_K-p_K)^2. For the capstone's K=3, that is just three squared errors added up. No new loss function is introduced — 11.1's squared-error idea is reused K times per example and summed, exactly the shape 14.1 predicted this whole phase would take.",
+      "Worked numerically: predictions p=[0.7,0.3,0.6] scored against a \"0\"-labeled example's one-hot target t=[1,0,0] (14.4's fixed class order): (1-0.7)^2 + (0-0.3)^2 + (0-0.6)^2 = 0.09 + 0.09 + 0.36 = 0.54. All three terms count toward the one number 0.54, even though only the FIRST output slot's target is 1 — a badly-off prediction on a wrong-class slot (here, predicting 0.6 on the \"7\" slot when the true class is \"0\") contributes just as much to the loss as being off on the correct-class slot.",
+      "This SUM is a different aggregation from 11.2's MEAN, and the two do not replace each other — they stack. 11.2's MSE averages one already-computed loss number across every example in a dataset: MSE_dataset = (1/n) x sum over n examples of that example's loss. This lesson only changes what counts as 'that example's loss' when there are K outputs instead of 1 — it is now itself a sum across K output slots, computed per example, before 11.2's mean ever runs. Written out in full for the capstone: MSE_dataset = (1/n) x sum over i=1..n of [ sum over k=1..3 of (t_i,k - p_i,k)^2 ]. The inner sum (over 3 output slots) is new to this lesson; the outer mean (over n examples) is 11.2, completely unchanged.",
+      "The K output slots are summed, not averaged, deliberately. Dividing by K here (turning the inner sum into a mean) would shrink every individual output slot's share of the loss as K grows — with K=3, each squared error would count for only 1/3 as much as it does now. That matters for 14.6: each output neuron's own delta_output (12.3's formula) is computed from dL/dzo_k, and summing rather than averaging keeps every output neuron's slot contributing its FULL, undivided squared error to the total loss, so no output neuron's blame gets silently diluted just because the network happens to have more than one output.",
+      "Verification note: the worked example's total (0.54) and every practice/quiz value below were computed directly in Python by summing each output slot's squared error, not estimated or rounded during derivation."
+    ],
+    "example": {
+      "problem": "A capstone example labeled \"1\" (one-hot target [0,1,0] per 14.4's fixed class order) produces predictions p=[0.1,0.8,0.2] from an untrained network. Compute this example's total loss.",
+      "steps": [
+        "Output slot 1 (target 0): (0-0.1)^2 = 0.01.",
+        "Output slot 2 (target 1): (1-0.8)^2 = 0.04.",
+        "Output slot 3 (target 0): (0-0.2)^2 = 0.04.",
+        "Sum all three slots: 0.01+0.04+0.04 = 0.09."
+      ],
+      "answer": "L_example = 0.09 — the sum of all three output slots' individual squared errors, per this lesson's extension of 11.1."
+    },
+    "practice": [
+      {
+        "problem": "A capstone example labeled \"0\" (target [1,0,0]) produces a PERFECT prediction, p=[1,0,0]. What is L_example, and why?",
+        "solution": "L_example = 0, because each of the 3 output slots has (t_k-p_k)^2 = 0 when p exactly matches t — summing three zeros gives zero, the same 'perfect prediction gives zero loss' fact 11.1 already established for a single output, now true independently for every slot."
+      },
+      {
+        "problem": "A capstone example labeled \"7\" (target [0,0,1]) produces predictions p=[0.9,0.05,0.4]. Compute L_example.",
+        "solution": "(0-0.9)^2=0.81, (0-0.05)^2=0.0025, (1-0.4)^2=0.36. Sum: 0.81+0.0025+0.36 = 1.1725."
+      },
+      {
+        "problem": "Why is L_example for a single capstone training example now a SUM over 3 terms instead of 11.1's original single term, and does this replace 11.2's mean-over-examples idea?",
+        "solution": "It's a sum over 3 terms because the output layer now has K=3 neurons (14.4), each needing its own (t_k-p_k)^2 term, added together. It does not replace 11.2's mean — 11.2's mean still runs across every example in the dataset; this lesson's sum only changes what counts as ONE example's own loss before that mean is taken."
+      },
+      {
+        "problem": "If the K output slots were averaged instead of summed (dividing the 3-term total by 3), how would that change delta_output's role in 14.6, without doing any calculation?",
+        "solution": "Every output neuron's dL/dzo_k would shrink by the same factor of 1/K compared to the summed version, since the loss feeding into 12.3's delta_output formula would already be divided down — each output neuron's blame for the total loss would be diluted purely because K happens to be larger than 1, not because it's actually less wrong. Summing (this lesson's choice) avoids that dilution."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "How is a capstone example's total loss L_example computed, now that the output layer has K=3 neurons?",
+        "choices": [
+          "By taking 11.1's formula for output slot 1 only, ignoring slots 2 and 3",
+          "By applying 11.1's squared-error formula independently to each of the 3 output slots, then summing all 3 results",
+          "By averaging the 3 output slots' predictions before comparing to any target",
+          "By multiplying all 3 output slots' squared errors together"
+        ],
+        "answerIndex": 1,
+        "explanation": "L_example sums 3 independent applications of 11.1's (t_k-p_k)^2 formula, one per output slot — no new loss function, just more addends."
+      },
+      {
+        "type": "short",
+        "question": "For p=[0.7,0.3,0.6] and one-hot target t=[1,0,0], what is L_example?",
+        "answer": "0.54",
+        "acceptable": [
+          "0.54",
+          "approximately 0.54"
+        ],
+        "explanation": "(1-0.7)^2+(0-0.3)^2+(0-0.6)^2 = 0.09+0.09+0.36 = 0.54."
+      },
+      {
+        "type": "mc",
+        "question": "How does this lesson's per-example sum relate to 11.2's MSE (mean across a dataset's examples)?",
+        "choices": [
+          "They are the same operation, applied twice",
+          "This lesson's sum happens WITHIN one example (across its K output slots); 11.2's mean happens ACROSS examples — the mean wraps around the sum, they don't replace each other",
+          "11.2's mean has been replaced by this lesson's sum",
+          "This lesson's sum only applies to test examples, never training examples"
+        ],
+        "answerIndex": 1,
+        "explanation": "MSE_dataset = (1/n) x sum over n examples of [sum over K output slots of (t-p)^2] — two separate, stacked aggregation levels."
+      },
+      {
+        "type": "short",
+        "question": "A capstone example gets a PERFECT prediction on all 3 output slots. What is L_example?",
+        "answer": "0",
+        "acceptable": [
+          "0",
+          "zero"
+        ],
+        "explanation": "Each of the 3 slots contributes (t_k-p_k)^2=0 when the prediction exactly matches the target; summing three zeros gives 0."
+      },
+      {
+        "type": "mc",
+        "question": "Why are the K output slots' squared errors SUMMED rather than averaged within one example's loss?",
+        "choices": [
+          "Averaging would divide every output neuron's contribution to the loss by K, diluting its blame purely because the network has more than one output — summing keeps every slot's full, undivided error",
+          "Summing is required because sigmoid cannot handle division",
+          "There is no difference between summing and averaging for this purpose",
+          "Averaging would make the loss negative"
+        ],
+        "answerIndex": 0,
+        "explanation": "Dividing by K would shrink each output neuron's share of the loss just because K grew, silently diluting blame that 14.6's delta_output formula depends on being undivided."
+      }
+    ]
+  },
+  {
+    "id": "14.6",
+    "number": 6,
+    "title": "Backpropagation with multiple outputs",
+    "objectives": [
+      "Show that delta_output_k = dL/dzo_k keeps 12.3's exact formula, 2(p_k-t_k) x sigma'(zo_k), unchanged for each output neuron k independently, because 14.5's sum-not-average keeps each output slot's term separate in the loss",
+      "Extend 12.4's weighted-sum delta_hidden formula from up to 2 output terms to K=3, showing each hidden neuron's blame sums one term per output neuron it feeds",
+      "Compute delta_output for all 3 outputs and delta_hidden for a shared hidden neuron in a worked 3-output example, verified against a finite-difference check",
+      "State the phase's core generalization in one sentence: nothing about backprop's shape changes with more outputs — the weighted sum in delta_hidden simply grows one more term per additional output neuron"
+    ],
+    "explanation": [
+      "12.3 defined delta_output = dL/dzo for a network with exactly one output neuron. 14.5 changed what L even is — now a sum of K independent squared-error terms, one per output neuron — so it's worth checking whether delta_output's formula changes too. It doesn't: because 14.5's loss is a SUM (not a mean) of K separate (t_k-p_k)^2 terms, and each term only involves ONE output neuron's own zo_k (14.4's output neurons don't share any weights with each other), dL/dzo_k only ever touches the k-th term of the sum — every other term's derivative with respect to zo_k is zero, since none of the other terms even mention zo_k. So delta_output_k = 2(p_k-t_k) x sigma'(zo_k), 12.3's exact formula, computed independently for each of the K output neurons.",
+      "Where the generalization actually shows up is 12.4's delta_hidden formula — and even there, the SHAPE of the formula was already built for this. 12.4 derived delta_hidden_j = [sum over every output k the hidden neuron feeds] (delta_output_k x w_jk) x sigma'(zh_j), and its own worked example already used K=2 outputs to show the sum has more than one term when there's more than one output neuron. The capstone's K=3 output layer means every hidden neuron now feeds all 3 output neurons, so its weighted sum simply has 3 terms instead of 1 or 2 — nothing about the formula's shape changes, only how many terms get added before the final sigma'(zh_j) multiplication.",
+      "Worked example, extending 12.4's own two-output network by one more output: a single hidden neuron (x1=1, wh=0.4, bh=0.1) feeding THREE output neurons — output 1 (wo1=0.5, bo1=0.05, t1=1) and output 2 (wo2=-0.3, bo2=0.2, t2=0) exactly as 12.4 had them, plus a new output 3 (wo3=0.2, bo3=-0.1, t3=1)."
+    ],
+    "example": {
+      "problem": "Using 12.4's single hidden neuron (x1=1, wh=0.4, bh=0.1) now feeding THREE output neurons — output 1 (wo1=0.5, bo1=0.05, t1=1), output 2 (wo2=-0.3, bo2=0.2, t2=0, both exactly as in 12.4), and a new output 3 (wo3=0.2, bo3=-0.1, t3=1) — compute delta_output for all 3 outputs, then delta_hidden (the 3-term weighted sum), and verify it against a finite-difference check.",
+      "steps": [
+        "Forward pass (unchanged from 12.4): zh = 0.4(1)+0.1 = 0.5. h = sigma(0.5), approximately 0.6225.",
+        "Output 1 (reusing 12.4's values): zo1 = 0.5(0.6225)+0.05, approximately 0.3612. p1 = sigma(0.3612), approximately 0.5893. delta_output1 = 2(0.5893-1) x [0.5893 x 0.4107], approximately -0.1988.",
+        "Output 2 (reusing 12.4's values): zo2 = -0.3(0.6225)+0.2, approximately 0.0133. p2 = sigma(0.0133), approximately 0.5033. delta_output2 = 2(0.5033-0) x [0.5033 x 0.4967], approximately 0.2516.",
+        "Output 3 (new): zo3 = 0.2(0.6225)+(-0.1), approximately 0.0245. p3 = sigma(0.0245), approximately 0.5061. delta_output3 = 2(0.5061-1) x [0.5061 x 0.4939], approximately -0.2469.",
+        "Total loss: L = (1-0.5893)^2 + (0-0.5033)^2 + (1-0.5061)^2, approximately 0.1687+0.2533+0.2439 = approximately 0.6659.",
+        "Weighted sum for delta_hidden: (delta_output1 x wo1) + (delta_output2 x wo2) + (delta_output3 x wo3) = (-0.1988)(0.5) + (0.2516)(-0.3) + (-0.2469)(0.2) = -0.0994 - 0.0755 - 0.0494, approximately -0.2243.",
+        "delta_hidden = weighted sum x sigma'(zh) = -0.2243 x [0.6225 x 0.3775] = -0.2243 x 0.2350, approximately -0.0527.",
+        "Finite-difference check (perturbing bh by epsilon=0.00001, recomputing total L, dividing the difference by 2 x epsilon): comes out to approximately -0.0527 as well, matching the 3-term weighted-sum formula."
+      ],
+      "answer": "delta_hidden is approximately -0.0527, built from all 3 output neurons' own deltas — extending 12.4's 2-term worked example by exactly one more term (delta_output3 x wo3, approximately -0.0494), confirming the same weighted-sum formula scales to any number of output neurons without changing shape, only term count."
+    },
+    "practice": [
+      {
+        "problem": "In the worked example, if output 3 were removed (back to 12.4's original 2-output network), what would delta_hidden equal? Confirm it matches 12.4's own 2-output answer of approximately -0.0411.",
+        "solution": "Dropping delta_output3 x wo3's term (approximately -0.0494) from the weighted sum leaves -0.0994-0.0755 = -0.1749, times sigma'(zh)=0.2350, giving approximately -0.0411 — exactly 12.4's 2-output answer, confirming the 3-output formula reduces correctly to the 2-output case when the third term is removed."
+      },
+      {
+        "problem": "For the capstone's actual K=3 output layer, how many terms does EVERY hidden neuron's delta_hidden weighted sum have, assuming every hidden neuron feeds every output neuron (a fully-connected layer)?",
+        "solution": "Exactly 3 — one term (delta_output_k x w_jk) per output neuron the hidden neuron feeds, and a fully-connected output layer means every hidden neuron feeds all 3 outputs, matching 14.4's fixed K=3."
+      },
+      {
+        "problem": "Does delta_output_k's own formula (2(p_k-t_k) x sigma'(zo_k)) change at all when K grows from 1 to 3? Why or why not?",
+        "solution": "No — 14.5's loss is a SUM of K independent per-slot terms, and each term only depends on its own output neuron's zo_k, so dL/dzo_k only ever picks up the k-th term's derivative (every other term's derivative with respect to zo_k is zero). delta_output_k stays exactly 12.3's original formula, computed once per output neuron."
+      },
+      {
+        "problem": "A hidden neuron feeds only 2 of the capstone's 3 output neurons (not all 3, if the network weren't fully connected). How many terms would its delta_hidden weighted sum have?",
+        "solution": "2 — one term per output neuron it actually feeds, since delta_hidden_j only sums over the outputs THAT hidden neuron connects to, not every output neuron in the whole network."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "When the loss becomes a sum over K=3 output slots (14.5), what happens to delta_output_k's formula for each individual output neuron?",
+        "choices": [
+          "It stays 12.3's exact formula, 2(p_k-t_k) x sigma'(zo_k), computed independently per output neuron",
+          "It gets divided by K",
+          "It becomes a weighted sum over all K outputs",
+          "It no longer depends on sigma'"
+        ],
+        "answerIndex": 0,
+        "explanation": "Because 14.5's loss sums K independent per-output terms, each dL/dzo_k only touches its own term — delta_output_k is unchanged from 12.3, computed once per output neuron."
+      },
+      {
+        "type": "short",
+        "question": "How many terms does delta_hidden_j's weighted sum have when a hidden neuron feeds all 3 of the capstone's output neurons?",
+        "answer": "3",
+        "acceptable": [
+          "three",
+          "3 terms"
+        ],
+        "explanation": "One term per output neuron fed — a fully-connected hidden neuron feeding all 3 capstone outputs has 3 terms in its weighted sum."
+      },
+      {
+        "type": "mc",
+        "question": "In the worked example extending 12.4's network to 3 outputs, what is delta_hidden?",
+        "choices": [
+          "approximately -0.0527",
+          "approximately -0.0411",
+          "approximately -0.2469",
+          "approximately 0.6659"
+        ],
+        "answerIndex": 0,
+        "explanation": "Summing all 3 output terms' contributions (-0.0994-0.0755-0.0494=-0.2243) and multiplying by sigma'(zh) approximately 0.2350 gives approximately -0.0527, confirmed by a finite-difference check."
+      },
+      {
+        "type": "short",
+        "question": "If output 3's term were dropped from the worked example's weighted sum by mistake, what would delta_hidden equal instead (approximately)?",
+        "answer": "-0.0411",
+        "acceptable": [
+          "approximately -0.0411",
+          "-0.0411"
+        ],
+        "explanation": "Without output 3's approximately -0.0494 contribution, the weighted sum is only -0.1749, giving delta_hidden approximately -0.0411 — 12.4's original 2-output answer, silently missing output 3's real influence."
+      },
+      {
+        "type": "mc",
+        "question": "What is this lesson's core generalization, in one sentence?",
+        "choices": [
+          "Nothing about backprop's shape changes with more output neurons — delta_hidden's weighted sum simply grows one more term per additional output neuron the hidden neuron feeds",
+          "More outputs require an entirely new backprop algorithm",
+          "delta_output must be averaged across all K outputs",
+          "Hidden neurons no longer need a delta when K>1"
+        ],
+        "answerIndex": 0,
+        "explanation": "12.4's formula was already built to handle any number of output neurons; the capstone's K=3 case is exactly that formula with 3 terms instead of 1 or 2, nothing new in kind."
+      }
+    ]
+  },
+  {
+    "id": "14.7",
+    "number": 7,
+    "title": "Choosing the capstone architecture",
+    "objectives": [
+      "Apply 10.6's rule that input and output sizes are fixed by the data/task, while hidden width is a free design choice, concretely to the capstone: input size=9 (14.2), output size=3 (14.4)",
+      "State and justify the capstone's chosen hidden width (2 neurons), citing 12.x's consistently small hidden layers and the tractability of 14.8's hand-trace",
+      "State the full architecture's weight-matrix shapes using 10.1's shape rule: W_hidden is (2 x 9), W_output is (3 x 2)",
+      "Compute the capstone network's total trainable parameter count from these shapes"
+    ],
+    "explanation": [
+      "10.6 established the rule this lesson finally applies to the capstone in full: an input layer's size is fixed by the data (how many features each example has), an output layer's size is fixed by the task (how many categories to sort into), and only the HIDDEN layer's width is a free design choice, not dictated by either. 14.2 already fixed the capstone's input size at 9 — the 3x3 pixel grid flattened, one input neuron per pixel. 14.4 already fixed its output size at 3 — one neuron per digit class (\"0\", \"1\", \"7\"). Both of those were decided already, well before this lesson; the only piece 10.6's rule leaves open is the hidden layer's width, and this lesson decides it.",
+      "The capstone's hidden layer gets exactly 2 neurons. This isn't the only workable choice, but it's the deliberate one: every Phase 12 hidden layer used exactly 2 neurons throughout (12.1-12.6's running networks), so 2 keeps the capstone consistent with every backprop example this course has already hand-traced, rather than introducing an unfamiliar width for its own sake. It also keeps 14.8's hand-trace tractable — a wider hidden layer would multiply the number of weights that lesson has to carry through the forward and backward pass by hand, without teaching anything the K=3-output generalization (14.5-14.6) hasn't already covered. Width was never this course's pedagogical point (14.1 already said as much about depth); 2 is the smallest width that still lets every hidden neuron meaningfully combine information from all 9 input pixels before the output layer sorts it into one of 3 classes.",
+      "With input size 9, hidden width 2, and output size 3 all fixed, 10.1's shape rule (W is m x n for m perceptrons reading n inputs) gives the exact shape of both weight matrices: W_hidden is 2 x 9 (2 hidden neurons, each reading all 9 pixel inputs) and W_output is 3 x 2 (3 output neurons, each reading both hidden neurons' activations) — exactly the shape 14.4 already forward-referenced when it said 14.7 would fix W_output's shape at (3 x hidden_width).",
+      "Counting every trainable parameter: W_hidden contributes 2 x 9 = 18 weights plus 2 hidden biases (one per hidden neuron) = 20 hidden-layer parameters. W_output contributes 3 x 2 = 6 weights plus 3 output biases (one per output neuron) = 9 output-layer parameters. The whole capstone network has 20 + 9 = 29 trainable parameters total — every one of which 14.8's hand-trace will compute a gradient for, and every one of which 14.9's training loop will actually update."
+    ],
+    "example": {
+      "problem": "Using 10.6's rule and this lesson's chosen hidden width, state the capstone's full architecture (input size, hidden width, output size), the shape of both weight matrices per 10.1's rule, and the total parameter count.",
+      "steps": [
+        "Input size: fixed by the data at 9 (14.2's flattened 3x3 pixel grid).",
+        "Output size: fixed by the task at 3 (14.4's K=3 digit classes).",
+        "Hidden width: a free design choice per 10.6, set to 2 (matching every Phase 12 hidden layer, keeping 14.8's hand-trace tractable).",
+        "W_hidden shape (10.1's m x n rule): 2 rows (hidden neurons) x 9 columns (inputs) = 2x9, plus 2 hidden biases.",
+        "W_output shape: 3 rows (output neurons) x 2 columns (hidden neurons) = 3x2, plus 3 output biases.",
+        "Total parameters: (2x9 + 2) + (3x2 + 3) = 20 + 9 = 29."
+      ],
+      "answer": "The capstone network is a 9-input, 2-hidden-neuron, 3-output sigmoid network: W_hidden is 2x9 with 2 biases (20 parameters), W_output is 3x2 with 3 biases (9 parameters), for 29 trainable parameters total."
+    },
+    "practice": [
+      {
+        "problem": "Which of the capstone's 3 architectural numbers (input size, hidden width, output size) was a free DESIGN CHOICE, and which two were FIXED by the data/task?",
+        "solution": "Hidden width (2) was a free design choice. Input size (9) was fixed by the data (14.2's pixel count) and output size (3) was fixed by the task (14.4's class count) — per 10.6's rule, only the hidden layer's width is ever a choice."
+      },
+      {
+        "problem": "If the capstone dataset used a 4x4 pixel grid instead of 3x3, would the hidden width of 2 need to change? Would the input size?",
+        "solution": "Input size would need to change, from 9 to 16 (a 4x4 grid flattens to 16 pixels) — it's fixed by the data. Hidden width would NOT need to change just because the input got bigger; 2 remains a valid free design choice regardless of input size, though a much larger input might make a wider hidden layer a reasonable DIFFERENT choice, not a required one."
+      },
+      {
+        "problem": "Compute W_hidden's total entry count (not counting biases) if the capstone instead used a hidden width of 4 instead of 2, keeping the input size at 9.",
+        "solution": "W_hidden would be 4 x 9 = 36 entries (4 rows for 4 hidden neurons, 9 columns for 9 inputs), compared to the chosen width-2 network's 2x9=18 entries — exactly double, since W_hidden's row count matches hidden width directly."
+      },
+      {
+        "problem": "Why does this lesson choose hidden width 2 specifically, rather than some other number like 5 or 10?",
+        "solution": "Width 2 keeps the capstone consistent with every Phase 12 hand-traced network (which all used 2 hidden neurons) and keeps 14.8's upcoming hand-trace tractable, since a wider hidden layer would mean carrying more weights through the forward and backward pass by hand without teaching anything new — width was never this course's pedagogical focus."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Per 10.6's rule, which of the capstone's architectural numbers is a FREE design choice?",
+        "choices": [
+          "Input size",
+          "Output size",
+          "Hidden width",
+          "All three are free choices"
+        ],
+        "answerIndex": 2,
+        "explanation": "10.6 fixes input size by the data and output size by the task; only hidden width is left as a free design choice, decided in this lesson."
+      },
+      {
+        "type": "short",
+        "question": "What hidden width does this lesson choose for the capstone, and what earlier phase's networks does it match?",
+        "answer": "2, matching every Phase 12 hidden layer",
+        "acceptable": [
+          "2 neurons, same as phase 12",
+          "two, matching 12.x"
+        ],
+        "explanation": "The capstone's hidden layer uses 2 neurons, keeping it consistent with every backprop example already hand-traced in Phase 12."
+      },
+      {
+        "type": "mc",
+        "question": "What is W_hidden's shape for the capstone (input size 9, hidden width 2), per 10.1's m x n rule?",
+        "choices": [
+          "2 x 9",
+          "9 x 2",
+          "3 x 2",
+          "2 x 3"
+        ],
+        "answerIndex": 0,
+        "explanation": "10.1's rule makes W's rows equal the number of perceptrons (2 hidden neurons) and columns equal the number of inputs (9), giving 2x9."
+      },
+      {
+        "type": "short",
+        "question": "How many trainable parameters does the capstone network have in total?",
+        "answer": "29",
+        "acceptable": [
+          "29 parameters",
+          "twenty-nine"
+        ],
+        "explanation": "20 hidden-layer parameters (18 weights + 2 biases) plus 9 output-layer parameters (6 weights + 3 biases) = 29."
+      },
+      {
+        "type": "mc",
+        "question": "What is W_output's shape for the capstone (hidden width 2, output size 3)?",
+        "choices": [
+          "3 x 2",
+          "2 x 3",
+          "9 x 3",
+          "3 x 9"
+        ],
+        "answerIndex": 0,
+        "explanation": "3 rows (output neurons) x 2 columns (hidden neurons feeding them), per 10.1's shape rule — exactly what 14.4 forward-referenced as (3 x hidden_width)."
+      }
+    ]
+  },
+  {
+    "id": "14.8",
+    "number": 8,
+    "title": "Hand-tracing one full forward + backward pass",
+    "objectives": [
+      "Run the complete five-step backpropagation procedure (12.6) on the capstone's ACTUAL architecture (9 inputs, 2 hidden neurons, 3 outputs, from 14.7) and a real capstone training example (14.3)",
+      "Exploit a blank-pixel input to keep the 9-input hand-trace tractable, and explain WHY zero-valued inputs make their weights' gradients exactly zero",
+      "Compute every one of the network's 29 parameters' gradients (14.7's count) and verify at least two against a finite-difference check",
+      "Confirm the K=3-output generalization (14.5-14.6) and the fixed architecture (14.7) combine into the exact same five-step procedure 12.6 already established, with no new step"
+    ],
+    "explanation": [
+      "12.6 ran backprop's full five-step procedure (forward pass, loss, delta_output, delta_hidden, gradients) on one small network, proving the procedure is a general algorithm. This lesson runs the identical five steps on the capstone's actual, now-fully-fixed architecture from 14.7 — 9 inputs, 2 hidden neurons, 3 outputs — using one of 14.3's real training examples, digit \"1\"'s variant A ([0,1,0,0,1,0,0,1,0], one-hot target [0,1,0] per 14.4). Nothing about the procedure itself is new: 14.5 already showed delta_output_k keeps 12.3's formula unchanged per output neuron, and 14.6 already showed delta_hidden_j's weighted sum simply grows to 3 terms — this lesson is where all of that comes together on the network 14.7 actually chose.",
+      "A 9-input hand-trace looks intimidating at first, but digit \"1\"'s variant A makes it tractable: 6 of its 9 pixels are 0 (blank), and only 3 are 1 (indices 1, 4, 7 — the middle column, per 14.2's row-major flattening). Every hidden neuron's zh is a sum of 9 products, weight_i x x_i, but a weight multiplied by x_i=0 contributes exactly 0 to that sum, no matter what the weight's own value is — so only the 3 weights lined up with the filled pixels actually matter for THIS example's forward pass, and (as the gradient step will show) only those same 3 weights get a nonzero gradient from this example too.",
+      "The five-step order from 12.6 is unchanged and still strict: (1) forward pass — compute zh1, zh2, h1, h2, then zo1, zo2, zo3, p1, p2, p3, caching every value; (2) loss — 14.5's sum of 3 squared errors; (3) delta_output_k for each of the 3 output neurons — 14.5-14.6 confirmed this is 12.3's unchanged formula, computed 3 times; (4) delta_hidden_j for each of the 2 hidden neurons — 14.6's 3-term weighted sum, computed twice; (5) every one of the 29 gradients (14.7's parameter count) — each output weight's gradient is its delta_output_k times the hidden activation it multiplies, and each hidden weight's gradient is its delta_hidden_j times the raw pixel input it multiplies, exactly 12.5's delta-times-input rule, now applied at capstone scale.",
+      "Getting all 29 gradients right, with at least one hand-computed value confirmed by an independent finite-difference check, is what this lesson actually proves: that 14.5's K=3 loss extension, 14.6's K=3 delta_hidden extension, and 14.7's fixed 9/2/3 architecture combine into exactly 12.6's five-step procedure, with nothing left to invent before 14.9 hands this same computation to NumPy and runs it thousands of times in a training loop."
+    ],
+    "example": {
+      "problem": "Using the capstone's fixed architecture (9 inputs, 2 hidden neurons, 3 outputs, from 14.7) and digit \"1\"'s training variant A (x=[0,1,0,0,1,0,0,1,0], one-hot target [0,1,0], from 14.3), with hidden-layer weights w_h1=[0.1,0.2,-0.1,0.05,0.3,-0.2,0.1,0.15,-0.05]/bh1=0.1 and w_h2=[-0.05,0.1,0.2,0.1,-0.15,0.05,0.2,0.1,-0.1]/bh2=-0.05, and output-layer weights output1: wo1=[0.4,-0.3]/bo1=0.05, output2: wo2=[0.2,0.5]/bo2=-0.1, output3: wo3=[-0.3,0.25]/bo3=0.15 — run the full five-step backward pass by hand and verify two gradients against a finite-difference check.",
+      "steps": [
+        "Step 1, forward pass — hidden layer: only pixels 1, 4, 7 are nonzero in x=[0,1,0,0,1,0,0,1,0] (the middle column, per 14.2), so zh1 = w_h1[1]+w_h1[4]+w_h1[7]+bh1 = 0.2+0.3+0.15+0.1 = 0.75 (every other weight's product with a 0 pixel vanishes). h1 = sigma(0.75), approximately 0.6792. zh2 = w_h2[1]+w_h2[4]+w_h2[7]+bh2 = 0.1+(-0.15)+0.1+(-0.05) = 0.0 exactly. h2 = sigma(0), exactly 0.5.",
+        "Step 1, forward pass — output layer: zo1 = 0.4(0.6792)+(-0.3)(0.5)+0.05, approximately 0.1717. p1 = sigma(0.1717), approximately 0.5428. zo2 = 0.2(0.6792)+0.5(0.5)+(-0.1), approximately 0.2858. p2 = sigma(0.2858), approximately 0.5710. zo3 = -0.3(0.6792)+0.25(0.5)+0.15, approximately 0.0712. p3 = sigma(0.0712), approximately 0.5178.",
+        "Step 2, loss (14.5's sum over K=3 output slots, target [0,1,0] since this example is labeled \"1\"): L = (0-0.5428)^2 + (1-0.5710)^2 + (0-0.5178)^2, approximately 0.2946 + 0.1841 + 0.2681 = approximately 0.7468.",
+        "Step 3, delta_output for each output neuron (12.3's unchanged formula, confirmed unchanged by 14.6): delta_output1 = 2(0.5428-0) x [0.5428 x 0.4572], approximately 0.2694. delta_output2 = 2(0.5710-1) x [0.5710 x 0.4290], approximately -0.2102. delta_output3 = 2(0.5178-0) x [0.5178 x 0.4822], approximately 0.2586.",
+        "Step 4, delta_hidden for hidden neuron 1 (14.6's 3-term weighted sum): terms are delta_output1 x wo1_1 = 0.2694 x 0.4, approximately 0.1078; delta_output2 x wo2_1 = -0.2102 x 0.2, approximately -0.0420; delta_output3 x wo3_1 = 0.2586 x (-0.3), approximately -0.0776. Summing: 0.1078-0.0420-0.0776, approximately -0.0118. delta_hidden1 = -0.0118 x sigma'(zh1) = -0.0118 x 0.2179, approximately -0.0026.",
+        "Step 4, delta_hidden for hidden neuron 2: terms are 0.2694 x (-0.3), approximately -0.0808; -0.2102 x 0.5, approximately -0.1051; 0.2586 x 0.25, approximately 0.0646. Summing: -0.0808-0.1051+0.0646, approximately -0.1213. delta_hidden2 = -0.1213 x sigma'(zh2) = -0.1213 x 0.25, approximately -0.0303.",
+        "Step 5, output-layer gradients (delta_output_k x hidden activation, 12.5's rule): output 1 — dL/dwo1_1=0.2694 x 0.6792 approximately 0.1830, dL/dwo1_2=0.2694 x 0.5 approximately 0.1347, dL/dbo1 approximately 0.2694. Output 2 — dL/dwo2_1 approximately -0.1428, dL/dwo2_2 approximately -0.1051, dL/dbo2 approximately -0.2102. Output 3 — dL/dwo3_1 approximately 0.1756, dL/dwo3_2 approximately 0.1293, dL/dbo3 approximately 0.2586.",
+        "Step 5, hidden-layer gradients (delta_hidden_j x raw pixel input): for hidden neuron 1, only pixels 1, 4, 7 have x_i=1, so dL/dw_h1[1]=dL/dw_h1[4]=dL/dw_h1[7]=delta_hidden1 x 1 approximately -0.0026, and dL/dw_h1[0]=dL/dw_h1[2]=dL/dw_h1[3]=dL/dw_h1[5]=dL/dw_h1[6]=dL/dw_h1[8]=delta_hidden1 x 0 = 0 EXACTLY (a blank pixel contributes nothing to this example's gradient, no matter what its weight's current value is). The same pattern holds for hidden neuron 2 with delta_hidden2 approximately -0.0303. dL/dbh1=delta_hidden1 approximately -0.0026, dL/dbh2=delta_hidden2 approximately -0.0303.",
+        "Finite-difference check, two gradients: perturbing w_h1[4] (an ACTIVE pixel weight) by epsilon=0.00001 and recomputing L gives approximately -0.0026, matching step 5's hand-computed value. Perturbing w_h1[0] (a BLANK pixel weight) the same way gives approximately 0.0000, confirming the exact-zero gradient predicted in step 5 — not just close to zero, but the finite-difference estimate itself comes out to 0.0000 for a weight whose input was 0 this example."
+      ],
+      "answer": "Every one of the network's 29 parameters (14.7's count) now has a gradient: 6 output weights + 3 output biases (step 5's output-layer block) plus 18 hidden weights + 2 hidden biases (step 5's hidden-layer block, 12 of those 18 weights exactly 0 because 6 of the 9 input pixels were blank for this example). Both a nonzero gradient (w_h1[4], approximately -0.0026) and an exact-zero gradient (w_h1[0], approximately 0.0000) were independently confirmed by finite differences, closing the same loop 12.6 already closed on a 9-parameter network — now run, without any new step, on the capstone's real 29-parameter architecture."
+    },
+    "practice": [
+      {
+        "problem": "Why does a blank pixel (x_i=0) in the capstone's input make BOTH its hidden weight w_h1[i] contribute nothing to zh1's sum AND its gradient dL/dw_h1[i] come out to exactly 0, for this specific training example?",
+        "solution": "In the forward pass, the term w_h1[i] x x_i is 0 whenever x_i=0, regardless of the weight's value, so a blank pixel's weight never affects zh1 for this example. In the backward pass, 12.5's rule makes dL/dw_h1[i] = delta_hidden1 x x_i — the SAME x_i multiplies the gradient too, so a blank pixel's weight also gets exactly 0 gradient this example. Both facts come from the same x_i=0, not two separate coincidences."
+      },
+      {
+        "problem": "If this same weight (w_h1[0], a blank-pixel weight for digit \"1\") were instead being trained on digit \"0\"'s variant A (x=[1,1,1,1,0,1,1,1,1]), would its gradient still be exactly 0? Why or why not?",
+        "solution": "No — digit \"0\"'s variant A has x[0]=1 (not blank), so w_h1[0]'s gradient would generally be nonzero for THAT example. Whether a given weight gets a zero gradient depends entirely on which pixel is blank in the CURRENT example being trained on, not on the weight itself — a weight that gets zero gradient from one example can get a nonzero gradient from a different example with a different blank pattern."
+      },
+      {
+        "problem": "This lesson hand-traces ONE training example (digit \"1\" variant A). The capstone dataset has 6 training examples total (14.3). Does 14.9's training loop use only this one example's gradients?",
+        "solution": "No — 14.9's training loop will run this exact same five-step procedure on every one of the 6 training examples (typically each training pass, or 'epoch'), not just this one. This lesson's hand-trace demonstrates the procedure on one example so it can be checked by hand; the actual training in 14.9 repeats it across the whole training set."
+      },
+      {
+        "problem": "Steps 3 and 4 of this lesson's procedure must happen in a specific order. Which comes first, and why?",
+        "solution": "Delta_output (step 3) must be computed before delta_hidden (step 4), because 14.6's weighted-sum formula for delta_hidden_j directly uses each output neuron's own delta_output_k as an input — delta_hidden can't be computed until every delta_output it depends on already exists, the same ordering constraint 12.6 established."
+      }
+    ],
+    "quiz": [
+      {
+        "type": "mc",
+        "question": "Why does digit \"1\"'s training variant A make the capstone's 9-input hand-trace tractable, despite having 9 separate pixel weights per hidden neuron?",
+        "choices": [
+          "6 of its 9 pixels are 0 (blank), so those weights' products vanish in the forward pass and their gradients come out to exactly 0 in the backward pass — only 3 weights per hidden neuron actually matter for this example",
+          "The network secretly only has 3 inputs",
+          "Blank pixels are skipped entirely and never appear in the weight matrix",
+          "9-input networks are always easy to hand-trace regardless of the input values"
+        ],
+        "answerIndex": 0,
+        "explanation": "A weight multiplied by a 0-valued pixel contributes 0 to both the forward sum and the backward gradient, so only the 3 weights aligned with digit \"1\"'s filled pixels (indices 1, 4, 7) actually do anything for this example."
+      },
+      {
+        "type": "short",
+        "question": "For this lesson's worked example, what is L (the total loss), approximately?",
+        "answer": "0.7468",
+        "acceptable": [
+          "approximately 0.7468",
+          "0.75"
+        ],
+        "explanation": "Summing the 3 output slots' squared errors, (0-0.5428)^2+(1-0.5710)^2+(0-0.5178)^2, gives approximately 0.2946+0.1841+0.2681 = 0.7468."
+      },
+      {
+        "type": "mc",
+        "question": "What does the finite-difference check on w_h1[0] (a blank-pixel weight) confirm?",
+        "choices": [
+          "That its gradient is exactly 0, matching the analytic prediction that a weight connected to a 0-valued input contributes and receives nothing this example",
+          "That the network made an error",
+          "That blank pixels should be removed from the dataset",
+          "That w_h1[0]'s gradient is undefined"
+        ],
+        "answerIndex": 0,
+        "explanation": "Perturbing w_h1[0] and recomputing L gives a finite-difference estimate of 0.0000, independently confirming the analytic dL/dw_h1[0]=0 prediction from 12.5's delta-times-input rule with x_i=0."
+      },
+      {
+        "type": "short",
+        "question": "How many of the network's 29 total parameters get an exactly-zero gradient from this specific training example, and why?",
+        "answer": "12",
+        "acceptable": [
+          "12 weights",
+          "twelve"
+        ],
+        "explanation": "6 of hidden neuron 1's 9 input weights and 6 of hidden neuron 2's 9 input weights (the weights aligned with the 6 blank pixels) each get exactly 0 gradient, since delta_hidden_j x 0 = 0 for both hidden neurons — 6+6=12."
+      },
+      {
+        "type": "mc",
+        "question": "What does this lesson prove that 12.6 hadn't already proven?",
+        "choices": [
+          "That 12.6's exact five-step procedure, unchanged in shape, runs correctly on the capstone's real architecture (9 inputs, 2 hidden, 3 outputs) and a real training example — combining 14.5's loss extension, 14.6's delta_hidden extension, and 14.7's architecture choice into one working computation",
+          "That backpropagation needs a sixth step for multi-output networks",
+          "That finite-difference checks stop working past 10 parameters",
+          "That blank pixels should never be used in training data"
+        ],
+        "answerIndex": 0,
+        "explanation": "12.6 proved the five-step procedure was a general algorithm on a small, abstract network; this lesson proves that same procedure, with no new step, handles the capstone's actual multi-output, larger-input architecture correctly."
       }
     ]
   }
